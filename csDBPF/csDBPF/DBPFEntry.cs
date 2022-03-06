@@ -7,7 +7,7 @@ namespace csDBPF {
 	/// <summary>
 	/// An abstract form of an entry item of a <see cref="DBPFFile"/>, representing an instance of a subfile that may be contained in a DBPF file.
 	/// </summary>
-	public abstract class DBPFEntry {
+	public class DBPFEntry {
 		private DBPFTGI _tgi;
 		public DBPFTGI TGI {
 			get { return _tgi; }
