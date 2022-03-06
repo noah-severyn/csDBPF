@@ -188,7 +188,7 @@ namespace csDBPF {
 		}
 
 		public override string ToString() {
-			return $"T:{_type} 0x{DBPFUtil.UIntToHexString(_type, 8)}, G:{_group} 0x{DBPFUtil.UIntToHexString(_group, 8)}, I:{_instance} 0x{DBPFUtil.UIntToHexString(_instance, 8)}";
+			return $"T:0x{DBPFUtil.UIntToHexString(_type, 8)}, G:0x{DBPFUtil.UIntToHexString(_group, 8)}, I:0x{DBPFUtil.UIntToHexString(_instance, 8)}";
 		}
 
 		/// <summary>
