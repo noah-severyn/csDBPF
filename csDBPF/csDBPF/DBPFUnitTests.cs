@@ -152,17 +152,17 @@ namespace csDBPF {
 		public void Test_056a_DBPFTGI_ModifyTGIusingDBPFTGI() {
 			DBPFTGI exemplar = new DBPFTGI(0x6534284a, 0, 0);
 			DBPFTGI exemplar2 = exemplar.ModifyTGI(DBPFTGI.EXEMPLAR_AVENUE);
-			Assert.AreEqual("T:1697917002 0x6534284A, G:3413315500 0xCB730FAC, I:0 0x00000000", exemplar2.ToString());
+			Assert.AreEqual("T:0x6534284A, G:0xCB730FAC, I:0x00000000", exemplar2.ToString());
 			Assert.AreEqual(exemplar.ToString(), exemplar.ModifyTGI(DBPFTGI.NULLTGI).ToString());
 			DBPFTGI exemplar4 = new DBPFTGI(0, 2, 3);
-			Assert.AreEqual("T:3395543715 0xCA63E2A3, G:1247710966 0x4A5E8EF6, I:3 0x00000003", exemplar4.ModifyTGI(DBPFTGI.LUA).ToString());
+			Assert.AreEqual("T:0xCA63E2A3, G:0x4A5E8EF6, I:0x00000003", exemplar4.ModifyTGI(DBPFTGI.LUA).ToString());
 		}
 
 		[TestMethod]
 		public void Test_056b_DBPFTGI_ModifyTGIusingUint() {
 			DBPFTGI exemplar = new DBPFTGI(0x6534284a, 0, 1000001);
-			Assert.AreEqual("T:1697917002 0x6534284A, G:0 0x00000000, I:100 0x00000064", exemplar.ModifyTGI(null, null, 100).ToString());
-			Assert.AreEqual("T:100 0x00000064, G:100 0x00000064, I:100 0x00000064", exemplar.ModifyTGI(100, 100, 100).ToString());
+			Assert.AreEqual("T:0x6534284A, G:0x00000000, I:0x00000064", exemplar.ModifyTGI(null, null, 100).ToString());
+			Assert.AreEqual("T:0x00000064, G:0x00000064, I:0x00000064", exemplar.ModifyTGI(100, 100, 100).ToString());
 		}
 		#endregion Test Methods for DBPFTGI Class
 
@@ -173,9 +173,9 @@ namespace csDBPF {
 			//DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\Bournemouth Housing Pack\\Mntoes-Bournemouth Housing Pack.dat");
 			DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 			Assert.AreEqual((uint) 0x44425046, dbpf.header.identifier); //1145196614 dec = 44425046 hex = DBPF ascii
-			Assert.AreEqual((uint) DBPFUtil.ReverseBytes(1), dbpf.header.majorVersion); //16777216 dec = 1000000 hex
+			Assert.AreEqual(DBPFUtil.ReverseBytes(1), dbpf.header.majorVersion); //16777216 dec = 1000000 hex
 			Assert.AreEqual((uint) 0, dbpf.header.minorVersion);
-			Assert.AreEqual((uint) DBPFUtil.ReverseBytes(7), dbpf.header.indexMajorVersion); //117440512 dec = 7000000 hex)
+			Assert.AreEqual(DBPFUtil.ReverseBytes(7), dbpf.header.indexMajorVersion); //117440512 dec = 7000000 hex)
 		}
 
 		[TestMethod]

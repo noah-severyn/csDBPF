@@ -16,6 +16,7 @@ namespace csDBPF {
 		public OrderedDictionary entryMap; //TODO - make these unmodifiable outside of this scope. see (Java) Collections.unmodifiableSet
 		public Dictionary<uint, DBPFTGI> tgiMap; //TODO - make these unmodifiable outside of this scope. see (Java) Collections.unmodifiableSet
 
+		//------------- BEGIN DBPFFile.Header ------------- \\
 		/// <summary>
 		/// Contains DBPFFile header data, including all related fields.
 		/// </summary>
@@ -120,9 +121,9 @@ namespace csDBPF {
 
 			bool map = false;
 			if (map) {
-				this.ReadAndMap(this.file);
+				ReadAndMap(this.file);
 			} else {
-				this.Read(this.file);
+				Read(this.file);
 			}
 
 
@@ -186,8 +187,8 @@ namespace csDBPF {
 
 					DBPFTGI tgi = new DBPFTGI(typeID, groupID, instanceID);
 					DBPFEntry entry = new DBPFEntry(tgi, offset, size, (uint) idx);
-					this.AddEntry(entry);
-					Trace.WriteLine(tgi.ToString());
+					AddEntry(entry);
+					//Trace.WriteLine(tgi.ToString());
 				}
 
 				//Check for a DIR Record (https://www.wiki.sc4devotion.com/index.php?title=DBDF)
@@ -202,6 +203,21 @@ namespace csDBPF {
 
 					}
 				}
+
+				//Populate data for non directory entries
+				foreach (DBPFEntry entry in entryMap.Values) {
+					if (!entry.TGI.MatchesKnownTGI(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
+						byte[] readData = new byte[entry.uncompressedSize];
+						br.BaseStream.Seek(entry.offset, SeekOrigin.Begin);
+						readData = br.ReadBytes(readData.Length);
+						entry.data = readData;
+
+						//After the data is set, we can know the other properties of the DBPFEntry, like isCompressed, compressedSize, etc.
+						entry.isCompressed = DBPFCompression.IsCompressed(entry.data);
+						entry.compressedSize = DBPFCompression.GetDecompressedSize(entry.data);
+					}
+				}
+
 			}
 			finally {
 				br.Close();
@@ -223,6 +239,7 @@ namespace csDBPF {
 			throw new NotImplementedException();
 		}
 
+		//TODO - also implement readCached https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFFile.java#L721
 
 
 		//private DBPFFile(string filePath, uint majorVersion, uint minorVersion, uint dateCreated, uint dateModified, uint indexMajorVersion, uint indexEntryCount, uint indexEntryOffset, uint indexSize) {
@@ -243,7 +260,7 @@ namespace csDBPF {
 
 
 
-		//TODO - implement read function, also readMapped https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFFile.java#L659
+
 
 
 		//public class DirectDBPFEntry : DBPFEntry {
@@ -261,16 +278,20 @@ namespace csDBPF {
 		//	//TODO - method equals is unimplemented in memo's code
 		//	//TODO - method hashCode is unimplemented in memo's code
 		//	public override string ToString() {
-		//		throw new NotImplementedException(); //TODO - implement this
+		//		return this.TGI.ToString() + " " + this.TGI.label.ToString();
 		//	}
 		//	public DBPFFile GetEncolsingDBPFFile() {
 		//		//return DBPFFile.this; //TODO - huh? this doesnt work
 		//		throw new NotImplementedException();
 		//	}
 
+		//	/// <summary>
+		//	/// Returns a string with this entry's TGI, offset, and size.
+		//	/// </summary>
+		//	/// <returns>This entry <see cref="ToString"/> with offset and size appended on.</returns>
 		//	public string ToDetailString() {
 		//		StringBuilder sb = new StringBuilder(ToString());
-		//		sb.AppendLine($"Offset: {DBPFUtil.ToHex(offset, 8)} Size: {size}");
+		//		sb.AppendLine($"Offset: {DBPFUtil.UIntToHexString(offset, 8)} Size: {size}");
 		//		return sb.ToString();
 		//	}
 		//}
