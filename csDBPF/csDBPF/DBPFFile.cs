@@ -188,7 +188,7 @@ namespace csDBPF {
 					DBPFTGI tgi = new DBPFTGI(typeID, groupID, instanceID);
 					DBPFEntry entry = new DBPFEntry(tgi, offset, size, (uint) idx);
 					AddEntry(entry);
-					Trace.WriteLine(tgi.ToString());
+					//Trace.WriteLine(tgi.ToString());
 				}
 
 				//Check for a DIR Record (https://www.wiki.sc4devotion.com/index.php?title=DBDF)
@@ -213,7 +213,7 @@ namespace csDBPF {
 						entry.data = readData;
 
 						//After the data is set, we can know the other properties of the DBPFEntry, like isCompressed, compressedSize, etc.
-						//entry.isCompressed = DBPFCompression.IsCompressed(entry.data);
+						entry.isCompressed = DBPFCompression.IsCompressed(entry.data);
 						entry.compressedSize = DBPFCompression.GetDecompressedSize(entry.data);
 					}
 				}
