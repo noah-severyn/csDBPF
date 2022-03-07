@@ -92,13 +92,21 @@ namespace csDBPF {
 		/// <param name="start">Location to start parsing at</param>
 		/// <param name="length">Length of the provided data to parse</param>
 		/// <returns>A string of parsed data</returns>
+		/// <remarks>
+		/// Any non-printable characters are replaced with a period ('.').
+		/// </remarks>
 		public static string CharsFromByteArray(byte[] data, int start, int length) {
 			StringBuilder sb = new StringBuilder();
-			//for (int idx = 0; idx < length; idx++) {
-			//	sb.Append((char) data[start+idx]);
-			//}
 			for (int idx = start; idx < start + length; idx++) {
-				sb.Append((char) data[idx]);
+				//Check to avoid problematic non-printable characters
+				if (data[idx] < 31 || data[idx] == 127) {
+					sb.Append('.');
+				} else {
+					sb.Append((char) data[idx]);
+				}
+
+
+				
 			}
 
 			return sb.ToString();
