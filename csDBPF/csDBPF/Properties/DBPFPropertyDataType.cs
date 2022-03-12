@@ -13,18 +13,26 @@ namespace csDBPF.Properties {
 		public static readonly DBPFPropertyDataType UINT16;
 		public static readonly DBPFPropertyDataType STRING;
 
+		/// <summary>
+		/// Type identifier
+		/// </summary>
 		private string _name;
 		public string name {
 			get { return _name; }
 		}
 
+		/// <summary>
+		/// Numeric value encoded in the exemplar data
+		/// </summary>
 		private ushort _value;
 		public ushort value {
 			get { return _value; }
 		}
 
+		/// <summary>
+		/// Length in bytes of the property
+		/// </summary>
 		private int _length;
-
 		public int length {
 			get { return _length; }
 		}
