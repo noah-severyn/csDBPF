@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace csDBPF.Properties {
-	class DBPFPropertyDataType {
+	public class DBPFPropertyDataType {
 		public static readonly DBPFPropertyDataType SINT32;
 		public static readonly DBPFPropertyDataType FLOAT32;
 		public static readonly DBPFPropertyDataType UINT32;
