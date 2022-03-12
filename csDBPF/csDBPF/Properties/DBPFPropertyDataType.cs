@@ -59,7 +59,7 @@ namespace csDBPF.Properties {
 					return type;
 				}
 			}
-			throw new KeyNotFoundException($"Value {DBPFUtil.UIntToHexString(value,2)} does not match a known property data type!")
+			throw new KeyNotFoundException($"Value {DBPFUtil.UIntToHexString(value, 2)} does not match a known property data type!");
 		}
 
 
