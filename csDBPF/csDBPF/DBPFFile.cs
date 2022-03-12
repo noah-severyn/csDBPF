@@ -197,7 +197,7 @@ namespace csDBPF {
 						br.BaseStream.Seek(entry.offset, SeekOrigin.Begin);
 						int numRecords = (int) entry.compressedSize / 16;
 						for (int idx = 0; idx < numRecords; idx++) {
-
+							//TODO - set uncompressed size here
 						}
 
 
@@ -223,6 +223,12 @@ namespace csDBPF {
 				br.Close();
 				fs.Close();
 			}
+
+
+			//Parse the properties of each entry
+			foreach (DBPFEntry entry in entryMap.Values) {
+				//GetSubfileFormat(DBPFCompression.Decompress(entry.data));
+			}
 		}
 
 
@@ -242,20 +248,25 @@ namespace csDBPF {
 		//TODO - also implement readCached https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFFile.java#L721
 
 
-		//private DBPFFile(string filePath, uint majorVersion, uint minorVersion, uint dateCreated, uint dateModified, uint indexMajorVersion, uint indexEntryCount, uint indexEntryOffset, uint indexSize) {
-		//	this.file = new FileInfo(filePath);
-		//	this.header = new Header();
+		//private string GetSubfileFormat(byte[] dData) {
+		//	string identifier;
+		//	StringBuilder sb = new StringBuilder();
+		//	for (int idx = 0; idx < 5; idx++) {
+		//		sb.Append(dData[idx]);
+		//	}
+		//	identifier = sb.ToString();
 
-		//	this.header.majorVersion = majorVersion;
-		//	this.header.minorVersion = minorVersion;
-		//	this.header.dateCreated = dateCreated;
-		//	this.header.dateModified = dateModified;
-		//	this.header.indexMajorVersion = indexMajorVersion;
-		//	this.header.indexEntryCount = indexEntryCount;
-		//	this.header.indexEntryOffset = indexEntryOffset;
-		//	this.header.indexSize = indexSize;
-		//	this.entryMap = new OrderedDictionary();
-		//	this.tgiMap = new Dictionary<uint, DBPFTGI>();
+		//	//Exemplars (EXMP) first 5 bytes EQZB1 or EQZT1
+		//	if (identifier == "EQZB1" || identifier == "EQZT1") {
+		//		return "EXMP";
+		//	}
+
+		//	//Cohorts (EXMP) first 5 bytes CQZB1 or CQZT1
+		//	if (identifier == "CQZB1" || identifier == "CQZT1") {
+		//		return "EXMP";
+		//	}
+
+		//	return null;
 		//}
 
 
