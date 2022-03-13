@@ -15,7 +15,7 @@ namespace csDBPF.Properties {
 		public static readonly DBPFPropertyDataType STRING;
 
 		/// <summary>
-		/// Type identifier
+		/// Data type identifier
 		/// </summary>
 		private string _name;
 		public string name {
@@ -23,11 +23,11 @@ namespace csDBPF.Properties {
 		}
 
 		/// <summary>
-		/// Numeric value encoded in the exemplar data
+		/// Numeric value encoded in the exemplar data used to identify the property data type
 		/// </summary>
-		private ushort _value;
-		public ushort value {
-			get { return _value; }
+		private ushort _identifyingNumber;
+		public ushort identifyingNumber {
+			get { return _identifyingNumber; }
 		}
 
 		/// <summary>
@@ -55,7 +55,7 @@ namespace csDBPF.Properties {
 		/// <returns>Corresponding DBPFPropertyType to the specified value; exception thrown if no result is found</returns>
 		public static DBPFPropertyDataType LookupDataType(ushort value) {
 			foreach (DBPFPropertyDataType type in dataTypes.Values) {
-				if (type.value == value) {
+				if (type.identifyingNumber == value) {
 					return type;
 				}
 			}
@@ -68,12 +68,12 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// This constructor only to be used internally to this class to declare known data types in the static constructor.
 		/// </summary>
-		/// <param name="name">Type identifier</param>
-		/// <param name="value">Numeric value encoded in the exemplar data</param>
+		/// <param name="name">Data type identifier</param>
+		/// <param name="value">Numeric value encoded in the exemplar data used to identify the property data type</param>
 		/// <param name="length">Length in bytes of the property</param>
 		private DBPFPropertyDataType(string name, ushort value, int length) {
 			_name = name;
-			_value = value;
+			_identifyingNumber = value;
 			_length = length;
 		}
 		
