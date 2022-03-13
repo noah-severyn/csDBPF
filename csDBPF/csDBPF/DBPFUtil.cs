@@ -36,11 +36,20 @@ namespace csDBPF {
 
 
 		/// <summary>
-		/// Reverses the byte order for a uint. Example: 1697917002 (0x6534284A) returns 1244148837 (0x4A283465)
+		/// Reverses the byte order for a ushort. Example: 3 (0x0003) returns 768 (0x0300)
 		/// </summary>
 		/// <remarks>
-		/// See:https://stackoverflow.com/a/18145923/10802255
+		/// See:https://www.csharp-examples.net/reverse-bytes/
 		/// </remarks>
+		/// <param name="value">Value to reverse</param>
+		/// <returns>Reversed ushort</returns>
+		public static ushort ReverseBytes(ushort value) {
+			return (ushort) ((value & 0x00FFU) << 8 | (value & 0xFF00U) >> 8);
+		}
+
+		/// <summary>
+		/// Reverses the byte order for a uint. See <see cref="ReverseBytes(uint)"/>.
+		/// </summary>
 		/// <param name="value">Value to reverse</param>
 		/// <returns>Reversed uint</returns>
 		public static uint ReverseBytes(uint value) {
@@ -48,16 +57,15 @@ namespace csDBPF {
 		}
 
 		/// <summary>
-		/// Reverses the byte order for a ushort. Example: 3 (0x0003) returns 768 (0x0300)
+		/// Reverses the byte order for a ulong. See <see cref="ReverseBytes(uint)"/>.
 		/// </summary>
-		/// <remarks>
-		/// See:https://stackoverflow.com/a/18145923/10802255
-		/// </remarks>
 		/// <param name="value">Value to reverse</param>
-		/// <returns>Reversed ushort</returns>
-		public static ushort ReverseBytes(ushort value) {
-			return (ushort) ((value & 0x00FFU) << 8 | (value & 0xFF00U) >> 8);
-		}
+		/// <returns>Reversed uint</returns>
+		public static ulong ReverseBytes(ulong value) {
+			return (value & 0x00000000000000FFUL) << 56 | (value & 0x000000000000FF00UL) << 40 | (value & 0x0000000000FF0000UL) << 24 | (value & 0x00000000FF000000UL) << 8 |
+		 (value & 0x000000FF00000000UL) >> 8 | (value & 0x0000FF0000000000UL) >> 24 | (value & 0x00FF000000000000UL) >> 40 | (value & 0xFF00000000000000UL) >> 56;
+	}
+
 
 		/// <summary>
 		/// Returns a string representation of the provided uint converted to hex, padded by the specified number of places
@@ -116,13 +124,8 @@ namespace csDBPF {
 				} else {
 					sb.Append((char) data[idx]);
 				}
-
-
-				
 			}
-
 			return sb.ToString();
 		}
-
 	}
 }
