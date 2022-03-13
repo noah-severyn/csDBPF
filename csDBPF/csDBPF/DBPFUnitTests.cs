@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using csDBPF.Properties;
 
 namespace csDBPF {
 	[TestClass]
@@ -166,8 +167,34 @@ namespace csDBPF {
 		}
 		#endregion Test Methods for DBPFTGI Class
 
+		// 06x Test Methods for DBPFProperty Class
+		#region Test Methods for DBPFProperty Class
+		[TestMethod]
+		public void Test_060_DBPFPropertyDataType_ReturnType() {
+			Assert.AreEqual("SINT32", DBPFPropertyDataType.SINT32.name);
+			Assert.AreEqual(DBPFPropertyDataType.BOOL, DBPFPropertyDataType.LookupDataType(0xB));
+			Assert.AreEqual(DBPFPropertyDataType.UINT32.name, DBPFPropertyDataType.LookupDataType(0x3).name);
+			Assert.AreEqual(4, DBPFPropertyDataType.LookupDataType(0x3).length);
+		}
+
+		[TestMethod]
+		public void Test_061_DBPFProperty_DecodeExemplarProperty() {
+			Assert.AreEqual(4, DBPFProperty.DecodeExemplarProperty(decompresseddata));
+		}
+		#endregion Test Methods for DBPFProperty Class
+
+
 		// 1xx Test Methods for DBPFFile Class
 		#region Test Methods for DBPFFile Class
+
+		public void ParseExemplarSubfile(byte[] data) {
+			//TODO - verify first 5 bytes are correct
+			ushort cohortTypeID = (ushort) ((data[8] << 2) & data[9]);
+			ushort cohortGroupID = (ushort) ((data[10] << 2) & data[10]);
+			ushort cohortInstanceID = (ushort) ((data[12] << 2) & data[13]);
+			ushort propertyCount = (ushort) ((data[14] << 2) & data[15]);
+		}
+		
 		[TestMethod]
 		public void Test_101_DBPFFile_ValidDBPF() {
 			//DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\Bournemouth Housing Pack\\Mntoes-Bournemouth Housing Pack.dat");
@@ -177,6 +204,10 @@ namespace csDBPF {
 			Assert.AreEqual((uint) 0, dbpf.header.minorVersion);
 			Assert.AreEqual(DBPFUtil.ReverseBytes(7), dbpf.header.indexMajorVersion); //117440512 dec = 7000000 hex)
 		}
+
+
+		
+
 
 		[TestMethod]
 		public void Test_102_DBPFFile_NotValidDBPF() {
