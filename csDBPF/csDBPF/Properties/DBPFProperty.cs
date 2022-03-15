@@ -9,43 +9,30 @@ namespace csDBPF.Properties {
 	/// An abstract class that defines the structure 
 	/// </summary>
 	public abstract class DBPFProperty {
+		private const ulong EQZB1 = 0x45515A4231232323; //EQZB1####
+		private const ulong EQZT1 = 0x45515A5431232323; //EQZT1####
+		private const ulong CQZB1 = 0x43515A4231232323; //CQZB1####
+		private const ulong CQZT1 = 0x43515A5431232323; //CQZT1####
+
 		private uint _id;
-		protected uint id {
-			get { return _id; }
-			set { _id = value; }
-		}
+		protected abstract uint id { get; set; }
 
 		private int _count;
-		protected int count {
-			get { return _count; }
-			set { _count = value; }
-		}
+		protected abstract int count { get; set; }
 
 		private DBPFPropertyDataType _dataType;
-		protected DBPFPropertyDataType dataType {
-			get { return _dataType; }
-			set { _dataType = value; }
-		}
+		protected abstract DBPFPropertyDataType dataType { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <remarks>
-		/// This is purposely vague as other classes that implement this class like XXXXX and YYYY and ZZZZZ implement their own data types
-		/// </remarks>
-		private object _values;
-		public object value {
-			get { return _values; }
-			set { _values = value; }
-		}
+		private byte[] _values;
+		protected abstract byte[] value { get; set; }
 
 
 
 		protected DBPFProperty(DBPFPropertyDataType dataType) {
 			_dataType = dataType;
-			_id = 0;
+			_id = 0x0;
 			_count = 0;
-			_values = new object();
+			_values = null;
 		}
 
 		public override string ToString() {
@@ -54,10 +41,7 @@ namespace csDBPF.Properties {
 			sb.Append($"Type: {_dataType}, ");
 			sb.Append($"Reps: {_count}, ");
 			sb.AppendLine("Values: ");
-			object[] vals = (object[]) _values;
-			foreach (object val in vals) {
-				sb.Append($"{val}, ");
-			}
+			//TODO - interpret that byte array and push it back to the user in the best format depending on the data type???
 			return sb.ToString();
 		}
 
@@ -67,8 +51,19 @@ namespace csDBPF.Properties {
 		/// <param name="dData">Decompressed raw data</param>
 		/// <param name="offset">Offset to start decoding from</param>
 		/// <returns>The DBPFProperty; null if cannot be decoded</returns>
+		/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP"/>
 		public static DBPFProperty DecodeExemplarProperty(byte[] dData, int offset = 24) {
-			//See: https://www.wiki.sc4devotion.com/index.php?title=EXMP
+			//Read the file identifier and verify if cohort or exemplar
+			ulong fileIdentifier = DBPFUtil.ReverseBytes(BitConverter.ToUInt64(dData, 0));
+			if (fileIdentifier != EQZB1 && fileIdentifier != EQZT1 && fileIdentifier != CQZB1 && fileIdentifier != CQZT1) {
+				throw new ArgumentException("Data provided does not represent an exemplar or cohort property!");
+			}
+
+			//Read cohort TGI info and determine the number of properties in this entry
+			//uint parentCohortTID = BitConverter.ToUInt32(dData, 8);
+			//uint parentCohortGID = BitConverter.ToUInt32(dData, 12);
+			//uint parentCohortIID = BitConverter.ToUInt32(dData, 16);
+			//uint propertyCount = BitConverter.ToUInt32(dData, 20);
 
 			//Read the property's numeric value (0x0000 0000)
 			uint propertyID = BitConverter.ToUInt32(dData, offset);
@@ -80,23 +75,44 @@ namespace csDBPF.Properties {
 			offset += 2;
 
 			//Read the property keyType
-			ushort keyType = DBPFUtil.ReverseBytes(BitConverter.ToUInt16(dData, offset));
+			//Because we are just reading the value to a byte array, it effectively does not matter whether the key type is 0x00 or 0x80 - the values are read the same way and the processing to parse the values is pushed off to later to the specific type classes.
+			ushort keyType = BitConverter.ToUInt16(dData, offset);
 			offset += 2;
 
-			//Examine the keyType
+			//Create new decoded property and set id and dataType
+			DBPFProperty newProperty = new DBPFProperty(dataType);
+			newProperty.id = propertyID;
 
-			DBPFProperty property = null;
-			
+			//Examine the keyType to determine how to set the values for the new property
 			if (keyType == 0x80) {
 				offset += 1; //Theres a 1 byte unused flag
-				uint numberOfRepititions = BitConverter.ToUInt32(dData, offset);
+				uint numberOfBytes = BitConverter.ToUInt32(dData, offset);
 				offset += 4;
-			} else {
-				offset += 1; //This one byte is number of value repetitions; seems to always be 0
+				byte[] newVals = new byte[dataType.length];
+				for (int idx = 0; idx < numberOfBytes; idx++) {
+					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
+				}
 			}
 
-			return null;
+			//keyType == 0x00 ... this is just a single value of the data type length
+			else {
+				offset += 1; //This one byte is number of value repetitions; seems to always be 0
+				byte[] newVals = new byte[dataType.length];
+				for (int idx = 0; idx < dataType.length; idx++) {
+					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
+				}
+				newProperty.value = newVals;
+			}
+			return newProperty;
 		}
-		
+
+
+		//TODO - make one function DecodeProperty which calls a bunch of private specialized functions depending on the entry TGI knownType
+
+
+		public static DBPFProperty DecodeCohortProperty(byte[] dData, int offset = 0) {
+			return DecodeExemplarProperty(dData, offset);
+		}
+
 	}
 }
