@@ -23,9 +23,16 @@ namespace csDBPF.Properties {
 		private DBPFPropertyDataType _dataType;
 		protected abstract DBPFPropertyDataType dataType { get; set; }
 
+		/// <summary>
+		/// This is a byte array of the raw values in the property.
+		/// </summary>
 		private byte[] _values;
-		protected abstract byte[] value { get; set; }
+		protected abstract byte[] values { get; set; }
 
+		/// <summary>
+		/// This is the decoded (interpreted) values based on the implementing class type. With the exception of string, will take the form of an array of the implementing class's type (int or float).
+		/// </summary>
+		protected abstract object valuesDecoded { get; set; }
 
 
 		protected DBPFProperty(DBPFPropertyDataType dataType) {
@@ -80,7 +87,7 @@ namespace csDBPF.Properties {
 			offset += 2;
 
 			//Create new decoded property and set id and dataType
-			DBPFProperty newProperty = new DBPFProperty(dataType);
+			DBPFProperty newProperty = null;//new DBPFProperty(dataType); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			newProperty.id = propertyID;
 
 			//Examine the keyType to determine how to set the values for the new property
@@ -101,7 +108,7 @@ namespace csDBPF.Properties {
 				for (int idx = 0; idx < dataType.length; idx++) {
 					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
-				newProperty.value = newVals;
+				//newProperty.value = newVals; //TODO uncomment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			}
 			return newProperty;
 		}
