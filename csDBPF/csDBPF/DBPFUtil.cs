@@ -91,8 +91,8 @@ namespace csDBPF {
 		/// </summary>
 		/// <param name="data">Data to parse</param>
 		/// <returns>A string of parsed data</returns>
-		public static string CharsFromByteArray(byte[] data) {
-			return CharsFromByteArray(data, 0, data.Length);
+		public static string StringFromByteArray(byte[] data) {
+			return StringFromByteArray(data, 0, data.Length);
 		}
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace csDBPF {
 		/// <param name="start">Location to start parsing at</param>
 		/// <returns>A string of parsed data</returns>
 		public static string CharsFromByteArray(byte[] data, int start) {
-			return CharsFromByteArray(data, start, data.Length - start);
+			return StringFromByteArray(data, start, data.Length - start);
 		}
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace csDBPF {
 		/// <remarks>
 		/// Any non-printable characters are replaced with a period ('.').
 		/// </remarks>
-		public static string CharsFromByteArray(byte[] data, int start, int length) {
+		public static string StringFromByteArray(byte[] data, int start, int length) {
 			StringBuilder sb = new StringBuilder();
 			for (int idx = start; idx < start + length; idx++) {
 				//Check to avoid problematic non-printable characters
