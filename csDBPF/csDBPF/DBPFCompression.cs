@@ -29,7 +29,7 @@ namespace csDBPF {
 				if (signature == DBPFCompression.QFS) {
 					//Memo's message: "there is an s3d file in SC1.dat which would otherwise return true on uncompressed data; this workaround is not fail proof"
 					//https://github.com/memo33/jDBPFX/blob/fa2535c51de80df48a7f62b79a376e25274998c0/src/jdbpfx/util/DBPFPackager.java#L54
-					string fileType = DBPFUtil.CharsFromByteArray(entryData, 0, 4);
+					string fileType = DBPFUtil.StringFromByteArray(entryData, 0, 4);
 					if (fileType.Equals("3DMD")) { //3DMD = 0x3344 4D44 = 860114244
 						return false;
 					}

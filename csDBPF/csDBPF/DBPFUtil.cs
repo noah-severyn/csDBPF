@@ -101,7 +101,7 @@ namespace csDBPF {
 		/// <param name="data">Data to parse</param>
 		/// <param name="start">Location to start parsing at</param>
 		/// <returns>A string of parsed data</returns>
-		public static string CharsFromByteArray(byte[] data, int start) {
+		public static string StringFromByteArray(byte[] data, int start) {
 			return StringFromByteArray(data, start, data.Length - start);
 		}
 
@@ -126,6 +126,24 @@ namespace csDBPF {
 				}
 			}
 			return sb.ToString();
+		}
+
+
+		/// <summary>
+		/// Reads a string and parses into a byte array the same length as the string
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>A byte array of parsed data</returns>
+		/// <remarks>
+		/// String encoding is single byte ANSI (Windows-1252)
+		/// </remarks>
+		public static byte[] StringToByteArray(string data) {
+			char[] chars = data.ToCharArray();
+			byte[] result = new byte[data.Length];
+			for (int idx = 0; idx < data.Length; idx++) {
+				result[idx] = Convert.ToByte(chars[idx]);
+			}
+			return result;
 		}
 	}
 }
