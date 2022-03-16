@@ -28,23 +28,28 @@ namespace csDBPF.Properties {
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <remarks>
-		/// This is purposely vague as other classes that implement this class like XXXXX and YYYY and ZZZZZ implement their own data types
-		/// </remarks>
 		private byte[] _values;
-		protected override byte[] value {
+		protected override byte[] values {
 			get { return _values; }
 			set { _values = value; }
 		}
 
+		private string _valuesDecoded;
+		protected override object valuesDecoded {
+			get { return _valuesDecoded; }
+			set {
+				if (!(value is Array)) {
+					Type t = value.GetType();
+					throw new ArgumentException($"DBPFPropertyString parameter of {t.Name} when {Type.GetType("System.String")} was expected");
+				}
+				//_valuesDecoded = DBPFUtil.CharsFromByteArray((string) value); 
+			}
+		}
 
 		//blank constructor here because we are not doing anything different in the setup - the difference comes when interpreting the value property
-		public DBPFPropertyString(DBPFPropertyDataType dataType) : base(dataType) {}
+		public DBPFPropertyString(DBPFPropertyDataType dataType) : base(dataType) { }
 
-		
+
 
 		/// <summary>
 		/// Appends a string representation of the value onto the base toString. See <see cref="DBPFProperty.ToString"/>
@@ -52,9 +57,8 @@ namespace csDBPF.Properties {
 		/// <returns>String value of the property</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder(base.ToString());
-			sb.Append(DBPFUtil.CharsFromByteArray(_values));
+			sb.Append(DBPFUtil.StringFromByteArray(_values));
 			return sb.ToString();
 		}
-
-	}
+	} 
 }
