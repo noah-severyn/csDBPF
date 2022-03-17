@@ -87,7 +87,18 @@ namespace csDBPF.Properties {
 			offset += 2;
 
 			//Create new decoded property and set id and dataType
-			DBPFProperty newProperty = null;//new DBPFProperty(dataType); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			DBPFProperty newProperty = null;
+			switch (dataType.name) {
+				case "STRING":
+					DBPFPropertyString newProperty = new DBPFPropertyString(dataType);
+					break;
+				case "FLOAT32":
+					DBPFPropertyFloat newProperty = new DBPFPropertyFloat(dataType);
+					break;
+				default:
+					DBPFPropertyInteger newProperty = new DBPFPropertyInteger(dataType);
+					break;
+			}
 			newProperty.id = propertyID;
 
 			//Examine the keyType to determine how to set the values for the new property
