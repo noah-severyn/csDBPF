@@ -61,8 +61,8 @@ namespace csDBPF {
 			byte[] b1 = { 0x54, 0x65, 0x73, 0x74 };
 			string s2 = "Parks Aura";
 			byte[] b2 = { 0x50, 0x61, 0x72, 0x6b, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61 };
-			Assert.AreEqual(b1, DBPFUtil.StringToByteArray(s1));
-			Assert.AreEqual(b2, DBPFUtil.StringToByteArray(s2));
+			CollectionAssert.AreEquivalent(b1, DBPFUtil.StringToByteArray(s1));
+			CollectionAssert.AreEquivalent(b2, DBPFUtil.StringToByteArray(s2));
 		}
 		#endregion Test Methods for DBPFUtil Class
 
