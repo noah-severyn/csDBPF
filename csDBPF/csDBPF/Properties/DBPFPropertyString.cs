@@ -6,6 +6,9 @@ using System.Text;
 namespace csDBPF.Properties {
 	//the _value field from the abstract class is simply a byte array representing the values, each of these subclasses would interpret that byte array and push it back to the user in the best format depending on the data type???
 	public class DBPFPropertyString : DBPFProperty {
+		/// <summary>
+		/// Stores the hexadecimal identifier for this property. <see cref=""/> //TODO - fill this here
+		/// </summary>
 		private uint _id;
 		protected override uint id {
 			get { return _id; }
@@ -18,6 +21,9 @@ namespace csDBPF.Properties {
 			set { _count = value; }
 		}
 
+		/// <summary>
+		/// Stores the <see cref="DBPFPropertyDataType"/> for this property.
+		/// </summary>
 		private DBPFPropertyDataType _dataType;
 		protected override DBPFPropertyDataType dataType {
 			get { return _dataType; }
@@ -29,6 +35,9 @@ namespace csDBPF.Properties {
 			}
 		}
 
+		/// <summary>
+		/// The byte array of base data for the property. When this is set, <see cref="DBPFPropertyString.valuesDecoded"/> is also set to the equivalent value.
+		/// </summary>
 		private byte[] _values;
 		protected override byte[] values {
 			get { return _values; }
@@ -41,6 +50,9 @@ namespace csDBPF.Properties {
 			}
 		}
 
+		/// <summary>
+		/// When decoded, <see cref="DBPFPropertyString.values"/> returns a string. When this is set, <see cref="DBPFPropertyString.values"/> is also set to the equivalent value.
+		/// </summary>
 		private string _valuesDecoded;
 		protected override object valuesDecoded {
 			get { return _valuesDecoded; }
@@ -78,7 +90,6 @@ namespace csDBPF.Properties {
 
 		//blank constructor here because we are not doing anything different in the setup - the difference comes when interpreting the value property
 		public DBPFPropertyString(DBPFPropertyDataType dataType) : base(dataType) { }
-
 
 
 		/// <summary>
