@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -31,18 +32,47 @@ namespace csDBPF.Properties {
 		private byte[] _values;
 		protected override byte[] values {
 			get { return _values; }
-			set { _values = value; }
+			set { 
+				//Set byte array values
+				_values = value;
+
+				//Set decoded string value
+				_valuesDecoded = DBPFUtil.StringFromByteArray(value);
+			}
 		}
 
 		private string _valuesDecoded;
 		protected override object valuesDecoded {
 			get { return _valuesDecoded; }
 			set {
-				if (!(value is Array)) {
-					Type t = value.GetType();
-					throw new ArgumentException($"DBPFPropertyString parameter of {t.Name} when {Type.GetType("System.String")} was expected");
+				Type t = value.GetType();
+
+				//If type(value) is string then directly set the decoded value
+				if (t == "".GetType()) {
+					_valuesDecoded = (string) value;
+					return;
 				}
-				//_valuesDecoded = DBPFUtil.CharsFromByteArray((string) value); 
+
+				//Otherwise check if value is an array of bytes
+				if (!t.IsArray || t.GetElementType() != byte.MinValue.GetType()) {
+					throw new ArgumentException($"An array of {t.GetElementType().Name} was provided when {Type.GetType("System.String")} is expected");
+				} else {
+					ArrayList result = new ArrayList(); //Use array list because we do not quite know the length
+					IEnumerable e = value as IEnumerable;
+					int idx = 0;
+					if (e != null) {
+						foreach (object item in e) {
+							result.Add((byte) item);
+							idx++;
+						}
+						
+						//Set values property to the newly set byte array
+						_values = result.ToArray(typeof(byte)) as byte[];
+
+						//Build string from array list
+						_valuesDecoded = string.Join("", result);
+					}
+				}
 			}
 		}
 
