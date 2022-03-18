@@ -34,7 +34,7 @@ namespace csDBPF {
 			return (sc4Files, skippedFiles);
 		}
 
-
+		#region ReverseBytes
 		/// <summary>
 		/// Reverses the byte order for a ushort. Example: 3 (0x0003) returns 768 (0x0300)
 		/// </summary>
@@ -64,28 +64,11 @@ namespace csDBPF {
 		public static ulong ReverseBytes(ulong value) {
 			return (value & 0x00000000000000FFUL) << 56 | (value & 0x000000000000FF00UL) << 40 | (value & 0x0000000000FF0000UL) << 24 | (value & 0x00000000FF000000UL) << 8 |
 		 (value & 0x000000FF00000000UL) >> 8 | (value & 0x0000FF0000000000UL) >> 24 | (value & 0x00FF000000000000UL) >> 40 | (value & 0xFF00000000000000UL) >> 56;
-	}
-
-
-		/// <summary>
-		/// Returns a string representation of the provided uint converted to hex, padded by the specified number of places
-		/// </summary>
-		/// <param name="value">Value to return</param>
-		/// <param name="places">Number of places to pad the value. Should usually be 8. 0-8 valid.</param>
-		/// <returns></returns>
-		public static string UIntToHexString(uint? value, int places) {
-			if (places < 0 || places > 8) {
-				throw new ArgumentOutOfRangeException("places", "Number of places must be between 0 and 8.");
-			}
-			if (value != null) {
-				return ((uint) value).ToString($"X{places}");
-			} else {
-				return value.ToString();
-			}
-
 		}
+		#endregion
 
 
+		#region StringFromByteArray
 		/// <summary>
 		/// Reads a byte array and returns a string of the entire array.
 		/// </summary>
@@ -127,6 +110,26 @@ namespace csDBPF {
 			}
 			return sb.ToString();
 		}
+		#endregion
+
+
+		/// <summary>
+		/// Returns a string representation of the provided uint converted to hex, padded by the specified number of places
+		/// </summary>
+		/// <param name="value">Value to return</param>
+		/// <param name="places">Number of places to pad the value. Should usually be 8. 0-8 valid.</param>
+		/// <returns></returns>
+		public static string UIntToHexString(uint? value, int places) {
+			if (places < 0 || places > 8) {
+				throw new ArgumentOutOfRangeException("places", "Number of places must be between 0 and 8.");
+			}
+			if (value != null) {
+				return ((uint) value).ToString($"X{places}");
+			} else {
+				return value.ToString();
+			}
+
+		}
 
 
 		/// <summary>
@@ -145,5 +148,20 @@ namespace csDBPF {
 			}
 			return result;
 		}
+
+
+		public static ushort[] ByteArrayToUInt8Array(byte[] data) {
+			if (data.Length % 2 !=0) {
+				throw new ArgumentException("Length of data array cannot be odd!");
+			}
+			ushort[] result = new ushort[data.Length / 2];
+			int pos = 0;
+			for (int idx = 0; idx < data.Length/2; idx++) {
+				result[idx] = (ushort) (data[pos] << 8 | data[pos + 1]);
+			}
+			return result;
+		}
+
+
 	}
 }
