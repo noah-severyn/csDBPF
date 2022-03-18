@@ -7,7 +7,7 @@ namespace csDBPF.Properties {
 	public class DBPFPropertyString : DBPFProperty {
 		//TODO - fill this comment here with properties.xml list
 		/// <summary>
-		/// Stores the hexadecimal identifier for this property. <see cref=""/> 
+		/// Hexadecimal identifier for this property. <see cref=""/> 
 		/// </summary>
 		private uint _id;
 		public override uint id {
@@ -15,15 +15,19 @@ namespace csDBPF.Properties {
 			set { _id = value; }
 		}
 
-		private int _count;
-		public override int count {
-			get { return _count; }
-			set { _count = value; }
+
+		/// <summary>
+		/// Number of reps of the data type in this property. This is always 1.
+		/// </summary>
+		private int _numberOfReps;
+		public override int numberOfReps {
+			get { return _numberOfReps; }
+			set { _numberOfReps = value; }
 		}
 
 
 		/// <summary>
-		/// Stores the <see cref="DBPFPropertyDataType"/> for this property.
+		/// The <see cref="DBPFPropertyDataType"/> for this property.
 		/// </summary>
 		private DBPFPropertyDataType _dataType;
 		public override DBPFPropertyDataType dataType {
@@ -95,7 +99,7 @@ namespace csDBPF.Properties {
 		/// <param name="dataType"></param>
 		public DBPFPropertyString(DBPFPropertyDataType dataType) : base(dataType) {
 			_dataType = dataType;
-			_count = 1; //For DBPFPropertyString, count always equals 1 because there is always only one string object representing the value
+			_numberOfReps = 1; //For DBPFPropertyString, count always equals 1 because there is always only one string object representing the value
 		}
 
 

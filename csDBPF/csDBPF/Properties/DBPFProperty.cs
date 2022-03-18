@@ -17,8 +17,8 @@ namespace csDBPF.Properties {
 		private uint _id;
 		public abstract uint id { get; set; }
 
-		private int _count;
-		public abstract int count { get; set; }
+		private int _numberOfReps;
+		public abstract int numberOfReps { get; set; }
 
 		private DBPFPropertyDataType _dataType;
 		public abstract DBPFPropertyDataType dataType { get; set; }
