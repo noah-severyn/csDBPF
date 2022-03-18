@@ -188,8 +188,47 @@ namespace csDBPF {
 		}
 
 		[TestMethod]
+		public void Test_061_DBPFProperty() {
+
+		}
+
+		[TestMethod]
+		public void Test_062_DBPFPropertyString() {
+			byte[] byteparks = { 0x50, 0x61, 0x72, 0x6B, 0x73};
+			string stringparks = "Parks";
+			byte[] byteparksaura = { 0x50, 0x61, 0x72, 0x6b, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61 };
+			string stringparksaura = "Parks Aura";
+			byte[] bytedataviewparksaura = { 0x44, 0x61, 0x74, 0x61, 0x56, 0x69, 0x65, 0x77, 0x3A, 0x20, 0x50, 0x61, 0x72, 0x6B, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61 };
+			string stringdataviewparksaura = "DataView: Parks Aura";
+
+			//Test a property read from file
+			DBPFProperty prop_file = DBPFProperty.DecodeExemplarProperty(decompresseddata, 37);
+			Assert.AreEqual((uint) 0x20, prop_file.id);
+			Assert.AreEqual(1, prop_file.count);
+			Assert.AreEqual(DBPFPropertyDataType.STRING, prop_file.dataType);
+			CollectionAssert.AreEquivalent(bytedataviewparksaura, prop_file.values);
+			Assert.AreEqual(stringdataviewparksaura, prop_file.valuesDecoded);
+
+			//Compare to known property
+			DBPFProperty prop_created = new DBPFPropertyString(DBPFPropertyDataType.STRING);
+			prop_created.id = 0x20;
+			prop_created.valuesDecoded = stringdataviewparksaura;
+			Assert.AreEqual(prop_created.id, prop_file.id);
+			Assert.AreEqual(prop_created.count, prop_file.count);
+			Assert.AreEqual(prop_created.dataType, prop_file.dataType);
+			CollectionAssert.AreEquivalent(prop_created.values, prop_file.values);
+			Assert.AreEqual(prop_created.valuesDecoded, prop_file.valuesDecoded);
+
+			//Check for no differences between values and valuesDecoded when each is changed
+			prop_created.valuesDecoded = stringparks;
+			CollectionAssert.AreEquivalent(byteparks, prop_created.values);
+			prop_created.values = byteparksaura;
+			Assert.AreEqual(stringparksaura, prop_created.valuesDecoded);
+		}
+
+		[TestMethod]
 		public void Test_061_DBPFProperty_DecodeExemplarProperty() {
-			Assert.AreEqual(4, DBPFProperty.DecodeExemplarProperty(decompresseddata, 37));
+			
 		}
 		#endregion Test Methods for DBPFProperty Class
 
@@ -198,7 +237,7 @@ namespace csDBPF {
 		#region Test Methods for DBPFFile Class
 
 		public void ParseExemplarSubfile(byte[] data) {
-			//TODO - verify first 5 bytes are correct
+			//TODO - verify first 5 bytes are correct --------------------- figure out what to do with this
 			ushort cohortTypeID = (ushort) ((data[8] << 2) & data[9]);
 			ushort cohortGroupID = (ushort) ((data[10] << 2) & data[10]);
 			ushort cohortInstanceID = (ushort) ((data[12] << 2) & data[13]);

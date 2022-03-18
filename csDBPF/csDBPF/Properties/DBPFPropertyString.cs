@@ -4,63 +4,64 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace csDBPF.Properties {
-	//the _value field from the abstract class is simply a byte array representing the values, each of these subclasses would interpret that byte array and push it back to the user in the best format depending on the data type???
 	public class DBPFPropertyString : DBPFProperty {
+		//TODO - fill this comment here with properties.xml list
 		/// <summary>
-		/// Stores the hexadecimal identifier for this property. <see cref=""/> //TODO - fill this here
+		/// Stores the hexadecimal identifier for this property. <see cref=""/> 
 		/// </summary>
 		private uint _id;
-		protected override uint id {
+		public override uint id {
 			get { return _id; }
 			set { _id = value; }
 		}
 
 		private int _count;
-		protected override int count {
+		public override int count {
 			get { return _count; }
 			set { _count = value; }
 		}
+
 
 		/// <summary>
 		/// Stores the <see cref="DBPFPropertyDataType"/> for this property.
 		/// </summary>
 		private DBPFPropertyDataType _dataType;
-		protected override DBPFPropertyDataType dataType {
+		public override DBPFPropertyDataType dataType {
 			get { return _dataType; }
 			set {
 				if (_dataType != DBPFPropertyDataType.STRING) {
 					throw new ArgumentException($"Data type of {_dataType.name} provided where {DBPFPropertyDataType.STRING.name} is required.");
 				}
-				_dataType = value; 
+				_dataType = value;
 			}
 		}
+
 
 		/// <summary>
 		/// The byte array of base data for the property. When this is set, <see cref="DBPFPropertyString.valuesDecoded"/> is also set to the equivalent value.
 		/// </summary>
 		private byte[] _values;
-		protected override byte[] values {
+		public override byte[] values {
 			get { return _values; }
-			set { 
-				//Set byte array values
+			set {
 				_values = value;
-
-				//Set decoded string value
 				_valuesDecoded = DBPFUtil.StringFromByteArray(value);
 			}
 		}
+
 
 		/// <summary>
 		/// When decoded, <see cref="DBPFPropertyString.values"/> returns a string. When this is set, <see cref="DBPFPropertyString.values"/> is also set to the equivalent value.
 		/// </summary>
 		private string _valuesDecoded;
-		protected override object valuesDecoded {
+		public override object valuesDecoded {
 			get { return _valuesDecoded; }
 			set {
 				Type t = value.GetType();
 
 				//If type(value) is string then directly set the decoded value
 				if (t == "".GetType()) {
+					_values = DBPFUtil.StringToByteArray((string) value);
 					_valuesDecoded = (string) value;
 					return;
 				}
@@ -77,19 +78,25 @@ namespace csDBPF.Properties {
 							result.Add((byte) item);
 							idx++;
 						}
-						
-						//Set values property to the newly set byte array
-						_values = result.ToArray(typeof(byte)) as byte[];
 
-						//Build string from array list
+						_values = result.ToArray(typeof(byte)) as byte[];
 						_valuesDecoded = string.Join("", result);
+						return;
 					}
 				}
+				throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}.");
 			}
 		}
 
-		//blank constructor here because we are not doing anything different in the setup - the difference comes when interpreting the value property
-		public DBPFPropertyString(DBPFPropertyDataType dataType) : base(dataType) { }
+
+		/// <summary>
+		/// Construct a new DBPFPropertyString.
+		/// </summary>
+		/// <param name="dataType"></param>
+		public DBPFPropertyString(DBPFPropertyDataType dataType) : base(dataType) {
+			_dataType = dataType;
+			_count = 1; //For DBPFPropertyString, count always equals 1 because there is always only one string object representing the value
+		}
 
 
 		/// <summary>
@@ -101,5 +108,5 @@ namespace csDBPF.Properties {
 			sb.Append(DBPFUtil.StringFromByteArray(_values));
 			return sb.ToString();
 		}
-	} 
+	}
 }

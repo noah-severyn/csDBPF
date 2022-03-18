@@ -6,7 +6,7 @@ using csDBPF.Properties;
 namespace csDBPF.Properties {
 
 	/// <summary>
-	/// An abstract class that defines the structure 
+	/// An abstract class defining the structure of a Property and the methods for interfacing with it.
 	/// </summary>
 	public abstract class DBPFProperty {
 		private const ulong EQZB1 = 0x45515A4231232323; //EQZB1####
@@ -15,27 +15,27 @@ namespace csDBPF.Properties {
 		private const ulong CQZT1 = 0x43515A5431232323; //CQZT1####
 
 		private uint _id;
-		protected abstract uint id { get; set; }
+		public abstract uint id { get; set; }
 
 		private int _count;
-		protected abstract int count { get; set; }
+		public abstract int count { get; set; }
 
 		private DBPFPropertyDataType _dataType;
-		protected abstract DBPFPropertyDataType dataType { get; set; }
+		public abstract DBPFPropertyDataType dataType { get; set; }
 
 		/// <summary>
 		/// This is a byte array of the raw values in the property.
 		/// </summary>
 		private byte[] _values;
-		protected abstract byte[] values { get; set; }
+		public abstract byte[] values { get; set; }
 
 		/// <summary>
 		/// This is the decoded (interpreted) values based on the implementing class type. With the exception of string, will take the form of an array of the implementing class's type (int or float).
 		/// </summary>
-		protected abstract object valuesDecoded { get; set; }
+		public abstract object valuesDecoded { get; set; }
 
 
-		protected DBPFProperty(DBPFPropertyDataType dataType) {
+		public DBPFProperty(DBPFPropertyDataType dataType) {
 			_dataType = dataType;
 			_id = 0x0;
 			_count = 0;
@@ -48,7 +48,6 @@ namespace csDBPF.Properties {
 			sb.Append($"Type: {_dataType}, ");
 			sb.Append($"Reps: {_count}, ");
 			sb.AppendLine("Values: ");
-			//TODO - interpret that byte array and push it back to the user in the best format depending on the data type???
 			return sb.ToString();
 		}
 
@@ -91,21 +90,22 @@ namespace csDBPF.Properties {
 			if (dataType.name == "STRING") {
 				newProperty = new DBPFPropertyString(dataType);
 			} else if (dataType.name == "FLOAT32") {
-				newProperty = new DBPFPropertyFloat(dataType);
+				//newProperty = new DBPFPropertyFloat(dataType);
 			} else {
-				newProperty = new DBPFPropertyInteger(dataType);
+				//newProperty = new DBPFPropertyInteger(dataType);
 			}
 			newProperty.id = propertyID;
 
 			//Examine the keyType to determine how to set the values for the new property
 			if (keyType == 0x80) {
-				offset += 1; //Theres a 1 byte unused flag
+				offset += 1; //There is a 1 byte unused flag
 				uint numberOfBytes = BitConverter.ToUInt32(dData, offset);
 				offset += 4;
-				byte[] newVals = new byte[dataType.length];
+				byte[] newValue = new byte[numberOfBytes];
 				for (int idx = 0; idx < numberOfBytes; idx++) {
-					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
+					newValue[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
+				newProperty.values = newValue;
 			}
 
 			//keyType == 0x00 ... this is just a single value of the data type length
@@ -115,7 +115,7 @@ namespace csDBPF.Properties {
 				for (int idx = 0; idx < dataType.length; idx++) {
 					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
-				//newProperty.value = newVals; //TODO uncomment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				//newProperty.value = newVals;
 			}
 			return newProperty;
 		}
