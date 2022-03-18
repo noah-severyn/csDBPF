@@ -26,8 +26,8 @@ namespace csDBPF {
 			Assert.AreEqual("000004D2", DBPFUtil.UIntToHexString(1234, 8));
 		}
 
+
 		[TestMethod]
-		[Ignore]
 		public void Test_013_DBPFUtil_StringFromByteArray() {
 			byte[] dbpfB = new byte[] { 0x44, 0x42, 0x50, 0x46 };
 			byte[] dbpfB1 = new byte[] { 68, 66, 80, 70 };
@@ -204,7 +204,7 @@ namespace csDBPF {
 			//Test a property read from file
 			DBPFProperty prop_file = DBPFProperty.DecodeExemplarProperty(decompresseddata, 37);
 			Assert.AreEqual((uint) 0x20, prop_file.id);
-			Assert.AreEqual(1, prop_file.count);
+			Assert.AreEqual((uint) 20, prop_file.numberOfReps);
 			Assert.AreEqual(DBPFPropertyDataType.STRING, prop_file.dataType);
 			CollectionAssert.AreEquivalent(bytedataviewparksaura, prop_file.values);
 			Assert.AreEqual(stringdataviewparksaura, prop_file.valuesDecoded);
@@ -214,7 +214,7 @@ namespace csDBPF {
 			prop_created.id = 0x20;
 			prop_created.valuesDecoded = stringdataviewparksaura;
 			Assert.AreEqual(prop_created.id, prop_file.id);
-			Assert.AreEqual(prop_created.count, prop_file.count);
+			Assert.AreEqual(prop_created.numberOfReps, prop_file.numberOfReps);
 			Assert.AreEqual(prop_created.dataType, prop_file.dataType);
 			CollectionAssert.AreEquivalent(prop_created.values, prop_file.values);
 			Assert.AreEqual(prop_created.valuesDecoded, prop_file.valuesDecoded);
@@ -222,8 +222,10 @@ namespace csDBPF {
 			//Check for no differences between values and valuesDecoded when each is changed
 			prop_created.valuesDecoded = stringparks;
 			CollectionAssert.AreEquivalent(byteparks, prop_created.values);
+			Assert.AreEqual((uint) byteparks.Length, prop_created.numberOfReps);
 			prop_created.values = byteparksaura;
 			Assert.AreEqual(stringparksaura, prop_created.valuesDecoded);
+			Assert.AreEqual((uint) stringparksaura.Length, prop_created.numberOfReps);
 		}
 
 		[TestMethod]
@@ -244,6 +246,7 @@ namespace csDBPF {
 			ushort propertyCount = (ushort) ((data[14] << 2) & data[15]);
 		}
 		
+		[Ignore]
 		[TestMethod]
 		public void Test_101_DBPFFile_ValidDBPF() {
 			//DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\Bournemouth Housing Pack\\Mntoes-Bournemouth Housing Pack.dat");

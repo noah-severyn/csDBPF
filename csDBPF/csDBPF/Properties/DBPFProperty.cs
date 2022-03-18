@@ -17,8 +17,8 @@ namespace csDBPF.Properties {
 		private uint _id;
 		public abstract uint id { get; set; }
 
-		private int _numberOfReps;
-		public abstract int numberOfReps { get; set; }
+		private uint _numberOfReps;
+		public abstract uint numberOfReps { get; }
 
 		private DBPFPropertyDataType _dataType;
 		public abstract DBPFPropertyDataType dataType { get; set; }
@@ -38,7 +38,7 @@ namespace csDBPF.Properties {
 		public DBPFProperty(DBPFPropertyDataType dataType) {
 			_dataType = dataType;
 			_id = 0x0;
-			_count = 0;
+			_numberOfReps = 0;
 			_values = null;
 		}
 
@@ -46,7 +46,7 @@ namespace csDBPF.Properties {
 			StringBuilder sb = new StringBuilder();
 			sb.Append($"ID: {_id}, ");
 			sb.Append($"Type: {_dataType}, ");
-			sb.Append($"Reps: {_count}, ");
+			sb.Append($"Reps: {_numberOfReps}, ");
 			sb.AppendLine("Values: ");
 			return sb.ToString();
 		}
@@ -92,19 +92,20 @@ namespace csDBPF.Properties {
 			} else if (dataType.name == "FLOAT32") {
 				//newProperty = new DBPFPropertyFloat(dataType);
 			} else {
-				//newProperty = new DBPFPropertyInteger(dataType);
+				newProperty = new DBPFPropertyInteger(dataType);
 			}
 			newProperty.id = propertyID;
 
 			//Examine the keyType to determine how to set the values for the new property
 			if (keyType == 0x80) {
 				offset += 1; //There is a 1 byte unused flag
-				uint numberOfBytes = BitConverter.ToUInt32(dData, offset);
+				uint countOfReps = BitConverter.ToUInt32(dData, offset);
 				offset += 4;
-				byte[] newValue = new byte[numberOfBytes];
-				for (int idx = 0; idx < numberOfBytes; idx++) {
+				byte[] newValue = new byte[countOfReps];
+				for (int idx = 0; idx < countOfReps; idx++) {
 					newValue[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
+				//newProperty.numberOfReps = countOfReps;
 				newProperty.values = newValue;
 			}
 
@@ -115,7 +116,8 @@ namespace csDBPF.Properties {
 				for (int idx = 0; idx < dataType.length; idx++) {
 					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
-				//newProperty.value = newVals;
+				//newProperty.numberOfReps = 0;
+				newProperty.values = newVals;
 			}
 			return newProperty;
 		}
