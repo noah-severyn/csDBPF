@@ -181,8 +181,6 @@ namespace csDBPF {
 		#endregion FromByteArrayTo
 
 		#region ToByteArrayFrom
-
-		#endregion ToByteArrayFrom
 		/// <summary>
 		/// Reads a string and parses into a byte array the same length as the string
 		/// </summary>
@@ -199,5 +197,8 @@ namespace csDBPF {
 			}
 			return result;
 		}
+
+
+		#endregion ToByteArrayFrom
 	}
 }

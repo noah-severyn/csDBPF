@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace csDBPF.Properties {
-	class DBPFPropertyInteger : DBPFProperty {
+	class DBPFPropertyNumber : DBPFProperty {
 		//TODO - fill this comment here with properties.xml list
 		/// <summary>
 		/// Hexadecimal identifier for this property. <see cref=""/> 
@@ -78,7 +78,7 @@ namespace csDBPF.Properties {
 		/// Construct a new DBPFPropertyInteger.
 		/// </summary>
 		/// <param name="dataType"></param>
-		public DBPFPropertyInteger(DBPFPropertyDataType dataType) : base(dataType) {
+		public DBPFPropertyNumber(DBPFPropertyDataType dataType) : base(dataType) {
 			_dataType = dataType;
 			_numberOfReps = 1;
 		}

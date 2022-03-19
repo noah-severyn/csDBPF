@@ -94,7 +94,7 @@ namespace csDBPF.Properties {
 			} else if (dataType.name == "FLOAT32") {
 				//newProperty = new DBPFPropertyFloat(dataType);
 			} else {
-				newProperty = new DBPFPropertyInteger(dataType);
+				newProperty = new DBPFPropertyNumber(dataType);
 			}
 			newProperty.id = propertyID;
 
