@@ -8,7 +8,7 @@ namespace csDBPF {
 	/// </summary>
 	public static class ByteArrayHelper {
 
-		#region ToType
+		#region FromByteArrayTo
 		/// <summary>
 		/// Convert byte array to bool array.
 		/// </summary>
@@ -178,9 +178,26 @@ namespace csDBPF {
 			}
 			return sb.ToString();
 		}
+		#endregion FromByteArrayTo
 
+		#region ToByteArrayFrom
 
-
-		#endregion ToType
+		#endregion ToByteArrayFrom
+		/// <summary>
+		/// Reads a string and parses into a byte array the same length as the string
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>A byte array of parsed data</returns>
+		/// <remarks>
+		/// String encoding is single byte ANSI (Windows-1252)
+		/// </remarks>
+		public static byte[] StringToByteArray(string data) {
+			char[] chars = data.ToCharArray();
+			byte[] result = new byte[data.Length];
+			for (int idx = 0; idx < data.Length; idx++) {
+				result[idx] = Convert.ToByte(chars[idx]);
+			}
+			return result;
+		}
 	}
 }
