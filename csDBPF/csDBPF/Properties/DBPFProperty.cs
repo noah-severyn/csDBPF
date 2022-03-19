@@ -9,10 +9,10 @@ namespace csDBPF.Properties {
 	/// An abstract class defining the structure of a Property and the methods for interfacing with it.
 	/// </summary>
 	public abstract class DBPFProperty {
-		private const ulong EQZB1 = 0x45515A4231232323; //EQZB1####
-		private const ulong EQZT1 = 0x45515A5431232323; //EQZT1####
-		private const ulong CQZB1 = 0x43515A4231232323; //CQZB1####
-		private const ulong CQZT1 = 0x43515A5431232323; //CQZT1####
+		private const long EQZB1 = 0x45515A4231232323; //EQZB1####
+		private const long EQZT1 = 0x45515A5431232323; //EQZT1####
+		private const long CQZB1 = 0x43515A4231232323; //CQZB1####
+		private const long CQZT1 = 0x43515A5431232323; //CQZT1####
 
 		private uint _id;
 		public abstract uint id { get; set; }
@@ -60,7 +60,7 @@ namespace csDBPF.Properties {
 		/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP"/>
 		public static DBPFProperty DecodeExemplarProperty(byte[] dData, int offset = 24) {
 			//Read the file identifier and verify if cohort or exemplar
-			ulong fileIdentifier = DBPFUtil.ReverseBytes(BitConverter.ToUInt64(dData, 0));
+			long fileIdentifier = DBPFUtil.ReverseBytes((long) BitConverter.ToUInt64(dData, 0));
 			if (fileIdentifier != EQZB1 && fileIdentifier != EQZT1 && fileIdentifier != CQZB1 && fileIdentifier != CQZT1) {
 				throw new ArgumentException("Data provided does not represent an exemplar or cohort property!");
 			}
