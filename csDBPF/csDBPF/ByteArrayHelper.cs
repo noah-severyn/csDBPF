@@ -3,8 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace csDBPF {
+	/// <summary>
+	/// Helper methods to parse a byte array into an array of one of the DBPF data types. 
+	/// </summary>
 	public static class ByteArrayHelper {
 
+		#region ToType
+		/// <summary>
+		/// Convert byte array to bool array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>Array of boolean values</returns>
 		public static bool[] ToBoolArray(byte[] data) {
 			bool[] result = new bool[data.Length];
 			for (int idx = 0; idx < data.Length; idx++) {
@@ -17,6 +26,11 @@ namespace csDBPF {
 			return result;
 		}
 
+		/// <summary>
+		/// Convert byte array to UInt8 array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>Array of char values</returns>
 		public static char[] ToUint8Array(byte[] data) {
 			char[] result = new char[data.Length];
 			for (int idx = 0; idx < data.Length; idx++) {
@@ -25,6 +39,11 @@ namespace csDBPF {
 			return result;
 		}
 
+		/// <summary>
+		/// Convert byte array to UInt16 array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>Array of ushort values</returns>
 		public static ushort[] ToUInt16Array(byte[] data) {
 			if (data.Length % 2 != 0) {
 				throw new ArgumentException("Length of data array cannot be odd!");
@@ -38,6 +57,11 @@ namespace csDBPF {
 			return result;
 		}
 
+		/// <summary>
+		/// Convert byte array to UInt32 array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>Array of uint values</returns>
 		public static uint[] ToUInt32Array(byte[] data) {
 			if (data.Length % 2 != 0) {
 				throw new ArgumentException("Length of data array cannot be odd!");
@@ -53,6 +77,11 @@ namespace csDBPF {
 			return result;
 		}
 
+		/// <summary>
+		/// Convert byte array to SInt32 array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>Array of int values</returns>
 		public static int[] ToSInt32Array(byte[] data) {
 			if (data.Length % 2 != 0) {
 				throw new ArgumentException("Length of data array cannot be odd!");
@@ -68,6 +97,11 @@ namespace csDBPF {
 			return result;
 		}
 
+		/// <summary>
+		/// Convert byte array to Float32 array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>Array of float values</returns>
 		public static float[] ToFloat32Array(byte[] data) {
 			if (data.Length % 2 != 0) {
 				throw new ArgumentException("Length of data array cannot be odd!");
@@ -83,6 +117,11 @@ namespace csDBPF {
 			return result;
 		}
 
+		/// <summary>
+		/// Convert byte array to SInt64 array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>Array of long values</returns>
 		public static long[] ToSInt64Array(byte[] data) {
 			if (data.Length % 2 != 0) {
 				throw new ArgumentException("Length of data array cannot be odd!");
@@ -92,10 +131,11 @@ namespace csDBPF {
 			long[] result = new long[data.Length / 8];
 			int pos = 0;
 			for (int idx = 0; idx < data.Length / 8; idx++) {
-				result[idx] = (data[pos] << 56) | (data[pos+1] << 48) | (data[pos+2] << 40) | (data[pos+3] << 32) | (data[pos+4] << 24) | (data[pos + 5] << 16) | (data[pos + 6] << 8) | data[pos + 7];
+				result[idx] = DBPFUtil.ReverseBytes(BitConverter.ToInt64(data, pos));
 				pos += 8;
 			}
 			return result;
 		}
+		#endregion ToType
 	}
 }
