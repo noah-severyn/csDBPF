@@ -6,76 +6,66 @@ namespace csDBPF {
 	[TestClass]
 	public class DBPFUnitTests {
 
+		[TestClass]
 		// 01x Test Methods for DBPFUtil Class
-		#region Test Methods for DBPFUtil Class
-		[TestMethod]
-		public void Test_011_DBPFUtil_ReverseBytes() {
-			//Example: 1697917002 (0x 65 34 28 4A) returns 1244148837 (0x 4A 28 34 65)
-			Assert.AreEqual((uint) 1244148837, DBPFUtil.ReverseBytes(1697917002));
-			Assert.AreEqual((uint) 0x4a283465, DBPFUtil.ReverseBytes(0x6534284a));
-			Assert.AreEqual((uint) 0, DBPFUtil.ReverseBytes(0));
+		public class DBPFUtilTests {
+			[TestMethod]
+			public void Test_011_DBPFUtil_ReverseBytes() {
+				//Example: 1697917002 (0x 65 34 28 4A) returns 1244148837 (0x 4A 28 34 65)
+				Assert.AreEqual((uint) 1244148837, DBPFUtil.ReverseBytes(1697917002));
+				Assert.AreEqual((uint) 0x4a283465, DBPFUtil.ReverseBytes(0x6534284a));
+				Assert.AreEqual((uint) 0, DBPFUtil.ReverseBytes(0));
+			}
+
+			[TestMethod]
+			public void Test_012_DBPFUtil_UintToHexString() {
+				Assert.AreEqual("6534284A", DBPFUtil.UIntToHexString(1697917002, 8));
+				Assert.AreEqual("4A283465", DBPFUtil.UIntToHexString(1244148837, 8));
+				Assert.AreEqual("6534284A", DBPFUtil.UIntToHexString(0x6534284A, 8));
+				Assert.AreEqual("4A283465", DBPFUtil.UIntToHexString(0x4A283465, 8));
+				Assert.AreEqual("4D2", DBPFUtil.UIntToHexString(1234, 3));
+				Assert.AreEqual("000004D2", DBPFUtil.UIntToHexString(1234, 8));
+			}
+
+			[Ignore]
+			[TestMethod]
+			public void Test_013_DBPFUtil_StringFromByteArray() {
+				byte[] dbpfB = new byte[] { 0x44, 0x42, 0x50, 0x46 };
+				byte[] dbpfB1 = new byte[] { 68, 66, 80, 70 };
+				Assert.AreEqual("DBPF", DBPFUtil.StringFromByteArray(dbpfB));
+				Assert.AreEqual(DBPFUtil.StringFromByteArray(dbpfB), DBPFUtil.StringFromByteArray(dbpfB1));
+				Assert.AreEqual("DBPF", DBPFUtil.StringFromByteArray(dbpfB, 0));
+				Assert.AreEqual("DBPF", DBPFUtil.StringFromByteArray(dbpfB, 0, dbpfB.Length));
+				Assert.AreEqual("BPF", DBPFUtil.StringFromByteArray(dbpfB, 1));
+				Assert.AreEqual("DB", DBPFUtil.StringFromByteArray(dbpfB, 0, 2));
+				Assert.AreEqual("P", DBPFUtil.StringFromByteArray(dbpfB, 2, 1));
+
+
+				string lettersS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+				byte[] lettersB = new byte[] { 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A };
+				Assert.AreEqual(lettersS, DBPFUtil.StringFromByteArray(lettersB));
+
+				string numbersS = "01213456789";
+				byte[] numbersB = new byte[] { 0x30, 0x31, 0x32, 0x31, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39 };
+				Assert.AreEqual(numbersS, DBPFUtil.StringFromByteArray(numbersB));
+
+				string specialS = "~`!@#$%^&*()_+-=[]\\{}|;':\",./<>?";
+				byte[] specialB = new byte[] { 0x7E, 0x60, 0x21, 0x40, 0x23, 0x24, 0x25, 0x5E, 0x26, 0x2A, 0x28, 0x29, 0x5F, 0x2B, 0x2D, 0x3D, 0x5B, 0x5D, 0x5C, 0x7B, 0x7D, 0x7C, 0x3B, 0x27, 0x3A, 0x22, 0x2C, 0x2E, 0x2F, 0x3C, 0x3E, 0x3F };
+				Assert.AreEqual(specialS, DBPFUtil.StringFromByteArray(specialB));
+
+				Assert.ThrowsException<NullReferenceException>(() => DBPFUtil.StringFromByteArray(null));
+			}
+
+			[TestMethod]
+			public void Test_014_DBPFUtil_StringToByteArray() {
+				string s1 = "Test";
+				byte[] b1 = { 0x54, 0x65, 0x73, 0x74 };
+				string s2 = "Parks Aura";
+				byte[] b2 = { 0x50, 0x61, 0x72, 0x6b, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61 };
+				CollectionAssert.AreEquivalent(b1, DBPFUtil.StringToByteArray(s1));
+				CollectionAssert.AreEquivalent(b2, DBPFUtil.StringToByteArray(s2));
+			}
 		}
-
-		[TestMethod]
-		public void Test_012_DBPFUtil_UintToHexString() {
-			Assert.AreEqual("6534284A", DBPFUtil.UIntToHexString(1697917002, 8));
-			Assert.AreEqual("4A283465", DBPFUtil.UIntToHexString(1244148837, 8));
-			Assert.AreEqual("6534284A", DBPFUtil.UIntToHexString(0x6534284A, 8));
-			Assert.AreEqual("4A283465", DBPFUtil.UIntToHexString(0x4A283465, 8));
-			Assert.AreEqual("4D2", DBPFUtil.UIntToHexString(1234, 3));
-			Assert.AreEqual("000004D2", DBPFUtil.UIntToHexString(1234, 8));
-		}
-
-
-		[TestMethod]
-		public void Test_013_DBPFUtil_StringFromByteArray() {
-			byte[] dbpfB = new byte[] { 0x44, 0x42, 0x50, 0x46 };
-			byte[] dbpfB1 = new byte[] { 68, 66, 80, 70 };
-			Assert.AreEqual("DBPF", DBPFUtil.StringFromByteArray(dbpfB));
-			Assert.AreEqual(DBPFUtil.StringFromByteArray(dbpfB), DBPFUtil.StringFromByteArray(dbpfB1));
-			Assert.AreEqual("DBPF", DBPFUtil.StringFromByteArray(dbpfB, 0));
-			Assert.AreEqual("DBPF", DBPFUtil.StringFromByteArray(dbpfB, 0, dbpfB.Length));
-			Assert.AreEqual("BPF", DBPFUtil.StringFromByteArray(dbpfB, 1));
-			Assert.AreEqual("DB", DBPFUtil.StringFromByteArray(dbpfB, 0, 2));
-			Assert.AreEqual("P", DBPFUtil.StringFromByteArray(dbpfB, 2, 1));
-
-
-			string lettersS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			byte[] lettersB = new byte[] { 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A };
-			Assert.AreEqual(lettersS, DBPFUtil.StringFromByteArray(lettersB));
-
-			string numbersS = "01213456789";
-			byte[] numbersB = new byte[] { 0x30, 0x31, 0x32, 0x31, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39 };
-			Assert.AreEqual(numbersS, DBPFUtil.StringFromByteArray(numbersB));
-
-			string specialS = "~`!@#$%^&*()_+-=[]\\{}|;':\",./<>?";
-			byte[] specialB = new byte[] { 0x7E, 0x60, 0x21, 0x40, 0x23, 0x24, 0x25, 0x5E, 0x26, 0x2A, 0x28, 0x29, 0x5F, 0x2B, 0x2D, 0x3D, 0x5B, 0x5D, 0x5C, 0x7B, 0x7D, 0x7C, 0x3B, 0x27, 0x3A, 0x22, 0x2C, 0x2E, 0x2F, 0x3C, 0x3E, 0x3F };
-			Assert.AreEqual(specialS, DBPFUtil.StringFromByteArray(specialB));
-
-			Assert.ThrowsException<NullReferenceException>(() => DBPFUtil.StringFromByteArray(null));
-		}
-
-		[TestMethod]
-		public void Test_014_DBPFUtil_StringToByteArray() {
-			string s1 = "Test";
-			byte[] b1 = { 0x54, 0x65, 0x73, 0x74 };
-			string s2 = "Parks Aura";
-			byte[] b2 = { 0x50, 0x61, 0x72, 0x6b, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61 };
-			CollectionAssert.AreEquivalent(b1, DBPFUtil.StringToByteArray(s1));
-			CollectionAssert.AreEquivalent(b2, DBPFUtil.StringToByteArray(s2));
-		}
-
-		[TestMethod]
-		public void Text_015_DBPFUtil_ByteArrayToOutTypeArray() {
-			byte[] bytes = { 0x45, 0x51, 0x5A, 0x42, 0x31, 0x23, 0x23, 0x23, 0x61, 0x28, 0x34, 0x05, 0x3F, 0x69, 0x0F, 0x69, 0x00, 0x67, 0x0B, 0x4A, 0x0F, 0x00, 0x00, 0x00 };
-			ushort[] uint16 = { 0x4551, 0x5A42, 0x3123, 0x2323, 0x6128, 0x3405, 0x3F69, 0x0F69, 0x0067, 0x0B4A, 0x0F00, 0x0000 };
-			int[] sint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
-			float[] float32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
-			uint[] uint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
-			long[] sing64 = { 0x45515A4231232323, 0x612834053F690F69, 0x00670B4A0F000000 };
-
-		}
-		#endregion Test Methods for DBPFUtil Class
 
 		// 02x Test methods for DBPFCompression Class
 		#region Test methods for DBPFCompression Class
@@ -105,6 +95,29 @@ namespace csDBPF {
 		}
 
 		#endregion Test methods for DBPFCompression Class
+
+		// 03x Test Methods for ByteArrayHelper
+		#region Test methods for ByteArrayHelper
+		[TestMethod]
+		public void Test_015_DBPFUtil_ByteArrayToOutTypeArray() {
+			byte[] bytes = { 0x45, 0x51, 0x5A, 0x42, 0x31, 0x23, 0x23, 0x23, 0x61, 0x28, 0x34, 0x05, 0x3F, 0x69, 0x0F, 0x69, 0x00, 0x67, 0x0B, 0x4A, 0x0F, 0x00, 0x00, 0x00 };
+			ushort[] uint16 = { 0x4551, 0x5A42, 0x3123, 0x2323, 0x6128, 0x3405, 0x3F69, 0x0F69, 0x0067, 0x0B4A, 0x0F00, 0x0000 };
+			int[] sint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
+			float[] float32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
+			uint[] uint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
+			long[] sint64 = { 0x45515A4231232323, 0x612834053F690F69, 0x00670B4A0F000000 };
+
+			CollectionAssert.AreEqual(uint16, ByteArrayHelper.ToUInt16Array(bytes));
+			CollectionAssert.AreEqual(sint32, ByteArrayHelper.ToSInt32Array(bytes));
+			CollectionAssert.AreEqual(float32, ByteArrayHelper.ToFloat32Array(bytes));
+			CollectionAssert.AreEqual(uint32, ByteArrayHelper.ToUInt32Array(bytes));
+			CollectionAssert.AreEqual(sint64, ByteArrayHelper.ToSInt64Array(bytes));
+		}
+
+
+		#endregion
+
+
 
 		// 05x Test Methods for DBPFTGI Class
 		#region Test Methods for DBPFTGI Class
