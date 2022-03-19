@@ -41,7 +41,7 @@ namespace csDBPF.Properties {
 			_dataType = dataType;
 			_id = 0x0;
 			_numberOfReps = 0;
-			_values = null;
+			_byteValues = null;
 		}
 
 		public override string ToString() {
@@ -108,7 +108,7 @@ namespace csDBPF.Properties {
 					newValue[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
 				//newProperty.numberOfReps = countOfReps;
-				newProperty.values = newValue;
+				newProperty.byteValues = newValue;
 			}
 
 			//keyType == 0x00 ... this is just a single value of the data type length
@@ -119,7 +119,7 @@ namespace csDBPF.Properties {
 					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
 				//newProperty.numberOfReps = 0;
-				newProperty.values = newVals;
+				newProperty.byteValues = newVals;
 			}
 			return newProperty;
 		}

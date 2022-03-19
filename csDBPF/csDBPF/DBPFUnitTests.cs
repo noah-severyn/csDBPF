@@ -34,28 +34,28 @@ namespace csDBPF {
 			public void Test_013_DBPFUtil_StringFromByteArray() {
 				byte[] dbpfB = new byte[] { 0x44, 0x42, 0x50, 0x46 };
 				byte[] dbpfB1 = new byte[] { 68, 66, 80, 70 };
-				Assert.AreEqual("DBPF", DBPFUtil.StringFromByteArray(dbpfB));
-				Assert.AreEqual(DBPFUtil.StringFromByteArray(dbpfB), DBPFUtil.StringFromByteArray(dbpfB1));
-				Assert.AreEqual("DBPF", DBPFUtil.StringFromByteArray(dbpfB, 0));
-				Assert.AreEqual("DBPF", DBPFUtil.StringFromByteArray(dbpfB, 0, dbpfB.Length));
-				Assert.AreEqual("BPF", DBPFUtil.StringFromByteArray(dbpfB, 1));
-				Assert.AreEqual("DB", DBPFUtil.StringFromByteArray(dbpfB, 0, 2));
-				Assert.AreEqual("P", DBPFUtil.StringFromByteArray(dbpfB, 2, 1));
+				Assert.AreEqual("DBPF", ByteArrayHelper.ToAString(dbpfB));
+				Assert.AreEqual(ByteArrayHelper.ToAString(dbpfB), ByteArrayHelper.ToAString(dbpfB1));
+				Assert.AreEqual("DBPF", ByteArrayHelper.ToAString(dbpfB, 0));
+				Assert.AreEqual("DBPF", ByteArrayHelper.ToAString(dbpfB, 0, dbpfB.Length));
+				Assert.AreEqual("BPF", ByteArrayHelper.ToAString(dbpfB, 1));
+				Assert.AreEqual("DB", ByteArrayHelper.ToAString(dbpfB, 0, 2));
+				Assert.AreEqual("P", ByteArrayHelper.ToAString(dbpfB, 2, 1));
 
 
 				string lettersS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 				byte[] lettersB = new byte[] { 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A };
-				Assert.AreEqual(lettersS, DBPFUtil.StringFromByteArray(lettersB));
+				Assert.AreEqual(lettersS, ByteArrayHelper.ToAString(lettersB));
 
 				string numbersS = "01213456789";
 				byte[] numbersB = new byte[] { 0x30, 0x31, 0x32, 0x31, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39 };
-				Assert.AreEqual(numbersS, DBPFUtil.StringFromByteArray(numbersB));
+				Assert.AreEqual(numbersS, ByteArrayHelper.ToAString(numbersB));
 
 				string specialS = "~`!@#$%^&*()_+-=[]\\{}|;':\",./<>?";
 				byte[] specialB = new byte[] { 0x7E, 0x60, 0x21, 0x40, 0x23, 0x24, 0x25, 0x5E, 0x26, 0x2A, 0x28, 0x29, 0x5F, 0x2B, 0x2D, 0x3D, 0x5B, 0x5D, 0x5C, 0x7B, 0x7D, 0x7C, 0x3B, 0x27, 0x3A, 0x22, 0x2C, 0x2E, 0x2F, 0x3C, 0x3E, 0x3F };
-				Assert.AreEqual(specialS, DBPFUtil.StringFromByteArray(specialB));
+				Assert.AreEqual(specialS, ByteArrayHelper.ToAString(specialB));
 
-				Assert.ThrowsException<NullReferenceException>(() => DBPFUtil.StringFromByteArray(null));
+				Assert.ThrowsException<NullReferenceException>(() => ByteArrayHelper.ToAString(null));
 			}
 
 			[TestMethod]
@@ -233,7 +233,7 @@ namespace csDBPF {
 				Assert.AreEqual((uint) 0x20, prop_file.id);
 				Assert.AreEqual((uint) 20, prop_file.numberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.STRING, prop_file.dataType);
-				CollectionAssert.AreEquivalent(bytedataviewparksaura, prop_file.values);
+				CollectionAssert.AreEquivalent(bytedataviewparksaura, prop_file.byteValues);
 				Assert.AreEqual(stringdataviewparksaura, prop_file.DecodeValues());
 
 				//Compare to known property
@@ -243,14 +243,14 @@ namespace csDBPF {
 				Assert.AreEqual(prop_created.id, prop_file.id);
 				Assert.AreEqual(prop_created.numberOfReps, prop_file.numberOfReps);
 				Assert.AreEqual(prop_created.dataType, prop_file.dataType);
-				CollectionAssert.AreEquivalent(prop_created.values, prop_file.values);
+				CollectionAssert.AreEquivalent(prop_created.byteValues, prop_file.byteValues);
 				Assert.AreEqual(prop_created.DecodeValues(), prop_file.DecodeValues());
 
 				//Check for no differences between values and valuesDecoded when each is changed
 				prop_created.SetValues(stringparks);
-				CollectionAssert.AreEquivalent(byteparks, prop_created.values);
+				CollectionAssert.AreEquivalent(byteparks, prop_created.byteValues);
 				Assert.AreEqual((uint) byteparks.Length, prop_created.numberOfReps);
-				prop_created.values = byteparksaura;
+				prop_created.byteValues = byteparksaura;
 				Assert.AreEqual(stringparksaura, prop_created.DecodeValues());
 				Assert.AreEqual((uint) stringparksaura.Length, prop_created.numberOfReps);
 			}

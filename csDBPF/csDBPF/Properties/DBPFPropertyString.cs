@@ -84,9 +84,12 @@ namespace csDBPF.Properties {
 			_numberOfReps = 1; //For DBPFPropertyString, count always equals 1 because there is always only one string object representing the value
 		}
 
-
+		/// <summary>
+		/// Parse the byte values for this property.
+		/// </summary>
+		/// <returns>A string</returns>
 		public override object DecodeValues() {
-			return DBPFUtil.StringFromByteArray(_byteValues);
+			return ByteArrayHelper.ToAString(_byteValues);
 		}
 
 		public override void SetValues(object newValue) {
@@ -105,7 +108,7 @@ namespace csDBPF.Properties {
 		/// <returns>String value of the property</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder(base.ToString());
-			sb.Append(DBPFUtil.StringFromByteArray(_byteValues));
+			sb.Append(ByteArrayHelper.ToAString(_byteValues));
 			return sb.ToString();
 		}
 	}
