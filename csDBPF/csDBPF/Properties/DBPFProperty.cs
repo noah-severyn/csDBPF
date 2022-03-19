@@ -26,8 +26,8 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// This is a byte array of the raw values in the property.
 		/// </summary>
-		private byte[] _values;
-		public abstract byte[] values { get; set; }
+		private byte[] _byteValues;
+		public abstract byte[] byteValues { get; set; }
 
 		/// <summary>
 		/// This is the decoded (interpreted) values based on the implementing class type. With the exception of string, will take the form of an array of the implementing class's type (int or float).

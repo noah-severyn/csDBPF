@@ -43,12 +43,12 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// The byte array of base data for the property. When this is set, <see cref="valuesDecoded"/> is also set to the equivalent value.
 		/// </summary>
-		private byte[] _values;
-		public override byte[] values {
-			get { return _values; }
+		private byte[] _byteValues;
+		public override byte[] byteValues {
+			get { return _byteValues; }
 			set {
 				_numberOfReps = (uint) value.Length;
-				_values = value;
+				_byteValues = value;
 				//_valuesDecoded = DBPFUtil.StringFromByteArray(value);
 			}
 		}
@@ -86,7 +86,7 @@ namespace csDBPF.Properties {
 
 
 		public override object DecodeValues() {
-			return DBPFUtil.StringFromByteArray(_values);
+			return DBPFUtil.StringFromByteArray(_byteValues);
 		}
 
 		public override void SetValues(object newValue) {
@@ -95,7 +95,7 @@ namespace csDBPF.Properties {
 				throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}. Must be a string.");
 			} else {
 				_numberOfReps = (uint) ((string) newValue).Length;
-				_values = DBPFUtil.StringToByteArray((string) newValue);
+				_byteValues = DBPFUtil.StringToByteArray((string) newValue);
 			}
 		}
 
@@ -105,7 +105,7 @@ namespace csDBPF.Properties {
 		/// <returns>String value of the property</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder(base.ToString());
-			sb.Append(DBPFUtil.StringFromByteArray(_values));
+			sb.Append(DBPFUtil.StringFromByteArray(_byteValues));
 			return sb.ToString();
 		}
 	}

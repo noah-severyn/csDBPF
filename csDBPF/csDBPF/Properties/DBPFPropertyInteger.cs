@@ -42,12 +42,12 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// The byte array of base data for the property. When this is set, <see cref="valuesDecoded"/> is also set to the equivalent value.
 		/// </summary>
-		private byte[] _values;
-		public override byte[] values {
-			get { return _values; }
+		private byte[] _byteValues;
+		public override byte[] byteValues {
+			get { return _byteValues; }
 			set {
 				_numberOfReps = (uint) value.Length;
-				_values = value;
+				_byteValues = value;
 				//_valuesDecoded = DBPFUtil.StringFromByteArray(value);
 			}
 		}
@@ -87,19 +87,19 @@ namespace csDBPF.Properties {
 		public override object DecodeValues() {
 			switch (_dataType.name) {
 				case "BOOL":
-					return ByteArrayHelper.ToBoolArray(_values);
+					return ByteArrayHelper.ToBoolArray(_byteValues);
 				case "UInt8":
-					return ByteArrayHelper.ToUint8Array(_values);
+					return ByteArrayHelper.ToUint8Array(_byteValues);
 				case "UInt16":
-					return ByteArrayHelper.ToUInt16Array(_values);
+					return ByteArrayHelper.ToUInt16Array(_byteValues);
 				case "SInt32":
-					return ByteArrayHelper.ToSInt32Array(_values);
+					return ByteArrayHelper.ToSInt32Array(_byteValues);
 				case "Float32":
-					return ByteArrayHelper.ToFloat32Array(_values);
+					return ByteArrayHelper.ToFloat32Array(_byteValues);
 				case "UInt32":
-					return ByteArrayHelper.ToUInt32Array(_values);
+					return ByteArrayHelper.ToUInt32Array(_byteValues);
 				case "SInt64":
-					return ByteArrayHelper.ToSInt64Array(_values);
+					return ByteArrayHelper.ToSInt64Array(_byteValues);
 				default:
 					return null;
 			}
