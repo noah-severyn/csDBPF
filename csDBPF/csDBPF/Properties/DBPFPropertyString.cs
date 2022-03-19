@@ -49,7 +49,7 @@ namespace csDBPF.Properties {
 			set {
 				_numberOfReps = (uint) value.Length;
 				_values = value;
-				_valuesDecoded = DBPFUtil.StringFromByteArray(value);
+				//_valuesDecoded = DBPFUtil.StringFromByteArray(value);
 			}
 		}
 
@@ -57,22 +57,22 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// When decoded, <see cref="DBPFPropertyString.values"/> returns a string. When this is set, <see cref="values"/> is also set to the equivalent value.
 		/// </summary>
-		private string _valuesDecoded;
-		public override object valuesDecoded {
-			get { return _valuesDecoded; }
-			set {
-				Type t = value.GetType();
+		//private string _valuesDecoded;
+		//public override object valuesDecoded {
+		//	get { return _valuesDecoded; }
+		//	set {
+		//		Type t = value.GetType();
 
-				//If type(value) is string then directly set the decoded value
-				if (t != "".GetType()) {
-					throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}.");
-				} else {
-					_numberOfReps = (uint) ((string) value).Length;
-					_values = DBPFUtil.StringToByteArray((string) value);
-					_valuesDecoded = (string) value;
-				}
-			}
-		}
+		//		//If type(value) is string then directly set the decoded value
+		//		if (t != "".GetType()) {
+		//			throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}.");
+		//		} else {
+		//			_numberOfReps = (uint) ((string) value).Length;
+		//			_values = DBPFUtil.StringToByteArray((string) value);
+		//			_valuesDecoded = (string) value;
+		//		}
+		//	}
+		//}
 
 
 		/// <summary>
@@ -84,6 +84,20 @@ namespace csDBPF.Properties {
 			_numberOfReps = 1; //For DBPFPropertyString, count always equals 1 because there is always only one string object representing the value
 		}
 
+
+		public override object DecodeValues() {
+			return DBPFUtil.StringFromByteArray(_values);
+		}
+
+		public override void SetValues(object newValue) {
+			Type t = newValue.GetType();
+			if (t != "".GetType()) {
+				throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}. Must be a string.");
+			} else {
+				_numberOfReps = (uint) ((string) newValue).Length;
+				_values = DBPFUtil.StringToByteArray((string) newValue);
+			}
+		}
 
 		/// <summary>
 		/// Appends a string representation of the value onto the base toString. See <see cref="DBPFProperty.ToString"/>

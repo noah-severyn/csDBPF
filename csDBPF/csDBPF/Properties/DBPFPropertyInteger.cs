@@ -31,8 +31,8 @@ namespace csDBPF.Properties {
 		public override DBPFPropertyDataType dataType {
 			get { return _dataType; }
 			set {
-				if (_dataType == DBPFPropertyDataType.STRING || _dataType == DBPFPropertyDataType.FLOAT32) {
-					throw new ArgumentException($"Data type of {_dataType.name} provided where {DBPFPropertyDataType.STRING.name} is required.");
+				if (_dataType == DBPFPropertyDataType.STRING) {
+					throw new ArgumentException($"Data type of {_dataType.name} provided where a numerical DBPFPropertyDataType is required.");
 				}
 				_dataType = value;
 			}
@@ -56,22 +56,22 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// When decoded, <see cref="DBPFPropertyString.values"/> returns a string. When this is set, <see cref="values"/> is also set to the equivalent value.
 		/// </summary>
-		private object _valuesDecoded;
-		public override object valuesDecoded {
-			get { return _valuesDecoded; }
-			set {
-				Type t = value.GetType();
+		//private object _valuesDecoded;
+		//public override object valuesDecoded {
+		//	get { return _valuesDecoded; }
+		//	set {
+		//		Type t = value.GetType();
 
-				//If type(value) is string then directly set the decoded value
-				if (t != "".GetType()) {
-					throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}.");
-				} else {
-					_numberOfReps = (uint) ((string) value).Length;
-					_values = DBPFUtil.StringToByteArray((string) value);
-					_valuesDecoded = (string) value;
-				}
-			}
-		}
+		//		//If type(value) is string then directly set the decoded value
+		//		if (t != "".GetType()) {
+		//			throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}.");
+		//		} else {
+		//			_numberOfReps = (uint) ((string) value).Length;
+		//			_values = DBPFUtil.StringToByteArray((string) value);
+		//			_valuesDecoded = (string) value;
+		//		}
+		//	}
+		//}
 
 
 		/// <summary>
@@ -81,6 +81,32 @@ namespace csDBPF.Properties {
 		public DBPFPropertyInteger(DBPFPropertyDataType dataType) : base(dataType) {
 			_dataType = dataType;
 			_numberOfReps = 1;
+		}
+
+
+		public override object DecodeValues() {
+			switch (_dataType.name) {
+				case "BOOL":
+					return ByteArrayHelper.ToBoolArray(_values);
+				case "UInt8":
+					return ByteArrayHelper.ToUint8Array(_values);
+				case "UInt16":
+					return ByteArrayHelper.ToUInt16Array(_values);
+				case "SInt32":
+					return ByteArrayHelper.ToSInt32Array(_values);
+				case "Float32":
+					return ByteArrayHelper.ToFloat32Array(_values);
+				case "UInt32":
+					return ByteArrayHelper.ToUInt32Array(_values);
+				case "SInt64":
+					return ByteArrayHelper.ToSInt64Array(_values);
+				default:
+					return null;
+			}
+		}
+
+		public override void SetValues(object newValue) {
+			throw new NotImplementedException();
 		}
 
 

@@ -234,24 +234,24 @@ namespace csDBPF {
 				Assert.AreEqual((uint) 20, prop_file.numberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.STRING, prop_file.dataType);
 				CollectionAssert.AreEquivalent(bytedataviewparksaura, prop_file.values);
-				Assert.AreEqual(stringdataviewparksaura, prop_file.valuesDecoded);
+				Assert.AreEqual(stringdataviewparksaura, prop_file.DecodeValues());
 
 				//Compare to known property
 				DBPFProperty prop_created = new DBPFPropertyString(DBPFPropertyDataType.STRING);
 				prop_created.id = 0x20;
-				prop_created.valuesDecoded = stringdataviewparksaura;
+				prop_created.SetValues(stringdataviewparksaura);
 				Assert.AreEqual(prop_created.id, prop_file.id);
 				Assert.AreEqual(prop_created.numberOfReps, prop_file.numberOfReps);
 				Assert.AreEqual(prop_created.dataType, prop_file.dataType);
 				CollectionAssert.AreEquivalent(prop_created.values, prop_file.values);
-				Assert.AreEqual(prop_created.valuesDecoded, prop_file.valuesDecoded);
+				Assert.AreEqual(prop_created.DecodeValues(), prop_file.DecodeValues());
 
 				//Check for no differences between values and valuesDecoded when each is changed
-				prop_created.valuesDecoded = stringparks;
+				prop_created.SetValues(stringparks);
 				CollectionAssert.AreEquivalent(byteparks, prop_created.values);
 				Assert.AreEqual((uint) byteparks.Length, prop_created.numberOfReps);
 				prop_created.values = byteparksaura;
-				Assert.AreEqual(stringparksaura, prop_created.valuesDecoded);
+				Assert.AreEqual(stringparksaura, prop_created.DecodeValues());
 				Assert.AreEqual((uint) stringparksaura.Length, prop_created.numberOfReps);
 			}
 

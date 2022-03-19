@@ -32,8 +32,10 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// This is the decoded (interpreted) values based on the implementing class type. With the exception of string, will take the form of an array of the implementing class's type (int or float).
 		/// </summary>
-		public abstract object valuesDecoded { get; set; }
+		//public abstract object valuesDecoded { get; set; }
 
+		public abstract object DecodeValues();
+		public abstract void SetValues(object newValue);
 
 		public DBPFProperty(DBPFPropertyDataType dataType) {
 			_dataType = dataType;
