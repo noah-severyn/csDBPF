@@ -150,17 +150,7 @@ namespace csDBPF {
 		}
 
 
-		public static ushort[] ByteArrayToUInt8Array(byte[] data) {
-			if (data.Length % 2 !=0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			}
-			ushort[] result = new ushort[data.Length / 2];
-			int pos = 0;
-			for (int idx = 0; idx < data.Length/2; idx++) {
-				result[idx] = (ushort) (data[pos] << 8 | data[pos + 1]);
-			}
-			return result;
-		}
+
 
 
 	}
