@@ -69,51 +69,6 @@ namespace csDBPF {
 		#endregion
 
 
-		#region StringFromByteArray
-		/// <summary>
-		/// Reads a byte array and returns a string of the entire array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>A string of parsed data</returns>
-		public static string StringFromByteArray(byte[] data) {
-			return StringFromByteArray(data, 0, data.Length);
-		}
-
-		/// <summary>
-		/// Reads a byte array and returns a string from the specified location to the end of the array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <param name="start">Location to start parsing at</param>
-		/// <returns>A string of parsed data</returns>
-		public static string StringFromByteArray(byte[] data, int start) {
-			return StringFromByteArray(data, start, data.Length - start);
-		}
-
-		/// <summary>
-		/// Reads a byte array and returns a string from the specified location for a determined length.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <param name="start">Location to start parsing at</param>
-		/// <param name="length">Length of the provided data to parse</param>
-		/// <returns>A string of parsed data</returns>
-		/// <remarks>
-		/// Any non-printable characters are replaced with a period ('.').
-		/// </remarks>
-		public static string StringFromByteArray(byte[] data, int start, int length) {
-			StringBuilder sb = new StringBuilder();
-			for (int idx = start; idx < start + length; idx++) {
-				//Check to avoid problematic non-printable characters
-				if (data[idx] < 31 || data[idx] == 127) {
-					sb.Append('.');
-				} else {
-					sb.Append((char) data[idx]);
-				}
-			}
-			return sb.ToString();
-		}
-		#endregion
-
-
 		/// <summary>
 		/// Returns a string representation of the provided uint converted to hex, padded by the specified number of places
 		/// </summary>
