@@ -98,7 +98,7 @@ namespace csDBPF.Properties {
 				throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}. Must be a string.");
 			} else {
 				_numberOfReps = (uint) ((string) newValue).Length;
-				_byteValues = DBPFUtil.StringToByteArray((string) newValue);
+				_byteValues = ByteArrayHelper.ToByteArray((string) newValue);
 			}
 		}
 

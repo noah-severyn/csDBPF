@@ -8,9 +8,10 @@ namespace csDBPF {
 	/// </summary>
 	public static class ByteArrayHelper {
 
+		//Convert from a byte[] to the specific data type
 		#region FromByteArrayTo
 		/// <summary>
-		/// Convert byte array to bool array.
+		/// Convert byte array to boolean array.
 		/// </summary>
 		/// <param name="data">Data to parse</param>
 		/// <returns>Array of boolean values</returns>
@@ -25,7 +26,6 @@ namespace csDBPF {
 			}
 			return result;
 		}
-
 		/// <summary>
 		/// Convert byte array to UInt8 array.
 		/// </summary>
@@ -38,7 +38,6 @@ namespace csDBPF {
 			}
 			return result;
 		}
-
 		/// <summary>
 		/// Convert byte array to UInt16 array.
 		/// </summary>
@@ -56,7 +55,6 @@ namespace csDBPF {
 			}
 			return result;
 		}
-
 		/// <summary>
 		/// Convert byte array to UInt32 array.
 		/// </summary>
@@ -76,7 +74,6 @@ namespace csDBPF {
 			}
 			return result;
 		}
-
 		/// <summary>
 		/// Convert byte array to SInt32 array.
 		/// </summary>
@@ -96,7 +93,6 @@ namespace csDBPF {
 			}
 			return result;
 		}
-
 		/// <summary>
 		/// Convert byte array to Float32 array.
 		/// </summary>
@@ -108,15 +104,15 @@ namespace csDBPF {
 			} else if (data.Length % 4 != 0) {
 				throw new ArgumentException("Length of data array must be a multiple of 4!");
 			}
+			if (BitConverter.IsLittleEndian) {
+				//Array.Reverse(data);
+			}
 			float[] result = new float[data.Length / 4];
-			int pos = 0;
 			for (int idx = 0; idx < data.Length / 4; idx++) {
-				result[idx] = (data[pos] << 24) | (data[pos + 1] << 16) | (data[pos + 2] << 8) | data[pos + 3];
-				pos += 4;
+				result[idx] = BitConverter.ToSingle(data, idx * 4);
 			}
 			return result;
 		}
-
 		/// <summary>
 		/// Convert byte array to SInt64 array.
 		/// </summary>
@@ -137,6 +133,7 @@ namespace csDBPF {
 			return result;
 		}
 
+
 		/// <summary>
 		/// Reads a byte array and returns a string of the entire array.
 		/// </summary>
@@ -145,7 +142,6 @@ namespace csDBPF {
 		public static string ToAString(byte[] data) {
 			return ToAString(data, 0, data.Length);
 		}
-
 		/// <summary>
 		/// Reads a byte array and returns a string from the specified location to the end of the array.
 		/// </summary>
@@ -155,7 +151,6 @@ namespace csDBPF {
 		public static string ToAString(byte[] data, int start) {
 			return ToAString(data, start, data.Length - start);
 		}
-
 		/// <summary>
 		/// Reads a byte array and returns a string from the specified location for a determined length.
 		/// </summary>
@@ -180,7 +175,8 @@ namespace csDBPF {
 		}
 		#endregion FromByteArrayTo
 
-		#region ToByteArrayFrom
+		//Convert from the specific data type to a byte[]
+		#region ToByteArray
 		/// <summary>
 		/// Reads a string and parses into a byte array the same length as the string
 		/// </summary>
@@ -189,11 +185,102 @@ namespace csDBPF {
 		/// <remarks>
 		/// String encoding is single byte ANSI (Windows-1252)
 		/// </remarks>
-		public static byte[] StringToByteArray(string data) {
+		public static byte[] ToByteArray(string data) {
 			char[] chars = data.ToCharArray();
 			byte[] result = new byte[data.Length];
 			for (int idx = 0; idx < data.Length; idx++) {
 				result[idx] = Convert.ToByte(chars[idx]);
+			}
+			return result;
+		}
+		/// <summary>
+		/// Pareses the boolean array and returns the corresponding byte array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>A byte array of parsed data</returns>
+		public static byte[] ToByteArray(bool[] data) {
+			byte[] result = new byte[data.Length];
+			for (int idx = 0; idx < result.Length; idx++) {
+				if (data[idx] == true) {
+					result[idx] = 0x01;
+				} else {
+					result[idx] = 0x00;
+				}
+			}
+			return result;
+		}
+		/// <summary>
+		/// Pareses the char (UInt8) array and returns the corresponding byte array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>A byte array of parsed data</returns>
+		public static byte[] ToByteArray(char[] data) {
+			byte[] result = new byte[data.Length];
+			Array.Copy(data, result, data.Length);
+			return result;
+		}
+		/// <summary>
+		/// Pareses the ushort (UInt16) array and returns the corresponding byte array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>A byte array of parsed data</returns>
+		public static byte[] ToByteArray(ushort[] data) {
+			byte[] result = new byte[data.Length * 2];
+			for (int pos = 0; pos < data.Length; pos++) {
+				Array.Copy(BitConverter.GetBytes(DBPFUtil.ReverseBytes(data[pos])), 0, result, pos * 2, 2);
+			}
+			return result;
+		}
+		/// <summary>
+		/// Pareses the int (Sint32) array and returns the corresponding byte array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>A byte array of parsed data</returns>
+		public static byte[] ToByteArray(int[] data) {
+			byte[] result = new byte[data.Length * 4];
+			
+			for (int pos = 0; pos < data.Length; pos++) {
+				byte[] bytes = BitConverter.GetBytes(data[pos]);
+				Array.Reverse(bytes);
+				Array.Copy(bytes, 0, result, pos * 4, 4);
+			}
+			return result;
+		}
+		/// <summary>
+		/// Pareses the uint (UInt32) array and returns the corresponding byte array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>A byte array of parsed data</returns>
+		public static byte[] ToByteArray(uint[] data) {
+			byte[] result = new byte[data.Length * 4];
+			for (int pos = 0; pos < data.Length; pos++) {
+				byte[] bytes = BitConverter.GetBytes(data[pos]);
+				Array.Reverse(bytes);
+				Array.Copy(bytes, 0, result, pos * 4, 4);
+			}
+			return result;
+		}
+		/// <summary>
+		/// Pareses the float (Float32) array and returns the corresponding byte array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>A byte array of parsed data</returns>
+		public static byte[] ToByteArray(float[] data) {
+			byte[] result = new byte[data.Length * 4];
+			Buffer.BlockCopy(data, 0, result, 0, result.Length);
+			return result;
+		}
+		/// <summary>
+		/// Pareses the long (SInt64) array and returns the corresponding byte array.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>A byte array of parsed data</returns>
+		public static byte[] ToByteArray(long[] data) {
+			byte[] result = new byte[data.Length * 8];
+			for (int pos = 0; pos < data.Length; pos++) {
+				byte[] bytes = BitConverter.GetBytes(data[pos]);
+				Array.Reverse(bytes);
+				Array.Copy(bytes, 0, result, pos * 8, 8);
 			}
 			return result;
 		}

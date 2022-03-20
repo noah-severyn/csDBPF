@@ -64,8 +64,8 @@ namespace csDBPF {
 				byte[] b1 = { 0x54, 0x65, 0x73, 0x74 };
 				string s2 = "Parks Aura";
 				byte[] b2 = { 0x50, 0x61, 0x72, 0x6b, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61 };
-				CollectionAssert.AreEquivalent(b1, DBPFUtil.StringToByteArray(s1));
-				CollectionAssert.AreEquivalent(b2, DBPFUtil.StringToByteArray(s2));
+				CollectionAssert.AreEquivalent(b1, ByteArrayHelper.ToByteArray(s1));
+				CollectionAssert.AreEquivalent(b2, ByteArrayHelper.ToByteArray(s2));
 			}
 		}
 
@@ -101,20 +101,29 @@ namespace csDBPF {
 		// 03x Test Methods for ByteArrayHelper class
 		[TestClass]
 		public class _03x_ByteArrayHelper {
+			readonly byte[] bytes = { 0x45, 0x51, 0x5A, 0x42, 0x31, 0x23, 0x23, 0x23, 0x61, 0x28, 0x34, 0x05, 0x3F, 0x69, 0x0F, 0x69, 0x00, 0x67, 0x0B, 0x4A, 0x0F, 0x00, 0x00, 0x00 };
+			readonly ushort[] uint16 = { 0x4551, 0x5A42, 0x3123, 0x2323, 0x6128, 0x3405, 0x3F69, 0x0F69, 0x0067, 0x0B4A, 0x0F00, 0x0000 };
+			readonly int[] sint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
+			readonly float[] float32 = { 54.5793648f, 8.8437e-18f, 8.470976e-36f, 1.08358377e+25f, 2283968f, 2.101948e-44f };
+			readonly uint[] uint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
+			readonly long[] sint64 = { 0x45515A4231232323, 0x612834053F690F69, 0x00670B4A0F000000 };
+
 			[TestMethod]
 			public void Test_030_ByteArrayHelper_ToTypeArray() {
-				byte[] bytes = { 0x45, 0x51, 0x5A, 0x42, 0x31, 0x23, 0x23, 0x23, 0x61, 0x28, 0x34, 0x05, 0x3F, 0x69, 0x0F, 0x69, 0x00, 0x67, 0x0B, 0x4A, 0x0F, 0x00, 0x00, 0x00 };
-				ushort[] uint16 = { 0x4551, 0x5A42, 0x3123, 0x2323, 0x6128, 0x3405, 0x3F69, 0x0F69, 0x0067, 0x0B4A, 0x0F00, 0x0000 };
-				int[] sint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
-				float[] float32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
-				uint[] uint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
-				long[] sint64 = { 0x45515A4231232323, 0x612834053F690F69, 0x00670B4A0F000000 };
-
 				CollectionAssert.AreEqual(uint16, ByteArrayHelper.ToUInt16Array(bytes));
 				CollectionAssert.AreEqual(sint32, ByteArrayHelper.ToSInt32Array(bytes));
 				CollectionAssert.AreEqual(float32, ByteArrayHelper.ToFloat32Array(bytes));
 				CollectionAssert.AreEqual(uint32, ByteArrayHelper.ToUInt32Array(bytes));
 				CollectionAssert.AreEqual(sint64, ByteArrayHelper.ToSInt64Array(bytes));
+			}
+
+			[TestMethod]
+			public void Test_031_ByteArrayHelper_ToByteArray() {
+				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(uint16));
+				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(sint32));
+				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(float32));
+				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(uint32));
+				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(sint64));
 			}
 		}
 
