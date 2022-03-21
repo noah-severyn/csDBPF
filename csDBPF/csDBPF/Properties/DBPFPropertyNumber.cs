@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +17,7 @@ namespace csDBPF.Properties {
 
 
 		/// <summary>
-		/// Number of repetitions of the data type in this property. The byte size of <see cref="DBPFPropertyDataType"/> multiplied by this number equals the byte size of this property's values. Tnitialized to 1.
+		/// Number of repetitions of the data type in this property. The byte size of this property's <see cref="DBPFPropertyDataType"/> multiplied by this number equals the byte size of this property's values in bytes. Initialized to 1.
 		/// </summary>
 		private uint _numberOfReps;
 		public override uint numberOfReps {
@@ -46,8 +47,8 @@ namespace csDBPF.Properties {
 		public override byte[] byteValues {
 			get { return _byteValues; }
 			set {
-				_numberOfReps = (uint) value.Length;
 				_byteValues = value;
+				_numberOfReps = (uint) (value.Length / _dataType.length);
 				//_valuesDecoded = DBPFUtil.StringFromByteArray(value);
 			}
 		}
@@ -88,17 +89,17 @@ namespace csDBPF.Properties {
 			switch (_dataType.name) {
 				case "BOOL":
 					return ByteArrayHelper.ToBoolArray(_byteValues);
-				case "UInt8":
+				case "UINT8":
 					return ByteArrayHelper.ToUint8Array(_byteValues);
-				case "UInt16":
+				case "UINT16":
 					return ByteArrayHelper.ToUInt16Array(_byteValues);
-				case "SInt32":
+				case "SINT32":
 					return ByteArrayHelper.ToSInt32Array(_byteValues);
-				case "Float32":
+				case "FLOAT32":
 					return ByteArrayHelper.ToFloat32Array(_byteValues);
-				case "UInt32":
+				case "UINT32":
 					return ByteArrayHelper.ToUInt32Array(_byteValues);
-				case "SInt64":
+				case "SINT64":
 					return ByteArrayHelper.ToSInt64Array(_byteValues);
 				default:
 					return null;
@@ -106,9 +107,23 @@ namespace csDBPF.Properties {
 		}
 
 		public override void SetValues(object newValue) {
-			throw new NotImplementedException();
+			//check if newValue is an array
+			Type t = newValue.GetType();
+			if (!t.IsArray) {
+				throw new ArgumentException("An array of numbers is expected.");
+			}
+			ArrayList result = new ArrayList();
+			IEnumerable e = newValue as IEnumerable;
+			if (e == null) {
+				throw new ArgumentException("Unable to iterate over object!");
+			} else {
+				foreach (object item in e) {
+					result.Add((byte) item);
+				}
+			}
+			_byteValues = result.ToArray(typeof(byte)) as byte[];
+			_numberOfReps = (uint) (_byteValues.Length / _dataType.length);
 		}
-
 
 		/// <summary>
 		/// Appends a string representation of the value onto the base toString. See <see cref="DBPFProperty.ToString"/>

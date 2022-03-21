@@ -74,7 +74,7 @@ namespace csDBPF.Properties {
 			//uint propertyCount = BitConverter.ToUInt32(dData, 20);
 
 			//Read the property's numeric value (0x0000 0000)
-			uint propertyID = BitConverter.ToUInt32(dData, offset);
+			uint propertyID = ((BitConverter.ToUInt32(dData, offset))); //todo - this is pretty hacky but it works
 			offset += 4;
 
 			//Read and return the data value type
@@ -83,12 +83,11 @@ namespace csDBPF.Properties {
 			offset += 2;
 
 			//Read the property keyType
-			//Because we are just reading the value to a byte array, it effectively does not matter whether the key type is 0x00 or 0x80 - the values are read the same way and the processing to parse the values is pushed off to later to the specific type classes.
 			ushort keyType = BitConverter.ToUInt16(dData, offset);
 			offset += 2;
 
 			//Create new decoded property and set id and dataType
-			DBPFProperty newProperty = null;
+			DBPFProperty newProperty;
 			if (dataType.name == "STRING") {
 				newProperty = new DBPFPropertyString(dataType);
 			} else {
@@ -101,11 +100,10 @@ namespace csDBPF.Properties {
 				offset += 1; //There is a 1 byte unused flag
 				uint countOfReps = BitConverter.ToUInt32(dData, offset);
 				offset += 4;
-				byte[] newValue = new byte[countOfReps];
-				for (int idx = 0; idx < countOfReps; idx++) {
+				byte[] newValue = new byte[countOfReps*newProperty.dataType.length];
+				for (int idx = 0; idx < newValue.Length; idx++) {
 					newValue[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
-				//newProperty.numberOfReps = countOfReps;
 				newProperty.byteValues = newValue;
 			}
 
@@ -116,7 +114,6 @@ namespace csDBPF.Properties {
 				for (int idx = 0; idx < dataType.length; idx++) {
 					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
-				//newProperty.numberOfReps = 0;
 				newProperty.byteValues = newVals;
 			}
 			return newProperty;

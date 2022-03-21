@@ -107,6 +107,7 @@ namespace csDBPF {
 			readonly float[] float32 = { 54.5793648f, 8.8437e-18f, 8.470976e-36f, 1.08358377e+25f, 2283968f, 2.101948e-44f };
 			readonly uint[] uint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
 			readonly long[] sint64 = { 0x45515A4231232323, 0x612834053F690F69, 0x00670B4A0F000000 };
+			//TODO - should add unit tests to test edge cases - min and max values
 
 			[TestMethod]
 			public void Test_030_ByteArrayHelper_ToTypeArray() {
@@ -264,10 +265,25 @@ namespace csDBPF {
 				Assert.AreEqual((uint) stringparksaura.Length, prop_created.numberOfReps);
 			}
 
-			[Ignore]
 			[TestMethod]
-			public void Test_061_DBPFProperty_DecodeExemplarProperty() {
-				throw new NotImplementedException();
+			public void Test_063_DBPFPropertyInteger() {
+				byte[] val = { 0x23, 0x00, 0x00, 0x00 };
+				uint[] decoded = { 0x23000000 };
+				DBPFProperty prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata);
+				Assert.AreEqual((uint) 0x10, prop_file.id);
+				Assert.AreEqual((uint) 1, prop_file.numberOfReps);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.dataType);
+				CollectionAssert.AreEquivalent(val, prop_file.byteValues);
+				CollectionAssert.AreEqual(decoded, (System.Collections.ICollection) prop_file.DecodeValues());
+
+				byte[] val2 = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+				uint[] decoded2 = { 0, 0, 0, 0, 0, 0, 0, 0 };
+				prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata, 70);
+				Assert.AreEqual((uint) 0x4A0B47E0, prop_file.id);
+				Assert.AreEqual((uint) 8, prop_file.numberOfReps);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.dataType);
+				CollectionAssert.AreEquivalent(val2, prop_file.byteValues);
+				CollectionAssert.AreEqual(decoded2, (System.Collections.ICollection) prop_file.DecodeValues());
 			}
 		}
 

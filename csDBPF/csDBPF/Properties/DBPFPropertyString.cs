@@ -47,8 +47,8 @@ namespace csDBPF.Properties {
 		public override byte[] byteValues {
 			get { return _byteValues; }
 			set {
-				_numberOfReps = (uint) value.Length;
 				_byteValues = value;
+				_numberOfReps = (uint) value.Length;
 				//_valuesDecoded = DBPFUtil.StringFromByteArray(value);
 			}
 		}
@@ -97,8 +97,8 @@ namespace csDBPF.Properties {
 			if (t != "".GetType()) {
 				throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}. Must be a string.");
 			} else {
-				_numberOfReps = (uint) ((string) newValue).Length;
 				_byteValues = ByteArrayHelper.ToByteArray((string) newValue);
+				_numberOfReps = (uint) ((string) newValue).Length;
 			}
 		}
 
