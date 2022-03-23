@@ -34,18 +34,40 @@ namespace csDBPF {
 			return (sc4Files, skippedFiles);
 		}
 
-
+		//TODO reverse bytes should check endianness before converting!!!!!
+		#region ReverseBytes
 		/// <summary>
-		/// Reverses the byte order for a uint. Example: 1697917002 (0x 65 34 28 4A) returns 1244148837 (0x 4A 28 34 65)
+		/// Reverses the byte order for a ushort. Example: 3 (0x0003) returns 768 (0x0300)
 		/// </summary>
 		/// <remarks>
-		/// See:https://stackoverflow.com/a/18145923/10802255
+		/// See:https://www.csharp-examples.net/reverse-bytes/
 		/// </remarks>
-		/// <param name="value">Integer value to reverse</param>
-		/// <returns></returns>
+		/// <param name="value">Value to reverse</param>
+		/// <returns>Reversed ushort</returns>
+		public static ushort ReverseBytes(ushort value) {
+			return (ushort) ((value & 0x00FFU) << 8 | (value & 0xFF00U) >> 8);
+		}
+
+		/// <summary>
+		/// Reverses the byte order for a uint. See <see cref="ReverseBytes(uint)"/>.
+		/// </summary>
+		/// <param name="value">Value to reverse</param>
+		/// <returns>Reversed uint</returns>
 		public static uint ReverseBytes(uint value) {
 			return (value & 0x000000FFU) << 24 | (value & 0x0000FF00U) << 8 | (value & 0x00FF0000U) >> 8 | (value & 0xFF000000U) >> 24;
 		}
+
+		/// <summary>
+		/// Reverses the byte order for a ulong. See <see cref="ReverseBytes(uint)"/>.
+		/// </summary>
+		/// <param name="value">Value to reverse</param>
+		/// <returns>Reversed uint</returns>
+		public static long ReverseBytes(long value) {
+			return (value & 0x00000000000000FFL) << 56 | (value & 0x000000000000FF00L) << 40 | (value & 0x0000000000FF0000L) << 24 | (value & 0x00000000FF000000L) << 8 |
+		 (value & 0x000000FF00000000L) >> 8 | (value & 0x0000FF0000000000L) >> 24 | (value & 0x00FF000000000000L) >> 40 | (value & 0x7F00000000000000L) >> 56;
+		}
+		#endregion
+
 
 		/// <summary>
 		/// Returns a string representation of the provided uint converted to hex, padded by the specified number of places
@@ -64,53 +86,5 @@ namespace csDBPF {
 			}
 
 		}
-
-
-		/// <summary>
-		/// Reads a byte array and returns a string of the entire array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>A string of parsed data</returns>
-		public static string CharsFromByteArray(byte[] data) {
-			return CharsFromByteArray(data, 0, data.Length);
-		}
-
-		/// <summary>
-		/// Reads a byte array and returns a string from the specified location to the end of the array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <param name="start">Location to start parsing at</param>
-		/// <returns>A string of parsed data</returns>
-		public static string CharsFromByteArray(byte[] data, int start) {
-			return CharsFromByteArray(data, start, data.Length - start);
-		}
-
-		/// <summary>
-		/// Reads a byte array and returns a string from the specified location for a determined length.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <param name="start">Location to start parsing at</param>
-		/// <param name="length">Length of the provided data to parse</param>
-		/// <returns>A string of parsed data</returns>
-		/// <remarks>
-		/// Any non-printable characters are replaced with a period ('.').
-		/// </remarks>
-		public static string CharsFromByteArray(byte[] data, int start, int length) {
-			StringBuilder sb = new StringBuilder();
-			for (int idx = start; idx < start + length; idx++) {
-				//Check to avoid problematic non-printable characters
-				if (data[idx] < 31 || data[idx] == 127) {
-					sb.Append('.');
-				} else {
-					sb.Append((char) data[idx]);
-				}
-
-
-				
-			}
-
-			return sb.ToString();
-		}
-
 	}
 }
