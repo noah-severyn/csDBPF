@@ -85,6 +85,10 @@ namespace csDBPF.Properties {
 		}
 
 
+		/// <summary>
+		/// Parse the byte values for this property to return an array of the property's <see cref="DBPFPropertyDataType"/>.
+		/// </summary>
+		/// <returns>An array <see cref="numberOfReps"/> long of <see cref="DBPFPropertyDataType"/> numbers</returns>
 		public override object DecodeValues() {
 			switch (_dataType.name) {
 				case "BOOL":
@@ -106,6 +110,11 @@ namespace csDBPF.Properties {
 			}
 		}
 
+
+		/// <summary>
+		/// Sets the value field to the provided byte array. Also sets numberOfReps to the appropriate value.
+		/// </summary>
+		/// <param name="newValue">Byte array</param>
 		public override void SetValues(object newValue) {
 			//check if newValue is an array
 			Type t = newValue.GetType();
@@ -125,13 +134,14 @@ namespace csDBPF.Properties {
 			_numberOfReps = (uint) (_byteValues.Length / _dataType.length);
 		}
 
+
 		/// <summary>
 		/// Appends a string representation of the value onto the base toString. See <see cref="DBPFProperty.ToString"/>
 		/// </summary>
 		/// <returns>String value of the property</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder(base.ToString());
-			//sb.Append(DBPFUtil.StringFromByteArray(_values));
+			sb.Append(DecodeValues());
 			return sb.ToString();
 		}
 	}

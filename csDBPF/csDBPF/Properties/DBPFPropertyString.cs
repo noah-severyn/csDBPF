@@ -81,17 +81,23 @@ namespace csDBPF.Properties {
 		/// <param name="dataType"></param>
 		public DBPFPropertyString(DBPFPropertyDataType dataType) : base(dataType) {
 			_dataType = dataType;
-			_numberOfReps = 1; //For DBPFPropertyString, count always equals 1 because there is always only one string object representing the value
+			_numberOfReps = 1;
 		}
 
+
 		/// <summary>
-		/// Parse the byte values for this property.
+		/// Parse the byte values for this property to return a string.
 		/// </summary>
 		/// <returns>A string</returns>
 		public override object DecodeValues() {
 			return ByteArrayHelper.ToAString(_byteValues);
 		}
 
+
+		/// <summary>
+		/// Sets the value field to the provided string. Also sets the numberOfReps to the length of the string.
+		/// </summary>
+		/// <param name="newValue">String value</param>
 		public override void SetValues(object newValue) {
 			Type t = newValue.GetType();
 			if (t != "".GetType()) {

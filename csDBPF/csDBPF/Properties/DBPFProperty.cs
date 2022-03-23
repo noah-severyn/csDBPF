@@ -35,6 +35,10 @@ namespace csDBPF.Properties {
 		//public abstract object valuesDecoded { get; set; }
 
 		public abstract object DecodeValues();
+		/// <summary>
+		/// Sets the value field to the provided byte array. Also sets numberOfReps to the appropriate value.
+		/// </summary>
+		/// <param name="newValue">Byte array if <see cref="DBPFPropertyNumber"/> or string if <see cref="DBPFPropertyString"/>.</param>
 		public abstract void SetValues(object newValue);
 
 		public DBPFProperty(DBPFPropertyDataType dataType) {
