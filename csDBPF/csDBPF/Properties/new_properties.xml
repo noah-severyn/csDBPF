@@ -247,7 +247,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Age to maintenance cost multiplier response curve" ID="0x0911e2e7" Type="Float32" Count="-4" Default="0 1" ShowAsHex="Y">
 			<HELP>
-				Converts the current radation of the plant to a multiplier for maintenance cost
+				Converts the current radiation of the plant to a multiplier for maintenance cost
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Funding percentage to decay rate multiplier response curve" ID="0x0911e2e8" Type="Float32" Count="-4" Default="0 0 1" ShowAsHex="Y">
@@ -327,7 +327,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Underground Intersection Height" ID="0x096e5653" Type="Float32" Default="10" ShowAsHex="Y">
 			<HELP>
-				Default height above trench floor to place intersectons
+				Default height above trench floor to place intersections
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Unwatered Terrain Color" ID="0x097f4c4e" Type="Uint8" Count="4" Default="0x00" ShowAsHex="Y">
@@ -347,7 +347,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Bulldoze Cost" ID="0x099afacd" Type="Sint64" Default="100" MinValue="0" MaxValue="10000000" ShowAsHex="N">
 			<HELP>
-				Bulldoze cost to delete the building, in Simoleans(tm)
+				Bulldoze cost to delete the building, in Simoleans
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Particle Life" ID="0x09b00b2b" Type="Float32" Default="30000" ShowAsHex="Y">
@@ -414,32 +414,32 @@
 		</PROPERTY>
 		<PROPERTY Name="TextureBlendStrength" ID="0x09c2aef0" Type="Float32" Default="1" ShowAsHex="Y">
 			<HELP>
-				Higher this value, the more weightage this texture gets while blending with others
+				Higher this value, the more weight age this texture gets while blending with others
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Z0_TextureSpreadCurve" ID="0x09c2aef3" Type="Float32" Count="-6" Default="0 1 32 1 64 0" ShowAsHex="Y">
 			<HELP>
-				Specifiess how does the texture strength fall off with distance
+				Specifies how does the texture strength fall off with distance
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Z1_TextureSpreadCurve" ID="0x09c2aef4" Type="Float32" Count="-6" Default="0 1 32 1 64 0" ShowAsHex="Y">
 			<HELP>
-				Specifiess how does the texture strength fall off with distance
+				Specifies how does the texture strength fall off with distance
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Z2_TextureSpreadCurve" ID="0x09c2aef5" Type="Float32" Count="-6" Default="0 1 32 1 64 0" ShowAsHex="Y">
 			<HELP>
-				Specifiess how does the texture strength fall off with distance
+				Specifies how does the texture strength fall off with distance
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Z3_TextureSpreadCurve" ID="0x09c2aef6" Type="Float32" Count="-6" Default="0 1 32 1 64 0" ShowAsHex="Y">
 			<HELP>
-				Specifiess how does the texture strength fall off with distance
+				Specifies how does the texture strength fall off with distance
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Z4_TextureSpreadCurve" ID="0x09c2aef7" Type="Float32" Count="-6" Default="0 1 32 1 64 0" ShowAsHex="Y">
 			<HELP>
-				Specifiess how does the texture strength fall off with distance
+				Specifies how does the texture strength fall off with distance
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Model Resource Key" ID="0x09c80416" Type="Uint32" Count="3" Default="0x5ad0e817 0xbadb57f1 0x00000000" ShowAsHex="Y">
@@ -479,7 +479,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Audio:ZoomScoreEnable" ID="0x0a25896b" Type="Uint8" Default="0x00" ShowAsHex="Y">
 			<HELP>
-				Bitfield describing which zoom levels score is active for
+				Bit field describing which zoom levels score is active for
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Power Pole Demolition Cost" ID="0x0a2eced8" Type="Float32" Default="5" ShowAsHex="Y">
@@ -694,17 +694,17 @@
 		</PROPERTY>
 		<PROPERTY Name="DisableBackgroundLoader" ID="0x0b579c27" Type="Bool" Default="False" ShowAsHex="Y">
 			<HELP>
-				if true, background loader is disabled
+				If true, background loader is disabled
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="MinLoadRadius" ID="0x0b579c28" Type="Uint32" Count="5" Default="0x00000000" ShowAsHex="Y">
 			<HELP>
-				Mininum extra radius to load (by zoom level)
+				Minimum extra radius to load (by zoom level)
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="ExtraLoadRadiusPerMeg" ID="0x0b579c29" Type="Float32" Count="5" Default="0" ShowAsHex="Y">
 			<HELP>
-				extra radius to load per free meg (by zoom level)
+				Extra radius to load per free meg (by zoom level)
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Ferry Terminal Type" ID="0x0bd86fd3" Type="Uint8" Default="0x00" ShowAsHex="Y">
@@ -743,7 +743,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Transit Switch Fare" ID="0x0bfc0a4c" Type="Float32" Default="0" ShowAsHex="N">
 			<HELP>
-				Simoleon charge per traveller to enter the switch
+				Simoleon charge per traveler to enter the switch
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Budget: Initial Tax Rate" ID="0x0c032488" Type="Float32" Count="3" Default="9" ShowAsHex="Y">
@@ -962,7 +962,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Landmark Effect" ID="0x2781284f" Type="Sint32" Count="2" Default="50 6" ShowAsHex="N">
 			<HELP>
-				Affects desirability of commerical buildings.   The first number in this array is the amount of the effect (-100 to 100) and the second number is the radius in cells.
+				Affects desirability of commercial buildings.   The first number in this array is the amount of the effect (-100 to 100) and the second number is the radius in cells.
 			</HELP>
 			<OPTION Value="Col:0" Name="Magnitude">
 			</OPTION>
@@ -1089,7 +1089,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Monthly Chance" ID="0x28ebbc36" Type="Float32" Default="0.00490" ShowAsHex="Y">
 			<HELP>
-				Monthly chance of this ordinance bemoming available
+				Monthly chance of this ordinance becoming available
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Enactment Income" ID="0x28ebbc37" Type="Sint32" Default="0" ShowAsHex="Y">
@@ -1354,17 +1354,17 @@
 		</PROPERTY>
 		<PROPERTY Name="Flammability multiplier, no water" ID="0x29b4013b" Type="Float32" Default="1" ShowAsHex="Y">
 			<HELP>
-				flammability multiplier if building is not watered
+				Flammability multiplier if building is not watered
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Flammability, hotspot settings" ID="0x29b4013c" Type="Uint32" Count="3" Default="0x00000080 0x00000008 0x00000010" ShowAsHex="Y">
 			<HELP>
-				hotspot settings: threshold value (0-255), radius (in tracts), minimum weight
+				Hotspot settings: threshold value (0-255), radius (in tracts), minimum weight
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Flammability, hotspot fire probability" ID="0x29b4013d" Type="Float32" Count="-2" Default="0" ShowAsHex="Y">
 			<HELP>
-				maps hotspot weight (# of cells above threshold) to monthly fire probability (in percent 0-100)
+				Maps hotspot weight (# of cells above threshold) to monthly fire probability (in percent 0-100)
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Flammability, random fire probability" ID="0x29b4013e" Type="Float32" Default="0" ShowAsHex="Y">
@@ -1433,7 +1433,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Audio:ListenerRolloffFactor" ID="0x2a36e3cb" Type="Float32" Default="1" ShowAsHex="Y">
 			<HELP>
-				How fast sounds rolloff with distance
+				How fast sounds roll off with distance
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Audio:ANDFilters" ID="0x2a3fbde1" Type="Uint32" Count="-1" Default="0x00000000" ShowAsHex="Y">
@@ -1578,7 +1578,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Audio:ListenerGranularity" ID="0x2aa40ccc" Type="Float32" Count="5" Default="26 13 6.5 3.200 1.600" ShowAsHex="Y">
 			<HELP>
-				Values per zoom controlling update garnularity in meters
+				Values per zoom controlling update granularity in meters
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Maximum HQ Boost" ID="0x2aa84164" Type="Float32" Default="10" ShowAsHex="Y">
@@ -2034,7 +2034,7 @@
 		</PROPERTY>
 		<PROPERTY Name="MaxNormalTerrainHeight" ID="0x48cd7b20" Type="Float32" Count="3" Default="308" ShowAsHex="Y">
 			<HELP>
-				Max normal height in fractally generated terrains, for different city size choices
+				Max normal height in fractionally generated terrains, for different city size choices
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="SeaLevel" ID="0x48cd7b21" Type="Float32" Default="0.150" ShowAsHex="Y">
@@ -2089,7 +2089,7 @@
 		</PROPERTY>
 		<PROPERTY Name="WaterProximityRangeFactor" ID="0x48cd7b31" Type="Float32" Default="0.600" ShowAsHex="Y">
 			<HELP>
-				Factor governing the max water proxmity range for texture assignment
+				Factor governing the max water proximity range for texture assignment
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="NumInitialErosionPasses" ID="0x48cd7b40" Type="Uint32" Default="0x00000004" ShowAsHex="Y">
@@ -2109,7 +2109,7 @@
 		</PROPERTY>
 		<PROPERTY Name="SeaLevelChangeDueToWaterSlider" ID="0x48cd7b43" Type="Float32" Count="3" Default="10" ShowAsHex="Y">
 			<HELP>
-				The sea level change range (meters) corresponding to the water slider, for diff city sizes
+				The sea level change range (meters) corresponding to the water slider, for different city sizes
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="MinCellsInUsefulFlatArea" ID="0x48cd7b50" Type="Uint32" Default="0x00000190" ShowAsHex="Y">
@@ -2124,7 +2124,7 @@
 		</PROPERTY>
 		<PROPERTY Name="MaxTerraceAltitudeFactor" ID="0x48cd7b52" Type="Float32" Default="0.5" ShowAsHex="Y">
 			<HELP>
-				Controls the maximum altitude upto which auto-flattening gets done
+				Controls the maximum altitude unto which auto-flattening gets done
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="MinTerraceAltitudeFactor" ID="0x48cd7b53" Type="Float32" Default="0.100" ShowAsHex="Y">
@@ -2219,12 +2219,12 @@
 		</PROPERTY>
 		<PROPERTY Name="EdgeReconcilliationSmoothingRadiusVsHeightDiff" ID="0x48cd7c00" Type="Float32" Count="-4" Default="0 16 300 30" ShowAsHex="Y">
 			<HELP>
-				Specifiess the smoothing radius as a function of height adjustment needed
+				Specifies the smoothing radius as a function of height adjustment needed
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="EdgeReconcilliationSmoothingIterations" ID="0x48cd7c01" Type="Uint32" Default="0x00000005" ShowAsHex="Y">
 			<HELP>
-				Smoothing iterations for edge reconcilliation
+				Smoothing iterations for edge reconciliation
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="EdgeReconcilliationHtDifferenceThreshold" ID="0x48cd7c02" Type="Float32" Default="1" ShowAsHex="Y">
@@ -2410,7 +2410,7 @@
 		</PROPERTY>
 		<PROPERTY Name="RippleLandVertexHtAboveSeaLevel" ID="0x491c9c03" Type="Float32" Default="2" ShowAsHex="Y">
 			<HELP>
-				Land side of the ribbon is keptabove sea level to get ripple washing the beach effect
+				Land side of the ribbon is kept above sea level to get ripple washing the beach effect
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="RippleTextureUIncrementPerQuad" ID="0x491c9c04" Type="Float32" Count="5" Default="0.400" ShowAsHex="Y">
@@ -2587,7 +2587,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Max Peds" ID="0x4998c904" Type="Uint32" Default="0x00000050" ShowAsHex="Y">
 			<HELP>
-				Maximum number of pedestrianss at one time
+				Maximum number of pedestrians at one time
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Ped Min/Max KPH" ID="0x4998c905" Type="Uint32" Count="2" Default="0x00000007 0x0000000a" ShowAsHex="Y">
@@ -2812,7 +2812,7 @@
 		</PROPERTY>
 		<PROPERTY Name="QuakeMicroSecsBetweenShakeEffects" ID="0x4a08c508" Type="Uint32" Default="0x00002710" ShowAsHex="Y">
 			<HELP>
-				Microsecs between shake effects
+				Microseconds between shake effects
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="QuakeDistBetweenAutomataRepulsors" ID="0x4a08c509" Type="Float32" Default="100" ShowAsHex="Y">
@@ -2942,7 +2942,7 @@
 		</PROPERTY>
 		<PROPERTY Name="DataView: Legends GUIDS" ID="0x4a0b47f3" Type="Uint32" Count="9" Default="0x00000000" ShowAsHex="Y">
 			<HELP>
-				GUID for ledgend Text GroupID, GUID
+				GUID for legend Text GroupID, GUID
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="DataView: Legends Header" ID="0x4a0b47f4" Type="Uint32" Default="0x00000000" ShowAsHex="Y">
@@ -3112,7 +3112,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Landfill: Level Tolerance Threshold" ID="0x4a280513" Type="Float32" Default="2" ShowAsHex="Y">
 			<HELP>
-				The altitude variance of the landfill zone before levelling will take place
+				The altitude variance of the landfill zone before leveling will take place
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Simolean Cost Per Tile" ID="0x4a2d49b9" Type="Uint32" Default="0x00000001" ShowAsHex="Y">
@@ -3219,7 +3219,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Landfill: Default Landfill Cell Maintenance Cost" ID="0x4a677e5f" Type="Sint64" Default="1" ShowAsHex="Y">
 			<HELP>
-				Monthly maintenance cost of a landfill cell (can be overridden by the model budghet cost property)
+				Monthly maintenance cost of a landfill cell (can be overridden by the model budget cost property)
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Nearest Destination Attractiveness" ID="0x4a678060" Type="Float32" Default="0.75" ShowAsHex="Y">
@@ -3374,12 +3374,12 @@
 		</PROPERTY>
 		<PROPERTY Name="Congestion to Accident Probability" ID="0x4be09ec9" Type="Float32" Count="-4" Default="0 0 1" ShowAsHex="Y">
 			<HELP>
-				Maps congestion to accident probablity
+				Maps congestion to accident probability
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Capacity to Accident Probability" ID="0x4be09eca" Type="Float32" Count="-4" Default="0 0 1" ShowAsHex="Y">
 			<HELP>
-				Maps capacity to accident probablity
+				Maps capacity to accident probability
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Accident Duration" ID="0x4be09ecb" Type="Float32" Default="10" ShowAsHex="Y">
@@ -3612,17 +3612,17 @@
 		</PROPERTY>
 		<PROPERTY Name="Fresh water distance loss" ID="0x68f5436d" Type="Uint32" Default="0x00000014" ShowAsHex="Y">
 			<HELP>
-				Percentace by which water production is reduced when not within range of fresh water source
+				Percentage by which water production is reduced when not within range of fresh water source
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="kSC4FoundationPropertySideTextures" ID="0x68fcff37" Type="Uint32" Count="5" Default="0x00000000" ShowAsHex="Y">
 			<HELP>
-				Texture IDs for each zoom level. Mutally exclusive with building model properties.
+				Texture IDs for each zoom level. Mutually exclusive with building model properties.
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="kSC4FoundationPropertyTopTextures" ID="0x68fcff38" Type="Uint32" Count="5" Default="0x00000000" ShowAsHex="Y">
 			<HELP>
-				Texture IDs for each zoom level. Mutally exclusive with building model properties.
+				Texture IDs for each zoom level. Mutually exclusive with building model properties.
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Power Funding To Efficiency Curve" ID="0x6911e2df" Type="Float32" Count="-2" Default="0" ShowAsHex="Y">
@@ -3892,7 +3892,7 @@
 		</PROPERTY>
 		<PROPERTY Name="MaxWaterDepthForDeepSeaBedTexture" ID="0x69ac5641" Type="Float32" Default="30" ShowAsHex="Y">
 			<HELP>
-				Upto this water depth we use deep seabed texture for terrain (No texturing beyond that depth)
+				Unto this water depth we use deep seabed texture for terrain (No texturing beyond that depth)
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="FireProtectionSim, StationNoRoad Multiplier" ID="0x69b425db" Type="Float32" Default="0.800" ShowAsHex="Y">
@@ -4127,7 +4127,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Obliterate_SmokeScreenFormationTime" ID="0x6a5a6702" Type="Float32" Default="3" ShowAsHex="Y">
 			<HELP>
-				Time (secs) between the creation of Finale effect and our last big wipe-out sweep of the ciry
+				Time (secs) between the creation of Finale effect and our last big wipe-out sweep of the city
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Active Lot State" ID="0x6a5e0727" Type="Uint8" Default="0x00" ShowAsHex="Y">
@@ -4751,7 +4751,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Max radiation pollution value for UI" ID="0x89135044" Type="Uint32" Default="0x00006978" ShowAsHex="Y">
 			<HELP>
-				Maximum radiaiton pollution value reported to the UI, must be less than 32767
+				Maximum radiation pollution value reported to the UI, must be less than 32767
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="LotConfigPropertyWaterCompatibility" ID="0x89136440" Type="Uint8" Default="0x00" ShowAsHex="Y">
@@ -5504,12 +5504,12 @@
 		</PROPERTY>
 		<PROPERTY Name="Ferry Fare" ID="0x8c3caef5" Type="Float32" Default="0" ShowAsHex="Y">
 			<HELP>
-				Income per traveller from a ferry trip
+				Income per traveler from a ferry trip
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Travellers per bus" ID="0x8c3e8185" Type="Uint32" Default="0x00000032" ShowAsHex="Y">
 			<HELP>
-				How many travellers it takes to yield a bus automata
+				How many travelers it takes to yield a bus automata
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Occupant Types" ID="0x8cb3511f" Type="Uint32" Count="-1" ShowAsHex="Y">
@@ -5663,7 +5663,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Water Use Reduction" ID="0xa8f4eb0c" Type="Float32" Default="1" ShowAsHex="Y">
 			<HELP>
-				Effect (multiplier) this ordinace has on water use
+				Effect (multiplier) this ordinance has on water use
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="IntelliScrollOuterRadiusPixels" ID="0xa90f5dec" Type="Uint32" Default="0x00000050" ShowAsHex="Y">
@@ -5733,7 +5733,7 @@
 		</PROPERTY>
 		<PROPERTY Name="ShimmerQuadDensity" ID="0xa91cbe02" Type="Uint32" Count="5" Default="0x00000258" ShowAsHex="Y">
 			<HELP>
-				Number of shimmer quads to have if all of a 256x256 happenned to be water
+				Number of shimmer quads to have if all of a 256x256 happened to be water
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Max roads funding percent" ID="0xa92356ae" Type="Float32" Default="1.200" ShowAsHex="Y">
@@ -5990,7 +5990,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Relative Occurrance" ID="0xaa12fcb8" Type="Float32" Default="10" ShowAsHex="Y">
 			<HELP>
-				Relative occurance weight of this crime, only has meaning relative to values for other crimes.
+				Relative occurrence weight of this crime, only has meaning relative to values for other crimes.
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Max acceptable pumped water pollution level" ID="0xaa161f81" Type="Uint32" Default="0x00000007" ShowAsHex="Y">
@@ -7379,7 +7379,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Audio:ZoomLoopEnable" ID="0xaa3fbdde" Type="Uint8" Default="0x00" ShowAsHex="Y">
 			<HELP>
-				Bitfield describing which zoom levels loop is active for
+				Bit field describing which zoom levels loop is active for
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Audio:FreshVolume" ID="0xaa3fc48e" Type="Uint32" Default="0x00000400" ShowAsHex="Y">
@@ -7485,7 +7485,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Helipad Type" ID="0xabb90e58" Type="Uint8" Default="0x00" ShowAsHex="Y">
 			<HELP>
-				Indicate what kind of helicopter should appear on this helipad
+				Indicate what kind of helicopter should appear on this heliport
 			</HELP>
 			<OPTION Value="0" Name="None">
 			</OPTION>
@@ -7577,7 +7577,7 @@
 		</PROPERTY>
 		<PROPERTY Name="MaxHtDiffBetweenLandBridgeEnds" ID="0xc804dd96" Type="Float32" Default="20" ShowAsHex="Y">
 			<HELP>
-				Max allowed terrain height diff between the two ends of land bridges
+				Max allowed terrain height difference between the two ends of land bridges
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="SmoothenOnlyConnectedTiles" ID="0xc804dd97" Type="Bool" Default="False" ShowAsHex="Y">
@@ -7766,7 +7766,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Auxiliary Model 2 Key" ID="0xc9e69af6" Type="Uint32" Count="3" Default="0x5ad0e817 0xbadb57f1 0x00000000" ShowAsHex="Y">
 			<HELP>
-				Type/Group/Instance for additional model (e.g. flashing lights on emerg. vehicles)
+				Type/Group/Instance for additional model (e.g. flashing lights on emergency vehicles)
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Grade max angle" ID="0xc9ee640a" Type="Float32" Default="45" ShowAsHex="Y">
@@ -8065,12 +8065,12 @@
 		</PROPERTY>
 		<PROPERTY Name="Subjective Factor Threshold (Min value)" ID="0xcab1ce3a" Type="Sint32" Count="7" Default="-4" ShowAsHex="Y">
 			<HELP>
-				Min value of desirability for subjective factors (pollution,garbage,school,hospital,crime,traffic,triplength).
+				Min value of desirability for subjective factors (pollution,garbage,school,hospital,crime,traffic,trip length).
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Subjective Factor Threshold (Max value)" ID="0xcab1ce3c" Type="Sint32" Count="7" Default="20" ShowAsHex="Y">
 			<HELP>
-				Max value of desirability for subjective factors (pollution,garbage,school,hospital,crime,traffic,triplength).
+				Max value of desirability for subjective factors (pollution,garbage,school,hospital,crime,traffic,trip length).
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Trip Starting Cost by travel type for Car Pref" ID="0xcad64136" Type="Float32" Count="9" Default="0.100 0" ShowAsHex="Y">
@@ -8160,7 +8160,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Auto-load Auxiliary Models" ID="0xcc21420d" Type="Uint32" Count="-1" Default="0x00000000" ShowAsHex="Y">
 			<HELP>
-				Index (1,2,3,etc.) of auxiliary model to load automatically on Init
+				Index (1,2,3,etc.) of auxiliary model to load automatically on initialization
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="kPropertyID_FlipsAllowed" ID="0xcc3e4755" Type="Uint8" Default="0x00" ShowAsHex="Y">
@@ -8245,7 +8245,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Transit Switch Point" ID="0xe90e25a1" Type="Uint8" Count="-4" Default="0x00" ShowAsHex="Y">
 			<HELP>
-				Paired entries indicating this building allows a travelling Sim to switch between transit types
+				Paired entries indicating this building allows a traveling Sim to switch between transit types
 			</HELP>
 			<OPTION Value="0x00000000" Name="Walk">
 			</OPTION>
@@ -8357,7 +8357,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Health Effectiveness vs. Average Age Effect" ID="0xe92d9db4" Type="Float32" Count="-2" Default="0 100" ShowAsHex="Y">
 			<HELP>
-				Maps average age of a tract to addional HQ boost %
+				Maps average age of a tract to additional HQ boost %
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="kZM_mZoneMinCellSize" ID="0xe94825b2" Type="Sint32" Count="16" Default="0" ShowAsHex="Y">
@@ -8765,7 +8765,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Audio:ZoomDistanceCameraPull" ID="0xea4a7c55" Type="Float32" Count="5" Default="1 0.75 0.5 0.25 0" ShowAsHex="Y">
 			<HELP>
-				Amount of horz dist to camera to pull to camera
+				Amount of horzontal dist to camera to pull to camera
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="NDa_MaxOverDemandFactorForBuyer" ID="0xea4ad2ff" Type="Float32" Default="1.100" ShowAsHex="Y">
