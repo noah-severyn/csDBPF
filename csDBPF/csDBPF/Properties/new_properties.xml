@@ -347,7 +347,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Bulldoze Cost" ID="0x099afacd" Type="Sint64" Default="100" MinValue="0" MaxValue="10000000" ShowAsHex="N">
 			<HELP>
-				Bulldoze cost to delete the building, in Simoleans
+				Bulldoze cost to delete the building, in Simoleons
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Particle Life" ID="0x09b00b2b" Type="Float32" Default="30000" ShowAsHex="Y">
@@ -2757,7 +2757,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Plop Cost" ID="0x49cac341" Type="Sint64" Default="100" MinValue="0" MaxValue="10000000" ShowAsHex="N">
 			<HELP>
-				Cost to plop this building, in Simoleans(tm)
+				Cost to plop this building, in Simoleons(tm)
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="kPropertyID_NetworkPlacementPattern" ID="0x49d55951" Type="Uint8" Count="4" Default="0x00" ShowAsHex="Y">
@@ -3344,7 +3344,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Budget: Land Value to Simoleans" ID="0x4ac519b8" Type="Float32" Count="-2" Default="0" ShowAsHex="Y">
 			<HELP>
-				For each taxable square of the given land value, the number of Simoleans produced
+				For each taxable square of the given land value, the number of Simoleons produced
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="NDe_MaxUnitCostForGarbageDealsRCurve" ID="0x4b61ffc9" Type="Float32" Count="-4" Default="0 1" ShowAsHex="Y">
@@ -7846,7 +7846,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Budget Requirements List" ID="0xca271783" Type="Sint64" Count="-1" Default="50" ShowAsHex="Y">
 			<HELP>
-				List of budget requirements for each growth stage - in Simoleans (tm)
+				List of budget requirements for each growth stage - in Simoleons (tm)
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Trip Capacity List" ID="0xca271784" Type="Uint32" Count="-1" Default="0x00000000" ShowAsHex="N">
@@ -7861,7 +7861,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Stage Upgrade Cost" ID="0xca271786" Type="Sint64" Count="-1" Default="0" ShowAsHex="Y">
 			<HELP>
-				List of costs in Simoleans (tm) associated with each growth stage
+				List of costs in Simoleons (tm) associated with each growth stage
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Port Size" ID="0xca271787" Type="Uint8" Default="0x02" ShowAsHex="Y">
@@ -8765,7 +8765,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Audio:ZoomDistanceCameraPull" ID="0xea4a7c55" Type="Float32" Count="5" Default="1 0.75 0.5 0.25 0" ShowAsHex="Y">
 			<HELP>
-				Amount of horzontal dist to camera to pull to camera
+				Amount of horizontal dist to camera to pull to camera
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="NDa_MaxOverDemandFactorForBuyer" ID="0xea4ad2ff" Type="Float32" Default="1.100" ShowAsHex="Y">
@@ -8931,7 +8931,7 @@
 		</PROPERTY>
 		<PROPERTY Name="Budget Item: Cost" ID="0xea54d286" Type="Sint64" Count="-1" Default="0" MinValue="0" ShowAsHex="N">
 			<HELP>
-				Monthly cost(s) in Simoleans for this budget item.
+				Monthly cost(s) in Simoleons for this budget item.
 			</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Jail, Jailbreak Response Curve" ID="0xea614f63" Type="Float32" Count="-2" Default="0" ShowAsHex="Y">
