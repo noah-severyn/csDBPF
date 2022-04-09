@@ -101,16 +101,21 @@ namespace csDBPF {
 		// 03x Test Methods for ByteArrayHelper class
 		[TestClass]
 		public class _03x_ByteArrayHelper {
-			readonly byte[] bytes = { 0x45, 0x51, 0x5A, 0x42, 0x31, 0x23, 0x23, 0x23, 0x61, 0x28, 0x34, 0x05, 0x3F, 0x69, 0x0F, 0x69, 0x00, 0x67, 0x0B, 0x4A, 0x0F, 0x00, 0x00, 0x00 };
-			readonly ushort[] uint16 = { 0x4551, 0x5A42, 0x3123, 0x2323, 0x6128, 0x3405, 0x3F69, 0x0F69, 0x0067, 0x0B4A, 0x0F00, 0x0000 };
-			readonly int[] sint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
-			readonly float[] float32 = { 54.5793648f, 8.8437e-18f, 8.470976e-36f, 1.08358377e+25f, 2283968f, 2.101948e-44f };
-			readonly uint[] uint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
-			readonly long[] sint64 = { 0x45515A4231232323, 0x612834053F690F69, 0x00670B4A0F000000 };
+			//Remember here that we are not "reading" the bytes straight from the file in order; rather we are "getting" numbers from them so we are worried about endianness.
+			readonly byte[] bytes = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x99, 0x70, 0x01, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70, 0x0C, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70 };
+			readonly byte[] bytesAsBools = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01 };
+			readonly bool[] bools = { false, false, false, false, false, false, true, true, true, false, false, false, true, true, true, true, true, false, false, false, true, true, true, true };
+			readonly ushort[] uint16 = { 0x0000, 0x0000, 0000, 0x7099, 0x0001, 0x0000, 0x533C, 0x70BC, 0x000C, 0x0000, 0x533C, 0x70BC };
+			readonly int[] sint32 = { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C };
+			readonly float[] float32 = { 0f, 3.78809652e+29f, 1.401298e-45f, 4.66270448e+29f, 1.681558e-44f, 4.66270448e+29f };
+			readonly uint[] uint32 = { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C };
+			readonly long[] sint64 = { 0x7099000000000000, 0x70BC533C00000001, 0x70BC533C0000000C };
 			//TODO - should add unit tests to test edge cases - min and max values
 
 			[TestMethod]
 			public void Test_030_ByteArrayHelper_ToTypeArray() {
+				CollectionAssert.AreEqual(bools, ByteArrayHelper.ToBoolArray(bytesAsBools));
+				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToUint8Array(bytes));
 				CollectionAssert.AreEqual(uint16, ByteArrayHelper.ToUInt16Array(bytes));
 				CollectionAssert.AreEqual(sint32, ByteArrayHelper.ToSInt32Array(bytes));
 				CollectionAssert.AreEqual(float32, ByteArrayHelper.ToFloat32Array(bytes));
@@ -120,6 +125,7 @@ namespace csDBPF {
 
 			[TestMethod]
 			public void Test_031_ByteArrayHelper_ToByteArray() {
+				CollectionAssert.AreEqual(bytesAsBools, ByteArrayHelper.ToByteArray(bools));
 				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(uint16));
 				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(sint32));
 				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(float32));
@@ -218,9 +224,9 @@ namespace csDBPF {
 			[TestMethod]
 			public void Test_060_DBPFPropertyDataType_ReturnType() {
 				Assert.AreEqual("SINT32", DBPFPropertyDataType.SINT32.name);
-				Assert.AreEqual(DBPFPropertyDataType.BOOL, DBPFPropertyDataType.LookupDataType(0xB));
-				Assert.AreEqual(DBPFPropertyDataType.UINT32.name, DBPFPropertyDataType.LookupDataType(0x3).name);
-				Assert.AreEqual(4, DBPFPropertyDataType.LookupDataType(0x3).length);
+				Assert.AreEqual(DBPFPropertyDataType.BOOL, DBPFPropertyDataType.LookupDataType(0xB00));
+				Assert.AreEqual(DBPFPropertyDataType.UINT32.name, DBPFPropertyDataType.LookupDataType(0x300).name);
+				Assert.AreEqual(4, DBPFPropertyDataType.LookupDataType(0x300).length);
 			}
 
 			[Ignore]
@@ -269,12 +275,12 @@ namespace csDBPF {
 			public void Test_063_DBPFPropertyInteger() {
 				//Single UInt32 value
 				byte[] val = { 0x23, 0x00, 0x00, 0x00 };
-				uint[] decoded = { 0x23000000 };
+				uint[] decoded = { 0x00000023 };
 				DBPFProperty prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata);
 				Assert.AreEqual((uint) 0x10, prop_file.id);
 				Assert.AreEqual((uint) 1, prop_file.numberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val, prop_file.byteValues);
+				CollectionAssert.AreEqual(val, prop_file.byteValues); //TODO - why does this not pass??? 
 				CollectionAssert.AreEqual(decoded, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//8 repetitions of 0
@@ -284,7 +290,7 @@ namespace csDBPF {
 				Assert.AreEqual((uint) 0x4A0B47E0, prop_file.id);
 				Assert.AreEqual((uint) 8, prop_file.numberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val2, prop_file.byteValues);
+				CollectionAssert.AreEqual(val2, prop_file.byteValues);
 				CollectionAssert.AreEqual(decoded2, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//True boolean value
@@ -294,7 +300,7 @@ namespace csDBPF {
 				Assert.AreEqual((uint) 0x4A0B47E1, prop_file.id);
 				Assert.AreEqual((uint) 1, prop_file.numberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.BOOL, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val3, prop_file.byteValues);
+				CollectionAssert.AreEqual(val3, prop_file.byteValues);
 				CollectionAssert.AreEqual(decoded3, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//False boolean value
@@ -304,7 +310,7 @@ namespace csDBPF {
 				Assert.AreEqual((uint) 0x4A0B47E2, prop_file.id);
 				Assert.AreEqual((uint) 1, prop_file.numberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.BOOL, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val4, prop_file.byteValues);
+				CollectionAssert.AreEqual(val4, prop_file.byteValues);
 				CollectionAssert.AreEqual(decoded4, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//Single UInt32 value of 0
@@ -314,7 +320,7 @@ namespace csDBPF {
 				Assert.AreEqual((uint) 0x4A0B47E3, prop_file.id);
 				Assert.AreEqual((uint) 1, prop_file.numberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val5, prop_file.byteValues);
+				CollectionAssert.AreEqual(val5, prop_file.byteValues);
 				CollectionAssert.AreEqual(decoded5, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//28 UInt32s
@@ -324,7 +330,7 @@ namespace csDBPF {
 				Assert.AreEqual((uint) 0x4A0B47E4, prop_file.id);
 				Assert.AreEqual((uint) 28, prop_file.numberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val6, prop_file.byteValues);
+				CollectionAssert.AreEqual(val6, prop_file.byteValues);
 				CollectionAssert.AreEqual(decoded6, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//Set values

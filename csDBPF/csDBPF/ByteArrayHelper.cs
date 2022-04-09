@@ -7,6 +7,7 @@ namespace csDBPF {
 	/// Helper methods to parse a byte array into an array of one of the DBPF data types. 
 	/// </summary>
 	public static class ByteArrayHelper {
+		//TODO - worried about returning the array.reverse of result - need to check for endianess before doing this??
 
 		//Convert from a byte[] to the specific data type
 		#region FromByteArrayTo
@@ -27,16 +28,12 @@ namespace csDBPF {
 			return result;
 		}
 		/// <summary>
-		/// Convert byte array to UInt8 array.
+		/// Convert byte array to UInt8 array. A Uint8 is the same as a byte, so just return the byte array.
 		/// </summary>
 		/// <param name="data">Data to parse</param>
-		/// <returns>Array of char values</returns>
-		public static char[] ToUint8Array(byte[] data) {
-			char[] result = new char[data.Length];
-			for (int idx = 0; idx < data.Length; idx++) {
-				result[idx] = (char) data[idx];
-			}
-			return result;
+		/// <returns>Array of byte values</returns>
+		public static byte[] ToUint8Array(byte[] data) {
+			return data;
 		}
 		/// <summary>
 		/// Convert byte array to UInt16 array.
@@ -47,11 +44,11 @@ namespace csDBPF {
 			if (data.Length % 2 != 0) {
 				throw new ArgumentException("Length of data array cannot be odd!");
 			}
+
 			ushort[] result = new ushort[data.Length / 2];
-			int pos = 0;
 			for (int idx = 0; idx < data.Length / 2; idx++) {
-				result[idx] = (ushort) (data[pos] << 8 | data[pos + 1]);
-				pos += 2;
+				//result[idx] = (ushort) (data[pos+1] << 8 | data[pos]);
+				result[idx] = BitConverter.ToUInt16(data, idx * 2);
 			}
 			return result;
 		}
@@ -66,11 +63,11 @@ namespace csDBPF {
 			} else if (data.Length % 4 != 0) {
 				throw new ArgumentException("Length of data array must be a multiple of 4!");
 			}
+
 			uint[] result = new uint[data.Length / 4];
-			int pos = 0;
 			for (int idx = 0; idx < data.Length / 4; idx++) {
-				result[idx] = (uint) ((data[pos] << 24) | (data[pos + 1] << 16) | (data[pos + 2] << 8) | data[pos + 3]);
-				pos += 4;
+				//result[idx] = (uint) ((data[pos+3] << 24) | (data[pos + 2] << 16) | (data[pos + 1] << 8) | data[pos]);
+				result[idx] = BitConverter.ToUInt32(data, idx * 4);
 			}
 			return result;
 		}
@@ -85,11 +82,11 @@ namespace csDBPF {
 			} else if (data.Length % 4 != 0) {
 				throw new ArgumentException("Length of data array must be a multiple of 4!");
 			}
+
 			int[] result = new int[data.Length / 4];
-			int pos = 0;
 			for (int idx = 0; idx < data.Length / 4; idx++) {
-				result[idx] = (data[pos] << 24) | (data[pos + 1] << 16) | (data[pos + 2] << 8) | data[pos + 3];
-				pos += 4;
+				//result[idx] = (data[pos+3] << 24) | (data[pos + 2] << 16) | (data[pos + 1] << 8) | data[pos];
+				result[idx] = BitConverter.ToInt32(data, idx * 4);
 			}
 			return result;
 		}
@@ -104,12 +101,10 @@ namespace csDBPF {
 			} else if (data.Length % 4 != 0) {
 				throw new ArgumentException("Length of data array must be a multiple of 4!");
 			}
-			if (BitConverter.IsLittleEndian) {
-				//Array.Reverse(data);
-			}
+
 			float[] result = new float[data.Length / 4];
 			for (int idx = 0; idx < data.Length / 4; idx++) {
-				result[idx] = BitConverter.ToSingle(data, idx * 4);
+				result[idx] = BitConverter.ToSingle(data, idx * 4); //float aka single
 			}
 			return result;
 		}
@@ -124,14 +119,14 @@ namespace csDBPF {
 			} else if (data.Length % 8 != 0) {
 				throw new ArgumentException("Length of data array must be a multiple of 8!");
 			}
+
 			long[] result = new long[data.Length / 8];
-			int pos = 0;
 			for (int idx = 0; idx < data.Length / 8; idx++) {
-				result[idx] = DBPFUtil.ReverseBytes(BitConverter.ToInt64(data, pos));
-				pos += 8;
+				result[idx] = BitConverter.ToInt64(data, idx * 8);
 			}
 			return result;
 		}
+
 
 
 		/// <summary>
@@ -227,7 +222,7 @@ namespace csDBPF {
 		public static byte[] ToByteArray(ushort[] data) {
 			byte[] result = new byte[data.Length * 2];
 			for (int pos = 0; pos < data.Length; pos++) {
-				Array.Copy(BitConverter.GetBytes(DBPFUtil.ReverseBytes(data[pos])), 0, result, pos * 2, 2);
+				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 2, 2);
 			}
 			return result;
 		}
@@ -238,11 +233,8 @@ namespace csDBPF {
 		/// <returns>A byte array of parsed data</returns>
 		public static byte[] ToByteArray(int[] data) {
 			byte[] result = new byte[data.Length * 4];
-			
 			for (int pos = 0; pos < data.Length; pos++) {
-				byte[] bytes = BitConverter.GetBytes(data[pos]);
-				Array.Reverse(bytes);
-				Array.Copy(bytes, 0, result, pos * 4, 4);
+				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 4, 4);
 			}
 			return result;
 		}
@@ -254,9 +246,7 @@ namespace csDBPF {
 		public static byte[] ToByteArray(uint[] data) {
 			byte[] result = new byte[data.Length * 4];
 			for (int pos = 0; pos < data.Length; pos++) {
-				byte[] bytes = BitConverter.GetBytes(data[pos]);
-				Array.Reverse(bytes);
-				Array.Copy(bytes, 0, result, pos * 4, 4);
+				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 4, 4);
 			}
 			return result;
 		}
@@ -278,9 +268,7 @@ namespace csDBPF {
 		public static byte[] ToByteArray(long[] data) {
 			byte[] result = new byte[data.Length * 8];
 			for (int pos = 0; pos < data.Length; pos++) {
-				byte[] bytes = BitConverter.GetBytes(data[pos]);
-				Array.Reverse(bytes);
-				Array.Copy(bytes, 0, result, pos * 8, 8);
+				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 8, 8);
 			}
 			return result;
 		}

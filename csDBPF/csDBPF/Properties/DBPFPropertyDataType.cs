@@ -78,14 +78,14 @@ namespace csDBPF.Properties {
 		}
 		
 		static DBPFPropertyDataType() {
-			SINT32 = new DBPFPropertyDataType("SINT32", 0x7, 4);
-			FLOAT32 = new DBPFPropertyDataType("FLOAT32", 0x9, 4);
-			UINT32 = new DBPFPropertyDataType("UINT32", 0x3, 4);
-			BOOL = new DBPFPropertyDataType("BOOL", 0xB, 1);
-			UINT8 = new DBPFPropertyDataType("UINT8", 0x1, 1);
-			SINT64 = new DBPFPropertyDataType("SINT62", 0x8, 8);
-			UINT16 = new DBPFPropertyDataType("UINT16", 0x2, 2);
-			STRING = new DBPFPropertyDataType("STRING", 0xC, 1);
+			SINT32 = new DBPFPropertyDataType("SINT32", 0x700, 4);
+			FLOAT32 = new DBPFPropertyDataType("FLOAT32", 0x900, 4);
+			UINT32 = new DBPFPropertyDataType("UINT32", 0x300, 4);
+			BOOL = new DBPFPropertyDataType("BOOL", 0xB00, 1);
+			UINT8 = new DBPFPropertyDataType("UINT8", 0x100, 1);
+			SINT64 = new DBPFPropertyDataType("SINT62", 0x800, 8);
+			UINT16 = new DBPFPropertyDataType("UINT16", 0x200, 2);
+			STRING = new DBPFPropertyDataType("STRING", 0xC00, 1);
 
 			dataTypes.Add(SINT32.ToString(), SINT32);
 			dataTypes.Add(FLOAT32.ToString(), FLOAT32);
