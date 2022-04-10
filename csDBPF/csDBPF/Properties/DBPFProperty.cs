@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
-using csDBPF.Properties;
+using System.Linq;
+using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace csDBPF.Properties {
 
@@ -35,6 +36,7 @@ namespace csDBPF.Properties {
 		//public abstract object valuesDecoded { get; set; }
 
 		public abstract object DecodeValues();
+		
 		/// <summary>
 		/// Sets the value field to the provided byte array. Also sets numberOfReps to the appropriate value.
 		/// </summary>
@@ -66,7 +68,6 @@ namespace csDBPF.Properties {
 		/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP"/>
 		public static DBPFProperty DecodeExemplarProperty(byte[] dData, int offset = 24) {
 			//Read the file identifier and verify if cohort or exemplar
-			//long fileIdentifier = DBPFUtil.ReverseBytes((long) BitConverter.ToUInt64(dData, 0));
 			string fileIdentifier = ByteArrayHelper.ToAString(dData, 0, 8);
 			if (fileIdentifier != EQZB1 && fileIdentifier != EQZT1 && fileIdentifier != CQZB1 && fileIdentifier != CQZT1) {
 				throw new ArgumentException("Data provided does not represent an exemplar or cohort property!");
@@ -83,7 +84,6 @@ namespace csDBPF.Properties {
 			offset += 4;
 
 			//Get the data value type
-			//ushort valueType = DBPFUtil.ReverseBytes(BitConverter.ToUInt16(dData, offset));
 			ushort valueType = BitConverter.ToUInt16(dData, offset);
 			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(valueType);
 			offset += 2;
@@ -106,7 +106,7 @@ namespace csDBPF.Properties {
 				offset += 1; //There is a 1 byte unused flag
 				uint countOfReps = BitConverter.ToUInt32(dData, offset);
 				offset += 4;
-				byte[] newValue = new byte[countOfReps*newProperty.dataType.length];
+				byte[] newValue = new byte[countOfReps * newProperty.dataType.length];
 				for (int idx = 0; idx < newValue.Length; idx++) {
 					newValue[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
@@ -120,7 +120,6 @@ namespace csDBPF.Properties {
 				for (int idx = 0; idx < dataType.length; idx++) {
 					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
-				//Array.Reverse(newVals); //TODO - why is this required? the order of the byteValues array switches as soon as it is set in the next line??? why?
 				newProperty.byteValues = newVals;
 			}
 			return newProperty;
@@ -132,6 +131,45 @@ namespace csDBPF.Properties {
 
 		public static DBPFProperty DecodeCohortProperty(byte[] dData, int offset = 0) {
 			return DecodeExemplarProperty(dData, offset);
+		}
+
+
+		/// <summary>
+		/// Queries new_properties.xml and returns the exemplar property (PROPERTY) element matching the specified ID.
+		/// </summary>
+		/// <param name="id">Property ID to lookup</param>
+		/// <returns>XElement of the specified property ID</returns>
+		public static XElement GetXMLProperty(uint id) {
+			//TODO - figure out if it is quicker to routinely query only what we need from the xml doc one thing at a time or load the whole doc into memory and then just grab the parts we need from that
+
+
+			XElement xml = XElement.Load("C:\\Users\\Administrator\\OneDrive\\Documents\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml");
+			//Within XML doc, there is a single element of PROPERTIES which contain many elements PROPERTY
+			string str = "0x" + DBPFUtil.UIntToHexString(id, 8).ToLower();
+			IEnumerable<XElement> matchingExemplarProperty = from prop in xml.Elements("PROPERTIES").Elements("PROPERTY")
+															 where prop.Attribute("ID").Value == "0x" + DBPFUtil.UIntToHexString(id, 8).ToLower()
+															 select prop;
+			//LINQ query returns an IEnumerable object, but because of our filter there should always only be one result so we do not have to worry about iterating over the return
+			return matchingExemplarProperty.First();
+
+
+
+			//foreach (var prop in matchingExemplarProperty) {
+			//	Console.WriteLine(prop.Value);
+			//	string idd = prop.Attribute("ID").Value;
+			//	string name = prop.Attribute("Name").Value;
+			//	string type = prop.Attribute("Type").Value;
+			//}
+			//Example XML format in new_properties.xml
+			//<PROPERTY Name="Name" ID="0x00000000" Type="Uint32" Default="0x00000000" ShowAsHex="Y" >
+			//		 < HELP >
+			//			 A GZGUID that identifies a class interface
+			//		 </HELP>
+			//</PROPERTY>
+
+			//list of possible fields for a property:
+			//name, id, type, default, showashex, minlength, maxlength, count, minvalue, maxvalue
+			//some properties have values restricted to certain things - these are the OPTION lists ... currently unimplemented
 		}
 
 	}

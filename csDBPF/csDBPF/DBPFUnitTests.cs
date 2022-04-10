@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using csDBPF.Properties;
+using System.Xml.Linq;
 
 namespace csDBPF {
 	[TestClass]
@@ -342,6 +343,18 @@ namespace csDBPF {
 				Assert.AreEqual((uint) 28, prop_file.numberOfReps);
 				CollectionAssert.AreEquivalent(val6, prop_file.byteValues);
 				CollectionAssert.AreEqual(decoded6, (System.Collections.ICollection) prop_file.DecodeValues());
+			}
+
+
+			[TestMethod]
+			public void Test_065_DBPFProperty_GetXMLProperty() {
+				XElement el = DBPFProperty.GetXMLProperty(0x00000010);
+				Assert.AreEqual("0x00000010", el.Attribute("ID").Value); 
+				Assert.AreEqual("Exemplar Type", el.Attribute("Name").Value);
+
+				el = DBPFProperty.GetXMLProperty(0x87cd6345);
+				Assert.AreEqual("0x87cd6345", el.Attribute("ID").Value);
+				Assert.AreEqual("R$$$ Proximity Effect", el.Attribute("Name").Value);
 			}
 		}
 
