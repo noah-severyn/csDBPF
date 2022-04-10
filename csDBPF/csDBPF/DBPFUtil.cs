@@ -70,12 +70,12 @@ namespace csDBPF {
 
 
 		/// <summary>
-		/// Returns a string representation of the provided uint converted to hex, padded by the specified number of places
+		/// Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
 		/// </summary>
 		/// <param name="value">Value to return</param>
-		/// <param name="places">Number of places to pad the value. Should usually be 8. 0-8 valid.</param>
-		/// <returns></returns>
-		public static string UIntToHexString(uint? value, int places) {
+		/// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
+		/// <returns>Uppercase string representing the uint</returns>
+		public static string UIntToHexString(uint? value, int places = 8) {
 			if (places < 0 || places > 8) {
 				throw new ArgumentOutOfRangeException("places", "Number of places must be between 0 and 8.");
 			}
