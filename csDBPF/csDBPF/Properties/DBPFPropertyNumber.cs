@@ -9,10 +9,10 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// Hexadecimal identifier for this property. <see cref=""/> 
 		/// </summary>
-		private uint _id;
-		public override uint id {
-			get { return _id; }
-			set { _id = value; }
+		private uint _ID;
+		public override uint ID {
+			get { return _ID; }
+			set { _ID = value; }
 		}
 
 
@@ -20,7 +20,7 @@ namespace csDBPF.Properties {
 		/// Number of repetitions of the data type in this property. The byte size of this property's <see cref="DBPFPropertyDataType"/> multiplied by this number equals the byte size of this property's values in bytes. Initialized to 1.
 		/// </summary>
 		private uint _numberOfReps;
-		public override uint numberOfReps {
+		public override uint NumberOfReps {
 			get { return _numberOfReps; }
 		}
 
@@ -29,7 +29,7 @@ namespace csDBPF.Properties {
 		/// The <see cref="DBPFPropertyDataType"/> for this property.
 		/// </summary>
 		private DBPFPropertyDataType _dataType;
-		public override DBPFPropertyDataType dataType {
+		public override DBPFPropertyDataType DataType {
 			get { return _dataType; }
 			set {
 				if (_dataType == DBPFPropertyDataType.STRING) {
@@ -44,7 +44,7 @@ namespace csDBPF.Properties {
 		/// The byte array of base data for the property. When this is set, <see cref="valuesDecoded"/> is also set to the equivalent value.
 		/// </summary>
 		private byte[] _byteValues;
-		public override byte[] byteValues {
+		public override byte[] ByteValues {
 			get { return _byteValues; }
 			set {
 				_byteValues = value;
@@ -88,7 +88,7 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// Parse the byte values for this property to return an array of the property's <see cref="DBPFPropertyDataType"/>.
 		/// </summary>
-		/// <returns>An array <see cref="numberOfReps"/> long of <see cref="DBPFPropertyDataType"/> numbers</returns>
+		/// <returns>An array <see cref="NumberOfReps"/> long of <see cref="DBPFPropertyDataType"/> numbers</returns>
 		public override object DecodeValues() {
 			switch (_dataType.name) {
 				case "BOOL":
