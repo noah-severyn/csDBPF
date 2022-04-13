@@ -4,7 +4,7 @@
 		<PROPERTY ID="0x00000000" Name="MiscType1" Type="Uint32" ShowAsHex="N">
 			<HELP>Function, values, &amp; DataType: varies from Exemplar file to Exemplar file</HELP>
 		</PROPERTY>
-		<PROPERTY Name="Parent Cohort" ID="ParentCohort" Type="Uint32" Count="3" ShowAsHex="Y">
+		<PROPERTY Name="Parent Cohort" ID="0x00000001" Type="Uint32" Count="3" ShowAsHex="Y">
 			<HELP>....</HELP>
 		</PROPERTY>
 		<PROPERTY Name="Exemplar Type" ID="0x00000010" Type="Uint32" ShowAsHex="Y">
