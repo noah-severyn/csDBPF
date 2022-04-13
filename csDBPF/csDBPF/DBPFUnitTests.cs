@@ -348,6 +348,7 @@ namespace csDBPF {
 
 			[TestMethod]
 			public void Test_065_DBPFProperty_GetXMLProperty() {
+				DBPFProperty.LoadXMLProperties();
 				XElement el = DBPFProperty.GetXMLProperty(0x00000010);
 				Assert.AreEqual("0x00000010", el.Attribute("ID").Value); 
 				Assert.AreEqual("Exemplar Type", el.Attribute("Name").Value);

@@ -3,6 +3,7 @@ using System.Text;
 using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace csDBPF.Properties {
 
@@ -14,21 +15,21 @@ namespace csDBPF.Properties {
 		private const string EQZT1 = "EQZT1###";
 		private const string CQZB1 = "CQZB1###";
 		private const string CQZT1 = "CQZT1###";
+		private static readonly Dictionary<uint, ExemplarProperty> AllProperties = new Dictionary<uint, ExemplarProperty>();
 
-		private uint _id;
-		public abstract uint id { get; set; }
+		private readonly uint _id;
+		public abstract uint ID { get; set; }
 
-		private uint _numberOfReps;
-		public abstract uint numberOfReps { get; }
+		private readonly uint _numberOfReps;
+		public abstract uint NumberOfReps { get; }
 
-		private DBPFPropertyDataType _dataType;
-		public abstract DBPFPropertyDataType dataType { get; set; }
+		private readonly DBPFPropertyDataType _dataType;
+		public abstract DBPFPropertyDataType DataType { get; set; }
 
 		/// <summary>
-		/// This is a byte array of the raw values in the property.
+		/// This is a byte array of the raw values in the property. Assignment of this value takes place in <see cref="DBPFPropertyString"/> or <see cref="DBPFPropertyNumber"/>.
 		/// </summary>
-		private byte[] _byteValues;
-		public abstract byte[] byteValues { get; set; }
+		public abstract byte[] ByteValues { get; set; }
 
 		/// <summary>
 		/// This is the decoded (interpreted) values based on the implementing class type. With the exception of string, will take the form of an array of the implementing class's type (int or float).
@@ -36,7 +37,7 @@ namespace csDBPF.Properties {
 		//public abstract object valuesDecoded { get; set; }
 
 		public abstract object DecodeValues();
-		
+
 		/// <summary>
 		/// Sets the value field to the provided byte array. Also sets numberOfReps to the appropriate value.
 		/// </summary>
@@ -47,7 +48,6 @@ namespace csDBPF.Properties {
 			_dataType = dataType;
 			_id = 0x0;
 			_numberOfReps = 0;
-			_byteValues = null;
 		}
 
 		public override string ToString() {
@@ -99,18 +99,18 @@ namespace csDBPF.Properties {
 			} else {
 				newProperty = new DBPFPropertyNumber(dataType);
 			}
-			newProperty.id = propertyID;
+			newProperty.ID = propertyID;
 
 			//Examine the keyType to determine how to set the values for the new property
 			if (keyType == 0x80) {
 				offset += 1; //There is a 1 byte unused flag
 				uint countOfReps = BitConverter.ToUInt32(dData, offset);
 				offset += 4;
-				byte[] newValue = new byte[countOfReps * newProperty.dataType.length];
+				byte[] newValue = new byte[countOfReps * newProperty.DataType.length];
 				for (int idx = 0; idx < newValue.Length; idx++) {
 					newValue[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
-				newProperty.byteValues = newValue;
+				newProperty.ByteValues = newValue;
 			}
 
 			//keyType == 0x00 ... this is just a single value of the data type length
@@ -120,7 +120,7 @@ namespace csDBPF.Properties {
 				for (int idx = 0; idx < dataType.length; idx++) {
 					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
-				newProperty.byteValues = newVals;
+				newProperty.ByteValues = newVals;
 			}
 			return newProperty;
 		}
@@ -167,10 +167,160 @@ namespace csDBPF.Properties {
 			//		 </HELP>
 			//</PROPERTY>
 
-			//list of possible fields for a property:
-			//name, id, type, default, showashex, minlength, maxlength, count, minvalue, maxvalue
 			//some properties have values restricted to certain things - these are the OPTION lists ... currently unimplemented
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <remarks>
+		/// The XML structure is as follows: each XML tag is an XElement (element). Each element can have one or more XAttributes (attributes) which help describe the element. See new_properties.xsd for required vs optional attributes for Properties.
+		/// </remarks>
+		public static void LoadXMLProperties() {
+			//XDocument is a great way to read XML files. Since we do not need to do anything too complicated and do not need to do any xml writing, we can go with the much simpler XElement instead which has fewer methods and properties to worry about.
+			XElement xml = XElement.Load("C:\\Users\\Administrator\\OneDrive\\Documents\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml");
+			IEnumerable<XElement> exemplarProperties = from prop in xml.Elements("PROPERTIES").Elements("PROPERTY")
+													   select prop;
+
+			foreach (XElement prop in exemplarProperties) {
+				uint id = Convert.ToUInt32(prop.Attribute("ID").Value, 16);
+				//string nm = prop.Attribute("Name").Value;
+				//DBPFPropertyDataType dt = DBPFPropertyDataType.LookupDataType(prop.Attribute("Type").Value);
+				//bool hx = prop.Attribute("ShowAsHex").Value == "Y";
+
+				//For the rest of the attributes, we do not know which ones will exist for a property; directly setting them from the constructor results in a null reference exception. Examine then set each one individually.
+				//https://stackoverflow.com/a/44929328 This is kind of hideous, but we are first checking if the XAttribute exists. If it does a string value is returned; null is returned if it does not exist. Throw this returned value into the TryParse. Since we have to deal with the possibility of the value being null and TryParse can only out non-nullable values, we need to check the result of TryParse whether it was successful or not. If it was successful we just return the out value, if it was not successful we finally just return null.
+				//short? ct = short.TryParse((string) TryXAttributeExists(prop, "Count"), out short s) ? s : (short?) null;
+				//string df = (string) TryXAttributeExists(prop, "DefaultValue");
+				//int? ml = int.TryParse((string) TryXAttributeExists(prop, "MinLength"), out int i1) ? i1 : (int?) null;
+				//int? xl = int.TryParse((string) TryXAttributeExists(prop, "MaxLength"), out int i2) ? i2 : (int?) null;
+				//uint? mv = uint.TryParse((string) TryXAttributeExists(prop, "MinValue"), out uint u1) ? u1 : (uint?) null;
+				//uint? xv = uint.TryParse((string) TryXAttributeExists(prop, "MaxValue"), out uint u2) ? u2 : (uint?) null;
+				//uint? st = uint.TryParse((string) TryXAttributeExists(prop, "Step"), out uint u3) ? u3 : (uint?) null;
+
+				ExemplarProperty exmp = new ExemplarProperty(
+					id,
+					prop.Attribute("Name").Value,
+					DBPFPropertyDataType.LookupDataType(prop.Attribute("Type").Value),
+					prop.Attribute("ShowAsHex").Value == "Y",
+					short.TryParse((string) TryXAttributeExists(prop, "Count"), out short s) ? s : (short?) null,
+					(string) TryXAttributeExists(prop, "DefaultValue"),
+					int.TryParse((string) TryXAttributeExists(prop, "MinLength"), out int i1) ? i1 : (int?) null,
+					int.TryParse((string) TryXAttributeExists(prop, "MaxLength"), out int i2) ? i2 : (int?) null,
+					uint.TryParse((string) TryXAttributeExists(prop, "MinValue"), out uint u1) ? u1 : (uint?) null,
+					uint.TryParse((string) TryXAttributeExists(prop, "MaxValue"), out uint u2) ? u2 : (uint?) null,
+					uint.TryParse((string) TryXAttributeExists(prop, "Step"), out uint u3) ? u3 : (uint?) null
+				);
+
+				AllProperties.Add(id, exmp);
+			}
+
+		}
+
+
+		/// <summary>
+		/// Generic Helper function to determine if the XAttribute exists for the given XElement and return its value if it does, or null if not.
+		/// </summary>
+		/// <param name="element"><see cref="XElement"/> to examine</param>
+		/// <param name="xname">Name of <see cref="XAttribute"/> to look for. Represents the <see cref="XName"/>.</param>
+		/// <returns><see cref="XAttribute.Value"/> if XAttribute exists; null otherwise</returns>
+		private static object TryXAttributeExists(XElement element, string xname) {
+			XAttribute xattr = element.Attribute(xname);
+			if (xattr == null) {
+				return null;
+			}
+			return xattr.Value;
+		}
+
+
+		private class ExemplarProperty {
+			//These parameters are required
+			//<xs:attribute name = "ID" type="xs:string" use="required" />
+			//<xs:attribute name = "Name" type="xs:string" use="required" />
+			//<xs:attribute name = "Type" type="xs:string" use="required" />
+			//<xs:attribute name = "ShowAsHex" type="xs:string" use="required" />
+			private uint _id;
+			protected uint id {
+				get { return _id; }
+			}
+			private string _name;
+			protected string name {
+				get { return _name; }
+			}
+			private DBPFPropertyDataType _type;
+			protected DBPFPropertyDataType type {
+				get { return _type; }
+			}
+			private bool _showAsHex;
+			protected bool showAsHex {
+				get { return _showAsHex; }
+			}
+
+			//These parameters are optional
+			//<xs:attribute name = "Count" type="xs:short" use="optional" />
+			//<xs:attribute name = "Default" type="xs:string" use="optional" />
+			//<xs:attribute name = "MinLength" type="xs:string" use="optional" />
+			//<xs:attribute name = "MaxLength" type="xs:string" use="optional" />
+			//<xs:attribute name = "MinValue" type="xs:string" use="optional" />
+			//<xs:attribute name = "MaxValue" type="xs:string" use="optional" />
+			//<xs:attribute name = "Step" type="xs:string" use="optional" />
+			private short? _count;
+			protected short? count {
+				get { return _count; }
+			}
+			private string _defaultValue;
+			protected string defaultValue {
+				get { return _defaultValue; }
+			}
+			private int? _minLength;
+			protected int? minLength {
+				get { return _minLength; }
+				set { _minLength = value; }
+			}
+			private int? _maxLength;
+			protected int? maxLength {
+				get { return _maxLength; }
+			}
+			private uint? _minValue;
+			protected uint? minValue {
+				get { return _minValue; }
+			}
+			private uint? _maxValue;
+			protected uint? maxValue {
+				get { return _maxValue; }
+			}
+			private uint? _step;
+			protected uint? step {
+				get { return _step; }
+			}
+
+			public ExemplarProperty() {
+				_id = 0;
+				_name = null;
+				_type = null;
+				_showAsHex = true;
+			}
+
+			public ExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex) {
+				_id = 0;
+				_name = null;
+				_type = null;
+				_showAsHex = true;
+			}
+
+			public ExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex, short? count = null, string defaultValue = null, int? minLength = null, int? maxLength = null, uint? minValue = null, uint? maxValue = null, uint? step = null) {
+				_id = id;
+				_name = name;
+				_type = type;
+				_showAsHex = showAsHex;
+				_count = count;
+				_defaultValue = defaultValue;
+				_minLength = minLength;
+				_maxLength = maxLength;
+				_minValue = minValue;
+				_maxValue = maxValue;
+				_step = step;
+			}
+		}
 	}
 }
