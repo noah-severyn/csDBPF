@@ -61,6 +61,14 @@ namespace csDBPF.Properties {
 			}
 			throw new KeyNotFoundException($"Value {DBPFUtil.UIntToHexString(value, 2)} does not match a known property data type!");
 		}
+		public static DBPFPropertyDataType LookupDataType(string value) {
+			foreach (DBPFPropertyDataType type in dataTypes.Values) {
+				if (type.name.ToUpper() == value.ToUpper()) {
+					return type;
+				}
+			}
+			throw new KeyNotFoundException($"Value {value} does not match a known property data type!");
+		}
 
 
 
@@ -83,7 +91,7 @@ namespace csDBPF.Properties {
 			UINT32 = new DBPFPropertyDataType("UINT32", 0x300, 4);
 			BOOL = new DBPFPropertyDataType("BOOL", 0xB00, 1);
 			UINT8 = new DBPFPropertyDataType("UINT8", 0x100, 1);
-			SINT64 = new DBPFPropertyDataType("SINT62", 0x800, 8);
+			SINT64 = new DBPFPropertyDataType("SINT64", 0x800, 8);
 			UINT16 = new DBPFPropertyDataType("UINT16", 0x200, 2);
 			STRING = new DBPFPropertyDataType("STRING", 0xC00, 1);
 
