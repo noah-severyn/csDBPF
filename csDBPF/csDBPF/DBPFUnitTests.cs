@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using csDBPF.Properties;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace csDBPF {
 	[TestClass]
@@ -348,7 +349,6 @@ namespace csDBPF {
 
 			[TestMethod]
 			public void Test_065_DBPFProperty_GetXMLProperty() {
-				DBPFProperty.LoadXMLProperties();
 				XElement el = DBPFProperty.GetXMLProperty(0x00000010);
 				Assert.AreEqual("0x00000010", el.Attribute("ID").Value); 
 				Assert.AreEqual("Exemplar Type", el.Attribute("Name").Value);
@@ -356,6 +356,27 @@ namespace csDBPF {
 				el = DBPFProperty.GetXMLProperty(0x87cd6345);
 				Assert.AreEqual("0x87cd6345", el.Attribute("ID").Value);
 				Assert.AreEqual("R$$$ Proximity Effect", el.Attribute("Name").Value);
+			}
+
+			[TestMethod]
+			public void Text_066_DBPFProperty_AllProperties() {
+				//< PROPERTY Name = "Item Button ID" ID = "0x8a2602bb" Type = "Uint32" Default = "0x00000000" ShowAsHex = "Y" >
+				DBPFProperty.AllProperties.TryGetValue(0x8a2602bb, out DBPFProperty.ExemplarProperty exmp);
+				Assert.AreEqual((uint) 0x8a2602bb, exmp.id);
+				Assert.AreEqual("Item Button ID", exmp.name);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, exmp.type);
+				Assert.AreEqual(true, exmp.showAsHex);
+				Assert.AreEqual((uint) 0, exmp.defaultValue);
+				Assert.AreEqual(null, exmp.maxValue);
+
+				//<PROPERTY Name="Path Offset Range for Peds" ID="0x29dd40c1" Type="Float32" Count="2" Default="-1 3" ShowAsHex="Y">
+				DBPFProperty.AllProperties.TryGetValue(0x29dd40c1, out DBPFProperty.ExemplarProperty exmp2);
+				Assert.AreEqual((uint) 0x29dd40c1, exmp2.id);
+				Assert.AreEqual("Path Offset Range for Peds", exmp2.name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp2.type);
+				Assert.AreEqual(true, exmp2.showAsHex);
+				Assert.AreEqual(null, exmp2.defaultValue);
+				Assert.AreEqual(2, exmp2.count);
 			}
 		}
 
