@@ -121,16 +121,17 @@ namespace csDBPF.Properties {
 			if (!t.IsArray) {
 				throw new ArgumentException("An array of numbers is expected.");
 			}
-			ArrayList result = new ArrayList();
-			IEnumerable e = newValue as IEnumerable;
-			if (e == null) {
+
+			List<byte> result = new List<byte>();
+			if (!(newValue is IEnumerable e)) {
 				throw new ArgumentException("Unable to iterate over object!");
 			} else {
 				foreach (object item in e) {
 					result.Add((byte) item);
 				}
 			}
-			_byteValues = result.ToArray(typeof(byte)) as byte[];
+			_byteValues = result.ToArray();
+
 			_numberOfReps = (uint) (_byteValues.Length / _dataType.length);
 		}
 
