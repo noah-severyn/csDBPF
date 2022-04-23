@@ -33,7 +33,7 @@ namespace csDBPF.Properties {
 			get { return _dataType; }
 			set {
 				if (_dataType != DBPFPropertyDataType.STRING) {
-					throw new ArgumentException($"Data type of {_dataType.name} provided where {DBPFPropertyDataType.STRING.name} is required.");
+					throw new ArgumentException($"Data type of {_dataType.Name} provided where {DBPFPropertyDataType.STRING.Name} is required.");
 				}
 				_dataType = value;
 			}

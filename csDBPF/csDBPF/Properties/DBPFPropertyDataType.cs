@@ -18,7 +18,7 @@ namespace csDBPF.Properties {
 		/// Data type identifier
 		/// </summary>
 		private string _name;
-		public string name {
+		public string Name {
 			get { return _name; }
 		}
 
@@ -26,7 +26,7 @@ namespace csDBPF.Properties {
 		/// Numeric value encoded in the exemplar data used to identify the property data type
 		/// </summary>
 		private ushort _identifyingNumber;
-		public ushort identifyingNumber {
+		public ushort IdentifyingNumber {
 			get { return _identifyingNumber; }
 		}
 
@@ -34,7 +34,7 @@ namespace csDBPF.Properties {
 		/// Length in bytes of the property
 		/// </summary>
 		private int _length;
-		public int length {
+		public int Length {
 			get { return _length; }
 		}
 
@@ -55,7 +55,7 @@ namespace csDBPF.Properties {
 		/// <returns>Corresponding DBPFPropertyType to the specified value; exception thrown if no result is found</returns>
 		public static DBPFPropertyDataType LookupDataType(ushort value) {
 			foreach (DBPFPropertyDataType type in dataTypes.Values) {
-				if (type.identifyingNumber == value) {
+				if (type.IdentifyingNumber == value) {
 					return type;
 				}
 			}
@@ -63,7 +63,7 @@ namespace csDBPF.Properties {
 		}
 		public static DBPFPropertyDataType LookupDataType(string value) {
 			foreach (DBPFPropertyDataType type in dataTypes.Values) {
-				if (type.name.ToUpper() == value.ToUpper()) {
+				if (type.Name.ToUpper() == value.ToUpper()) {
 					return type;
 				}
 			}

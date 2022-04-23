@@ -16,7 +16,7 @@ namespace csDBPF.Properties {
 		private const string EQZT1 = "EQZT1###";
 		private const string CQZB1 = "CQZB1###";
 		private const string CQZT1 = "CQZT1###";
-		private static Dictionary<uint, ExemplarProperty> xmlProperties = new Dictionary<uint, ExemplarProperty>();
+		private static readonly Dictionary<uint, ExemplarProperty> xmlProperties = new Dictionary<uint, ExemplarProperty>();
 		public static ImmutableDictionary<uint, ExemplarProperty> AllProperties;
 		
 		private const string xmlPath = "C:\\Users\\Administrator\\OneDrive\\Documents\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml";
@@ -98,7 +98,7 @@ namespace csDBPF.Properties {
 
 			//Create new decoded property then set id and dataType
 			DBPFProperty newProperty;
-			if (dataType.name == "STRING") {
+			if (dataType.Name == "STRING") {
 				newProperty = new DBPFPropertyString(dataType);
 			} else {
 				newProperty = new DBPFPropertyNumber(dataType);
@@ -110,7 +110,7 @@ namespace csDBPF.Properties {
 				offset += 1; //There is a 1 byte unused flag
 				uint countOfReps = BitConverter.ToUInt32(dData, offset);
 				offset += 4;
-				byte[] newValue = new byte[countOfReps * newProperty.DataType.length];
+				byte[] newValue = new byte[countOfReps * newProperty.DataType.Length];
 				for (int idx = 0; idx < newValue.Length; idx++) {
 					newValue[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
@@ -120,8 +120,8 @@ namespace csDBPF.Properties {
 			//keyType == 0x00 ... this is just a single value of the data type length
 			else {
 				offset += 1; //This one byte is number of value repetitions; seems to always be 0
-				byte[] newVals = new byte[dataType.length];
-				for (int idx = 0; idx < dataType.length; idx++) {
+				byte[] newVals = new byte[dataType.Length];
+				for (int idx = 0; idx < dataType.Length; idx++) {
 					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
 				}
 				newProperty.ByteValues = newVals;
@@ -249,8 +249,8 @@ namespace csDBPF.Properties {
 			internal short? count {
 				get { return _count; }
 			}
-			private List<object> _defaultValue;
-			internal List<object> defaultValue {
+			private List<string> _defaultValue;
+			internal List<string> defaultValue {
 				get { return _defaultValue; }
 			}
 			private int? _minLength;
@@ -298,7 +298,7 @@ namespace csDBPF.Properties {
 				if (defaultValue == null) {
 					_defaultValue = null;
 				} else {
-					_defaultValue = new List<object>(defaultValue.Split(" "));
+					_defaultValue = new List<string>(defaultValue.Split(" "));
 				}
 				
 				_minLength = minLength;

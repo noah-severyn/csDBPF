@@ -33,7 +33,7 @@ namespace csDBPF.Properties {
 			get { return _dataType; }
 			set {
 				if (_dataType == DBPFPropertyDataType.STRING) {
-					throw new ArgumentException($"Data type of {_dataType.name} provided where a numerical DBPFPropertyDataType is required.");
+					throw new ArgumentException($"Data type of {_dataType.Name} provided where a numerical DBPFPropertyDataType is required.");
 				}
 				_dataType = value;
 			}
@@ -48,7 +48,7 @@ namespace csDBPF.Properties {
 			get { return _byteValues; }
 			set {
 				_byteValues = value;
-				_numberOfReps = (uint) (value.Length / _dataType.length);
+				_numberOfReps = (uint) (value.Length / _dataType.Length);
 				//_valuesDecoded = DBPFUtil.StringFromByteArray(value);
 			}
 		}
@@ -90,7 +90,7 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <returns>An array <see cref="NumberOfReps"/> long of <see cref="DBPFPropertyDataType"/> numbers</returns>
 		public override object DecodeValues() {
-			switch (_dataType.name) {
+			switch (_dataType.Name) {
 				case "BOOL":
 					return ByteArrayHelper.ToBoolArray(_byteValues);
 				case "UINT8":
@@ -132,7 +132,7 @@ namespace csDBPF.Properties {
 			}
 			_byteValues = result.ToArray();
 
-			_numberOfReps = (uint) (_byteValues.Length / _dataType.length);
+			_numberOfReps = (uint) (_byteValues.Length / _dataType.Length);
 		}
 
 
