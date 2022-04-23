@@ -83,7 +83,16 @@ namespace csDBPF {
 			} else {
 				return value.ToString();
 			}
+		}
 
+
+		/// <summary>
+		/// Convert Unix datetime to a <see cref="DateTime"/> object.
+		/// </summary>
+		/// <param name="time">Unix time</param>
+		/// <returns><see cref="DateTime"/> object equal to the provided Unix time</returns>
+		public static DateTime UnixToDate(uint time) {
+			return DateTimeOffset.FromUnixTimeSeconds(time).UtcDateTime;
 		}
 	}
 }

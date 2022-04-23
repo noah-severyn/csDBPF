@@ -69,6 +69,17 @@ namespace csDBPF {
 				CollectionAssert.AreEquivalent(b1, ByteArrayHelper.ToByteArray(s1));
 				CollectionAssert.AreEquivalent(b2, ByteArrayHelper.ToByteArray(s2));
 			}
+
+			[TestMethod]
+			public void Test_015_DBPFUtil_DateFromUnix() {
+				uint u1 = 0x5e115977; // 1/5/2020 3:35:19 AM 
+				DateTime d1 = new DateTime(2020, 1, 5, 3, 35, 19);
+				uint u2 = 0x60557b29; // 3/20/2021 4:33:45 AM
+				DateTime d2 = new DateTime(2021, 3, 20, 4, 33, 45);
+
+				Assert.AreEqual(d1, DBPFUtil.UnixToDate(u1));
+				Assert.AreEqual(d2, DBPFUtil.UnixToDate(u2));
+			}
 		}
 
 		// 02x Test methods for DBPFCompression class

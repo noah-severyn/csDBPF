@@ -37,7 +37,7 @@ namespace csDBPF {
 			public string Identifier {
 				get { return _identifier; }
 				set {
-					string identifierDbpf = "DBPF";// (uint) 0x44425046; //1145196614 decimal = 44425046 hex = DBPF ASCII
+					string identifierDbpf = "DBPF";
 					if (value.CompareTo(identifierDbpf) != 0) {
 						throw new Exception("File is not a DBPF file!");
 					} else {
@@ -102,8 +102,8 @@ namespace csDBPF {
 			public override string ToString() {
 				StringBuilder sb = new StringBuilder();
 				sb.Append($"Version: {MajorVersion}.{MinorVersion}; ");
-				sb.Append($"Created: {DateCreated}; "); // TODO - add functions to output these in a readable format - possibly functions in a util class?
-				sb.Append($"Modified: {DateModified}; "); // TODO - add functions to output these in a readable format - possibly functions in a util class?
+				sb.Append($"Created: {DateCreated}; "); //Unix DateTime
+				sb.Append($"Modified: {DateModified}; "); //Unix DateTime
 				sb.Append($"Index Major Version: {IndexMajorVersion}; ");
 				sb.Append($"Index Entry Count: {IndexEntryCount}; ");
 				sb.Append($"Index Offset Location: {IndexEntryOffset}; ");
