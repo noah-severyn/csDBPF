@@ -8,7 +8,7 @@ namespace csDBPF {
 	/// </summary>
 	public static class ByteArrayHelper {
 		//Convert from a byte[] to the specific data type
-		#region FromByteArrayTo
+		#region FromByteArrayToArray
 		/// <summary>
 		/// Convert byte array to boolean array.
 		/// </summary>
@@ -124,9 +124,9 @@ namespace csDBPF {
 			}
 			return result;
 		}
+		#endregion FromByteArrayToArray
 
-
-
+		#region FromByteArrayToA
 		/// <summary>
 		/// Reads a byte array and returns a string of the entire array.
 		/// </summary>
@@ -166,7 +166,20 @@ namespace csDBPF {
 			}
 			return sb.ToString();
 		}
-		#endregion FromByteArrayTo
+
+		/// <summary>
+		/// Sequentially reads 4 bytes and assigns them to a uint in big-endian order.
+		/// </summary>
+		/// <param name="data">Array of length 4 to convert</param>
+		/// <returns>Uint</returns>
+		public static uint ReadAUint(byte[] data) {
+			if (data.Length != 4) {
+				throw new ArgumentException("Length of data array must be 4");
+			}
+			return (uint) ((data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3]);
+		}
+		#endregion FromByteArrayToA
+
 
 		//Convert from the specific data type to a byte[]
 		#region ToByteArray

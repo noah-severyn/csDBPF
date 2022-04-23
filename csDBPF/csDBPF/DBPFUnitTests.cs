@@ -134,6 +134,16 @@ namespace csDBPF {
 				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(uint32));
 				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(sint64));
 			}
+
+			[TestMethod]
+			public void Test_032_ByteArrayHelper_ReadAUint() {
+				byte[] dbpf = { 0x44, 0x42, 0x50, 0x46 };
+				Assert.AreEqual((uint) 0x44425046, ByteArrayHelper.ReadAUint(dbpf));
+				byte[] arr1 = { 0x00,0x00,0x10,0x00};
+				Assert.AreEqual((uint) 0x00001000, ByteArrayHelper.ReadAUint(arr1));
+				byte[] arr2 = { 0x07, 0x00, 0x00, 0x30 };
+				Assert.AreEqual((uint) 0x07000030, ByteArrayHelper.ReadAUint(arr2));
+			}
 		}
 
 		// 05x Test Methods for DBPFTGI Class
@@ -413,15 +423,14 @@ namespace csDBPF {
 		// 1xx Test Methods for DBPFFile Class
 		[TestClass]
 		public class _1xx_DBPFFile {
-			[Ignore]
 			[TestMethod]
 			public void Test_101_DBPFFile_ValidDBPF() {
 				//DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\Bournemouth Housing Pack\\Mntoes-Bournemouth Housing Pack.dat");
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
-				Assert.AreEqual((uint) 0x44425046, dbpf.header.Identifier); //1145196614 dec = 44425046 hex = DBPF ascii
-				Assert.AreEqual(DBPFUtil.ReverseBytes(1), dbpf.header.MajorVersion); //16777216 dec = 1000000 hex
-				Assert.AreEqual((uint) 0, dbpf.header.MinorVersion);
-				Assert.AreEqual(DBPFUtil.ReverseBytes(7), dbpf.header.IndexMajorVersion); //117440512 dec = 7000000 hex)
+				Assert.AreEqual("DBPF", dbpf.Header.Identifier);
+				Assert.AreEqual((uint) 1, dbpf.Header.MajorVersion);
+				Assert.AreEqual((uint) 0, dbpf.Header.MinorVersion);
+				Assert.AreEqual((uint) 7, dbpf.Header.IndexMajorVersion);
 			}
 
 			[TestMethod]

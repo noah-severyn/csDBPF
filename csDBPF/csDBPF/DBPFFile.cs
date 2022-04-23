@@ -15,8 +15,8 @@ namespace csDBPF {
 	/// At a high level, a <see cref="DBPFFile"/> ("file") is the container for the DBPF data. This takes the form of a dat/sc4lot/sc4model/sc4desc file. Each file is broken into one or more <see cref="DBPFEntry"/> ("entries" or "subfiles"). Each entry is composed of one or more <see cref="DBPFProperty"/> ("properties"). Each property corresponds to one of <see cref="DBPFExemplarProperty"/> which come from the properties XML file which stores useful and human friendly information about the property including name, min/max value, default values, etc.
 	/// </remarks>
 	public class DBPFFile {
-		public Header header;
-		public FileInfo file;
+		public DBPFHeader Header;
+		public FileInfo File;
 		public OrderedDictionary entryMap; //TODO - make these unmodifiable outside of this scope. see (Java) Collections.unmodifiableSet
 		public Dictionary<uint, DBPFTGI> tgiMap; //TODO - make these unmodifiable outside of this scope. see (Java) Collections.unmodifiableSet
 
@@ -24,8 +24,8 @@ namespace csDBPF {
 		/// <summary>
 		/// Contains DBPFFile header data, including all related fields.
 		/// </summary>
-		public class Header {
-			private uint _identifier;
+		public class DBPFHeader {
+			private string _identifier;
 			private uint _majorVersion;
 			private uint _minorVersion;
 			private uint _dateCreated;
@@ -34,10 +34,10 @@ namespace csDBPF {
 			private uint _indexEntryCount;
 			private uint _indexEntryOffset;
 			private uint _indexSize;
-			public uint Identifier {
+			public string Identifier {
 				get { return _identifier; }
 				set {
-					uint identifierDbpf = (uint) 0x44425046; //1145196614 decimal = 44425046 hex = DBPF ASCII
+					string identifierDbpf = "DBPF";// (uint) 0x44425046; //1145196614 decimal = 44425046 hex = DBPF ASCII
 					if (value.CompareTo(identifierDbpf) != 0) {
 						throw new Exception("File is not a DBPF file!");
 					} else {
@@ -48,7 +48,7 @@ namespace csDBPF {
 			public uint MajorVersion {
 				get { return _majorVersion; }
 				set {
-					if (value != (uint) 0x1000000) { //16777216 decimal = 1000000 hex
+					if (value != 1) {
 						throw new Exception("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
 					} else {
 						_majorVersion = value;
@@ -58,7 +58,7 @@ namespace csDBPF {
 			public uint MinorVersion {
 				get { return _minorVersion; }
 				set {
-					if (value != (uint) 0) {
+					if (value != 0) {
 						throw new Exception("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
 					} else {
 						_minorVersion = value;
@@ -76,7 +76,7 @@ namespace csDBPF {
 			public uint IndexMajorVersion {
 				get { return _indexMajorVersion; }
 				set {
-					if (value != (uint) 0x7000000) { //117440512 decimal = 7000000 hex
+					if (value != 7) {
 						throw new Exception("Unsupported index version. Only 7 is supported for SC4 DBPF files.");
 					} else {
 						_indexMajorVersion = value;
@@ -97,7 +97,7 @@ namespace csDBPF {
 			}
 
 			//empty constructor to prevent automatic creation of blank constructor and assigning default values to fields
-			public Header() { }
+			public DBPFHeader() { }
 
 			public override string ToString() {
 				StringBuilder sb = new StringBuilder();
@@ -118,32 +118,19 @@ namespace csDBPF {
 		/// </summary>
 		/// <param name="filePath">Full path of file to read, including filename and extension.</param>
 		public DBPFFile(string filePath) {
-			this.file = new FileInfo(filePath);
-			this.header = new Header();
+			this.File = new FileInfo(filePath);
+			this.Header = new DBPFHeader();
 			this.entryMap = new OrderedDictionary();
 			this.tgiMap = new Dictionary<uint, DBPFTGI>();
 
 			bool map = false;
 			if (map) {
-				ReadAndMap(this.file);
+				ReadAndMap(this.File);
 			} else {
-				Read(this.file);
+				Read(this.File);
 			}
 
 
-		}
-
-
-		/// <summary>
-		/// Adds an entry to the entryMap and the TGI of that entry to the tgiMap.
-		/// </summary>
-		/// <param name="entry">Entry to add</param>
-		private void AddEntry(DBPFEntry entry) {
-			if (entry == null) {
-				throw new ArgumentNullException();
-			}
-			entryMap.Add(entry.IndexPos, entry);
-			tgiMap.Add(entry.IndexPos, entry.TGI);
 		}
 
 
@@ -168,21 +155,21 @@ namespace csDBPF {
 
 			try {
 				// Read Header Info
-				this.header.Identifier = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.MajorVersion = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.MinorVersion = DBPFUtil.ReverseBytes(br.ReadUInt32());
+				Header.Identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
+				Header.MajorVersion = br.ReadUInt32();
+				Header.MinorVersion = br.ReadUInt32();
 				br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
-				this.header.DateCreated = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.DateModified = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.IndexMajorVersion = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.IndexEntryCount = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.IndexEntryOffset = br.ReadUInt32(); //TODO - figure out why this works as it's different than all of the others ... unless none of the uint should be reversed???
-				this.header.IndexSize = DBPFUtil.ReverseBytes(br.ReadUInt32());
+				Header.DateCreated = br.ReadUInt32();
+				Header.DateModified = br.ReadUInt32();
+				Header.IndexMajorVersion = br.ReadUInt32();
+				Header.IndexEntryCount = br.ReadUInt32();
+				Header.IndexEntryOffset = br.ReadUInt32();
+				Header.IndexSize = br.ReadUInt32();
 
 				//Read Index Info
 				long len = br.BaseStream.Length;
-				br.BaseStream.Seek((this.header.IndexEntryOffset), SeekOrigin.Begin);
-				for (int idx = 0; idx < (this.header.IndexEntryCount >> 24); idx++) {
+				br.BaseStream.Seek((Header.IndexEntryOffset), SeekOrigin.Begin);
+				for (int idx = 0; idx < (Header.IndexEntryCount); idx++) {
 					uint typeID = br.ReadUInt32();
 					uint groupID = br.ReadUInt32();
 					uint instanceID = br.ReadUInt32();
@@ -192,11 +179,10 @@ namespace csDBPF {
 					DBPFTGI tgi = new DBPFTGI(typeID, groupID, instanceID);
 					DBPFEntry entry = new DBPFEntry(tgi, offset, size, (uint) idx);
 					AddEntry(entry);
-					//Trace.WriteLine(tgi.ToString());
 				}
 
-				//Check for a DIR Record (https://www.wiki.sc4devotion.com/index.php?title=DBDF)
-				foreach (DBPFEntry entry in this.entryMap.Values) {
+				//Check for a DIR Record, aka the list of all compressed files (https://www.wiki.sc4devotion.com/index.php?title=DBDF)
+				foreach (DBPFEntry entry in entryMap.Values) {
 					if (entry.TGI.MatchesKnownTGI(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
 						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
 						int numRecords = (int) entry.CompressedSize / 16;
@@ -233,6 +219,19 @@ namespace csDBPF {
 			foreach (DBPFEntry entry in entryMap.Values) {
 				//GetSubfileFormat(DBPFCompression.Decompress(entry.data));
 			}
+		}
+
+
+		/// <summary>
+		/// Adds an entry to the entryMap and the TGI of that entry to the tgiMap.
+		/// </summary>
+		/// <param name="entry">Entry to add</param>
+		private void AddEntry(DBPFEntry entry) {
+			if (entry == null) {
+				throw new ArgumentNullException();
+			}
+			entryMap.Add(entry.IndexPos, entry);
+			tgiMap.Add(entry.IndexPos, entry.TGI);
 		}
 
 
