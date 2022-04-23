@@ -12,7 +12,7 @@ namespace csDBPF {
 	/// Represents the header data and entry list as read from a DBPF file.
 	/// </summary>
 	/// <remarks>
-	/// At a high level, a <see cref="DBPFFile"/> ("file") is the container for the DBPF data. This takes the form of a dat/sc4lot/sc4model/sc4desc file. Each file is broken into one or more <see cref="DBPFEntry"/> ("entries" or "subfiles"). Each entry is composed of one or more <see cref="DBPFProperty"/> ("properties")
+	/// At a high level, a <see cref="DBPFFile"/> ("file") is the container for the DBPF data. This takes the form of a dat/sc4lot/sc4model/sc4desc file. Each file is broken into one or more <see cref="DBPFEntry"/> ("entries" or "subfiles"). Each entry is composed of one or more <see cref="DBPFProperty"/> ("properties"). Each property corresponds to one of <see cref="DBPFExemplarProperty"/> which come from the properties XML file which stores useful and human friendly information about the property including name, min/max value, default values, etc.
 	/// </remarks>
 	public class DBPFFile {
 		public Header header;
