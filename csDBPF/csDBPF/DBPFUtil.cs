@@ -34,7 +34,6 @@ namespace csDBPF {
 			return (sc4Files, skippedFiles);
 		}
 
-		//TODO reverse bytes should check endianness before converting!!!!!
 		#region ReverseBytes
 		/// <summary>
 		/// Reverses the byte order for a ushort. Example: 3 (0x0003) returns 768 (0x0300)
