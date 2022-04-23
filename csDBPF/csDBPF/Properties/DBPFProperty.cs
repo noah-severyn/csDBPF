@@ -160,11 +160,11 @@ namespace csDBPF.Properties {
 					DBPFPropertyDataType.LookupDataType(prop.Attribute("Type").Value),
 					prop.Attribute("ShowAsHex").Value == "Y",
 					short.TryParse((string) TryXAttributeExists(prop, "Count"), out short s) ? s : (short?) null,
-					(string) TryXAttributeExists(prop, "DefaultValue"),
+					(string) TryXAttributeExists(prop, "Default"),
 					int.TryParse((string) TryXAttributeExists(prop, "MinLength"), out int i1) ? i1 : (int?) null,
 					int.TryParse((string) TryXAttributeExists(prop, "MaxLength"), out int i2) ? i2 : (int?) null,
-					uint.TryParse((string) TryXAttributeExists(prop, "MinValue"), out uint u1) ? u1 : (uint?) null,
-					uint.TryParse((string) TryXAttributeExists(prop, "MaxValue"), out uint u2) ? u2 : (uint?) null,
+					(string) TryXAttributeExists(prop, "MinValue"),
+					(string) TryXAttributeExists(prop, "MaxValue"),
 					uint.TryParse((string) TryXAttributeExists(prop, "Step"), out uint u3) ? u3 : (uint?) null
 				);
 
@@ -225,15 +225,15 @@ namespace csDBPF.Properties {
 				get { return _id; }
 			}
 			private string _name;
-			internal string name {
+			internal string Name {
 				get { return _name; }
 			}
 			private DBPFPropertyDataType _type;
-			internal DBPFPropertyDataType type {
+			internal DBPFPropertyDataType Type {
 				get { return _type; }
 			}
 			private bool _showAsHex;
-			internal bool showAsHex {
+			internal bool ShowAsHex {
 				get { return _showAsHex; }
 			}
 
@@ -246,32 +246,32 @@ namespace csDBPF.Properties {
 			//<xs:attribute name = "MaxValue" type="xs:string" use="optional" />
 			//<xs:attribute name = "Step" type="xs:string" use="optional" />
 			private short? _count;
-			internal short? count {
+			internal short? Count {
 				get { return _count; }
 			}
 			private List<string> _defaultValue;
-			internal List<string> defaultValue {
+			internal List<string> DefaultValue {
 				get { return _defaultValue; }
 			}
 			private int? _minLength;
-			internal int? minLength {
+			internal int? MinLength {
 				get { return _minLength; }
 				set { _minLength = value; }
 			}
 			private int? _maxLength;
-			internal int? maxLength {
+			internal int? MaxLength {
 				get { return _maxLength; }
 			}
-			private uint? _minValue;
-			internal uint? minValue {
+			private string _minValue;
+			internal string MinValue {
 				get { return _minValue; }
 			}
-			private uint? _maxValue;
-			internal uint? maxValue {
+			private string _maxValue;
+			internal string MaxValue {
 				get { return _maxValue; }
 			}
 			private uint? _step;
-			internal uint? step {
+			internal uint? Step {
 				get { return _step; }
 			}
 
@@ -289,7 +289,7 @@ namespace csDBPF.Properties {
 				_showAsHex = showAsHex;
 			}
 
-			public ExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex, short? count = null, string defaultValue = null, int? minLength = null, int? maxLength = null, uint? minValue = null, uint? maxValue = null, uint? step = null) {
+			public ExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex, short? count = null, string defaultValue = null, int? minLength = null, int? maxLength = null, string minValue = null, string maxValue = null, uint? step = null) {
 				_id = id;
 				_name = name;
 				_type = type;
@@ -310,17 +310,17 @@ namespace csDBPF.Properties {
 
 			public override string ToString() {
 				StringBuilder sb = new StringBuilder();
-				sb.Append($"ID: {_id} ");
-				sb.Append($" Name: {_name}");
-				sb.Append($" Type: {_type}");
-				sb.Append($" ShowAsHex: {_showAsHex}");
-				sb.Append($" Count: {_count}");
-				sb.Append($" Default: {_defaultValue}");
-				sb.Append($" MinLen: {_minLength}");
-				sb.Append($" MaxLen: {_maxLength}");
-				sb.Append($" MinVal: {_minValue}");
-				sb.Append($" MaxVal: {_maxValue}");
-				sb.Append($" Step: {_step}");
+				sb.Append($"ID: {_id}, ");
+				sb.Append($"Name: {_name}, ");
+				sb.Append($"Type: {_type}, ");
+				sb.Append($"ShowAsHex: {_showAsHex}, ");
+				sb.Append($"Count: {_count}, ");
+				sb.Append($"Default: {_defaultValue}, ");
+				sb.Append($"MinLen: {_minLength}, ");
+				sb.Append($"MaxLen: {_maxLength}, ");
+				sb.Append($"MinVal: {_minValue}, ");
+				sb.Append($"MaxVal: {_maxValue}, ");
+				sb.Append($"Step: {_step}, ");
 				return sb.ToString();
 			}
 		}

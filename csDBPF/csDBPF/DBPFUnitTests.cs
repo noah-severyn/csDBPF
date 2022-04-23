@@ -225,10 +225,10 @@ namespace csDBPF {
 		public class _06x_DBPFProperty {
 			[TestMethod]
 			public void Test_060_DBPFPropertyDataType_ReturnType() {
-				Assert.AreEqual("SINT32", DBPFPropertyDataType.SINT32.name);
+				Assert.AreEqual("SINT32", DBPFPropertyDataType.SINT32.Name);
 				Assert.AreEqual(DBPFPropertyDataType.BOOL, DBPFPropertyDataType.LookupDataType(0xB00));
-				Assert.AreEqual(DBPFPropertyDataType.UINT32.name, DBPFPropertyDataType.LookupDataType(0x300).name);
-				Assert.AreEqual(4, DBPFPropertyDataType.LookupDataType(0x300).length);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32.Name, DBPFPropertyDataType.LookupDataType(0x300).Name);
+				Assert.AreEqual(4, DBPFPropertyDataType.LookupDataType(0x300).Length);
 			}
 
 			[Ignore]
@@ -356,27 +356,56 @@ namespace csDBPF {
 				el = DBPFProperty.GetXMLProperty(0x87cd6345);
 				Assert.AreEqual("0x87cd6345", el.Attribute("ID").Value);
 				Assert.AreEqual("R$$$ Proximity Effect", el.Attribute("Name").Value);
+
+				el = DBPFProperty.GetXMLProperty(0x8a2602bb);
+				Assert.AreEqual("0x8a2602bb", el.Attribute("ID").Value);
+				Assert.AreEqual("Item Button ID", el.Attribute("Name").Value);
+				Assert.AreEqual("Uint32", el.Attribute("Type").Value);
+				Assert.AreEqual("Y", el.Attribute("ShowAsHex").Value);
+				Assert.AreEqual("0x00000000", el.Attribute("Default").Value);
 			}
 
 			[TestMethod]
 			public void Text_066_DBPFProperty_AllProperties() {
 				//< PROPERTY Name = "Item Button ID" ID = "0x8a2602bb" Type = "Uint32" Default = "0x00000000" ShowAsHex = "Y" >
 				DBPFProperty.AllProperties.TryGetValue(0x8a2602bb, out DBPFProperty.ExemplarProperty exmp);
-				Assert.AreEqual((uint) 0x8a2602bb, exmp.id);
-				Assert.AreEqual("Item Button ID", exmp.name);
-				Assert.AreEqual(DBPFPropertyDataType.UINT32, exmp.type);
-				Assert.AreEqual(true, exmp.showAsHex);
-				Assert.AreEqual((uint) 0, exmp.defaultValue);
-				Assert.AreEqual(null, exmp.maxValue);
+				Assert.AreEqual(0x8a2602bb, exmp.id);
+				Assert.AreEqual("Item Button ID", exmp.Name);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, exmp.Type);
+				Assert.AreEqual(true, exmp.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "0x00000000" }, exmp.DefaultValue);
+				Assert.AreEqual(null, exmp.MaxValue);
 
 				//<PROPERTY Name="Path Offset Range for Peds" ID="0x29dd40c1" Type="Float32" Count="2" Default="-1 3" ShowAsHex="Y">
 				DBPFProperty.AllProperties.TryGetValue(0x29dd40c1, out DBPFProperty.ExemplarProperty exmp2);
 				Assert.AreEqual((uint) 0x29dd40c1, exmp2.id);
-				Assert.AreEqual("Path Offset Range for Peds", exmp2.name);
-				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp2.type);
-				Assert.AreEqual(true, exmp2.showAsHex);
-				Assert.AreEqual(null, exmp2.defaultValue);
-				Assert.AreEqual(2, exmp2.count);
+				Assert.AreEqual("Path Offset Range for Peds", exmp2.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp2.Type);
+				Assert.AreEqual(true, exmp2.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "-1", "3" }, exmp2.DefaultValue);
+				Assert.AreEqual((short) 2, exmp2.Count);
+
+				//<PROPERTY Name="WaveMinTimeInState" ID="0x6932dc06" Type="Float32" Count="4" Default="12 0.230 0.5 2" ShowAsHex="Y">
+				DBPFProperty.AllProperties.TryGetValue(0x6932dc06, out DBPFProperty.ExemplarProperty exmp3);
+				Assert.AreEqual((uint) 0x6932dc06, exmp3.id);
+				Assert.AreEqual("WaveMinTimeInState", exmp3.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp3.Type);
+				Assert.AreEqual(true, exmp3.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "12", "0.230", "0.5", "2" }, exmp3.DefaultValue);
+				Assert.AreEqual((short) 4, exmp3.Count);
+				Assert.AreEqual(null, exmp3.Step);
+
+				//<PROPERTY Name="Health Effectiveness vs. Distance Effect" ID="0x891b3ae6" Type="Float32" Count="-2" Default="0 100" MinValue="0" MaxValue="100" ShowAsHex="Y">
+				DBPFProperty.AllProperties.TryGetValue(0x891b3ae6, out DBPFProperty.ExemplarProperty exmp4);
+				Assert.AreEqual(0x891b3ae6, exmp4.id);
+				Assert.AreEqual("Health Effectiveness vs. Distance Effect", exmp4.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp4.Type);
+				Assert.AreEqual(true, exmp4.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "0", "100" }, exmp4.DefaultValue);
+				Assert.AreEqual((short) -2, exmp4.Count);
+				Assert.AreEqual("0", exmp4.MinValue);
+				Assert.AreEqual("100", exmp4.MaxValue);
+				Assert.AreEqual(null, exmp4.MaxLength);
 			}
 		}
 
@@ -389,10 +418,10 @@ namespace csDBPF {
 			public void Test_101_DBPFFile_ValidDBPF() {
 				//DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\Bournemouth Housing Pack\\Mntoes-Bournemouth Housing Pack.dat");
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
-				Assert.AreEqual((uint) 0x44425046, dbpf.header.identifier); //1145196614 dec = 44425046 hex = DBPF ascii
-				Assert.AreEqual(DBPFUtil.ReverseBytes(1), dbpf.header.majorVersion); //16777216 dec = 1000000 hex
-				Assert.AreEqual((uint) 0, dbpf.header.minorVersion);
-				Assert.AreEqual(DBPFUtil.ReverseBytes(7), dbpf.header.indexMajorVersion); //117440512 dec = 7000000 hex)
+				Assert.AreEqual((uint) 0x44425046, dbpf.header.Identifier); //1145196614 dec = 44425046 hex = DBPF ascii
+				Assert.AreEqual(DBPFUtil.ReverseBytes(1), dbpf.header.MajorVersion); //16777216 dec = 1000000 hex
+				Assert.AreEqual((uint) 0, dbpf.header.MinorVersion);
+				Assert.AreEqual(DBPFUtil.ReverseBytes(7), dbpf.header.IndexMajorVersion); //117440512 dec = 7000000 hex)
 			}
 
 			[TestMethod]
