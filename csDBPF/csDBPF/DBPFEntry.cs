@@ -21,13 +21,13 @@ namespace csDBPF {
 		}
 
 		private uint _offset;
-		public uint offset {
+		public uint Offset {
 			get { return _offset; }
 			//set { _offset = value; }
 		}
 
 		private uint _index;
-		public uint indexPos {
+		public uint IndexPos {
 			get { return _index; }
 			//set { _index = value; }
 		}
@@ -39,7 +39,7 @@ namespace csDBPF {
 		/// Initially all data is assumed to be compressed until the first bytes of data can be read to determine actual compression status.
 		/// </remarks>
 		private uint _uncompressedSize;
-		public uint uncompressedSize {
+		public uint UncompressedSize {
 			get { return _uncompressedSize; }
 			set { _uncompressedSize = value; }
 		}
@@ -51,7 +51,7 @@ namespace csDBPF {
 		/// Initially all data is assumed to be compressed until the first bytes of data can be read to determine actual compression status.
 		/// </remarks>
 		private uint _compressedSize;
-		public uint compressedSize {
+		public uint CompressedSize {
 			get { return _compressedSize; }
 			set { _compressedSize = value; }
 		}
@@ -63,13 +63,13 @@ namespace csDBPF {
 		/// Assume TRUE until the first bytes of data can be read to determine actual compression status. 
 		/// </remarks>
 		private bool _isCompressed;
-		public bool isCompressed {
+		public bool IsCompressed {
 			get { return _isCompressed; }
 			set { _isCompressed = value; }
 		}
 
 		private byte[] _data;
-		public byte[] data {
+		public byte[] Data {
 			get { return _data; }
 			set { _data = value; }
 		}
@@ -106,7 +106,7 @@ namespace csDBPF {
 
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder(_tgi.ToString());
-			sb.AppendLine($", IndexPos: {_index}, Offset: {_offset}, uSize: {_uncompressedSize}, Compr: {_isCompressed}, cSize: {_compressedSize} ");
+			sb.AppendLine($", IndexPos: {_index}, Offset: {_offset}, uSize: {_uncompressedSize}, Comp: {_isCompressed}, cSize: {_compressedSize} ");
 			return sb.ToString();
 		}
 

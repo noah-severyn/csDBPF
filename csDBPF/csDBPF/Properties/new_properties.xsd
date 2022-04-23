@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="ExemplarProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="PROPERTIES">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="unbounded" name="PROPERTY">
+								<xs:complexType mixed="true">
+									<xs:sequence minOccurs="0">
+										<xs:choice maxOccurs="unbounded">
+											<xs:element name="HELP" type="xs:string" />
+											<xs:element maxOccurs="unbounded" name="OPTION">
+												<xs:complexType>
+													<xs:attribute name="Value" type="xs:string" use="required" />
+													<xs:attribute name="Name" type="xs:string" use="required" />
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="FORMAT">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string">
+															<xs:attribute name="Type" type="xs:string" use="required" />
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="FORMATHELP" type="xs:string" />
+										</xs:choice>
+									</xs:sequence>
+									<xs:attribute name="ID" type="xs:string" use="required" />
+									<xs:attribute name="Name" type="xs:string" use="required" />
+									<xs:attribute name="Type" type="xs:string" use="required" />
+									<xs:attribute name="ShowAsHex" type="xs:string" use="required" />
+									<xs:attribute name="Count" type="xs:short" use="optional" />
+									<xs:attribute name="Default" type="xs:string" use="optional" />
+									<xs:attribute name="MinLength" type="xs:string" use="optional" />
+									<xs:attribute name="MaxLength" type="xs:string" use="optional" />
+									<xs:attribute name="MinValue" type="xs:string" use="optional" />
+									<xs:attribute name="MaxValue" type="xs:string" use="optional" />
+									<xs:attribute name="Step" type="xs:string" use="optional" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="CATEGORIES">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="unbounded" name="CATEGORY">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element minOccurs="0" name="HELP" type="xs:string" />
+										<xs:element minOccurs="0" name="FILTERS">
+											<xs:complexType mixed="true">
+												<xs:sequence minOccurs="0">
+													<xs:choice maxOccurs="unbounded">
+														<xs:element maxOccurs="unbounded" name="NOT">
+															<xs:complexType>
+																<xs:attribute name="ID" type="xs:string" use="required" />
+																<xs:attribute name="Value" type="xs:string" use="optional" />
+															</xs:complexType>
+														</xs:element>
+														<xs:element maxOccurs="unbounded" name="NEEDED">
+															<xs:complexType>
+																<xs:attribute name="ID" type="xs:string" use="required" />
+																<xs:attribute name="Value" type="xs:string" use="optional" />
+															</xs:complexType>
+														</xs:element>
+													</xs:choice>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element minOccurs="0" name="PROPERTIES">
+											<xs:complexType mixed="true">
+												<xs:sequence minOccurs="0">
+													<xs:choice maxOccurs="unbounded">
+														<xs:element maxOccurs="unbounded" name="eval">
+															<xs:complexType>
+																<xs:attribute name="name" type="xs:string" use="required" />
+																<xs:attribute name="value" type="xs:string" use="required" />
+															</xs:complexType>
+														</xs:element>
+														<xs:element maxOccurs="unbounded" name="PROPERTY">
+															<xs:complexType>
+																<xs:attribute name="ID" type="xs:string" use="required" />
+																<xs:attribute name="Value" type="xs:string" use="optional" />
+																<xs:attribute name="Set" type="xs:string" use="optional" />
+																<xs:attribute name="Eval" type="xs:string" use="optional" />
+																<xs:attribute name="Remove" type="xs:string" use="optional" />
+															</xs:complexType>
+														</xs:element>
+													</xs:choice>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="Name" type="xs:string" use="required" />
+									<xs:attribute name="ID" type="xs:string" use="required" />
+									<xs:attribute name="ParentID" type="xs:string" use="required" />
+									<xs:attribute name="img" type="xs:string" use="optional" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="LOTCREATION">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="unbounded" name="STAGEvsDENSITY">
+								<xs:complexType>
+									<xs:attribute name="purpose" type="xs:string" use="required" />
+									<xs:attribute name="wealth" type="xs:unsignedByte" use="required" />
+									<xs:attribute name="ratio" type="xs:string" use="required" />
+									<xs:attribute name="baseTex" type="xs:string" use="required" />
+								</xs:complexType>
+							</xs:element>
+							<xs:element maxOccurs="unbounded" name="ZONING">
+								<xs:complexType>
+									<xs:attribute name="purpose" type="xs:string" use="required" />
+									<xs:attribute name="value" type="xs:unsignedByte" use="required" />
+									<xs:attribute name="stages" type="xs:string" use="required" />
+									<xs:attribute name="height" type="xs:unsignedShort" use="required" />
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="MaxSlopeBeforeLotFoundation">
+								<xs:complexType>
+									<xs:attribute name="value" type="xs:string" use="required" />
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="MaxSlopeAllowed">
+								<xs:complexType>
+									<xs:attribute name="value" type="xs:string" use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

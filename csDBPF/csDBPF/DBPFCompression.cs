@@ -199,7 +199,7 @@ namespace csDBPF {
 			int writeIdx = 9; //leave 9 bytes for the header
 			int lastReadIdx = 0;
 			//ArrayList locsOfCurrentIdx = new ArrayList();
-			ArrayList locsOfCurrentIdx;
+			ArrayList locsOfCurrentIdx; //DO NOT USE ARRAY LIST USE LIST<T> INSTEAD
 			ArrayList ret;
 			int idx = 0;
 			bool end = false;

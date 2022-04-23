@@ -5,12 +5,11 @@ using System.Text;
 
 namespace csDBPF.Properties {
 	public class DBPFPropertyString : DBPFProperty {
-		//TODO - fill this comment here with properties.xml list
 		/// <summary>
-		/// Hexadecimal identifier for this property. <see cref=""/> 
+		/// Hexadecimal identifier for this property. <see cref="DBPFExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
 		private uint _id;
-		public override uint id {
+		public override uint ID {
 			get { return _id; }
 			set { _id = value; }
 		}
@@ -20,7 +19,7 @@ namespace csDBPF.Properties {
 		/// Number of repetitions of the data type in this property. Describes the number of chars in the string (length of string).
 		/// </summary>
 		private uint _numberOfReps;
-		public override uint numberOfReps {
+		public override uint NumberOfReps {
 			get { return _numberOfReps; }
 		}
 
@@ -29,11 +28,11 @@ namespace csDBPF.Properties {
 		/// The <see cref="DBPFPropertyDataType"/> for this property.
 		/// </summary>
 		private DBPFPropertyDataType _dataType;
-		public override DBPFPropertyDataType dataType {
+		public override DBPFPropertyDataType DataType {
 			get { return _dataType; }
 			set {
 				if (_dataType != DBPFPropertyDataType.STRING) {
-					throw new ArgumentException($"Data type of {_dataType.name} provided where {DBPFPropertyDataType.STRING.name} is required.");
+					throw new ArgumentException($"Data type of {_dataType.Name} provided where {DBPFPropertyDataType.STRING.Name} is required.");
 				}
 				_dataType = value;
 			}
@@ -44,7 +43,7 @@ namespace csDBPF.Properties {
 		/// The byte array of base data for the property. When this is set, <see cref="valuesDecoded"/> is also set to the equivalent value.
 		/// </summary>
 		private byte[] _byteValues;
-		public override byte[] byteValues {
+		public override byte[] ByteValues {
 			get { return _byteValues; }
 			set {
 				_byteValues = value;

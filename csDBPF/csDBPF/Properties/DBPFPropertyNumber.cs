@@ -5,14 +5,13 @@ using System.Text;
 
 namespace csDBPF.Properties {
 	class DBPFPropertyNumber : DBPFProperty {
-		//TODO - fill this comment here with properties.xml list
 		/// <summary>
-		/// Hexadecimal identifier for this property. <see cref=""/> 
+		/// Hexadecimal identifier for this property. <see cref="DBPFExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
-		private uint _id;
-		public override uint id {
-			get { return _id; }
-			set { _id = value; }
+		private uint _ID;
+		public override uint ID {
+			get { return _ID; }
+			set { _ID = value; }
 		}
 
 
@@ -20,7 +19,7 @@ namespace csDBPF.Properties {
 		/// Number of repetitions of the data type in this property. The byte size of this property's <see cref="DBPFPropertyDataType"/> multiplied by this number equals the byte size of this property's values in bytes. Initialized to 1.
 		/// </summary>
 		private uint _numberOfReps;
-		public override uint numberOfReps {
+		public override uint NumberOfReps {
 			get { return _numberOfReps; }
 		}
 
@@ -29,11 +28,11 @@ namespace csDBPF.Properties {
 		/// The <see cref="DBPFPropertyDataType"/> for this property.
 		/// </summary>
 		private DBPFPropertyDataType _dataType;
-		public override DBPFPropertyDataType dataType {
+		public override DBPFPropertyDataType DataType {
 			get { return _dataType; }
 			set {
 				if (_dataType == DBPFPropertyDataType.STRING) {
-					throw new ArgumentException($"Data type of {_dataType.name} provided where a numerical DBPFPropertyDataType is required.");
+					throw new ArgumentException($"Data type of {_dataType.Name} provided where a numerical DBPFPropertyDataType is required.");
 				}
 				_dataType = value;
 			}
@@ -44,11 +43,11 @@ namespace csDBPF.Properties {
 		/// The byte array of base data for the property. When this is set, <see cref="valuesDecoded"/> is also set to the equivalent value.
 		/// </summary>
 		private byte[] _byteValues;
-		public override byte[] byteValues {
+		public override byte[] ByteValues {
 			get { return _byteValues; }
 			set {
 				_byteValues = value;
-				_numberOfReps = (uint) (value.Length / _dataType.length);
+				_numberOfReps = (uint) (value.Length / _dataType.Length);
 				//_valuesDecoded = DBPFUtil.StringFromByteArray(value);
 			}
 		}
@@ -88,9 +87,9 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// Parse the byte values for this property to return an array of the property's <see cref="DBPFPropertyDataType"/>.
 		/// </summary>
-		/// <returns>An array <see cref="numberOfReps"/> long of <see cref="DBPFPropertyDataType"/> numbers</returns>
+		/// <returns>An array <see cref="NumberOfReps"/> long of <see cref="DBPFPropertyDataType"/> numbers</returns>
 		public override object DecodeValues() {
-			switch (_dataType.name) {
+			switch (_dataType.Name) {
 				case "BOOL":
 					return ByteArrayHelper.ToBoolArray(_byteValues);
 				case "UINT8":
@@ -121,17 +120,18 @@ namespace csDBPF.Properties {
 			if (!t.IsArray) {
 				throw new ArgumentException("An array of numbers is expected.");
 			}
-			ArrayList result = new ArrayList();
-			IEnumerable e = newValue as IEnumerable;
-			if (e == null) {
+
+			List<byte> result = new List<byte>();
+			if (!(newValue is IEnumerable e)) {
 				throw new ArgumentException("Unable to iterate over object!");
 			} else {
 				foreach (object item in e) {
 					result.Add((byte) item);
 				}
 			}
-			_byteValues = result.ToArray(typeof(byte)) as byte[];
-			_numberOfReps = (uint) (_byteValues.Length / _dataType.length);
+			_byteValues = result.ToArray();
+
+			_numberOfReps = (uint) (_byteValues.Length / _dataType.Length);
 		}
 
 

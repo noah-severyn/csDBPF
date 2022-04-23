@@ -394,3 +394,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 csDBPF/HEX-DEC-TXT Decoder.xlsm
+*.xlsm

@@ -12,7 +12,7 @@ namespace csDBPF {
 	/// Represents the header data and entry list as read from a DBPF file.
 	/// </summary>
 	/// <remarks>
-	/// At a high level, a <see cref="DBPFFile"/> ("file") is the container for the DBPF data. This takes the form of a dat/sc4lot/sc4model/sc4desc file. Each file is broken into one or more <see cref="DBPFEntry"/> ("entries" or "subfiles"). Each entry is composed of one or more <see cref="DBPFProperty"/> ("properties")
+	/// At a high level, a <see cref="DBPFFile"/> ("file") is the container for the DBPF data. This takes the form of a dat/sc4lot/sc4model/sc4desc file. Each file is broken into one or more <see cref="DBPFEntry"/> ("entries" or "subfiles"). Each entry is composed of one or more <see cref="DBPFProperty"/> ("properties"). Each property corresponds to one of <see cref="DBPFExemplarProperty"/> which come from the properties XML file which stores useful and human friendly information about the property including name, min/max value, default values, etc.
 	/// </remarks>
 	public class DBPFFile {
 		public Header header;
@@ -34,7 +34,7 @@ namespace csDBPF {
 			private uint _indexEntryCount;
 			private uint _indexEntryOffset;
 			private uint _indexSize;
-			public uint identifier {
+			public uint Identifier {
 				get { return _identifier; }
 				set {
 					uint identifierDbpf = (uint) 0x44425046; //1145196614 decimal = 44425046 hex = DBPF ASCII
@@ -45,7 +45,7 @@ namespace csDBPF {
 					}
 				}
 			}
-			public uint majorVersion {
+			public uint MajorVersion {
 				get { return _majorVersion; }
 				set {
 					if (value != (uint) 0x1000000) { //16777216 decimal = 1000000 hex
@@ -55,7 +55,7 @@ namespace csDBPF {
 					}
 				}
 			}
-			public uint minorVersion {
+			public uint MinorVersion {
 				get { return _minorVersion; }
 				set {
 					if (value != (uint) 0) {
@@ -65,15 +65,15 @@ namespace csDBPF {
 					}
 				}
 			}
-			public uint dateCreated {
+			public uint DateCreated {
 				get { return _dateCreated; }
 				set { _dateCreated = value; }
 			}
-			public uint dateModified {
+			public uint DateModified {
 				get { return _dateModified; }
 				set { _dateModified = value; }
 			}
-			public uint indexMajorVersion {
+			public uint IndexMajorVersion {
 				get { return _indexMajorVersion; }
 				set {
 					if (value != (uint) 0x7000000) { //117440512 decimal = 7000000 hex
@@ -83,15 +83,15 @@ namespace csDBPF {
 					}
 				}
 			}
-			public uint indexEntryCount {
+			public uint IndexEntryCount {
 				get { return _indexEntryCount; }
 				set { _indexEntryCount = value; }
 			}
-			public uint indexEntryOffset {
+			public uint IndexEntryOffset {
 				get { return _indexEntryOffset; }
 				set { _indexEntryOffset = value; }
 			}
-			public uint indexSize {
+			public uint IndexSize {
 				get { return _indexSize; }
 				set { _indexSize = value; }
 			}
@@ -101,13 +101,13 @@ namespace csDBPF {
 
 			public override string ToString() {
 				StringBuilder sb = new StringBuilder();
-				sb.Append($"Version: {majorVersion}.{minorVersion}; ");
-				sb.Append($"Created: {dateCreated}; "); // TODO - add functions to output these in a readable format - possibly functions in a util class?
-				sb.Append($"Modified: {dateModified}; "); // TODO - add functions to output these in a readable format - possibly functions in a util class?
-				sb.Append($"Index Major Version: {indexMajorVersion}; ");
-				sb.Append($"Index Entry Count: {indexEntryCount}; ");
-				sb.Append($"Index Offset Location: {indexEntryOffset}; ");
-				sb.Append($"Index Size: {indexSize}; ");
+				sb.Append($"Version: {MajorVersion}.{MinorVersion}; ");
+				sb.Append($"Created: {DateCreated}; "); // TODO - add functions to output these in a readable format - possibly functions in a util class?
+				sb.Append($"Modified: {DateModified}; "); // TODO - add functions to output these in a readable format - possibly functions in a util class?
+				sb.Append($"Index Major Version: {IndexMajorVersion}; ");
+				sb.Append($"Index Entry Count: {IndexEntryCount}; ");
+				sb.Append($"Index Offset Location: {IndexEntryOffset}; ");
+				sb.Append($"Index Size: {IndexSize}; ");
 				return sb.ToString();
 			}
 		}
@@ -142,8 +142,8 @@ namespace csDBPF {
 			if (entry == null) {
 				throw new ArgumentNullException();
 			}
-			entryMap.Add(entry.indexPos, entry);
-			tgiMap.Add(entry.indexPos, entry.TGI);
+			entryMap.Add(entry.IndexPos, entry);
+			tgiMap.Add(entry.IndexPos, entry.TGI);
 		}
 
 
@@ -168,21 +168,21 @@ namespace csDBPF {
 
 			try {
 				// Read Header Info
-				this.header.identifier = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.majorVersion = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.minorVersion = DBPFUtil.ReverseBytes(br.ReadUInt32());
+				this.header.Identifier = DBPFUtil.ReverseBytes(br.ReadUInt32());
+				this.header.MajorVersion = DBPFUtil.ReverseBytes(br.ReadUInt32());
+				this.header.MinorVersion = DBPFUtil.ReverseBytes(br.ReadUInt32());
 				br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
-				this.header.dateCreated = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.dateModified = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.indexMajorVersion = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.indexEntryCount = DBPFUtil.ReverseBytes(br.ReadUInt32());
-				this.header.indexEntryOffset = br.ReadUInt32(); //TODO - figure out why this works as it's different than all of the others ... unless none of the uint should be reversed???
-				this.header.indexSize = DBPFUtil.ReverseBytes(br.ReadUInt32());
+				this.header.DateCreated = DBPFUtil.ReverseBytes(br.ReadUInt32());
+				this.header.DateModified = DBPFUtil.ReverseBytes(br.ReadUInt32());
+				this.header.IndexMajorVersion = DBPFUtil.ReverseBytes(br.ReadUInt32());
+				this.header.IndexEntryCount = DBPFUtil.ReverseBytes(br.ReadUInt32());
+				this.header.IndexEntryOffset = br.ReadUInt32(); //TODO - figure out why this works as it's different than all of the others ... unless none of the uint should be reversed???
+				this.header.IndexSize = DBPFUtil.ReverseBytes(br.ReadUInt32());
 
 				//Read Index Info
 				long len = br.BaseStream.Length;
-				br.BaseStream.Seek((this.header.indexEntryOffset), SeekOrigin.Begin);
-				for (int idx = 0; idx < (this.header.indexEntryCount >> 24); idx++) {
+				br.BaseStream.Seek((this.header.IndexEntryOffset), SeekOrigin.Begin);
+				for (int idx = 0; idx < (this.header.IndexEntryCount >> 24); idx++) {
 					uint typeID = br.ReadUInt32();
 					uint groupID = br.ReadUInt32();
 					uint instanceID = br.ReadUInt32();
@@ -198,8 +198,8 @@ namespace csDBPF {
 				//Check for a DIR Record (https://www.wiki.sc4devotion.com/index.php?title=DBDF)
 				foreach (DBPFEntry entry in this.entryMap.Values) {
 					if (entry.TGI.MatchesKnownTGI(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
-						br.BaseStream.Seek(entry.offset, SeekOrigin.Begin);
-						int numRecords = (int) entry.compressedSize / 16;
+						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
+						int numRecords = (int) entry.CompressedSize / 16;
 						for (int idx = 0; idx < numRecords; idx++) {
 							//TODO - set uncompressed size here
 						}
@@ -211,14 +211,14 @@ namespace csDBPF {
 				//Populate data for non directory entries
 				foreach (DBPFEntry entry in entryMap.Values) {
 					if (!entry.TGI.MatchesKnownTGI(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
-						byte[] readData = new byte[entry.uncompressedSize];
-						br.BaseStream.Seek(entry.offset, SeekOrigin.Begin);
+						byte[] readData = new byte[entry.UncompressedSize];
+						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
 						readData = br.ReadBytes(readData.Length);
-						entry.data = readData;
+						entry.Data = readData;
 
 						//After the data is set, we can know the other properties of the DBPFEntry, like isCompressed, compressedSize, etc.
-						entry.isCompressed = DBPFCompression.IsCompressed(entry.data);
-						entry.compressedSize = DBPFCompression.GetDecompressedSize(entry.data);
+						entry.IsCompressed = DBPFCompression.IsCompressed(entry.Data);
+						entry.CompressedSize = DBPFCompression.GetDecompressedSize(entry.Data);
 					}
 				}
 

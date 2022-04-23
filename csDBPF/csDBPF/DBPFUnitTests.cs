@@ -1,6 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using csDBPF.Properties;
+using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace csDBPF {
 	[TestClass]
@@ -101,16 +103,21 @@ namespace csDBPF {
 		// 03x Test Methods for ByteArrayHelper class
 		[TestClass]
 		public class _03x_ByteArrayHelper {
-			readonly byte[] bytes = { 0x45, 0x51, 0x5A, 0x42, 0x31, 0x23, 0x23, 0x23, 0x61, 0x28, 0x34, 0x05, 0x3F, 0x69, 0x0F, 0x69, 0x00, 0x67, 0x0B, 0x4A, 0x0F, 0x00, 0x00, 0x00 };
-			readonly ushort[] uint16 = { 0x4551, 0x5A42, 0x3123, 0x2323, 0x6128, 0x3405, 0x3F69, 0x0F69, 0x0067, 0x0B4A, 0x0F00, 0x0000 };
-			readonly int[] sint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
-			readonly float[] float32 = { 54.5793648f, 8.8437e-18f, 8.470976e-36f, 1.08358377e+25f, 2283968f, 2.101948e-44f };
-			readonly uint[] uint32 = { 0x45515A42, 0x31232323, 0x61283405, 0x3F690F69, 0x00670B4A, 0x0F000000 };
-			readonly long[] sint64 = { 0x45515A4231232323, 0x612834053F690F69, 0x00670B4A0F000000 };
+			//Remember here that we are not "reading" the bytes straight from the file in order; rather we are "getting" numbers from them so we are worried about endianness.
+			readonly byte[] bytes = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x99, 0x70, 0x01, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70, 0x0C, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70 };
+			readonly byte[] bytesAsBools = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01 };
+			readonly bool[] bools = { false, false, false, false, false, false, true, true, true, false, false, false, true, true, true, true, true, false, false, false, true, true, true, true };
+			readonly ushort[] uint16 = { 0x0000, 0x0000, 0000, 0x7099, 0x0001, 0x0000, 0x533C, 0x70BC, 0x000C, 0x0000, 0x533C, 0x70BC };
+			readonly int[] sint32 = { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C };
+			readonly float[] float32 = { 0f, 3.78809652e+29f, 1.401298e-45f, 4.66270448e+29f, 1.681558e-44f, 4.66270448e+29f };
+			readonly uint[] uint32 = { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C };
+			readonly long[] sint64 = { 0x7099000000000000, 0x70BC533C00000001, 0x70BC533C0000000C };
 			//TODO - should add unit tests to test edge cases - min and max values
 
 			[TestMethod]
 			public void Test_030_ByteArrayHelper_ToTypeArray() {
+				CollectionAssert.AreEqual(bools, ByteArrayHelper.ToBoolArray(bytesAsBools));
+				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToUint8Array(bytes));
 				CollectionAssert.AreEqual(uint16, ByteArrayHelper.ToUInt16Array(bytes));
 				CollectionAssert.AreEqual(sint32, ByteArrayHelper.ToSInt32Array(bytes));
 				CollectionAssert.AreEqual(float32, ByteArrayHelper.ToFloat32Array(bytes));
@@ -120,6 +127,7 @@ namespace csDBPF {
 
 			[TestMethod]
 			public void Test_031_ByteArrayHelper_ToByteArray() {
+				CollectionAssert.AreEqual(bytesAsBools, ByteArrayHelper.ToByteArray(bools));
 				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(uint16));
 				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(sint32));
 				CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(float32));
@@ -217,10 +225,10 @@ namespace csDBPF {
 		public class _06x_DBPFProperty {
 			[TestMethod]
 			public void Test_060_DBPFPropertyDataType_ReturnType() {
-				Assert.AreEqual("SINT32", DBPFPropertyDataType.SINT32.name);
-				Assert.AreEqual(DBPFPropertyDataType.BOOL, DBPFPropertyDataType.LookupDataType(0xB));
-				Assert.AreEqual(DBPFPropertyDataType.UINT32.name, DBPFPropertyDataType.LookupDataType(0x3).name);
-				Assert.AreEqual(4, DBPFPropertyDataType.LookupDataType(0x3).length);
+				Assert.AreEqual("SINT32", DBPFPropertyDataType.SINT32.Name);
+				Assert.AreEqual(DBPFPropertyDataType.BOOL, DBPFPropertyDataType.LookupDataType(0xB00));
+				Assert.AreEqual(DBPFPropertyDataType.UINT32.Name, DBPFPropertyDataType.LookupDataType(0x300).Name);
+				Assert.AreEqual(4, DBPFPropertyDataType.LookupDataType(0x300).Length);
 			}
 
 			[Ignore]
@@ -240,102 +248,164 @@ namespace csDBPF {
 
 				//Test a property read from file
 				DBPFProperty prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata, 37);
-				Assert.AreEqual((uint) 0x20, prop_file.id);
-				Assert.AreEqual((uint) 20, prop_file.numberOfReps);
-				Assert.AreEqual(DBPFPropertyDataType.STRING, prop_file.dataType);
-				CollectionAssert.AreEquivalent(bytedataviewparksaura, prop_file.byteValues);
+				Assert.AreEqual((uint) 0x20, prop_file.ID);
+				Assert.AreEqual((uint) 20, prop_file.NumberOfReps);
+				Assert.AreEqual(DBPFPropertyDataType.STRING, prop_file.DataType);
+				CollectionAssert.AreEquivalent(bytedataviewparksaura, prop_file.ByteValues);
 				Assert.AreEqual(stringdataviewparksaura, prop_file.DecodeValues());
 
 				//Compare to known property
 				DBPFProperty prop_created = new DBPFPropertyString(DBPFPropertyDataType.STRING);
-				prop_created.id = 0x20;
+				prop_created.ID = 0x20;
 				prop_created.SetValues(stringdataviewparksaura);
-				Assert.AreEqual(prop_created.id, prop_file.id);
-				Assert.AreEqual(prop_created.numberOfReps, prop_file.numberOfReps);
-				Assert.AreEqual(prop_created.dataType, prop_file.dataType);
-				CollectionAssert.AreEquivalent(prop_created.byteValues, prop_file.byteValues);
+				Assert.AreEqual(prop_created.ID, prop_file.ID);
+				Assert.AreEqual(prop_created.NumberOfReps, prop_file.NumberOfReps);
+				Assert.AreEqual(prop_created.DataType, prop_file.DataType);
+				CollectionAssert.AreEquivalent(prop_created.ByteValues, prop_file.ByteValues);
 				Assert.AreEqual(prop_created.DecodeValues(), prop_file.DecodeValues());
 
 				//Check for no differences between values and valuesDecoded when each is changed
 				prop_created.SetValues(stringparks);
-				CollectionAssert.AreEquivalent(byteparks, prop_created.byteValues);
-				Assert.AreEqual((uint) byteparks.Length, prop_created.numberOfReps);
-				prop_created.byteValues = byteparksaura;
+				CollectionAssert.AreEquivalent(byteparks, prop_created.ByteValues);
+				Assert.AreEqual((uint) byteparks.Length, prop_created.NumberOfReps);
+				prop_created.ByteValues = byteparksaura;
 				Assert.AreEqual(stringparksaura, prop_created.DecodeValues());
-				Assert.AreEqual((uint) stringparksaura.Length, prop_created.numberOfReps);
+				Assert.AreEqual((uint) stringparksaura.Length, prop_created.NumberOfReps);
 			}
 
 			[TestMethod]
 			public void Test_063_DBPFPropertyInteger() {
 				//Single UInt32 value
 				byte[] val = { 0x23, 0x00, 0x00, 0x00 };
-				uint[] decoded = { 0x23000000 };
+				uint[] decoded = { 0x00000023 };
 				DBPFProperty prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata);
-				Assert.AreEqual((uint) 0x10, prop_file.id);
-				Assert.AreEqual((uint) 1, prop_file.numberOfReps);
-				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val, prop_file.byteValues);
+				Assert.AreEqual((uint) 0x10, prop_file.ID);
+				Assert.AreEqual((uint) 1, prop_file.NumberOfReps);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.DataType);
+				CollectionAssert.AreEqual(val, prop_file.ByteValues);
 				CollectionAssert.AreEqual(decoded, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//8 repetitions of 0
 				byte[] val2 = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 				uint[] decoded2 = { 0, 0, 0, 0, 0, 0, 0, 0 };
 				prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata, 70);
-				Assert.AreEqual((uint) 0x4A0B47E0, prop_file.id);
-				Assert.AreEqual((uint) 8, prop_file.numberOfReps);
-				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val2, prop_file.byteValues);
+				Assert.AreEqual((uint) 0x4A0B47E0, prop_file.ID);
+				Assert.AreEqual((uint) 8, prop_file.NumberOfReps);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.DataType);
+				CollectionAssert.AreEqual(val2, prop_file.ByteValues);
 				CollectionAssert.AreEqual(decoded2, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//True boolean value
 				byte[] val3 = { 1 };
 				bool[] decoded3 = { true };
 				prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata, 115);
-				Assert.AreEqual((uint) 0x4A0B47E1, prop_file.id);
-				Assert.AreEqual((uint) 1, prop_file.numberOfReps);
-				Assert.AreEqual(DBPFPropertyDataType.BOOL, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val3, prop_file.byteValues);
+				Assert.AreEqual((uint) 0x4A0B47E1, prop_file.ID);
+				Assert.AreEqual((uint) 1, prop_file.NumberOfReps);
+				Assert.AreEqual(DBPFPropertyDataType.BOOL, prop_file.DataType);
+				CollectionAssert.AreEqual(val3, prop_file.ByteValues);
 				CollectionAssert.AreEqual(decoded3, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//False boolean value
 				byte[] val4 = { 0 };
 				bool[] decoded4 = { false };
 				prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata, 125);
-				Assert.AreEqual((uint) 0x4A0B47E2, prop_file.id);
-				Assert.AreEqual((uint) 1, prop_file.numberOfReps);
-				Assert.AreEqual(DBPFPropertyDataType.BOOL, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val4, prop_file.byteValues);
+				Assert.AreEqual((uint) 0x4A0B47E2, prop_file.ID);
+				Assert.AreEqual((uint) 1, prop_file.NumberOfReps);
+				Assert.AreEqual(DBPFPropertyDataType.BOOL, prop_file.DataType);
+				CollectionAssert.AreEqual(val4, prop_file.ByteValues);
 				CollectionAssert.AreEqual(decoded4, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//Single UInt32 value of 0
 				byte[] val5 = { 0,0,0,0 };
 				uint[] decoded5 = { 0 };
 				prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata, 135);
-				Assert.AreEqual((uint) 0x4A0B47E3, prop_file.id);
-				Assert.AreEqual((uint) 1, prop_file.numberOfReps);
-				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val5, prop_file.byteValues);
+				Assert.AreEqual((uint) 0x4A0B47E3, prop_file.ID);
+				Assert.AreEqual((uint) 1, prop_file.NumberOfReps);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.DataType);
+				CollectionAssert.AreEqual(val5, prop_file.ByteValues);
 				CollectionAssert.AreEqual(decoded5, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//28 UInt32s
 				byte[] val6 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x99, 0x70, 0x01, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70, 0x0C, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70, 0x0D, 0x00, 0x00, 0x00, 0x79, 0x8C, 0xD9, 0x70, 0x46, 0x00, 0x00, 0x00, 0x79, 0x8C, 0xD9, 0x70, 0x7F, 0x00, 0x00, 0x00, 0xBA, 0xC5, 0xF0, 0x70, 0x80, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0x70, 0x81, 0x00, 0x00, 0x00, 0xDD, 0xF1, 0xE2, 0x70, 0xB8, 0x00, 0x00, 0x00, 0xBB, 0xE3, 0xC5, 0x70, 0xB9, 0x00, 0x00, 0x00, 0x9A, 0xD4, 0xA8, 0x70, 0xF2, 0x00, 0x00, 0x00, 0x79, 0xC6, 0x8A, 0x70, 0xF3, 0x00, 0x00, 0x00, 0x58, 0xB7, 0x6A, 0x70, 0xFE, 0x00, 0x00, 0x00, 0x36, 0xA8, 0x46, 0x70, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x99, 0x00, 0x70 };
 				uint[] decoded6 = { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C, 0x0000000D, 0x70D98C79, 0x00000046, 0x70D98C79, 0x0000007F, 0x70F0C5BA, 0x00000080, 0x70FFFFFF, 0x00000081, 0x70E2F1DD, 0x000000B8, 0x70C5E3BB, 0x000000B9, 0x70A8D49A, 0x000000F2, 0x708AC679, 0x000000F3, 0x706AB758, 0x000000FE, 0x7046A836, 0x000000FF, 0x70009900 };
 				prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata, 148);
-				Assert.AreEqual((uint) 0x4A0B47E4, prop_file.id);
-				Assert.AreEqual((uint) 28, prop_file.numberOfReps);
-				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.dataType);
-				CollectionAssert.AreEquivalent(val6, prop_file.byteValues);
+				Assert.AreEqual((uint) 0x4A0B47E4, prop_file.ID);
+				Assert.AreEqual((uint) 28, prop_file.NumberOfReps);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, prop_file.DataType);
+				CollectionAssert.AreEqual(val6, prop_file.ByteValues);
 				CollectionAssert.AreEqual(decoded6, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//Set values
 				prop_file.SetValues(val5);
-				Assert.AreEqual((uint) 1, prop_file.numberOfReps);
-				CollectionAssert.AreEquivalent(val5, prop_file.byteValues);
+				Assert.AreEqual((uint) 1, prop_file.NumberOfReps);
+				CollectionAssert.AreEquivalent(val5, prop_file.ByteValues);
 				CollectionAssert.AreEqual(decoded5, (System.Collections.ICollection) prop_file.DecodeValues());
 				prop_file.SetValues(val6);
-				Assert.AreEqual((uint) 28, prop_file.numberOfReps);
-				CollectionAssert.AreEquivalent(val6, prop_file.byteValues);
+				Assert.AreEqual((uint) 28, prop_file.NumberOfReps);
+				CollectionAssert.AreEquivalent(val6, prop_file.ByteValues);
 				CollectionAssert.AreEqual(decoded6, (System.Collections.ICollection) prop_file.DecodeValues());
+			}
+
+
+			[TestMethod]
+			public void Test_065_DBPFProperty_GetXMLProperty() {
+				XElement el = XMLProperties.GetXMLProperty(0x00000010);
+				Assert.AreEqual("0x00000010", el.Attribute("ID").Value); 
+				Assert.AreEqual("Exemplar Type", el.Attribute("Name").Value);
+
+				el = XMLProperties.GetXMLProperty(0x87cd6345);
+				Assert.AreEqual("0x87cd6345", el.Attribute("ID").Value);
+				Assert.AreEqual("R$$$ Proximity Effect", el.Attribute("Name").Value);
+
+				el = XMLProperties.GetXMLProperty(0x8a2602bb);
+				Assert.AreEqual("0x8a2602bb", el.Attribute("ID").Value);
+				Assert.AreEqual("Item Button ID", el.Attribute("Name").Value);
+				Assert.AreEqual("Uint32", el.Attribute("Type").Value);
+				Assert.AreEqual("Y", el.Attribute("ShowAsHex").Value);
+				Assert.AreEqual("0x00000000", el.Attribute("Default").Value);
+			}
+
+			[TestMethod]
+			public void Text_066_DBPFProperty_AllProperties() {
+				//< PROPERTY Name = "Item Button ID" ID = "0x8a2602bb" Type = "Uint32" Default = "0x00000000" ShowAsHex = "Y" >
+				XMLProperties.AllProperties.TryGetValue(0x8a2602bb, out DBPFExemplarProperty exmp);
+				Assert.AreEqual(0x8a2602bb, exmp.id);
+				Assert.AreEqual("Item Button ID", exmp.Name);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, exmp.Type);
+				Assert.AreEqual(true, exmp.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "0x00000000" }, exmp.DefaultValue);
+				Assert.AreEqual(null, exmp.MaxValue);
+
+				//<PROPERTY Name="Path Offset Range for Peds" ID="0x29dd40c1" Type="Float32" Count="2" Default="-1 3" ShowAsHex="Y">
+				XMLProperties.AllProperties.TryGetValue(0x29dd40c1, out DBPFExemplarProperty exmp2);
+				Assert.AreEqual((uint) 0x29dd40c1, exmp2.id);
+				Assert.AreEqual("Path Offset Range for Peds", exmp2.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp2.Type);
+				Assert.AreEqual(true, exmp2.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "-1", "3" }, exmp2.DefaultValue);
+				Assert.AreEqual((short) 2, exmp2.Count);
+
+				//<PROPERTY Name="WaveMinTimeInState" ID="0x6932dc06" Type="Float32" Count="4" Default="12 0.230 0.5 2" ShowAsHex="Y">
+				XMLProperties.AllProperties.TryGetValue(0x6932dc06, out DBPFExemplarProperty exmp3);
+				Assert.AreEqual((uint) 0x6932dc06, exmp3.id);
+				Assert.AreEqual("WaveMinTimeInState", exmp3.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp3.Type);
+				Assert.AreEqual(true, exmp3.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "12", "0.230", "0.5", "2" }, exmp3.DefaultValue);
+				Assert.AreEqual((short) 4, exmp3.Count);
+				Assert.AreEqual(null, exmp3.Step);
+
+				//<PROPERTY Name="Health Effectiveness vs. Distance Effect" ID="0x891b3ae6" Type="Float32" Count="-2" Default="0 100" MinValue="0" MaxValue="100" ShowAsHex="Y">
+				XMLProperties.AllProperties.TryGetValue(0x891b3ae6, out DBPFExemplarProperty exmp4);
+				Assert.AreEqual(0x891b3ae6, exmp4.id);
+				Assert.AreEqual("Health Effectiveness vs. Distance Effect", exmp4.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp4.Type);
+				Assert.AreEqual(true, exmp4.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "0", "100" }, exmp4.DefaultValue);
+				Assert.AreEqual((short) -2, exmp4.Count);
+				Assert.AreEqual("0", exmp4.MinValue);
+				Assert.AreEqual("100", exmp4.MaxValue);
+				Assert.AreEqual(null, exmp4.MaxLength);
 			}
 		}
 
@@ -348,10 +418,10 @@ namespace csDBPF {
 			public void Test_101_DBPFFile_ValidDBPF() {
 				//DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\Bournemouth Housing Pack\\Mntoes-Bournemouth Housing Pack.dat");
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
-				Assert.AreEqual((uint) 0x44425046, dbpf.header.identifier); //1145196614 dec = 44425046 hex = DBPF ascii
-				Assert.AreEqual(DBPFUtil.ReverseBytes(1), dbpf.header.majorVersion); //16777216 dec = 1000000 hex
-				Assert.AreEqual((uint) 0, dbpf.header.minorVersion);
-				Assert.AreEqual(DBPFUtil.ReverseBytes(7), dbpf.header.indexMajorVersion); //117440512 dec = 7000000 hex)
+				Assert.AreEqual((uint) 0x44425046, dbpf.header.Identifier); //1145196614 dec = 44425046 hex = DBPF ascii
+				Assert.AreEqual(DBPFUtil.ReverseBytes(1), dbpf.header.MajorVersion); //16777216 dec = 1000000 hex
+				Assert.AreEqual((uint) 0, dbpf.header.MinorVersion);
+				Assert.AreEqual(DBPFUtil.ReverseBytes(7), dbpf.header.IndexMajorVersion); //117440512 dec = 7000000 hex)
 			}
 
 			[TestMethod]
