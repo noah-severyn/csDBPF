@@ -5,9 +5,8 @@ using System.Text;
 
 namespace csDBPF.Properties {
 	public class DBPFPropertyString : DBPFProperty {
-		//TODO - fill this comment here with properties.xml list
 		/// <summary>
-		/// Hexadecimal identifier for this property. <see cref=""/> 
+		/// Hexadecimal identifier for this property. <see cref="DBPFExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
 		private uint _id;
 		public override uint ID {

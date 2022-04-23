@@ -7,8 +7,6 @@ namespace csDBPF {
 	/// Helper methods to parse a byte array into an array of one of the DBPF data types. 
 	/// </summary>
 	public static class ByteArrayHelper {
-		//TODO - worried about returning the array.reverse of result - need to check for endianess before doing this??
-
 		//Convert from a byte[] to the specific data type
 		#region FromByteArrayTo
 		/// <summary>
