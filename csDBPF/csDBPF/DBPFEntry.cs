@@ -8,30 +8,30 @@ namespace csDBPF {
 	/// An abstract form of an entry item of a <see cref="DBPFFile"/>, representing an instance of a subfile that may be contained in a DBPF file.
 	/// </summary>
 	public class DBPFEntry {
+		//------------- DBPFEntry Fields ------------- \\
+		/// <summary>
+		/// The <see cref="DBPFTGI"/>object representing the file type of the entry.
+		/// </summary>
 		private DBPFTGI _tgi;
 		public DBPFTGI TGI {
 			get { return _tgi; }
-			//set {
-			//	if (value == null) {
-			//		throw new Exception("Null TGI");
-			//	} else {
-			//		_tgi = value;
-			//	}
-			//}
 		}
-
+		/// <summary>
+		/// Byte position of this entry within the DBPFFile.
+		/// </summary>
 		private uint _offset;
 		public uint Offset {
 			get { return _offset; }
 			//set { _offset = value; }
 		}
-
+		/// <summary>
+		/// Position of this entry in relation to the other entries in the DBPFFile.
+		/// </summary>
 		private uint _index;
 		public uint IndexPos {
 			get { return _index; }
 			//set { _index = value; }
 		}
-
 		/// <summary>
 		/// Uncompressed size of the entry data, in bytes.
 		/// </summary>
@@ -43,7 +43,6 @@ namespace csDBPF {
 			get { return _uncompressedSize; }
 			set { _uncompressedSize = value; }
 		}
-
 		/// <summary>
 		/// Compressed size of the entry data, in bytes.
 		/// </summary>
@@ -55,7 +54,6 @@ namespace csDBPF {
 			get { return _compressedSize; }
 			set { _compressedSize = value; }
 		}
-
 		/// <summary>
 		/// Compression status of the entry data.
 		/// </summary>
@@ -67,13 +65,21 @@ namespace csDBPF {
 			get { return _isCompressed; }
 			set { _isCompressed = value; }
 		}
-
+		/// <summary>
+		/// Byte array of data pertaining to this entry.
+		/// </summary>
+		/// <remarks>
+		/// The interpretation of the entry data depends on the compression status of the entry and also on the file type of the entry (known through its <see cref="TGI"/>).
+		/// </remarks>
 		private byte[] _data;
 		public byte[] Data {
 			get { return _data; }
 			set { _data = value; }
 		}
 
+
+
+		//------------- DBPFEntry Constructors ------------- \\
 		/// <summary>
 		/// Create a new DBPFEntry object.
 		/// </summary>
@@ -81,7 +87,6 @@ namespace csDBPF {
 		public DBPFEntry(DBPFTGI tgi) {
 			_tgi = tgi;
 		}
-
 		/// <summary>
 		/// Create a new DBPFEntry object.
 		/// </summary>
@@ -91,7 +96,6 @@ namespace csDBPF {
 		/// <param name="index">Entry position in the file. 0-n</param>
 		public DBPFEntry(DBPFTGI tgi, uint offset, uint size, uint index) {
 			if (tgi == null) {
-				//throw new Exception("Null TGI");
 				_tgi = DBPFTGI.NULLTGI;
 			} else {
 				_tgi = tgi;
@@ -99,11 +103,14 @@ namespace csDBPF {
 			_offset = offset;
 			_index = index;
 			_compressedSize = size;
-			//Note: the properties below cannot be definitively determined until after the data is read and set - assign placeholder defaults
+			//Note the properties below cannot be definitively determined until after the data is read and set - assign placeholder defaults for now
 			_uncompressedSize = size;
 			_isCompressed = true;
 		}
 
+
+
+		//------------- DBPFEntry Methods ------------- \\
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder(_tgi.ToString());
 			sb.AppendLine($", IndexPos: {_index}, Offset: {_offset}, uSize: {_uncompressedSize}, Comp: {_isCompressed}, cSize: {_compressedSize} ");

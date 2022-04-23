@@ -7,9 +7,9 @@ using System.Text;
 namespace csDBPF {
 	public class DBPFTGI {
 		//In general Dictionary items are kept in the order they are added, and since we're not doing a lot of adding/deleting/otherwise sorting, its not as big of a deal and we don't need to use a special type like SortedDictionary
-		//QUESTION - Fix knownEntries to use sorted dictionary type? https://stackoverflow.com/questions/1453190/does-the-enumerator-of-a-dictionarytkey-tvalue-return-key-value-pairs-in-the
+		//QUESTION - Fix KnownEntries to use sorted dictionary type? https://stackoverflow.com/questions/1453190/does-the-enumerator-of-a-dictionarytkey-tvalue-return-key-value-pairs-in-the
 		//TODO - also make this dictionary immutable
-		private static readonly Dictionary<DBPFTGI, string> knownEntries = new Dictionary<DBPFTGI, string>();
+		private static readonly Dictionary<DBPFTGI, string> KnownEntries = new Dictionary<DBPFTGI, string>();
 		public static readonly DBPFTGI BLANKTGI; /** BLANKTGI (0, 0, 0) */
 		public static readonly DBPFTGI DIRECTORY; /** Directory file (0xe86b1eef, 0xe86b1eef, 0x286b1f03) */
 		public static readonly DBPFTGI LD; /** LD file (0x6be74c60, 0x6be74c60, 0) */
@@ -56,30 +56,39 @@ namespace csDBPF {
 		public static readonly DBPFTGI NULLTGI; /** NULLTGI (0, 0, 0) */
 
 
-
+		
 		private readonly uint? _type;
-		public uint? type {
+		/// <summary>
+		/// Type ID. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Type_ID">Type ID</see>
+		/// </summary>
+		public uint? Type {
 			get { return _type; }
 			//set { myVar = value; }
 		}
+		
 		private readonly uint? _group;
-		public uint? group {
+		/// <summary>
+		/// Group ID. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Group_ID">Group ID</see>
+		/// </summary>
+		public uint? Group {
 			get { return _group; }
 			//set { myVar = value; }
 		}
+		
 		private readonly uint? _instance;
-		public uint? instance {
+		/// <summary>
+		/// Instance ID. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Instance_ID">Instance ID</see>
+		/// </summary>
+		public uint? Instance {
 			get { return _instance; }
 			//set { myVar = value; }
 		}
 		private readonly string _label;
-		public string label {
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Label {
 			get { return _label; }
-		}
-
-		private string _labelshort;
-		public string shortLabel {
-			get { return _labelshort; }
 		}
 
 		//IMPORTANT - Never allow creation of null TID, GID, or IID because they interfere with the lookups of knownType
@@ -87,8 +96,7 @@ namespace csDBPF {
 			_type = type;
 			_group = group;
 			_instance = instance;
-			//_label = MatchesAnyKnownTGI();
-			//TODO - call matches here to set label field
+			_label = MatchesAnyKnownTGI();
 		}
 
 		/// <summary>
@@ -99,9 +107,9 @@ namespace csDBPF {
 		/// </remarks>
 		/// <param name="existingType">Known entry type</param>
 		public DBPFTGI(DBPFTGI knownEntry) {
-			_type = knownEntry.type != null ? knownEntry.type : 0;
-			_group = knownEntry.group != null ? knownEntry.group : 0;
-			_instance = knownEntry.instance != null ? knownEntry.instance : 0;
+			_type = knownEntry.Type != null ? knownEntry.Type : 0;
+			_group = knownEntry.Group != null ? knownEntry.Group : 0;
+			_instance = knownEntry.Instance != null ? knownEntry.Instance : 0;
 			//_label = MatchesAnyKnownTGI();
 		}
 
@@ -118,22 +126,22 @@ namespace csDBPF {
 		public bool MatchesKnownTGI(DBPFTGI knownType) {
 			bool isTIDok, isGIDok, isIIDok;
 
-			if (!knownType.type.HasValue) {
+			if (!knownType.Type.HasValue) {
 				isTIDok = true;
 			} else {
-				isTIDok = this.type == knownType.type;
+				isTIDok = this.Type == knownType.Type;
 			}
 
-			if (!knownType.group.HasValue) {
+			if (!knownType.Group.HasValue) {
 				isGIDok = true;
 			} else {
-				isGIDok = this.group == knownType.group;
+				isGIDok = this.Group == knownType.Group;
 			}
 
-			if (!knownType.instance.HasValue) {
+			if (!knownType.Instance.HasValue) {
 				isIIDok = true;
 			} else {
-				isIIDok = this.instance == knownType.instance;
+				isIIDok = this.Instance == knownType.Instance;
 			}
 
 			return isTIDok && isGIDok && isIIDok;
@@ -145,7 +153,7 @@ namespace csDBPF {
 		/// </summary>
 		/// <returns>The label of the known entry type if found; null otherwise.</returns>
 		public string MatchesAnyKnownTGI() {
-			foreach (KeyValuePair<DBPFTGI, string> entry in knownEntries) {
+			foreach (KeyValuePair<DBPFTGI, string> entry in KnownEntries) {
 				if (this.Equals(entry.Key)) {
 					return entry.Value;
 				}
@@ -164,18 +172,18 @@ namespace csDBPF {
 			bool evalT, evalG, evalI;
 			if (obj is DBPFTGI) {
 				DBPFTGI checkTGI = (DBPFTGI) obj;
-				if (!(checkTGI.type is null)) {
-					evalT = this.type == checkTGI.type;
+				if (!(checkTGI.Type is null)) {
+					evalT = this.Type == checkTGI.Type;
 				} else {
 					evalT = true;
 				}
-				if (!(checkTGI.group is null)) {
-					evalG = this.group == checkTGI.group;
+				if (!(checkTGI.Group is null)) {
+					evalG = this.Group == checkTGI.Group;
 				} else {
 					evalG = true;
 				}
-				if (!(checkTGI.instance is null)) {
-					evalI = this.instance == checkTGI.instance;
+				if (!(checkTGI.Instance is null)) {
+					evalI = this.Instance == checkTGI.Instance;
 				} else {
 					evalI = true;
 				}
@@ -202,9 +210,9 @@ namespace csDBPF {
 		public DBPFTGI ModifyTGI(DBPFTGI modifier) {
 			//if modifier.type != null then use modifier.type else use this.type
 			return new DBPFTGI(
-				modifier.type != null ? (uint) modifier.type : (uint) this.type,
-				modifier.group != null ? (uint) modifier.group : (uint) this.group,
-				modifier.instance != null ? (uint) modifier.instance : (uint) this.instance
+				modifier.Type != null ? (uint) modifier.Type : (uint) this.Type,
+				modifier.Group != null ? (uint) modifier.Group : (uint) this.Group,
+				modifier.Instance != null ? (uint) modifier.Instance : (uint) this.Instance
 			);
 		}
 
@@ -221,9 +229,9 @@ namespace csDBPF {
 		public DBPFTGI ModifyTGI(uint? t, uint? g, uint? i) {
 			//if t != null then use t else use this.type
 			return new DBPFTGI(
-				t != null ? (uint) t : (uint) this.type,
-				g != null ? (uint) g : (uint) this.group,
-				i != null ? (uint) i : (uint) this.instance
+				t != null ? (uint) t : (uint) this.Type,
+				g != null ? (uint) g : (uint) this.Group,
+				i != null ? (uint) i : (uint) this.Instance
 			);
 		}
 
@@ -281,49 +289,49 @@ namespace csDBPF {
 			EFFDIR = new DBPFTGI(0xea5118b0, null, null, "EFFDIR");
 			NULLTGI = new DBPFTGI(null, null, null, "UNKNOWN");
 
-			knownEntries.Add(BLANKTGI, "BLANKTGI");
-			knownEntries.Add(DIRECTORY, "DIRECTORY");
-			knownEntries.Add(LD, "LD");
-			knownEntries.Add(S3D_MAXIS, "S3D_MAXIS");
-			knownEntries.Add(S3D, "S3D");
-			knownEntries.Add(COHORT, "COHORT");
-			knownEntries.Add(EXEMPLAR_ROAD, "EXEMPLAR_ROAD");
-			knownEntries.Add(EXEMPLAR_STREET, "EXEMPLAR_STREET");
-			knownEntries.Add(EXEMPLAR_ONEWAYROAD, "EXEMPLAR_ONEWAYROAD");
-			knownEntries.Add(EXEMPLAR_AVENUE, "EXEMPLAR_AVENUE");
-			knownEntries.Add(EXEMPLAR_HIGHWAY, "EXEMPLAR_HIGHWAY");
-			knownEntries.Add(EXEMPLAR_GROUNDHIGHWAY, "EXEMPLAR_GROUNDHIGHWAY");
-			knownEntries.Add(EXEMPLAR_DIRTROAD, "EXEMPLAR_DIRTROAD");
-			knownEntries.Add(EXEMPLAR_RAIL, "EXEMPLAR_RAIL");
-			knownEntries.Add(EXEMPLAR_LIGHTRAIL, "EXEMPLAR_LIGHTRAIL");
-			knownEntries.Add(EXEMPLAR_MONORAIL, "EXEMPLAR_MONORAIL");
-			knownEntries.Add(EXEMPLAR_POWERPOLE, "EXEMPLAR_POWERPOLE");
-			knownEntries.Add(EXEMPLAR_T21, "EXEMPLAR_T21");
-			knownEntries.Add(EXEMPLAR, "EXEMPLAR");
-			knownEntries.Add(FSH_MISC, "FSH_MISC");
-			knownEntries.Add(FSH_TRANSIT, "FSH_TRANSIT");
-			knownEntries.Add(FSH_BASE_OVERLAY, "FSH_BASE_OVERLAY");
-			knownEntries.Add(FSH_SHADOW, "FSH_SHADOW");
-			knownEntries.Add(FSH_ANIM_PROPS, "FSH_ANIM_PROPS");
-			knownEntries.Add(FSH_ANIM_NONPROPS, "FSH_ANIM_NONPROPS");
-			knownEntries.Add(FSH_TERRAIN_FOUNDATION, "FSH_TERRAIN_FOUNDATION");
-			knownEntries.Add(FSH_UI, "FSH_UI");
-			knownEntries.Add(FSH, "FSH");
-			knownEntries.Add(SC4PATH_2D, "SC4PATH_2D");
-			knownEntries.Add(SC4PATH_3D, "SC4PATH_3D");
-			knownEntries.Add(SC4PATH, "SC4PATH");
-			knownEntries.Add(PNG_ICON, "PNG_ICON");
-			knownEntries.Add(PNG, "PNG");
-			knownEntries.Add(LUA, "LUA");
-			knownEntries.Add(LUA_GEN, "LUA_GEN");
-			knownEntries.Add(WAV, "WAV");
-			knownEntries.Add(LTEXT, "LTEXT");
-			knownEntries.Add(INI_FONT, "INI_FONT");
-			knownEntries.Add(INI_NETWORK, "INI_NETWORK");
-			knownEntries.Add(INI, "INI");
-			knownEntries.Add(RUL, "RUL");
-			knownEntries.Add(EFFDIR, "EFFDIR");
-			knownEntries.Add(NULLTGI, "NULLTGI"); // NULLTGI matches with everything
+			KnownEntries.Add(BLANKTGI, "BLANKTGI");
+			KnownEntries.Add(DIRECTORY, "DIRECTORY");
+			KnownEntries.Add(LD, "LD");
+			KnownEntries.Add(S3D_MAXIS, "S3D_MAXIS");
+			KnownEntries.Add(S3D, "S3D");
+			KnownEntries.Add(COHORT, "COHORT");
+			KnownEntries.Add(EXEMPLAR_ROAD, "EXEMPLAR_ROAD");
+			KnownEntries.Add(EXEMPLAR_STREET, "EXEMPLAR_STREET");
+			KnownEntries.Add(EXEMPLAR_ONEWAYROAD, "EXEMPLAR_ONEWAYROAD");
+			KnownEntries.Add(EXEMPLAR_AVENUE, "EXEMPLAR_AVENUE");
+			KnownEntries.Add(EXEMPLAR_HIGHWAY, "EXEMPLAR_HIGHWAY");
+			KnownEntries.Add(EXEMPLAR_GROUNDHIGHWAY, "EXEMPLAR_GROUNDHIGHWAY");
+			KnownEntries.Add(EXEMPLAR_DIRTROAD, "EXEMPLAR_DIRTROAD");
+			KnownEntries.Add(EXEMPLAR_RAIL, "EXEMPLAR_RAIL");
+			KnownEntries.Add(EXEMPLAR_LIGHTRAIL, "EXEMPLAR_LIGHTRAIL");
+			KnownEntries.Add(EXEMPLAR_MONORAIL, "EXEMPLAR_MONORAIL");
+			KnownEntries.Add(EXEMPLAR_POWERPOLE, "EXEMPLAR_POWERPOLE");
+			KnownEntries.Add(EXEMPLAR_T21, "EXEMPLAR_T21");
+			KnownEntries.Add(EXEMPLAR, "EXEMPLAR");
+			KnownEntries.Add(FSH_MISC, "FSH_MISC");
+			KnownEntries.Add(FSH_TRANSIT, "FSH_TRANSIT");
+			KnownEntries.Add(FSH_BASE_OVERLAY, "FSH_BASE_OVERLAY");
+			KnownEntries.Add(FSH_SHADOW, "FSH_SHADOW");
+			KnownEntries.Add(FSH_ANIM_PROPS, "FSH_ANIM_PROPS");
+			KnownEntries.Add(FSH_ANIM_NONPROPS, "FSH_ANIM_NONPROPS");
+			KnownEntries.Add(FSH_TERRAIN_FOUNDATION, "FSH_TERRAIN_FOUNDATION");
+			KnownEntries.Add(FSH_UI, "FSH_UI");
+			KnownEntries.Add(FSH, "FSH");
+			KnownEntries.Add(SC4PATH_2D, "SC4PATH_2D");
+			KnownEntries.Add(SC4PATH_3D, "SC4PATH_3D");
+			KnownEntries.Add(SC4PATH, "SC4PATH");
+			KnownEntries.Add(PNG_ICON, "PNG_ICON");
+			KnownEntries.Add(PNG, "PNG");
+			KnownEntries.Add(LUA, "LUA");
+			KnownEntries.Add(LUA_GEN, "LUA_GEN");
+			KnownEntries.Add(WAV, "WAV");
+			KnownEntries.Add(LTEXT, "LTEXT");
+			KnownEntries.Add(INI_FONT, "INI_FONT");
+			KnownEntries.Add(INI_NETWORK, "INI_NETWORK");
+			KnownEntries.Add(INI, "INI");
+			KnownEntries.Add(RUL, "RUL");
+			KnownEntries.Add(EFFDIR, "EFFDIR");
+			KnownEntries.Add(NULLTGI, "NULLTGI"); // NULLTGI matches with everything
 		}
 
 		/// <summary>
