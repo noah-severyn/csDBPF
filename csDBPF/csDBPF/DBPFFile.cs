@@ -19,8 +19,8 @@ namespace csDBPF {
 	public class DBPFFile {
 		public DBPFHeader Header;
 		public FileInfo File;
-		public OrderedDictionary entryMap; //TODO - make these unmodifiable outside of this scope. see (Java) Collections.unmodifiableSet
-		public Dictionary<uint, DBPFTGI> tgiMap; //TODO - make these unmodifiable outside of this scope. see (Java) Collections.unmodifiableSet
+		public OrderedDictionary ListOfEntries; //TODO - make these unmodifiable outside of this scope. see (Java) Collections.unmodifiableSet
+		public Dictionary<uint, DBPFTGI> ListOfTGIs; //TODO - make these unmodifiable outside of this scope. see (Java) Collections.unmodifiableSet
 
 		//------------- BEGIN DBPFFile.Header ------------- \\
 		/// <summary>
@@ -122,16 +122,16 @@ namespace csDBPF {
 		/// </summary>
 		/// <param name="filePath">Full path of file to read, including filename and extension.</param>
 		public DBPFFile(string filePath) {
-			this.File = new FileInfo(filePath);
-			this.Header = new DBPFHeader();
-			this.entryMap = new OrderedDictionary();
-			this.tgiMap = new Dictionary<uint, DBPFTGI>();
+			File = new FileInfo(filePath);
+			Header = new DBPFHeader();
+			ListOfEntries = new OrderedDictionary();
+			ListOfTGIs = new Dictionary<uint, DBPFTGI>();
 
 			bool map = false;
 			if (map) {
-				ReadAndMap(this.File);
+				ReadAndMap(File);
 			} else {
-				Read(this.File);
+				Read(File);
 			}
 
 
@@ -186,7 +186,7 @@ namespace csDBPF {
 				}
 
 				//Check for a DIR Record, aka the list of all compressed files (https://www.wiki.sc4devotion.com/index.php?title=DBDF)
-				foreach (DBPFEntry entry in entryMap.Values) {
+				foreach (DBPFEntry entry in ListOfEntries.Values) {
 					if (entry.TGI.MatchesKnownTGI(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
 						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
 						int numRecords = (int) entry.CompressedSize / 16;
@@ -199,7 +199,7 @@ namespace csDBPF {
 				}
 
 				//Populate data for non directory entries
-				foreach (DBPFEntry entry in entryMap.Values) {
+				foreach (DBPFEntry entry in ListOfEntries.Values) {
 					if (!entry.TGI.MatchesKnownTGI(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
 						byte[] readData = new byte[entry.UncompressedSize];
 						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
@@ -221,7 +221,7 @@ namespace csDBPF {
 
 
 			//Parse the properties of each entry
-			foreach (DBPFEntry entry in entryMap.Values) {
+			foreach (DBPFEntry entry in ListOfEntries.Values) {
 				//GetSubfileFormat(DBPFCompression.Decompress(entry.data));
 			}
 		}
@@ -235,8 +235,8 @@ namespace csDBPF {
 			if (entry == null) {
 				throw new ArgumentNullException();
 			}
-			entryMap.Add(entry.IndexPos, entry);
-			tgiMap.Add(entry.IndexPos, entry.TGI);
+			ListOfEntries.Add(entry.IndexPos, entry);
+			ListOfTGIs.Add(entry.IndexPos, entry.TGI);
 		}
 
 

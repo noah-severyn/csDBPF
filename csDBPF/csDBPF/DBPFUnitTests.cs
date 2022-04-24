@@ -512,7 +512,7 @@ namespace csDBPF {
 
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 
-				DBPFEntry e0 = (DBPFEntry) dbpf.entryMap[0];
+				DBPFEntry e0 = (DBPFEntry) dbpf.ListOfEntries[0];
 				byte[] e0ddata = DBPFCompression.Decompress(e0.Data);
 				e0.Data = e0ddata;
 				Dictionary<int, DBPFProperty> propertiesReturned = (Dictionary<int, DBPFProperty>) e0.DecodeEntry();
@@ -527,8 +527,8 @@ namespace csDBPF {
 					CollectionAssert.AreEqual(outk.ByteValues, outr.ByteValues);
 				}
 
-				Assert.AreEqual("Parks Aura (by Cori)", ((DBPFEntry) dbpf.entryMap[1]).DecodeEntry());
-				Assert.AreEqual("+100  to +165", ((DBPFEntry) dbpf.entryMap[dbpf.entryMap.Count-2]).DecodeEntry());
+				Assert.AreEqual("Parks Aura (by Cori)", ((DBPFEntry) dbpf.ListOfEntries[1]).DecodeEntry());
+				Assert.AreEqual("+100  to +165", ((DBPFEntry) dbpf.ListOfEntries[dbpf.ListOfEntries.Count-2]).DecodeEntry());
 			}
 		}
 	}
