@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace csDBPF {
 	public static class DBPFUtil {
@@ -93,6 +94,14 @@ namespace csDBPF {
 		/// <returns><see cref="DateTime"/> object equal to the provided Unix time</returns>
 		public static DateTime UnixToDate(uint time) {
 			return DateTimeOffset.FromUnixTimeSeconds(time).UtcDateTime;
+		}
+
+		public static string PrintByteValues(byte[] data) {
+			StringBuilder sb = new StringBuilder();
+			foreach (byte b in data) {
+				sb.Append(b.ToString("X2") + " ");
+			}
+			return sb.ToString();
 		}
 	}
 }

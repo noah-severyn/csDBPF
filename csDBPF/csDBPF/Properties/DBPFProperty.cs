@@ -14,28 +14,35 @@ namespace csDBPF.Properties {
 		private const string CQZB1 = "CQZB1###";
 		private const string CQZT1 = "CQZT1###";
 
+		private readonly uint _id;
 		/// <summary>
 		/// The Uint32 hex identifier for this property. See <see cref="ExemplarProperty"/>.
 		/// </summary>
-		private readonly uint _id;
 		public abstract uint ID { get; set; }
-
+		
+		private readonly uint _numberOfReps;
 		/// <summary>
 		/// The number of repetitions of <see cref="DBPFPropertyDataType"/> this property has. This informs how many bytes to read for this property. 
 		/// </summary>
-		private readonly uint _numberOfReps;
 		public abstract uint NumberOfReps { get; }
-
+		
+		private readonly DBPFPropertyDataType _dataType;
 		/// <summary>
 		/// The <see cref="DBPFPropertyDataType"/> for this property.
 		/// </summary>
-		private readonly DBPFPropertyDataType _dataType;
 		public abstract DBPFPropertyDataType DataType { get; set; }
 
+		private readonly ushort _keyType;
+		/// <summary>
+		/// The KeyType contains a value of 0x80 if the property has more than or equal to one repetition, and 0x00 if it has 0 repetitions. 0x80 is the only recorded KeyType
+		/// </summary>
+		public abstract ushort KeyType { get; set; }
+		
 		/// <summary>
 		/// This is a byte array of the raw values in the property. Assignment of this value takes place in <see cref="DBPFPropertyString"/> or <see cref="DBPFPropertyNumber"/>.
 		/// </summary>
 		public abstract byte[] ByteValues { get; set; }
+
 
 		/// <summary>
 		/// Parse the byte values for this property depending on the property's <see cref="DBPFPropertyDataType"/>.
@@ -52,16 +59,17 @@ namespace csDBPF.Properties {
 
 		public DBPFProperty(DBPFPropertyDataType dataType) {
 			_dataType = dataType;
-			_id = 0x0;
+			_id = 0;
 			_numberOfReps = 0;
 		}
 
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder();
-			sb.Append($"ID: {_id}, ");
+			sb.Append($"ID: {DBPFUtil.UIntToHexString(_id)}, ");
 			sb.Append($"Type: {_dataType}, ");
+			sb.Append($"Key: {_keyType}, ");
 			sb.Append($"Reps: {_numberOfReps}, ");
-			sb.AppendLine("Values: ");
+			sb.Append("Values: ");
 			return sb.ToString();
 		}
 
@@ -79,11 +87,10 @@ namespace csDBPF.Properties {
 				throw new ArgumentException("Data provided does not represent an exemplar or cohort property!");
 			}
 
-			//Read cohort TGI info and determine the number of properties in this entry
-			//uint parentCohortTID = BitConverter.ToUInt32(dData, 8);
-			//uint parentCohortGID = BitConverter.ToUInt32(dData, 12);
-			//uint parentCohortIID = BitConverter.ToUInt32(dData, 16);
-			//uint propertyCount = BitConverter.ToUInt32(dData, 20);
+			//The first 24 bytes are features of the entry: T, G, I, property count. When examining a specific property in the entry we are not concerned about them.
+			if (offset < 24) {
+				offset = 24;
+			}
 
 			//Get the property's numeric value (0x0000 0000)
 			uint propertyID = BitConverter.ToUInt32(dData, offset);
@@ -106,6 +113,7 @@ namespace csDBPF.Properties {
 				newProperty = new DBPFPropertyNumber(dataType);
 			}
 			newProperty.ID = propertyID;
+			newProperty.KeyType = keyType;
 
 			//Examine the keyType to determine how to set the values for the new property
 			if (keyType == 0x80) {
@@ -124,7 +132,8 @@ namespace csDBPF.Properties {
 				offset += 1; //This one byte is number of value repetitions; seems to always be 0
 				byte[] newVals = new byte[dataType.Length];
 				for (int idx = 0; idx < dataType.Length; idx++) {
-					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
+					//newVals[idx] = (byte) BitConverter.ToChar(dData, dData[offset + idx];);
+					newVals[idx] = dData[offset + idx];
 				}
 				newProperty.ByteValues = newVals;
 			}
@@ -140,8 +149,5 @@ namespace csDBPF.Properties {
 		public static DBPFProperty DecodeCohortProperty(byte[] dData, int offset = 0) {
 			return DecodeExemplarProperty(dData, offset);
 		}
-
-
-
 	}
 }

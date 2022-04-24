@@ -5,29 +5,20 @@ using System.Text;
 
 namespace csDBPF.Properties {
 	class DBPFPropertyNumber : DBPFProperty {
+
+		private uint _ID;
 		/// <summary>
 		/// Hexadecimal identifier for this property. <see cref="DBPFExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
-		private uint _ID;
 		public override uint ID {
 			get { return _ID; }
 			set { _ID = value; }
 		}
 
-
-		/// <summary>
-		/// Number of repetitions of the data type in this property. The byte size of this property's <see cref="DBPFPropertyDataType"/> multiplied by this number equals the byte size of this property's values in bytes. Initialized to 1.
-		/// </summary>
-		private uint _numberOfReps;
-		public override uint NumberOfReps {
-			get { return _numberOfReps; }
-		}
-
-
+		private DBPFPropertyDataType _dataType;
 		/// <summary>
 		/// The <see cref="DBPFPropertyDataType"/> for this property.
 		/// </summary>
-		private DBPFPropertyDataType _dataType;
 		public override DBPFPropertyDataType DataType {
 			get { return _dataType; }
 			set {
@@ -38,11 +29,27 @@ namespace csDBPF.Properties {
 			}
 		}
 
+		private ushort _keyType;
+		/// <summary>
+		/// The KeyType contains a value of 0x80 if the property has more than or equal to one repetition, and 0x00 if it has 0 repetitions. 0x80 is the only recorded KeyType
+		/// </summary>
+		public override ushort KeyType {
+			get { return _keyType; }
+			set { _keyType = value; }
+		}
 
+		private uint _numberOfReps;
+		/// <summary>
+		/// Number of repetitions of the data type in this property. The byte size of this property's <see cref="DBPFPropertyDataType"/> multiplied by this number equals the byte size of this property's values in bytes. Initialized to 1.
+		/// </summary>
+		public override uint NumberOfReps {
+			get { return _numberOfReps; }
+		}
+
+		private byte[] _byteValues;
 		/// <summary>
 		/// The byte array of base data for the property. When this is set, <see cref="valuesDecoded"/> is also set to the equivalent value.
 		/// </summary>
-		private byte[] _byteValues;
 		public override byte[] ByteValues {
 			get { return _byteValues; }
 			set {
@@ -141,7 +148,8 @@ namespace csDBPF.Properties {
 		/// <returns>String value of the property</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder(base.ToString());
-			sb.Append(DecodeValues());
+			sb.Append($"{DBPFUtil.PrintByteValues(_byteValues)}");
+			//sb.Append(DecodeValues());
 			return sb.ToString();
 		}
 	}
