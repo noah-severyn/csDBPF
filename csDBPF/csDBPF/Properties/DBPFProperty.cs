@@ -6,7 +6,7 @@ using System.Collections;
 namespace csDBPF.Properties {
 
 	/// <summary>
-	/// An abstract class defining the structure of a Property and the methods for interfacing with it.
+	/// An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries.
 	/// </summary>
 	public abstract class DBPFProperty {
 		private const string EQZB1 = "EQZB1###";
@@ -131,12 +131,17 @@ namespace csDBPF.Properties {
 			return newProperty;
 		}
 
-
-		//TODO - make one function DecodeProperty which calls a bunch of private specialized functions depending on the entry TGI knownType
-
-
+		/// <summary>
+		/// Decodes the property from raw data at the given offset.
+		/// </summary>
+		/// <param name="dData">Decompressed raw data</param>
+		/// <param name="offset">Offset to start decoding from</param>
+		/// <returns>The DBPFProperty; null if cannot be decoded</returns>
 		public static DBPFProperty DecodeCohortProperty(byte[] dData, int offset = 0) {
 			return DecodeExemplarProperty(dData, offset);
 		}
+
+
+
 	}
 }

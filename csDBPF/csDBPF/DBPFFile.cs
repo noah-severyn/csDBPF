@@ -12,7 +12,9 @@ namespace csDBPF {
 	/// Represents the header data and entry list as read from a DBPF file.
 	/// </summary>
 	/// <remarks>
-	/// At a high level, a <see cref="DBPFFile"/> ("file") is the container for the DBPF data. This takes the form of a dat/sc4lot/sc4model/sc4desc file. Each file is broken into one or more <see cref="DBPFEntry"/> ("entries" or "subfiles"). Each entry is composed of one or more <see cref="DBPFProperty"/> ("properties"). Each property corresponds to one of <see cref="DBPFExemplarProperty"/> which come from the properties XML file which stores useful and human friendly information about the property including name, min/max value, default values, etc.
+	/// At a high level, a <see cref="DBPFFile"/> ("file") is the container for the DBPF data. This takes the form of a dat/sc4lot/sc4model/sc4desc file. Each file is broken into one or more <see cref="DBPFEntry"/> ("entries" or "subfiles"). 
+	/// For Exemplar and Cohort type entries, each entry is composed of one or more <see cref="DBPFProperty"/> ("properties"). Each property corresponds to one of <see cref="DBPFExemplarProperty"/> which are generated from the properties XML file. This file stores useful and human friendly information about the property including name, min/max value, default values, etc.
+	/// For other type entries, their data is stored in a byte array, and is interpreted (read) differently depending on the type of the entry.
 	/// </remarks>
 	public class DBPFFile {
 		public DBPFHeader Header;
@@ -112,6 +114,8 @@ namespace csDBPF {
 			}
 		}
 
+
+
 		//------------- BEGIN DBPFFile ------------- \\
 		/// <summary>
 		/// Read from an existing DBPF file and instantiate a new DBPFFile object.
@@ -205,6 +209,7 @@ namespace csDBPF {
 						//After the data is set, we can know the other properties of the DBPFEntry, like isCompressed, compressedSize, etc.
 						entry.IsCompressed = DBPFCompression.IsCompressed(entry.Data);
 						entry.CompressedSize = DBPFCompression.GetDecompressedSize(entry.Data);
+						
 					}
 				}
 

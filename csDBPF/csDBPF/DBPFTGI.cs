@@ -56,7 +56,7 @@ namespace csDBPF {
 		public static readonly DBPFTGI NULLTGI; /** NULLTGI (0, 0, 0) */
 
 
-		
+		//------------- DBPFTGI Fields ------------- \\
 		private readonly uint? _type;
 		/// <summary>
 		/// Type ID. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Type_ID">Type ID</see>
@@ -91,7 +91,18 @@ namespace csDBPF {
 			get { return _label; }
 		}
 
-		//IMPORTANT - Never allow creation of null TID, GID, or IID because they interfere with the lookups of knownType
+
+
+		//------------- DBPFTGI Constructors ------------- \\
+		/// <summary>
+		/// Create a new DBPFTGI from the specified Type Group and Instance.
+		/// </summary>
+		/// <remarks>
+		/// Important: Never allow creation of null TID, GID, or IID because they interfere with the lookups of KnownType.
+		/// </remarks>
+		/// <param name="type"></param>
+		/// <param name="group"></param>
+		/// <param name="instance"></param>
 		public DBPFTGI(uint type, uint group, uint instance) {
 			_type = type;
 			_group = group;
@@ -110,10 +121,12 @@ namespace csDBPF {
 			_type = knownEntry.Type != null ? knownEntry.Type : 0;
 			_group = knownEntry.Group != null ? knownEntry.Group : 0;
 			_instance = knownEntry.Instance != null ? knownEntry.Instance : 0;
-			//_label = MatchesAnyKnownTGI();
+			_label = MatchesAnyKnownTGI();
 		}
 
 
+
+		//------------- DBPFTGI Methods ------------- \\
 		/// <summary>
 		/// Check if this DBPFTGI matches a specific known DBPFTGI entry type. Unlike equals, this method is not reflexive.
 		/// </summary>
@@ -129,19 +142,19 @@ namespace csDBPF {
 			if (!knownType.Type.HasValue) {
 				isTIDok = true;
 			} else {
-				isTIDok = this.Type == knownType.Type;
+				isTIDok = Type == knownType.Type;
 			}
 
 			if (!knownType.Group.HasValue) {
 				isGIDok = true;
 			} else {
-				isGIDok = this.Group == knownType.Group;
+				isGIDok = Group == knownType.Group;
 			}
 
 			if (!knownType.Instance.HasValue) {
 				isIIDok = true;
 			} else {
-				isIIDok = this.Instance == knownType.Instance;
+				isIIDok = Instance == knownType.Instance;
 			}
 
 			return isTIDok && isGIDok && isIIDok;
@@ -154,7 +167,7 @@ namespace csDBPF {
 		/// <returns>The label of the known entry type if found; null otherwise.</returns>
 		public string MatchesAnyKnownTGI() {
 			foreach (KeyValuePair<DBPFTGI, string> entry in KnownEntries) {
-				if (this.Equals(entry.Key)) {
+				if (Equals(entry.Key)) {
 					return entry.Value;
 				}
 			}
@@ -173,31 +186,31 @@ namespace csDBPF {
 			if (obj is DBPFTGI) {
 				DBPFTGI checkTGI = (DBPFTGI) obj;
 				if (!(checkTGI.Type is null)) {
-					evalT = this.Type == checkTGI.Type;
+					evalT = Type == checkTGI.Type;
 				} else {
 					evalT = true;
 				}
 				if (!(checkTGI.Group is null)) {
-					evalG = this.Group == checkTGI.Group;
+					evalG = Group == checkTGI.Group;
 				} else {
 					evalG = true;
 				}
 				if (!(checkTGI.Instance is null)) {
-					evalI = this.Instance == checkTGI.Instance;
+					evalI = Instance == checkTGI.Instance;
 				} else {
 					evalI = true;
 				}
 				return evalT && evalG && evalI;
-				//return this.type == checkTGI.type && this.group == checkTGI.group && this.instance == checkTGI.instance;
 			} else {
 				return false;
 			}
-
 		}
+
 
 		public override string ToString() {
 			return $"T:0x{DBPFUtil.UIntToHexString(_type, 8)}, G:0x{DBPFUtil.UIntToHexString(_group, 8)}, I:0x{DBPFUtil.UIntToHexString(_instance, 8)}";
 		}
+
 
 		/// <summary>
 		/// Returns a new DBPFTGI with the fields of this and the provided TGI.
@@ -210,11 +223,12 @@ namespace csDBPF {
 		public DBPFTGI ModifyTGI(DBPFTGI modifier) {
 			//if modifier.type != null then use modifier.type else use this.type
 			return new DBPFTGI(
-				modifier.Type != null ? (uint) modifier.Type : (uint) this.Type,
-				modifier.Group != null ? (uint) modifier.Group : (uint) this.Group,
-				modifier.Instance != null ? (uint) modifier.Instance : (uint) this.Instance
+				modifier.Type != null ? (uint) modifier.Type : (uint) Type,
+				modifier.Group != null ? (uint) modifier.Group : (uint) Group,
+				modifier.Instance != null ? (uint) modifier.Instance : (uint) Instance
 			);
 		}
+
 
 		/// <summary>
 		/// Returns a new DBPFTGI with the specified TGI components.
@@ -229,9 +243,9 @@ namespace csDBPF {
 		public DBPFTGI ModifyTGI(uint? t, uint? g, uint? i) {
 			//if t != null then use t else use this.type
 			return new DBPFTGI(
-				t != null ? (uint) t : (uint) this.Type,
-				g != null ? (uint) g : (uint) this.Group,
-				i != null ? (uint) i : (uint) this.Instance
+				t != null ? (uint) t : (uint) Type,
+				g != null ? (uint) g : (uint) Group,
+				i != null ? (uint) i : (uint) Instance
 			);
 		}
 

@@ -55,14 +55,7 @@ namespace csDBPF {
 					header[idx] = cData[idx + 4];
 				}
 
-				//first two bytes of header should be QFS identifier 
-				//TODO - this check is redundant
-				uint signature = (uint) (header[0] | (header[1] << 8));
-				if (signature != DBPFCompression.QFS) {
-					Trace.WriteLine("Not compressed");
-				}
-
-				//next 3 bytes are the decompressed size ... byte shift most significant byte to least
+				//After QFS identifier, next 3 bytes are the decompressed size ... byte shift most significant byte to least
 				uint decompressedSize = Convert.ToUInt32((header[2] << 16) + (header[3] << 8) + header[4]);
 				return decompressedSize;
 
@@ -250,7 +243,6 @@ namespace csDBPF {
 		/// </remarks>
 		private static void LZCompliantCopy(ref byte[] source, int sourceOffset, ref byte[] destination, int destinationOffset, int length) {
 			if (length > 0) {
-				//QUESTION - is a simple loop quicker than recursive Array.Copy? I'd think so but is it needed?
 				Array.Copy(source, sourceOffset, destination, destinationOffset, length);
 
 				length -= 1;

@@ -149,11 +149,11 @@ namespace csDBPF {
 			[TestMethod]
 			public void Test_032_ByteArrayHelper_ReadAUint() {
 				byte[] dbpf = { 0x44, 0x42, 0x50, 0x46 };
-				Assert.AreEqual((uint) 0x44425046, ByteArrayHelper.ReadAUint(dbpf));
+				Assert.AreEqual((uint) 0x44425046, ByteArrayHelper.ReadBytesToUintConstant(dbpf));
 				byte[] arr1 = { 0x00,0x00,0x10,0x00};
-				Assert.AreEqual((uint) 0x00001000, ByteArrayHelper.ReadAUint(arr1));
+				Assert.AreEqual((uint) 0x00001000, ByteArrayHelper.ReadBytesToUintConstant(arr1));
 				byte[] arr2 = { 0x07, 0x00, 0x00, 0x30 };
-				Assert.AreEqual((uint) 0x07000030, ByteArrayHelper.ReadAUint(arr2));
+				Assert.AreEqual((uint) 0x07000030, ByteArrayHelper.ReadBytesToUintConstant(arr2));
 			}
 		}
 
@@ -240,7 +240,6 @@ namespace csDBPF {
 			}
 		}
 
-
 		// 06x Test Methods for DBPFProperty Class
 		[TestClass]
 		public class _06x_DBPFProperty {
@@ -259,7 +258,7 @@ namespace csDBPF {
 			}
 
 			[TestMethod]
-			public void Test_062_DBPFPropertyString() {
+			public void Test_061a_DBPFPropertyString() {
 				byte[] byteparks = { 0x50, 0x61, 0x72, 0x6B, 0x73 };
 				string stringparks = "Parks";
 				byte[] byteparksaura = { 0x50, 0x61, 0x72, 0x6b, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61 };
@@ -295,7 +294,7 @@ namespace csDBPF {
 			}
 
 			[TestMethod]
-			public void Test_063_DBPFPropertyInteger() {
+			public void Test_061b_DBPFPropertyInteger() {
 				//Single UInt32 value
 				byte[] val = { 0x23, 0x00, 0x00, 0x00 };
 				uint[] decoded = { 0x00000023 };
@@ -366,12 +365,15 @@ namespace csDBPF {
 				CollectionAssert.AreEquivalent(val6, prop_file.ByteValues);
 				CollectionAssert.AreEqual(decoded6, (System.Collections.ICollection) prop_file.DecodeValues());
 			}
+		}
 
-
+		// 07x Test Methods for Property XML Parsing
+		[TestClass]
+		public class _07x_XMLPropertyParsing {
 			[TestMethod]
-			public void Test_065_DBPFProperty_GetXMLProperty() {
+			public void Test_070_DBPFProperty_GetXMLProperty() {
 				XElement el = XMLProperties.GetXMLProperty(0x00000010);
-				Assert.AreEqual("0x00000010", el.Attribute("ID").Value); 
+				Assert.AreEqual("0x00000010", el.Attribute("ID").Value);
 				Assert.AreEqual("Exemplar Type", el.Attribute("Name").Value);
 
 				el = XMLProperties.GetXMLProperty(0x87cd6345);
@@ -387,7 +389,7 @@ namespace csDBPF {
 			}
 
 			[TestMethod]
-			public void Text_066_DBPFProperty_AllProperties() {
+			public void Text_071_DBPFProperty_AllProperties() {
 				//< PROPERTY Name = "Item Button ID" ID = "0x8a2602bb" Type = "Uint32" Default = "0x00000000" ShowAsHex = "Y" >
 				XMLProperties.AllProperties.TryGetValue(0x8a2602bb, out DBPFExemplarProperty exmp);
 				Assert.AreEqual(0x8a2602bb, exmp.id);
@@ -430,13 +432,11 @@ namespace csDBPF {
 			}
 		}
 
-
 		// 1xx Test Methods for DBPFFile Class
 		[TestClass]
 		public class _1xx_DBPFFile {
 			[TestMethod]
 			public void Test_101_DBPFFile_ValidDBPF() {
-				//DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\Bournemouth Housing Pack\\Mntoes-Bournemouth Housing Pack.dat");
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 				Assert.AreEqual("DBPF", dbpf.Header.Identifier);
 				Assert.AreEqual((uint) 1, dbpf.Header.MajorVersion);
@@ -449,20 +449,24 @@ namespace csDBPF {
 				//These should fail : not valid DBPF file
 				Exception ex = Assert.ThrowsException<Exception>(() => new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\CAS_AutoHistorical_v0.0.2.dll"));
 				Assert.IsTrue(ex.Message.Contains("File is not a DBPF file!"));
-
 				//example: Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => account.Debit(debitAmount));
 			}
 
-			[TestMethod]
 			[Ignore]
-			public void Test_110_ParseHeader() {
-
+			[TestMethod]
+			public void Test_110a_ParseExemplarEntries() {
+				//DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\Bournemouth Housing Pack\\Mntoes-Bournemouth Housing Pack.dat");
+				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 			}
 
 			[TestMethod]
-			[Ignore]
-			public void Test_210_ParseIndex() {
-
+			public void Test_110b_ParseLTEXTEntries() {
+				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+				foreach (DBPFEntry entry in dbpf.entryMap) {
+					if (entry.TGI.MatchesKnownTGI(DBPFTGI.LTEXT)) {
+						entry
+					}
+				}
 			}
 		}
 
