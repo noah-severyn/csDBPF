@@ -61,13 +61,13 @@ namespace csDBPF.Properties {
 			_dataType = dataType;
 			_id = 0;
 			_numberOfReps = 0;
-			_keyType = 0;
 		}
 
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder();
 			sb.Append($"ID: {DBPFUtil.UIntToHexString(_id)}, ");
 			sb.Append($"Type: {_dataType}, ");
+			sb.Append($"Key: {_keyType}, ");
 			sb.Append($"Reps: {_numberOfReps}, ");
 			sb.Append("Values: ");
 			return sb.ToString();
@@ -132,7 +132,8 @@ namespace csDBPF.Properties {
 				offset += 1; //This one byte is number of value repetitions; seems to always be 0
 				byte[] newVals = new byte[dataType.Length];
 				for (int idx = 0; idx < dataType.Length; idx++) {
-					newVals[idx] = (byte) BitConverter.ToChar(dData, offset + idx);
+					//newVals[idx] = (byte) BitConverter.ToChar(dData, dData[offset + idx];);
+					newVals[idx] = dData[offset + idx];
 				}
 				newProperty.ByteValues = newVals;
 			}
@@ -148,8 +149,5 @@ namespace csDBPF.Properties {
 		public static DBPFProperty DecodeCohortProperty(byte[] dData, int offset = 0) {
 			return DecodeExemplarProperty(dData, offset);
 		}
-
-
-
 	}
 }

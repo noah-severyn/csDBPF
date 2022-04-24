@@ -148,7 +148,7 @@ namespace csDBPF.Properties {
 		/// <returns>String value of the property</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder(base.ToString());
-			sb.Append($"{DBPFUtil.PrintBytevalues(_byteValues)}");
+			sb.Append($"{DBPFUtil.PrintByteValues(_byteValues)}");
 			//sb.Append(DecodeValues());
 			return sb.ToString();
 		}

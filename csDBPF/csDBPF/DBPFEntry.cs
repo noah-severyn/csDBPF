@@ -1,4 +1,5 @@
-﻿using System;
+﻿using csDBPF.Properties;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -117,6 +118,68 @@ namespace csDBPF {
 			return sb.ToString();
 		}
 
+		//TODO - make one function DecodeProperty which calls a bunch of private specialized functions depending on the entry TGI knownType
+		public object DecodeEntry() {
+			switch (TGI.Label) {
+				case "EXEMPLAR":
+					return DecodeEntry_EXMP(_data);
+				case "LTEXT":
+					return DecodeEntry_LTEXT(_data);
+				default:
+					return null;
+			}
+		}
 
+
+
+		public static Dictionary<int, DBPFProperty> DecodeEntry_EXMP(byte[] dData) {
+			if (DBPFCompression.IsCompressed(dData)) {
+				throw new ArgumentException("Data cannot be compressed!");
+			}
+
+			Dictionary<int, DBPFProperty> listOfProperties = new Dictionary<int, DBPFProperty>();
+
+			//Read cohort TGI info and determine the number of properties in this entry
+			uint parentCohortTID = BitConverter.ToUInt32(dData, 8);
+			uint parentCohortGID = BitConverter.ToUInt32(dData, 12);
+			uint parentCohortIID = BitConverter.ToUInt32(dData, 16);
+			uint propertyCount = BitConverter.ToUInt32(dData, 20);
+
+			int pos = 24;
+			DBPFProperty property;
+			for (int idx = 0; idx < propertyCount; idx++) {
+				property = DBPFProperty.DecodeExemplarProperty(dData, pos);
+				listOfProperties.Add(idx, property);
+				pos += property.ByteValues.Length + 9; //Skip 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
+				if (property.KeyType == 0x80) { //Skip 4 more for NumberOfValues
+					pos += 4;
+				}
+			}
+			return listOfProperties;
+		}
+
+
+		/// <summary>
+		/// Decodes the LTEXT string from raw data
+		/// </summary>
+		/// <param name="data">Raw data of the LTEXT entry</param>
+		/// <returns>A string</returns>
+		public static string DecodeEntry_LTEXT(byte[] data) {
+			int pos = 0;
+			ushort numberOfChars = BitConverter.ToUInt16(data, pos);
+			pos += 2;
+			ushort textControlChar = ByteArrayHelper.ReadBytesToUshortConstant(data, pos);
+			pos += 2;
+			if (textControlChar != 0x0010) {
+				throw new ArgumentException("Data is not valid LTEXT format!");
+			}
+
+			StringBuilder sb = new StringBuilder();
+			for (int idx = 0; idx < numberOfChars; idx++) {
+				sb.Append(BitConverter.ToChar(data, pos));
+				pos += 2;
+			}
+			return sb.ToString();
+		}
 	}
 }
