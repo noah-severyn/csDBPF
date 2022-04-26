@@ -10,19 +10,19 @@ namespace csDBPF.Properties {
 		//<xs:attribute name = "Type" type="xs:string" use="required" />
 		//<xs:attribute name = "ShowAsHex" type="xs:string" use="required" />
 		private uint _id;
-		internal uint id {
+		public uint id {
 			get { return _id; }
 		}
 		private string _name;
-		internal string Name {
+		public string Name {
 			get { return _name; }
 		}
 		private DBPFPropertyDataType _type;
-		internal DBPFPropertyDataType Type {
+		public DBPFPropertyDataType Type {
 			get { return _type; }
 		}
 		private bool _showAsHex;
-		internal bool ShowAsHex {
+		public bool ShowAsHex {
 			get { return _showAsHex; }
 		}
 
@@ -35,32 +35,32 @@ namespace csDBPF.Properties {
 		//<xs:attribute name = "MaxValue" type="xs:string" use="optional" />
 		//<xs:attribute name = "Step" type="xs:string" use="optional" />
 		private short? _count;
-		internal short? Count {
+		public short? Count {
 			get { return _count; }
 		}
 		private List<string> _defaultValue;
-		internal List<string> DefaultValue {
+		public List<string> DefaultValue {
 			get { return _defaultValue; }
 		}
 		private int? _minLength;
-		internal int? MinLength {
+		public int? MinLength {
 			get { return _minLength; }
 			set { _minLength = value; }
 		}
 		private int? _maxLength;
-		internal int? MaxLength {
+		public int? MaxLength {
 			get { return _maxLength; }
 		}
 		private string _minValue;
-		internal string MinValue {
+		public string MinValue {
 			get { return _minValue; }
 		}
 		private string _maxValue;
-		internal string MaxValue {
+		public string MaxValue {
 			get { return _maxValue; }
 		}
 		private uint? _step;
-		internal uint? Step {
+		public uint? Step {
 			get { return _step; }
 		}
 

@@ -1,10 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using csDBPF;
 using csDBPF.Properties;
 using System.Xml.Linq;
 using System.Collections.Generic;
 
-namespace csDBPF {
+namespace csDBPF_Test {
 	[TestClass]
 	public class DBPFUnitTests {
 
@@ -150,7 +151,7 @@ namespace csDBPF {
 			public void Test_032_ByteArrayHelper_ReadAUint() {
 				byte[] dbpf = { 0x44, 0x42, 0x50, 0x46 };
 				Assert.AreEqual((uint) 0x44425046, ByteArrayHelper.ReadBytesToUintConstant(dbpf));
-				byte[] arr1 = { 0x00,0x00,0x10,0x00};
+				byte[] arr1 = { 0x00, 0x00, 0x10, 0x00 };
 				Assert.AreEqual((uint) 0x00001000, ByteArrayHelper.ReadBytesToUintConstant(arr1));
 				byte[] arr2 = { 0x07, 0x00, 0x00, 0x30 };
 				Assert.AreEqual((uint) 0x07000030, ByteArrayHelper.ReadBytesToUintConstant(arr2));
@@ -336,7 +337,7 @@ namespace csDBPF {
 				CollectionAssert.AreEqual(decoded4, (System.Collections.ICollection) prop_file.DecodeValues());
 
 				//Single UInt32 value of 0
-				byte[] val5 = { 0,0,0,0 };
+				byte[] val5 = { 0, 0, 0, 0 };
 				uint[] decoded5 = { 0 };
 				prop_file = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata, 135);
 				Assert.AreEqual((uint) 0x4A0B47E3, prop_file.ID);
@@ -477,7 +478,7 @@ namespace csDBPF {
 				foreach (int key in propertiesKnown.Keys) {
 					propertiesKnown.TryGetValue(key, out DBPFProperty outk);
 					propertiesReturned.TryGetValue(key, out DBPFProperty outr);
-					Assert.AreEqual(outk.ID,outr.ID);
+					Assert.AreEqual(outk.ID, outr.ID);
 					Assert.AreEqual(outk.NumberOfReps, outr.NumberOfReps);
 					Assert.AreEqual(outk.DataType, outr.DataType);
 					Assert.AreEqual(outk.KeyType, outr.KeyType);
@@ -528,7 +529,7 @@ namespace csDBPF {
 				}
 
 				Assert.AreEqual("Parks Aura (by Cori)", ((DBPFEntry) dbpf.ListOfEntries[1]).DecodeEntry());
-				Assert.AreEqual("+100  to +165", ((DBPFEntry) dbpf.ListOfEntries[dbpf.ListOfEntries.Count-2]).DecodeEntry());
+				Assert.AreEqual("+100  to +165", ((DBPFEntry) dbpf.ListOfEntries[dbpf.ListOfEntries.Count - 2]).DecodeEntry());
 			}
 		}
 	}

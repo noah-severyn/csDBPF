@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml.Linq;
 
 namespace csDBPF.Properties {
-	static class XMLProperties {
+	public static class XMLProperties {
 		private static readonly Dictionary<uint, DBPFExemplarProperty> xmlProperties = new Dictionary<uint, DBPFExemplarProperty>();
 		public static ImmutableDictionary<uint, DBPFExemplarProperty> AllProperties;
 		private const string xmlPath = "C:\\Users\\Administrator\\OneDrive\\Documents\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml"; //TODO - make this path relative
