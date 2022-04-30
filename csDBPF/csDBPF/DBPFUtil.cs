@@ -17,16 +17,15 @@ namespace csDBPF {
 		/// </summary>
 		/// <param name="filesToFilter">List of all files to filter through</param>
 		/// <returns>Tuple of List <string> (sc4Files,skippedFiles)</returns>
-		public static (List<string>, List<string>) FilterFilesByExtension(List<string> filesToFilter) {
+		public static (List<string>, List<string>) SortFilesByExtension(List<string> filesToFilter) {
 			List<string> sc4Files = new List<string>();
 			List<string> skippedFiles = new List<string>();
 
 			string extension;
 			foreach (string file in filesToFilter) {
 				extension = file.Substring(file.LastIndexOf(".") + 1);
-				if (sc4Extensions.Any(extension.Contains)) { //https://stackoverflow.com/a/2912483/10802255
+				if (sc4Extensions.Any(extension.Contains) && IsFileDBPF(file)) { //https://stackoverflow.com/a/2912483/10802255
 					sc4Files.Add(file);
-					Trace.WriteLine(file);
 				} else {
 					skippedFiles.Add(file);
 				}
@@ -34,6 +33,24 @@ namespace csDBPF {
 
 			return (sc4Files, skippedFiles);
 		}
+
+		/// <summary>
+		/// Examines the file <see cref="DBPFFile.DBPFHeader"/> to determine if the file is valid DBPF or not.
+		/// </summary>
+		/// <param name="fileName">Full path of file</param>
+		/// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
+		public static bool IsFileDBPF(string fileName) {
+			try {
+				//In order to determine if the file is DBPF or not, all we need to look at is first few bytes which make up the header - no need to examine any of the rest of the file, so we just create a Header here instead of a DBPFFile.
+				DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader(fileName);
+				return true;
+			}
+			catch (Exception) {
+				return false;
+			}
+		}
+
+
 
 		#region ReverseBytes
 		/// <summary>

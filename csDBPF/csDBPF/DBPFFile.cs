@@ -98,8 +98,48 @@ namespace csDBPF {
 				set { _indexSize = value; }
 			}
 
-			//empty constructor to prevent automatic creation of blank constructor and assigning default values to fields
-			public DBPFHeader() { }
+
+			/// <summary>
+			/// Blank constructor used when also creating a new DBPFFile.
+			/// </summary>
+			internal DBPFHeader() { }
+
+
+			/// <summary>
+			/// External constructor for creating just a Header for the file. Often used when no other info about the file is required, resulting in much lower overhead as only the few bytes of the file that make up the <see cref="DBPFFile.DBPFHeader"/> are examined.
+			/// </summary>
+			/// <param name="filePath"></param>
+			public DBPFHeader(string filePath) {
+				ReadHeader(filePath);
+			}
+
+			/// <summary>
+			/// Read and parse the first 48 bytes of a file.
+			/// </summary>
+			/// <param name="filePath">Full path of file to examine</param>
+			private void ReadHeader(string filePath) {
+				FileInfo file = new FileInfo(filePath);
+				FileStream fs = new FileStream(file.FullName, FileMode.Open); //TODO - https://docs.microsoft.com/en-us/dotnet/standard/io/handling-io-errors
+				BinaryReader br = new BinaryReader(fs);
+
+				try {
+					// Read Header Info
+					Identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
+					MajorVersion = br.ReadUInt32();
+					MinorVersion = br.ReadUInt32();
+					br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
+					DateCreated = br.ReadUInt32();
+					DateModified = br.ReadUInt32();
+					IndexMajorVersion = br.ReadUInt32();
+					IndexEntryCount = br.ReadUInt32();
+					IndexEntryOffset = br.ReadUInt32();
+					IndexSize = br.ReadUInt32();
+				}
+				finally {
+					br.Close();
+					fs.Close();
+				}
+			}
 
 			public override string ToString() {
 				StringBuilder sb = new StringBuilder();

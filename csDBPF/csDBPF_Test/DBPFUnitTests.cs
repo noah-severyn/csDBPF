@@ -13,6 +13,16 @@ namespace csDBPF_Test {
 		[TestClass]
 		public class _01x_DBPFUtil {
 			[TestMethod]
+			public void Test_010_DBPFUtil_IsFileDBPF() {
+				Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_GraphModd. V2.dat"));
+				Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\CAS_AutoHistorical_v0.0.2.dat"));
+				Assert.IsFalse(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\CAS_AutoHistorical_v0.0.2.dll"));
+				Assert.IsFalse(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\NBVC_Surfer\\nbvc.jpg"));
+				Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\!Deps\\BSC MEGA Props - Gascooker Vol01.dat"));
+				Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\UK Bungelow\\BungelowA10-0x5ad0e817_0x55278ec9_0x30000.sc4model"));
+			}
+
+			[TestMethod]
 			public void Test_011_DBPFUtil_ReverseBytes() {
 				//Example: 1697917002 (0x 65 34 28 4A) returns 1244148837 (0x 4A 28 34 65)
 				Assert.AreEqual((uint) 1244148837, DBPFUtil.ReverseBytes(1697917002));
