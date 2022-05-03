@@ -524,8 +524,6 @@ namespace csDBPF_Test {
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 
 				DBPFEntry e0 = (DBPFEntry) dbpf.ListOfEntries[0];
-				byte[] e0ddata = DBPFCompression.Decompress(e0.Data);
-				e0.Data = e0ddata;
 				Dictionary<int, DBPFProperty> propertiesReturned = (Dictionary<int, DBPFProperty>) e0.DecodeEntry();
 				CollectionAssert.AreEqual(propertiesKnown.Keys, propertiesReturned.Keys);
 				foreach (int key in propertiesKnown.Keys) {

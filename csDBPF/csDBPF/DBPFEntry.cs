@@ -67,10 +67,10 @@ namespace csDBPF {
 			set { _isCompressed = value; }
 		}
 		/// <summary>
-		/// Byte array of data pertaining to this entry.
+		/// Byte array of data pertaining to this entry. Depending on the value is IsCompressed, this data could be compressed or not.
 		/// </summary>
 		/// <remarks>
-		/// The interpretation of the entry data depends on the compression status of the entry and also on the file type of the entry (known through its <see cref="TGI"/>).
+		/// The interpretation of the entry data depends on the compression status of the entry and also on the file type of the entry (known through its <see cref="TGI"/>). Always check if the data is compressed before processing.
 		/// </remarks>
 		private byte[] _data;
 		public byte[] Data {
@@ -118,23 +118,33 @@ namespace csDBPF {
 			return sb.ToString();
 		}
 
-		//TODO - make one function DecodeProperty which calls a bunch of private specialized functions depending on the entry TGI knownType
+		/// <summary>
+		/// Parses the byte values of the entry depending on the entry's data type.
+		/// </summary>
+		/// <returns>Decoded object. Object type differs depending on the entry data type.</returns>
 		public object DecodeEntry() {
 			switch (TGI.Label) {
 				case "EXEMPLAR":
-					return DecodeEntry_EXMP(_data);
+					return DecodeEntry_EXMP(_data); //return Dictionary<int, DBPFProperty>
 				case "LTEXT":
-					return DecodeEntry_LTEXT(_data);
+					return DecodeEntry_LTEXT(_data); //return string
 				default:
 					return null;
 			}
 		}
 
 
-
-		public static Dictionary<int, DBPFProperty> DecodeEntry_EXMP(byte[] dData) {
-			if (DBPFCompression.IsCompressed(dData)) {
-				throw new ArgumentException("Data cannot be compressed!");
+		/// <summary>
+		/// Decodes the compressed data into a dictionary of one or more <see cref="DBPFProperty"/>.
+		/// </summary>
+		/// <param name="cData">Compressed data</param>
+		/// <returns></returns>
+		public static Dictionary<int, DBPFProperty> DecodeEntry_EXMP(byte[] cData) {
+			byte[] dData;
+			if (DBPFCompression.IsCompressed(cData)) {
+				dData = DBPFCompression.Decompress(cData);
+			} else {
+				dData = cData;
 			}
 
 			Dictionary<int, DBPFProperty> listOfProperties = new Dictionary<int, DBPFProperty>();
@@ -160,9 +170,9 @@ namespace csDBPF {
 
 
 		/// <summary>
-		/// Decodes the LTEXT string from raw data
+		/// Decodes the LTEXT string from raw data. Data is not compressed.
 		/// </summary>
-		/// <param name="data">Raw data of the LTEXT entry</param>
+		/// <param name="data">Raw data of the LTEXT entry (not compressed)</param>
 		/// <returns>A string</returns>
 		public static string DecodeEntry_LTEXT(byte[] data) {
 			int pos = 0;
