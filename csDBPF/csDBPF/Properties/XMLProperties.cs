@@ -7,8 +7,8 @@ using System.Xml.Linq;
 
 namespace csDBPF.Properties {
 	public static class XMLProperties {
-		private static readonly Dictionary<uint, DBPFExemplarProperty> xmlProperties = new Dictionary<uint, DBPFExemplarProperty>();
-		public static ImmutableDictionary<uint, DBPFExemplarProperty> AllProperties;
+		private static readonly Dictionary<uint, XMLExemplarProperty> xmlProperties = new Dictionary<uint, XMLExemplarProperty>();
+		public static ImmutableDictionary<uint, XMLExemplarProperty> AllProperties;
 		private const string xmlPath = "C:\\Users\\Administrator\\OneDrive\\Documents\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml"; //TODO - make this path relative
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace csDBPF.Properties {
 
 				//For the rest of the attributes, we do not know which ones will exist for a property; directly setting them from the constructor results in a null reference exception. Examine then set each one individually.
 				//https://stackoverflow.com/a/44929328 This is kind of hideous, but we are first checking if the XAttribute exists. If it does a string value is returned; null is returned if it does not exist. Throw this returned value into the TryParse. Since we have to deal with the possibility of the value being null and TryParse can only out non-nullable values, we need to check the result of TryParse whether it was successful or not. If it was successful we just return the out value, if it was not successful we finally just return null.
-				DBPFExemplarProperty exmp = new DBPFExemplarProperty(
+				XMLExemplarProperty exmp = new XMLExemplarProperty(
 					id,
 					prop.Attribute("Name").Value,
 					DBPFPropertyDataType.LookupDataType(prop.Attribute("Type").Value),

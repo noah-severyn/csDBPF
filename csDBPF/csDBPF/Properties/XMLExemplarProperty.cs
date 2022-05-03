@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace csDBPF.Properties {
-	public class DBPFExemplarProperty {
+	public class XMLExemplarProperty {
 		//These parameters are required
 		//<xs:attribute name = "ID" type="xs:string" use="required" />
 		//<xs:attribute name = "Name" type="xs:string" use="required" />
@@ -67,7 +67,7 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// Create a DBPFExemplarProperty, setting all required parameters to null. All optional parameters are null.
 		/// </summary>
-		internal DBPFExemplarProperty() {
+		internal XMLExemplarProperty() {
 			_id = 0;
 			_name = null;
 			_type = null;
@@ -80,7 +80,7 @@ namespace csDBPF.Properties {
 		/// <param name="name"></param>
 		/// <param name="type"></param>
 		/// <param name="showAsHex"></param>
-		internal DBPFExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex) {
+		internal XMLExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex) {
 			_id = id;
 			_name = name;
 			_type = type;
@@ -100,7 +100,7 @@ namespace csDBPF.Properties {
 		/// <param name="minValue"></param>
 		/// <param name="maxValue"></param>
 		/// <param name="step"></param>
-		public DBPFExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex, short? count = null, string defaultValue = null, int? minLength = null, int? maxLength = null, string minValue = null, string maxValue = null, uint? step = null) {
+		public XMLExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex, short? count = null, string defaultValue = null, int? minLength = null, int? maxLength = null, string minValue = null, string maxValue = null, uint? step = null) {
 			_id = id;
 			_name = name;
 			_type = type;

@@ -8,7 +8,7 @@ namespace csDBPF.Properties {
 		
 		private uint _id;
 		/// <summary>
-		/// Hexadecimal identifier for this property. <see cref="DBPFExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
+		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
 		public override uint ID {
 			get { return _id; }
