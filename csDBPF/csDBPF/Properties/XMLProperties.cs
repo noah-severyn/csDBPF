@@ -76,7 +76,7 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <param name="id">Property ID to lookup</param>
 		/// <returns>XElement of the specified property ID</returns>
-		public static XElement GetXMLProperty(uint id) {
+		internal static XElement GetXMLProperty(uint id) {
 			XElement xml = XElement.Load(xmlPath);
 			//Within XML doc, there is a single element of PROPERTIES which contain many elements PROPERTY
 			string str = "0x" + DBPFUtil.UIntToHexString(id, 8).ToLower();

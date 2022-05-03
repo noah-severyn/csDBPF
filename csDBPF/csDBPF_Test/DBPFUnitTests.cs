@@ -381,23 +381,23 @@ namespace csDBPF_Test {
 		// 07x Test Methods for Property XML Parsing
 		[TestClass]
 		public class _07x_XMLPropertyParsing {
-			[TestMethod]
-			public void Test_070_DBPFProperty_GetXMLProperty() {
-				XElement el = XMLProperties.GetXMLProperty(0x00000010);
-				Assert.AreEqual("0x00000010", el.Attribute("ID").Value);
-				Assert.AreEqual("Exemplar Type", el.Attribute("Name").Value);
+			//[TestMethod]
+			//public void Test_070_DBPFProperty_GetXMLProperty() {
+			//	XElement el = XMLProperties.GetXMLProperty(0x00000010);
+			//	Assert.AreEqual("0x00000010", el.Attribute("ID").Value);
+			//	Assert.AreEqual("Exemplar Type", el.Attribute("Name").Value);
 
-				el = XMLProperties.GetXMLProperty(0x87cd6345);
-				Assert.AreEqual("0x87cd6345", el.Attribute("ID").Value);
-				Assert.AreEqual("R$$$ Proximity Effect", el.Attribute("Name").Value);
+			//	el = XMLProperties.GetXMLProperty(0x87cd6345);
+			//	Assert.AreEqual("0x87cd6345", el.Attribute("ID").Value);
+			//	Assert.AreEqual("R$$$ Proximity Effect", el.Attribute("Name").Value);
 
-				el = XMLProperties.GetXMLProperty(0x8a2602bb);
-				Assert.AreEqual("0x8a2602bb", el.Attribute("ID").Value);
-				Assert.AreEqual("Item Button ID", el.Attribute("Name").Value);
-				Assert.AreEqual("Uint32", el.Attribute("Type").Value);
-				Assert.AreEqual("Y", el.Attribute("ShowAsHex").Value);
-				Assert.AreEqual("0x00000000", el.Attribute("Default").Value);
-			}
+			//	el = XMLProperties.GetXMLProperty(0x8a2602bb);
+			//	Assert.AreEqual("0x8a2602bb", el.Attribute("ID").Value);
+			//	Assert.AreEqual("Item Button ID", el.Attribute("Name").Value);
+			//	Assert.AreEqual("Uint32", el.Attribute("Type").Value);
+			//	Assert.AreEqual("Y", el.Attribute("ShowAsHex").Value);
+			//	Assert.AreEqual("0x00000000", el.Attribute("Default").Value);
+			//}
 
 			[TestMethod]
 			public void Text_071_DBPFProperty_AllProperties() {
