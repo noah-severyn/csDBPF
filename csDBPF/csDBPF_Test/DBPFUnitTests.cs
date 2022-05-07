@@ -266,11 +266,11 @@ namespace csDBPF_Test {
 			[TestMethod]
 			public void Test_060b_DBPFPropertyDataType_ReturnDataType() {
 				string a = "";
-				Assert.AreEqual(a.GetType(), DBPFPropertyDataType.STRING.DataType);
+				Assert.AreEqual(a.GetType(), DBPFPropertyDataType.STRING.PrimitiveDataType);
 				uint b = 0x0;
-				Assert.AreEqual(b.GetType(), DBPFPropertyDataType.UINT32.DataType);
+				Assert.AreEqual(b.GetType(), DBPFPropertyDataType.UINT32.PrimitiveDataType);
 				byte c = 0x08;
-				Assert.AreEqual(c.GetType(), DBPFPropertyDataType.UINT8.DataType);
+				Assert.AreEqual(c.GetType(), DBPFPropertyDataType.UINT8.PrimitiveDataType);
 			}
 
 			[TestMethod]

@@ -39,10 +39,12 @@ namespace csDBPF.Properties {
 			get { return _length; }
 		}
 
-		private Type _dataType;
-
-		public Type DataType {
-			get { return _dataType; }
+		private Type _primitiveType;
+		/// <summary>
+		/// Returns the base (primitive) data type of this object (i.e., System.X).
+		/// </summary>
+		public Type PrimitiveDataType {
+			get { return _primitiveType; }
 		}
 
 
@@ -88,11 +90,11 @@ namespace csDBPF.Properties {
 		/// <param name="name">Data type identifier</param>
 		/// <param name="value">Numeric value encoded in the exemplar data used to identify the property data type</param>
 		/// <param name="length">Length in bytes of the property</param>
-		private DBPFPropertyDataType(string name, ushort value, int length, Type type) {
+		private DBPFPropertyDataType(string name, ushort value, int length, Type baseType) {
 			_name = name;
 			_identifyingNumber = value;
 			_length = length;
-			_dataType = type;
+			_primitiveType = baseType;
 		}
 		
 		static DBPFPropertyDataType() {
