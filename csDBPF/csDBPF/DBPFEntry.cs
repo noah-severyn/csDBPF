@@ -114,7 +114,7 @@ namespace csDBPF {
 		//------------- DBPFEntry Methods ------------- \\
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder(_tgi.ToString());
-			sb.AppendLine($", IndexPos: {_index}, Offset: {_offset}, uSize: {_uncompressedSize}, Comp: {_isCompressed}, cSize: {_compressedSize} ");
+			sb.AppendLine($", Type: {_tgi.Label}, IndexPos: {_index}, Offset: {_offset}, uSize: {_uncompressedSize}, Comp: {_isCompressed}, cSize: {_compressedSize} ");
 			return sb.ToString();
 		}
 
@@ -131,6 +131,12 @@ namespace csDBPF {
 				default:
 					return null;
 			}
+		}
+
+
+
+		public Dictionary<int,DBPFProperty> DecodeEntry_EXMP() {
+			return DecodeEntry_EXMP(_data);
 		}
 
 
