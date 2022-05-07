@@ -14,29 +14,38 @@ namespace csDBPF.Properties {
 		public static readonly DBPFPropertyDataType UINT16;
 		public static readonly DBPFPropertyDataType STRING;
 
+		
+		private string _name;
 		/// <summary>
 		/// Data type identifier
 		/// </summary>
-		private string _name;
 		public string Name {
 			get { return _name; }
 		}
 
+		private ushort _identifyingNumber;
 		/// <summary>
 		/// Numeric value encoded in the exemplar data used to identify the property data type
 		/// </summary>
-		private ushort _identifyingNumber;
 		public ushort IdentifyingNumber {
 			get { return _identifyingNumber; }
 		}
 
+		private int _length;
 		/// <summary>
 		/// Length in bytes of the property
 		/// </summary>
-		private int _length;
 		public int Length {
 			get { return _length; }
 		}
+
+		private Type _dataType;
+
+		public Type DataType {
+			get { return _dataType; }
+		}
+
+
 
 		/// <summary>
 		/// Returns the name of the property data type.
@@ -79,21 +88,22 @@ namespace csDBPF.Properties {
 		/// <param name="name">Data type identifier</param>
 		/// <param name="value">Numeric value encoded in the exemplar data used to identify the property data type</param>
 		/// <param name="length">Length in bytes of the property</param>
-		private DBPFPropertyDataType(string name, ushort value, int length) {
+		private DBPFPropertyDataType(string name, ushort value, int length, Type type) {
 			_name = name;
 			_identifyingNumber = value;
 			_length = length;
+			_dataType = type;
 		}
 		
 		static DBPFPropertyDataType() {
-			SINT32 = new DBPFPropertyDataType("SINT32", 0x700, 4);
-			FLOAT32 = new DBPFPropertyDataType("FLOAT32", 0x900, 4);
-			UINT32 = new DBPFPropertyDataType("UINT32", 0x300, 4);
-			BOOL = new DBPFPropertyDataType("BOOL", 0xB00, 1);
-			UINT8 = new DBPFPropertyDataType("UINT8", 0x100, 1);
-			SINT64 = new DBPFPropertyDataType("SINT64", 0x800, 8);
-			UINT16 = new DBPFPropertyDataType("UINT16", 0x200, 2);
-			STRING = new DBPFPropertyDataType("STRING", 0xC00, 1);
+			SINT32 = new DBPFPropertyDataType("SINT32", 0x700, 4, Type.GetType("System.Int32"));
+			FLOAT32 = new DBPFPropertyDataType("FLOAT32", 0x900, 4, Type.GetType("System.Double"));
+			UINT32 = new DBPFPropertyDataType("UINT32", 0x300, 4, Type.GetType("System.UInt32"));
+			BOOL = new DBPFPropertyDataType("BOOL", 0xB00, 1, Type.GetType("System.Boolean"));
+			UINT8 = new DBPFPropertyDataType("UINT8", 0x100, 1, Type.GetType("System.Byte"));
+			SINT64 = new DBPFPropertyDataType("SINT64", 0x800, 8, Type.GetType("System.Int64"));
+			UINT16 = new DBPFPropertyDataType("UINT16", 0x200, 2, Type.GetType("System.UInt16"));
+			STRING = new DBPFPropertyDataType("STRING", 0xC00, 1, Type.GetType("System.String"));
 
 			dataTypes.Add(SINT32.ToString(), SINT32);
 			dataTypes.Add(FLOAT32.ToString(), FLOAT32);

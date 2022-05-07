@@ -4,6 +4,7 @@ using csDBPF;
 using csDBPF.Properties;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace csDBPF_Test {
 	[TestClass]
@@ -255,17 +256,21 @@ namespace csDBPF_Test {
 		[TestClass]
 		public class _06x_DBPFProperty {
 			[TestMethod]
-			public void Test_060_DBPFPropertyDataType_ReturnType() {
+			public void Test_060a_DBPFPropertyDataType_ReturnType() {
 				Assert.AreEqual("SINT32", DBPFPropertyDataType.SINT32.Name);
 				Assert.AreEqual(DBPFPropertyDataType.BOOL, DBPFPropertyDataType.LookupDataType(0xB00));
 				Assert.AreEqual(DBPFPropertyDataType.UINT32.Name, DBPFPropertyDataType.LookupDataType(0x300).Name);
 				Assert.AreEqual(4, DBPFPropertyDataType.LookupDataType(0x300).Length);
 			}
 
-			[Ignore]
 			[TestMethod]
-			public void Test_061_DBPFProperty() {
-				throw new NotImplementedException();
+			public void Test_060b_DBPFPropertyDataType_ReturnDataType() {
+				string a = "";
+				Assert.AreEqual(a.GetType(), DBPFPropertyDataType.STRING.DataType);
+				uint b = 0x0;
+				Assert.AreEqual(b.GetType(), DBPFPropertyDataType.UINT32.DataType);
+				byte c = 0x08;
+				Assert.AreEqual(c.GetType(), DBPFPropertyDataType.UINT8.DataType);
 			}
 
 			[TestMethod]
@@ -375,6 +380,17 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 28, prop_file.NumberOfReps);
 				CollectionAssert.AreEquivalent(val6, prop_file.ByteValues);
 				CollectionAssert.AreEqual(decoded6, (System.Collections.ICollection) prop_file.DecodeValues());
+			}
+
+			[TestMethod]
+			public void Test_062_DBPFProperty_UseDataType() {
+				//TODO - this could use a bit of clean up I think
+				DBPFProperty prop = DBPFProperty.DecodeExemplarProperty(_02x_DBPFCompression.decompresseddata);
+				Type t = prop.DecodeValues().GetType().GetElementType();
+				Array a = Array.CreateInstance(t, prop.NumberOfReps);
+				uint b = 0;
+				Assert.AreEqual(b.GetType(), a.GetType().GetElementType());
+				Assert.AreEqual(t, a.GetType().GetElementType());
 			}
 		}
 

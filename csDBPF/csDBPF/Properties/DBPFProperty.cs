@@ -22,7 +22,7 @@ namespace csDBPF.Properties {
 		
 		private readonly uint _numberOfReps;
 		/// <summary>
-		/// The number of repetitions of <see cref="DBPFPropertyDataType"/> this property has. This informs how many bytes to read for this property. 
+		/// The number of repetitions of <see cref="DBPFPropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. 
 		/// </summary>
 		public abstract uint NumberOfReps { get; }
 		
@@ -47,6 +47,9 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// Parse the byte values for this property depending on the property's <see cref="DBPFPropertyDataType"/>.
 		/// </summary>
+		/// <remarks>
+		/// This method can return an array of a variety of numerical data types, so use something like: Array.CreateInstance(DecodeValues().GetType().GetElementType(), NumberOfReps).
+		/// </remarks>
 		public abstract object DecodeValues();
 
 		/// <summary>

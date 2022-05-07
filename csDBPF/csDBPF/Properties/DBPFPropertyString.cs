@@ -55,30 +55,8 @@ namespace csDBPF.Properties {
 			set {
 				_byteValues = value;
 				_numberOfReps = (uint) value.Length;
-				//_valuesDecoded = DBPFUtil.StringFromByteArray(value);
 			}
 		}
-
-
-		/// <summary>
-		/// When decoded, <see cref="DBPFPropertyString.values"/> returns a string. When this is set, <see cref="values"/> is also set to the equivalent value.
-		/// </summary>
-		//private string _valuesDecoded;
-		//public override object valuesDecoded {
-		//	get { return _valuesDecoded; }
-		//	set {
-		//		Type t = value.GetType();
-
-		//		//If type(value) is string then directly set the decoded value
-		//		if (t != "".GetType()) {
-		//			throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}.");
-		//		} else {
-		//			_numberOfReps = (uint) ((string) value).Length;
-		//			_values = DBPFUtil.StringToByteArray((string) value);
-		//			_valuesDecoded = (string) value;
-		//		}
-		//	}
-		//}
 
 
 		/// <summary>
