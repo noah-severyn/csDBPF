@@ -11,6 +11,10 @@ namespace csDBPF.Properties {
 		public static ImmutableDictionary<uint, XMLExemplarProperty> AllProperties;
 		private const string xmlPath = "C:\\Users\\Administrator\\OneDrive\\Documents\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml"; //TODO - make this path relative
 
+
+
+
+		//------------- XMLProperties Constructor ------------- \\
 		/// <summary>
 		/// Static constructor to populate the list of all properties from the XML file.
 		/// </summary>
@@ -20,8 +24,11 @@ namespace csDBPF.Properties {
 		}
 
 
+
+
+		//------------- XMLProperties Methods ------------- \\
 		/// <summary>
-		/// 
+		/// Reads new_properties.xml and loads it into the <see cref="AllProperties"/> ImmutableDictionary.
 		/// </summary>
 		/// <remarks>
 		/// The XML structure is as follows: each XML tag is an XElement (element). Each element can have one or more XAttributes (attributes) which help describe the element. See new_properties.xsd for required vs optional attributes for Properties.
@@ -76,7 +83,7 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <param name="id">Property ID to lookup</param>
 		/// <returns>XElement of the specified property ID</returns>
-		internal static XElement GetXMLProperty(uint id) {
+		private static XElement GetXMLProperty(uint id) {
 			XElement xml = XElement.Load(xmlPath);
 			//Within XML doc, there is a single element of PROPERTIES which contain many elements PROPERTY
 			string str = "0x" + DBPFUtil.UIntToHexString(id, 8).ToLower();

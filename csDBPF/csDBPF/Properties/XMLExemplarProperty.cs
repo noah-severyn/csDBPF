@@ -4,6 +4,9 @@ using System.Text;
 
 namespace csDBPF.Properties {
 	public class XMLExemplarProperty {
+
+		//------------- XMLExemplarProperty Fields ------------- \\
+
 		//These parameters are required
 		//<xs:attribute name = "ID" type="xs:string" use="required" />
 		//<xs:attribute name = "Name" type="xs:string" use="required" />
@@ -64,6 +67,10 @@ namespace csDBPF.Properties {
 			get { return _step; }
 		}
 
+
+
+
+		//------------- XMLExemplarProperty Constructors ------------- \\
 		/// <summary>
 		/// Create a DBPFExemplarProperty, setting all required parameters to null. All optional parameters are null.
 		/// </summary>
@@ -120,6 +127,9 @@ namespace csDBPF.Properties {
 		}
 
 
+
+
+		//------------- XMLExemplarProperty Methods ------------- \\
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder();
 			sb.Append($"ID: {_id}, ");
