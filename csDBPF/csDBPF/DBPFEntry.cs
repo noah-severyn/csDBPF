@@ -144,7 +144,7 @@ namespace csDBPF {
 		/// Decodes the compressed data into a dictionary of one or more <see cref="DBPFProperty"/>.
 		/// </summary>
 		/// <param name="cData">Compressed data</param>
-		/// <returns></returns>
+		/// <returns>Dictionary of <see cref="DBPFProperty"/> indexed by their order in the entry</returns>
 		public static Dictionary<int, DBPFProperty> DecodeEntry_EXMP(byte[] cData) {
 			byte[] dData;
 			if (DBPFCompression.IsCompressed(cData)) {
@@ -164,7 +164,7 @@ namespace csDBPF {
 			int pos = 24;
 			DBPFProperty property;
 			for (int idx = 0; idx < propertyCount; idx++) {
-				property = DBPFProperty.DecodeExemplarProperty(dData, pos);
+				property = DBPFProperty.DecodeExemplarProperty_Binary(dData, pos);
 				listOfProperties.Add(idx, property);
 				pos += property.ByteValues.Length + 9; //Skip 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
 				if (property.KeyType == 0x80) { //Skip 4 more for NumberOfValues

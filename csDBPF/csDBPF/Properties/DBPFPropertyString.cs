@@ -82,14 +82,16 @@ namespace csDBPF.Properties {
 		/// Sets the value field to the provided string. Also sets the numberOfReps to the length of the string.
 		/// </summary>
 		/// <param name="newValue">String value</param>
-		public override void SetValues(object newValue) {
-			Type t = newValue.GetType();
-			if (t != "".GetType()) {
-				throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}. Must be a string.");
-			} else {
-				_byteValues = ByteArrayHelper.ToByteArray((string) newValue);
-				_numberOfReps = (uint) ((string) newValue).Length;
-			}
+		public override void SetValues(byte[] newValue) {
+			//Type t = newValue.GetType();
+			//if (t != "".GetType()) {
+			//	throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}. Must be a string.");
+			//} else {
+			//	_byteValues = ByteArrayHelper.ToByteArray((string) newValue);
+			//	_numberOfReps = (uint) ((string) newValue).Length;
+			//}
+			_byteValues = newValue;
+			_numberOfReps = (uint) newValue.Length;
 		}
 
 		/// <summary>

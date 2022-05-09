@@ -6,6 +6,10 @@ using System.Text;
 namespace csDBPF.Properties {
 	class DBPFPropertyNumber : DBPFProperty {
 
+
+
+
+		//------------- DBPFPropertyNumber Fields ------------- \\
 		private uint _ID;
 		/// <summary>
 		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
@@ -59,6 +63,9 @@ namespace csDBPF.Properties {
 		}
 
 
+
+
+		//------------- DBPFPropertyNumber Constructor ------------- \\
 		/// <summary>
 		/// Construct a new DBPFPropertyInteger.
 		/// </summary>
@@ -69,6 +76,9 @@ namespace csDBPF.Properties {
 		}
 
 
+
+
+		//------------- DBPFPropertyNumber Methods ------------- \\
 		/// <summary>
 		/// Parse the byte values for this property to return an array of the property's <see cref="DBPFPropertyDataType"/>.
 		/// </summary>
@@ -99,23 +109,25 @@ namespace csDBPF.Properties {
 		/// Sets the value field to the provided byte array. Also sets numberOfReps to the appropriate value.
 		/// </summary>
 		/// <param name="newValue">Byte array</param>
-		public override void SetValues(object newValue) {
+		public override void SetValues(byte[] newValue) {
 			//check if newValue is an array
-			Type t = newValue.GetType();
-			if (!t.IsArray) {
-				throw new ArgumentException("An array of numbers is expected.");
-			}
+			//Type t = newValue.GetType();
+			//if (!t.IsArray) {
+			//	throw new ArgumentException("An array of numbers is expected.");
+			//}
 
 			List<byte> result = new List<byte>();
-			if (!(newValue is IEnumerable e)) {
-				throw new ArgumentException("Unable to iterate over object!");
-			} else {
-				foreach (object item in e) {
-					result.Add((byte) item);
-				}
+			//if (!(newValue is IEnumerable e)) {
+			//	throw new ArgumentException("Unable to iterate over object!");
+			//} else {
+			//	foreach (object item in e) {
+			//		result.Add((byte) item);
+			//	}
+			//}
+			foreach (byte item in newValue) {
+				result.Add(item);
 			}
 			_byteValues = result.ToArray();
-
 			_numberOfReps = (uint) (_byteValues.Length / _dataType.Length);
 		}
 

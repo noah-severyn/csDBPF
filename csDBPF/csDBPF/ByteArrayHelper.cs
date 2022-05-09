@@ -306,5 +306,22 @@ namespace csDBPF {
 
 
 		#endregion ToByteArrayFrom
+
+
+		/// <summary>
+		/// Finds the first instance of a given byte starting at the specified offset.
+		/// </summary>
+		/// <param name="data">Array to search in</param>
+		/// <param name="byteToFind">Byte value to find</param>
+		/// <param name="offset">Location in array to start at</param>
+		/// <returns>Index of next occurrence of the target byte; 0 if byte is not found</returns>
+		public static int FindNextInstanceOf(byte[] data, byte byteToFind, int offset = 0) {
+			for (int idx = offset; idx < data.Length; idx++) {
+				if (data[idx] == byteToFind) {
+					return idx;
+				}
+			}
+			return 0;
+		}
 	}
 }
