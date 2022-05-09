@@ -5,7 +5,11 @@ using System.Text;
 
 namespace csDBPF.Properties {
 	public class DBPFPropertyString : DBPFProperty {
-		
+
+
+
+
+		//------------- DBPFPropertyString Fields ------------- \\		
 		private uint _id;
 		/// <summary>
 		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
@@ -55,6 +59,9 @@ namespace csDBPF.Properties {
 		}
 
 
+
+
+		//------------- DBPFPropertyString Constructor ------------- \\		
 		/// <summary>
 		/// Construct a new DBPFPropertyString.
 		/// </summary>
@@ -65,6 +72,9 @@ namespace csDBPF.Properties {
 		}
 
 
+
+
+		//------------- DBPFPropertyString Methods ------------- \\		
 		/// <summary>
 		/// Parse the byte values for this property to return a string.
 		/// </summary>
@@ -82,6 +92,7 @@ namespace csDBPF.Properties {
 			_byteValues = newValue;
 			_numberOfReps = (uint) newValue.Length;
 		}
+
 
 		/// <summary>
 		/// Appends a string representation of the value onto the base toString. See <see cref="DBPFProperty.ToString"/>
