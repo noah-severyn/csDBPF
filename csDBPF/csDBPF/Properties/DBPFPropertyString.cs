@@ -52,10 +52,6 @@ namespace csDBPF.Properties {
 		/// </summary>
 		public override byte[] ByteValues {
 			get { return _byteValues; }
-			set {
-				_byteValues = value;
-				_numberOfReps = (uint) value.Length;
-			}
 		}
 
 
@@ -83,13 +79,6 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <param name="newValue">String value</param>
 		public override void SetValues(byte[] newValue) {
-			//Type t = newValue.GetType();
-			//if (t != "".GetType()) {
-			//	throw new ArgumentException($"Property {this} cannot apply set the value field to type of {t}. Must be a string.");
-			//} else {
-			//	_byteValues = ByteArrayHelper.ToByteArray((string) newValue);
-			//	_numberOfReps = (uint) ((string) newValue).Length;
-			//}
 			_byteValues = newValue;
 			_numberOfReps = (uint) newValue.Length;
 		}

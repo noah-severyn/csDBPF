@@ -84,20 +84,10 @@ namespace csDBPF.Properties {
 		/// </summary>
 		public abstract ushort KeyType { get; set; }
 
-		private int _encodingType;
-		/// <summary>
-		/// Encoding type of this property. 1 for Binary, 2 for Text.
-		/// </summary>
-		public int EncodingType {
-			get { return _encodingType; }
-			set { _encodingType = value; }
-		}
-
-
 		/// <summary>
 		/// This is a byte array of the raw values in the property. Assignment of this value takes place in <see cref="DBPFPropertyString"/> or <see cref="DBPFPropertyNumber"/>.
 		/// </summary>
-		public abstract byte[] ByteValues { get; set; }
+		public abstract byte[] ByteValues { get; }
 
 		/// <summary>
 		/// Parse the byte values for this property depending on the property's <see cref="DBPFPropertyDataType"/>.
@@ -206,7 +196,7 @@ namespace csDBPF.Properties {
 				for (int idx = 0; idx < newValue.Length; idx++) {
 					newValue[idx] = dData[offset + idx];
 				}
-				newProperty.ByteValues = newValue;
+				newProperty.SetValues(newValue);
 			}
 
 			//keyType == 0x00 ... this is just a single value of the data type length
@@ -216,7 +206,7 @@ namespace csDBPF.Properties {
 				for (int idx = 0; idx < dataType.Length; idx++) {
 					newVals[idx] = dData[offset + idx];
 				}
-				newProperty.ByteValues = newVals;
+				newProperty.SetValues(newVals);
 			}
 			return newProperty;
 		}

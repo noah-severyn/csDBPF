@@ -56,10 +56,6 @@ namespace csDBPF.Properties {
 		/// </summary>
 		public override byte[] ByteValues {
 			get { return _byteValues; }
-			set {
-				_byteValues = value;
-				_numberOfReps = (uint) (value.Length / _dataType.Length);
-			}
 		}
 
 
@@ -110,20 +106,7 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <param name="newValue">Byte array</param>
 		public override void SetValues(byte[] newValue) {
-			//check if newValue is an array
-			//Type t = newValue.GetType();
-			//if (!t.IsArray) {
-			//	throw new ArgumentException("An array of numbers is expected.");
-			//}
-
 			List<byte> result = new List<byte>();
-			//if (!(newValue is IEnumerable e)) {
-			//	throw new ArgumentException("Unable to iterate over object!");
-			//} else {
-			//	foreach (object item in e) {
-			//		result.Add((byte) item);
-			//	}
-			//}
 			foreach (byte item in newValue) {
 				result.Add(item);
 			}

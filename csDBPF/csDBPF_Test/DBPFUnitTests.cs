@@ -294,7 +294,7 @@ namespace csDBPF_Test {
 				//Compare to known property
 				DBPFProperty prop_created = new DBPFPropertyString(DBPFPropertyDataType.STRING);
 				prop_created.ID = 0x20;
-				prop_created.SetValues(stringdataviewparksaura);
+				prop_created.SetValues(ByteArrayHelper.ToByteArray(stringdataviewparksaura));
 				Assert.AreEqual(prop_created.ID, prop_file.ID);
 				Assert.AreEqual(prop_created.NumberOfReps, prop_file.NumberOfReps);
 				Assert.AreEqual(prop_created.DataType, prop_file.DataType);
@@ -302,10 +302,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual(prop_created.DecodeValues(), prop_file.DecodeValues());
 
 				//Check for no differences between values and valuesDecoded when each is changed
-				prop_created.SetValues(stringparks);
+				prop_created.SetValues(ByteArrayHelper.ToByteArray(stringparks));
 				CollectionAssert.AreEquivalent(byteparks, prop_created.ByteValues);
 				Assert.AreEqual((uint) byteparks.Length, prop_created.NumberOfReps);
-				prop_created.ByteValues = byteparksaura;
+				prop_created.SetValues(byteparksaura);
 				Assert.AreEqual(stringparksaura, prop_created.DecodeValues());
 				Assert.AreEqual((uint) stringparksaura.Length, prop_created.NumberOfReps);
 			}
