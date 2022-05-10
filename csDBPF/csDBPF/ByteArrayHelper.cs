@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Globalization;
 
 namespace csDBPF {
 	/// <summary>
@@ -170,34 +171,57 @@ namespace csDBPF {
 		/// <summary>
 		/// Sequentially reads 4 bytes and assigns them to a uint in big-endian order.
 		/// </summary>
-		/// <param name="data">Array of length 4 to convert</param>
-		/// <returns>Uint</returns>
-		public static uint ReadBytesToUintConstant(byte[] data) {
-			if (data.Length != 4) {
-				throw new ArgumentException("Length of data array must be 4");
-			}
-			return (uint) ((data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3]);
+		/// <param name="data">Array to read from</param>
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <returns>Uint value</returns>
+		public static uint ReadBytesIntoUint(byte[] data, int offset = 0) {
+			return (uint) ((data[offset] << 24) | (data[offset + 1] << 16) | (data[offset + 2] << 8) | data[offset + 3]);
 		}
-		/// <summary>
-		/// Sequentially reads 2 bytes and assigns them to a uint in big-endian order.
-		/// </summary>
-		/// <param name="data">Array of length 2 to convert</param>
-		/// <returns>Ushort</returns>
-		public static ushort ReadBytesToUshortConstant(byte[] data) {
-			if (data.Length != 2) {
-				throw new ArgumentException("Length of data array must be 2");
-			}
-			return (ushort) ((data[0] << 8) | data[1]);
-		}
+
 		/// <summary>
 		/// Sequentially reads 2 bytes from the specified position and assigns them to a uint in big-endian order.
 		/// </summary>
 		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at</param>
-		/// <returns>Ushort</returns>
-		public static ushort ReadBytesToUshortConstant(byte[] data, int offset) {
-			return (ushort) ((data[offset] << 8) | data[offset+1]);
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <returns>Ushort value</returns>
+		public static ushort ReadBytesIntooUshort(byte[] data, int offset = 0) {
+			return (ushort) ((data[offset] << 8) | data[offset + 1]);
 		}
+
+
+		/// <summary>
+		/// Sequentially reads 1 byte, converts it to string equivalent, then parses back into a byte.
+		/// </summary>
+		/// <param name="data">Array to read from</param>
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <returns>Byte value</returns>
+		public static byte ReadTextIntoByte(byte[] data, int offset = 0) {
+			byte.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result);
+			return result;
+		}
+
+		/// <summary>
+		/// Sequentially reads 4 bytes, converts them to string equivalents, then parses them into a uint.
+		/// </summary>
+		/// <param name="data">Array to read from</param>
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <returns>Uint value</returns>
+		public static uint ReadTextIntoUint(byte[] data, int offset = 0) {
+			uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result);
+			return result;
+		}
+
+		public static object ReadTextIntoType(byte[] data, Type type, int offset = 0) {
+			switch (type.Name) {
+				case "UInt32":
+					uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result);
+					return result;
+				default:
+					return null;
+			}
+		}
+
+
 		#endregion FromByteArrayToA
 
 

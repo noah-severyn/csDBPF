@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -226,12 +227,14 @@ namespace csDBPF.Properties {
 				offset = 85;
 			}
 
-			uint propertyID = BitConverter.ToUInt32(dData, offset);
+			offset += 2; //skip first "0x"
+			uint propertyID = ByteArrayHelper.ReadTextIntoUint(dData, offset);
+			offset += 8;
 
 			//Capture the DataType
 			offset += 19; //Skip over :{"Exemplar Type"}=
 			int endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.Colon, offset);
-			string type = ByteArrayHelper.ToAString(dData, offset, endPos);
+			string type = ByteArrayHelper.ToAString(dData, offset, endPos-offset);
 			offset = endPos + 1;
 			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(type);
 
@@ -245,70 +248,102 @@ namespace csDBPF.Properties {
 			newProperty.ID = propertyID;
 
 			//Determine number of reps
-			byte countOfReps = dData[offset];
+			int countOfReps =  ByteArrayHelper.ReadTextIntoByte(dData, offset)+1;
 			offset++;
 
 			//Parse the values into a byte array
-			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.OpeningBrace, offset) + 1;
+			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.OpeningBrace, offset)+1;
 
 			if (newProperty.DataType == DBPFPropertyDataType.FLOAT32) {
-				//Build a string from the byte values -- in this case, the byte values are literal, e.g., [0x38, 0x31, 0x2E, 0x35] = ["8", "1", ".", "5"] -> 81.5
-				StringBuilder sb = new StringBuilder();
-				float[] newVals = new float[countOfReps];
+				////Build a string from the byte values -- in this case, the byte values are literal, e.g., [0x38, 0x31, 0x2E, 0x35] = ["8", "1", ".", "5"] -> 81.5
+				//StringBuilder sb = new StringBuilder();
+				//float[] newVals = new float[countOfReps];
 
-				if (countOfReps == 1) {
-					endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, offset);
-					for (int idx = offset; idx < endPos-offset; idx++) {
-						sb.Append(BitConverter.ToChar(dData, idx));
-					}
-					float.TryParse(sb.ToString(), out float value);
-					newVals[0] = value;
-					newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
+				//if (countOfReps == 1) {
+				//	endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, offset);
+				//	for (int idx = offset; idx < endPos-offset; idx++) {
+				//		sb.Append(BitConverter.ToChar(dData, idx));
+				//	}
+				//	float.TryParse(sb.ToString(), out float value);
+				//	newVals[0] = value;
+				//	newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
 
-				} else {
-					endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, offset);
+				//} else {
+				//	endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, offset);
 
-					//loop over the number of reps
-					for (int rep = 0; rep < countOfReps; rep++) {
+				//	//loop over the number of reps
+				//	for (int rep = 0; rep < countOfReps; rep++) {
 
-						//loop over the bytes for each rep
-						int endRepPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.Comma, offset);
-						for (int idx = offset; idx < endRepPos - offset; idx++) {
-							sb.Append(BitConverter.ToChar(dData, idx));
-						}
-						float.TryParse(sb.ToString(), out float value);
-						newVals[rep] = value;
-					}
-					newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
-				}
+				//		//loop over the bytes for each rep
+				//		int endRepPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.Comma, offset);
+				//		for (int idx = offset; idx < endRepPos - offset; idx++) {
+				//			sb.Append(BitConverter.ToChar(dData, idx));
+				//		}
+				//		float.TryParse(sb.ToString(), out float value);
+				//		newVals[rep] = value;
+				//	}
+				//	newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
+				//}
+
 				
-
 			} else {
-				offset += 2; //skip "0x"
+				
+				Array newVals = Array.CreateInstance(newProperty.DataType.PrimitiveDataType, countOfReps+1);
 
-
-
-			}
-			int pos = 0;
-
-
-
-
-
-
-			for (int idx = offset; idx < countOfReps; idx++) {
-
-
-				Array.Copy(dData, offset, newProperty.ByteValues, pos, newProperty.DataType.Length);
-
-				pos += newProperty.DataType.Length;
-				if (newProperty.DataType != DBPFPropertyDataType.FLOAT32) {
-					offset += newProperty.DataType.Length + 2; //skip the number and the additional "0x"
-				} else {
-					offset += newProperty.DataType.Length; //skip the number only
+				for (int rep = 0; rep < countOfReps; rep++) {
+					offset += 2; //skip "0x"
+					var result = ByteArrayHelper.ReadTextIntoType(dData, newProperty.DataType.PrimitiveDataType, offset);
+					switch (newProperty.DataType.Name) {
+						case "SINT32":
+							newVals.SetValue((int) result, rep);
+								break;
+						case "UINT32":
+							newVals.SetValue((uint) result, rep);
+							break;
+						case "BOOL":
+							newVals.SetValue((bool) result, rep);
+							break;
+						case "UINT8":
+							newVals.SetValue((byte) result, rep);
+							break;
+						case "SINT64":
+							newVals.SetValue((long) result, rep);
+							break;
+						case "UINT16":
+							newVals.SetValue((ushort) result, rep);
+							break;
+						case "STRING":
+							newVals.SetValue((string) result, rep); //this should just be one string not an array
+							break;
+						default:
+							break;
+					}
+					offset += (newProperty.DataType.Length)*2+1;
+					
 				}
+				newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals)); //add unit tests to continue to validate this, especially with additional data types
 
 			}
+			//int pos = 0;
+
+
+
+
+
+
+			//for (int idx = offset; idx < countOfReps; idx++) {
+
+
+			//	Array.Copy(dData, offset, newProperty.ByteValues, pos, newProperty.DataType.Length);
+
+			//	pos += newProperty.DataType.Length;
+			//	if (newProperty.DataType != DBPFPropertyDataType.FLOAT32) {
+			//		offset += newProperty.DataType.Length + 2; //skip the number and the additional "0x"
+			//	} else {
+			//		offset += newProperty.DataType.Length; //skip the number only
+			//	}
+
+			//}
 
 			//As the number of reps is set automatically, all we need to do is set the value
 

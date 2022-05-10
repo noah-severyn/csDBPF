@@ -184,7 +184,7 @@ namespace csDBPF {
 			int pos = 0;
 			ushort numberOfChars = BitConverter.ToUInt16(data, pos);
 			pos += 2;
-			ushort textControlChar = ByteArrayHelper.ReadBytesToUshortConstant(data, pos);
+			ushort textControlChar = ByteArrayHelper.ReadBytesIntooUshort(data, pos);
 			pos += 2;
 			if (textControlChar != 0x0010) {
 				throw new ArgumentException("Data is not valid LTEXT format!");
