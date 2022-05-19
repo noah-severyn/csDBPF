@@ -212,10 +212,33 @@ namespace csDBPF {
 		}
 
 		public static object ReadTextIntoType(byte[] data, Type type, int offset = 0) {
+			//var result = 0;
 			switch (type.Name) {
+				case "Int32":
+					int.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_int);
+					return result_int;
+				case "Float32":
+					float.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out float result_float);
+					return result_float;
 				case "UInt32":
-					uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result);
-					return result;
+					uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result_uint);
+					return result_uint;
+				case "Bool":
+					int.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_bool);
+					if (result_bool == 0) {
+						return false;
+					} else {
+						return true;
+					}
+				case "Uint8":
+					byte.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result_byte);
+					return result_byte;
+				case "Int64":
+					long.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result_long);
+					return result_long;
+				case "UInt16":
+					ushort.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort result_ushort);
+					return result_ushort;
 				default:
 					return null;
 			}
@@ -326,6 +349,28 @@ namespace csDBPF {
 				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 8, 8);
 			}
 			return result;
+		}
+
+		public static byte[] ToByteArray(Array data) {
+			Type type = data.GetType().GetElementType();
+			switch (type.Name) {
+				case "Int32":
+					return ToByteArray((int[]) data);
+				case "Float32":
+					return ToByteArray((float[]) data);
+				case "UInt32":
+					return ToByteArray((uint[]) data);
+				case "Bool":
+					return ToByteArray((bool[]) data);
+				case "Uint8":
+					return ToByteArray((byte[]) data);
+				case "Int64":
+					return ToByteArray((long[]) data);
+				case "UInt16":
+					return ToByteArray((ushort[]) data);
+				default:
+					return null;
+			}
 		}
 
 

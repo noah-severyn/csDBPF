@@ -55,7 +55,8 @@ namespace csDBPF.Properties {
 			Colon = 0x3A, // : = 0x3A
 			Comma = 0x2C, // , 0x2C
 			OpeningBrace = 0x7B, // { = 0x7B
-			ClosingBrace = 0x7D // } = 0x7D
+			ClosingBrace = 0x7D, // } = 0x7D
+			Quotation = 0x22 // " = 0x22
 		}
 
 
@@ -234,7 +235,7 @@ namespace csDBPF.Properties {
 			//Capture the DataType
 			offset += 19; //Skip over :{"Exemplar Type"}=
 			int endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.Colon, offset);
-			string type = ByteArrayHelper.ToAString(dData, offset, endPos-offset);
+			string type = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
 			offset = endPos + 1;
 			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(type);
 
@@ -247,12 +248,12 @@ namespace csDBPF.Properties {
 			}
 			newProperty.ID = propertyID;
 
-			//Determine number of reps
-			int countOfReps =  ByteArrayHelper.ReadTextIntoByte(dData, offset)+1;
+			//Determine number of reps - reps = number of repetitions = number of values + 1 (e.g. one value -> 0 reps; 4 values -> 3 reps)
+			int countOfReps = ByteArrayHelper.ReadTextIntoByte(dData, offset);
 			offset++;
 
 			//Parse the values into a byte array
-			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.OpeningBrace, offset)+1;
+			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.OpeningBrace, offset) + 1;
 
 			if (newProperty.DataType == DBPFPropertyDataType.FLOAT32) {
 				////Build a string from the byte values -- in this case, the byte values are literal, e.g., [0x38, 0x31, 0x2E, 0x35] = ["8", "1", ".", "5"] -> 81.5
@@ -284,19 +285,25 @@ namespace csDBPF.Properties {
 				//	}
 				//	newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
 				//}
-
-				
+			} else if (newProperty.DataType == DBPFPropertyDataType.STRING) {
+				//strings are encoded with quotes, so we start one position after and end one position sooner to avoid incorporating them into the decoded string
+				endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, offset)-1;
+				//string result = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
+				byte[] result2 = new byte[endPos - offset];
+				Array.Copy(dData, offset+1, result2, 0, endPos - offset);
+				newProperty.SetValues(result2);
 			} else {
-				
-				Array newVals = Array.CreateInstance(newProperty.DataType.PrimitiveDataType, countOfReps+1);
 
-				for (int rep = 0; rep < countOfReps; rep++) {
+				Array newVals = Array.CreateInstance(newProperty.DataType.PrimitiveDataType, countOfReps + 1);
+				//byte[] result = new byte[newProperty.DataType.Length];
+
+				for (int rep = 0; rep < countOfReps+1; rep++) {
 					offset += 2; //skip "0x"
 					var result = ByteArrayHelper.ReadTextIntoType(dData, newProperty.DataType.PrimitiveDataType, offset);
 					switch (newProperty.DataType.Name) {
 						case "SINT32":
 							newVals.SetValue((int) result, rep);
-								break;
+							break;
 						case "UINT32":
 							newVals.SetValue((uint) result, rep);
 							break;
@@ -312,43 +319,16 @@ namespace csDBPF.Properties {
 						case "UINT16":
 							newVals.SetValue((ushort) result, rep);
 							break;
-						case "STRING":
-							newVals.SetValue((string) result, rep); //this should just be one string not an array
-							break;
 						default:
 							break;
 					}
-					offset += (newProperty.DataType.Length)*2+1;
-					
+
+					//Array.Copy(dData, offset, result, rep*newProperty.DataType.Length, result.Length);
+					offset += (newProperty.DataType.Length) * 2 + 1;
 				}
+				
 				newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals)); //add unit tests to continue to validate this, especially with additional data types
-
 			}
-			//int pos = 0;
-
-
-
-
-
-
-			//for (int idx = offset; idx < countOfReps; idx++) {
-
-
-			//	Array.Copy(dData, offset, newProperty.ByteValues, pos, newProperty.DataType.Length);
-
-			//	pos += newProperty.DataType.Length;
-			//	if (newProperty.DataType != DBPFPropertyDataType.FLOAT32) {
-			//		offset += newProperty.DataType.Length + 2; //skip the number and the additional "0x"
-			//	} else {
-			//		offset += newProperty.DataType.Length; //skip the number only
-			//	}
-
-			//}
-
-			//As the number of reps is set automatically, all we need to do is set the value
-
-			//endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, startPos)-1;
-			//Array.Copy(dData, startPos, newProperty.ByteValues, 0, endPos - startPos);
 
 			return newProperty;
 		}
@@ -399,6 +379,15 @@ namespace csDBPF.Properties {
 				default:
 					return 0;
 			}
+		}
+
+		/// <summary>
+		/// Returns the encoding type of the property, returning either Binary or Text.
+		/// </summary>
+		/// <param name="dData">Byte data for a property</param>
+		/// <returns>1 if Binary encoding, 2 if Text encoding</returns>
+		public static int GetEncodingType(byte[] dData) {
+			return ValidateData(dData, 3);
 		}
 
 

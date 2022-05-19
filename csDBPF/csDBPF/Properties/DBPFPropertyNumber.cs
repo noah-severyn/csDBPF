@@ -111,7 +111,7 @@ namespace csDBPF.Properties {
 				result.Add(item);
 			}
 			_byteValues = result.ToArray();
-			_numberOfReps = (uint) (_byteValues.Length / _dataType.Length);
+			_numberOfReps = (uint) (_byteValues.Length / _dataType.Length)-1;
 		}
 
 

@@ -393,6 +393,20 @@ namespace csDBPF_Test {
 			[TestMethod]
 			public void Test_062b_DBPFPropertyInteger_Text() {
 				DBPFProperty propt = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, propt.DataType);
+				Assert.AreEqual((uint) 0, propt.NumberOfReps);
+				uint[] decoded = { 0x2 };
+				CollectionAssert.AreEqual(decoded, (System.Collections.ICollection) propt.DecodeValues());
+				
+				DBPFProperty propt2 = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t,137);
+				Assert.AreEqual(DBPFPropertyDataType.STRING, propt2.DataType);
+				Assert.AreEqual((uint) 1, propt2.NumberOfReps);
+				Assert.AreEqual("B62-CS$_Albertsons_60s_Grocery v 1.1", propt2.DecodeValues());
+
+				DBPFProperty propt3 = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t, 217);
+				Assert.AreEqual(DBPFPropertyDataType.SINT64, propt3.DataType);
+				Assert.AreEqual((uint) 1, propt3.NumberOfReps);
+				Assert.AreEqual(0x00000000000000a9, propt3.DecodeValues());
 			}
 
 
