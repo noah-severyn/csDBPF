@@ -51,12 +51,13 @@ namespace csDBPF.Properties {
 			TrendBar,
 			GraphControl
 		}
-		private enum TextSeparators : byte {
-			Colon = 0x3A, // : = 0x3A
-			Comma = 0x2C, // , 0x2C
-			OpeningBrace = 0x7B, // { = 0x7B
-			ClosingBrace = 0x7D, // } = 0x7D
-			Quotation = 0x22 // " = 0x22
+		private enum SpecialChars : byte {
+			Colon = 0x3A, // :
+			Comma = 0x2C, // ,
+			Equal = 0x3D, // =
+			OpeningBrace = 0x7B, // {
+			ClosingBrace = 0x7D, // }
+			Quotation = 0x22 // "
 		}
 
 
@@ -215,12 +216,20 @@ namespace csDBPF.Properties {
 
 
 		public static DBPFProperty DecodeExemplarProperty_Text(byte[] dData, int offset = 85) {
-			//for text encoding, first 8 bytes are the fileIdentifier as usual. each property is separated by the code 0x0D0A. Followed by the text name of the property.
-			//for parent cohort, looks like "ParentCohort=Key:{0x00000000,0x00000000,0x00000000} ... then 0D0A
-			//then number of properties, looks like PropCount=0x00000018 ... then 0D0A
-			//then property hex id then :{"Exemplar Type"}=Uint32:0:{0x00000002} ... thats id:{"Exemplar Type"}=DataType:NumberOfReps:{vals}
-			//if number of properties > 0 then each value is delineated with a comma
-			//if data type if float32, byte values are interpreted literally, e.g., [0x38, 0x31, 0x2E, 0x35] = ["8", "1", ".", "5"] -> 81.5
+			//The sequence 0D0A (i.e. {0x0D, 0x0A}) separates each piece of entry header information and each property
+
+			//The first 8 bytes are the fileIdentifier as usual (EQZT1### etc)
+			//Next two bytes for the delimiter 0D0A
+			//Parent Cohort is the text `ParentCohort=Key:{0x00000000,0x00000000,0x00000000}`
+			//Next two bytes for the delimiter 0D0A
+			//Number of properties is the text `PropCount=0x00000000`
+			//Next two bytes for the delimiter 0D0A
+
+			//Now comes the list of properties.
+			//For each property hex ID preceded with 0x (for 10 bytes) then the format `:{"TextExemplarName"}=DataTypeName:NumberOfReps:{rep0,rep1,rep2}`
+				//An example is `:{"Exemplar Type"}=Uint32:0:{0x00000002}`
+				//If number of properties > 0 then rep list is comma separated, and for all but Float32 each rep is preceded with 0x
+				//If data type if Float32, byte values are interpreted literally, e.g., {0x38, 0x31, 0x2E, 0x35} = {"8", "1", ".", "5"} -> 81.5
 			ValidateData(dData, 2);
 
 			//The first 85 bytes are features of the entry: ParentCohort TGI and property count. When examining a specific property in the entry we are not concerned about them.
@@ -233,8 +242,10 @@ namespace csDBPF.Properties {
 			offset += 8;
 
 			//Capture the DataType
-			offset += 19; //Skip over :{"Exemplar Type"}=
-			int endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.Colon, offset);
+			//Skip over the property name :{"Exemplar Type"}= or :{"Bulldoze Cost"}= are examples
+			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Equal, offset)+1;
+
+			int endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset); //represents the ending position (offset) of whatever we are looking for
 			string type = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
 			offset = endPos + 1;
 			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(type);
@@ -249,11 +260,12 @@ namespace csDBPF.Properties {
 			newProperty.ID = propertyID;
 
 			//Determine number of reps - reps = number of repetitions = number of values + 1 (e.g. one value -> 0 reps; 4 values -> 3 reps)
-			int countOfReps = ByteArrayHelper.ReadTextIntoByte(dData, offset);
-			offset++;
+			endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
+			int countOfReps = ByteArrayHelper.ReadTextIntoANumber(dData, offset, endPos - offset);
+			offset = endPos;
 
 			//Parse the values into a byte array
-			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.OpeningBrace, offset) + 1;
+			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
 
 			if (newProperty.DataType == DBPFPropertyDataType.FLOAT32) {
 				////Build a string from the byte values -- in this case, the byte values are literal, e.g., [0x38, 0x31, 0x2E, 0x35] = ["8", "1", ".", "5"] -> 81.5
@@ -287,7 +299,7 @@ namespace csDBPF.Properties {
 				//}
 			} else if (newProperty.DataType == DBPFPropertyDataType.STRING) {
 				//strings are encoded with quotes, so we start one position after and end one position sooner to avoid incorporating them into the decoded string
-				endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, offset)-2;
+				endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset)-2;
 				//string result = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
 				byte[] result2 = new byte[endPos - offset];
 				Array.Copy(dData, offset+1, result2, 0, endPos - offset);

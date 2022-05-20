@@ -392,28 +392,34 @@ namespace csDBPF_Test {
 
 			[TestMethod]
 			public void Test_062b_DBPFPropertyInteger_Text() {
-				//UINT32
+				//1x Uint32
 				DBPFProperty propt = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, propt.DataType);
 				Assert.AreEqual((uint) 0, propt.NumberOfReps);
 				uint[] decoded = { 0x2 };
 				CollectionAssert.AreEqual(decoded, (System.Collections.ICollection) propt.DecodeValues());
 
-				//STRING
+				//1x String
 				string string2 = "B62-CS$_Albertsons_60s_Grocery v 1.1";
 				DBPFProperty propt2 = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t,137);
 				Assert.AreEqual(DBPFPropertyDataType.STRING, propt2.DataType);
 				Assert.AreEqual((uint) string2.Length, propt2.NumberOfReps);
 				Assert.AreEqual(string2, propt2.DecodeValues());
 
-				//SINT64
+				//1x Sint64
 				DBPFProperty propt3 = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t, 217);
 				Assert.AreEqual(DBPFPropertyDataType.SINT64, propt3.DataType);
 				Assert.AreEqual((uint) 0, propt3.NumberOfReps);
 				long[] decoded3 = { 0x00000000000000A9 };
 				CollectionAssert.AreEqual(decoded3, (System.Collections.ICollection) propt3.DecodeValues());
 
-
+				//3x Float32
+				//implement this
+				DBPFProperty propt4 = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t, 277);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt3.DataType);
+				Assert.AreEqual((uint) 2, propt3.NumberOfReps);
+				float[] decoded4 = { 81.589798f, 13.947300f, 39.442501f };
+				CollectionAssert.AreEqual(decoded4, (System.Collections.ICollection) propt4.DecodeValues());
 
 				//remaining:  SInt32,Float32,,Bool,UInt8,,UInt16,
 			}
