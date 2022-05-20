@@ -184,7 +184,7 @@ namespace csDBPF {
 		/// <param name="data">Array to read from</param>
 		/// <param name="offset">Location in array to start at. Default is 0</param>
 		/// <returns>Ushort value</returns>
-		public static ushort ReadBytesIntooUshort(byte[] data, int offset = 0) {
+		public static ushort ReadBytesIntoUshort(byte[] data, int offset = 0) {
 			return (ushort) ((data[offset] << 8) | data[offset + 1]);
 		}
 
@@ -211,6 +211,12 @@ namespace csDBPF {
 			return result;
 		}
 
+
+		public static int ReadTextIntoANumber(byte[] data, int offset, int length) {
+			int.TryParse(ToAString(data, offset, length), out int result);
+			return result;
+		}
+
 		public static object ReadTextIntoType(byte[] data, Type type, int offset = 0) {
 			//var result = 0;
 			switch (type.Name) {
@@ -224,20 +230,20 @@ namespace csDBPF {
 					uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result_uint);
 					return result_uint;
 				case "Bool":
-					int.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_bool);
+					int.TryParse(ToAString(data, offset, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_bool);
 					if (result_bool == 0) {
 						return false;
 					} else {
 						return true;
 					}
 				case "Uint8":
-					byte.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result_byte);
+					byte.TryParse(ToAString(data, offset, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result_byte);
 					return result_byte;
 				case "Int64":
-					long.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result_long);
+					long.TryParse(ToAString(data, offset, 16), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result_long);
 					return result_long;
 				case "UInt16":
-					ushort.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort result_ushort);
+					ushort.TryParse(ToAString(data, offset, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort result_ushort);
 					return result_ushort;
 				default:
 					return null;
