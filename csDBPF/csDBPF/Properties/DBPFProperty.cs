@@ -287,7 +287,7 @@ namespace csDBPF.Properties {
 				//}
 			} else if (newProperty.DataType == DBPFPropertyDataType.STRING) {
 				//strings are encoded with quotes, so we start one position after and end one position sooner to avoid incorporating them into the decoded string
-				endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, offset)-1;
+				endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, offset)-2;
 				//string result = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
 				byte[] result2 = new byte[endPos - offset];
 				Array.Copy(dData, offset+1, result2, 0, endPos - offset);
