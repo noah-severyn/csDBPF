@@ -318,7 +318,7 @@ namespace csDBPF_Test {
 			}
 
 			[TestMethod]
-			public void Test_061b_DBPFPropertyInteger_Binary() {
+			public void Test_061b_DBPFPropertyNumber_Binary() {
 				//Single UInt32 value
 				byte[] val = { 0x23, 0x00, 0x00, 0x00 };
 				uint[] decoded = { 0x00000023 };
@@ -391,7 +391,7 @@ namespace csDBPF_Test {
 			}
 
 			[TestMethod]
-			public void Test_062b_DBPFPropertyInteger_Text() {
+			public void Test_062b_DBPFProperty_Text() {
 				//1x Uint32
 				DBPFProperty propt = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, propt.DataType);
@@ -414,14 +414,36 @@ namespace csDBPF_Test {
 				CollectionAssert.AreEqual(decoded3, (System.Collections.ICollection) propt3.DecodeValues());
 
 				//3x Float32
-				//implement this
 				DBPFProperty propt4 = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t, 277);
-				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt3.DataType);
-				Assert.AreEqual((uint) 2, propt3.NumberOfReps);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt4.DataType);
+				Assert.AreEqual((uint) 2, propt4.NumberOfReps);
 				float[] decoded4 = { 81.589798f, 13.947300f, 39.442501f };
 				CollectionAssert.AreEqual(decoded4, (System.Collections.ICollection) propt4.DecodeValues());
 
-				//remaining:  SInt32,Float32,,Bool,UInt8,,UInt16,
+				//1x Float32
+				DBPFProperty propt5 = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t, 355);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt5.DataType);
+				Assert.AreEqual((uint) 0, propt5.NumberOfReps);
+				float[] decoded5 = { 0.5f};
+				CollectionAssert.AreEqual(decoded5, (System.Collections.ICollection) propt5.DecodeValues());
+
+				//1x Uint8
+				DBPFProperty propt6 = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t, 472);
+				Assert.AreEqual(DBPFPropertyDataType.UINT8, propt6.DataType);
+				Assert.AreEqual((uint) 0, propt6.NumberOfReps);
+				byte[] decoded6 = { 0x01 };
+				CollectionAssert.AreEqual(decoded6, (System.Collections.ICollection) propt6.DecodeValues());
+
+				//4x Sint32
+				//not understanding why this number of reps is different than all of the other ones
+				DBPFProperty propt7 = DBPFProperty.DecodeExemplarProperty_Text(TestArrays.notcompresseddata_t, 617);
+				Assert.AreEqual(DBPFPropertyDataType.SINT32, propt7.DataType);
+				Assert.AreEqual((uint) 3, propt7.NumberOfReps);
+				float[] decoded7 = { 0x07, 0x03, 0x16, 0x00 };
+				CollectionAssert.AreEqual(decoded7, (System.Collections.ICollection) propt7.DecodeValues());
+
+				//remaining single: Sint32, , , Bool, , , UInt16,
+				//remaining muitis: , , UInt32, Bool, UInt8, SInt64, UInt16,
 			}
 
 

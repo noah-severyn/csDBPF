@@ -141,15 +141,11 @@ namespace csDBPF.Properties {
 
 
 		//------------- DBPFProperty Methods ------------- \\
-		public override string ToString() {
-			StringBuilder sb = new StringBuilder();
-			sb.Append($"ID: {DBPFUtil.UIntToHexString(_id)}, ");
-			sb.Append($"Type: {_dataType}, ");
-			sb.Append($"Key: {_keyType}, ");
-			sb.Append($"Reps: {_numberOfReps}, ");
-			sb.Append("Values: ");
-			return sb.ToString();
-		}
+		//public override string ToString() {
+		//	StringBuilder sb = new StringBuilder();
+
+		//	return sb.ToString();
+		//}
 
 
 		/// <summary>
@@ -262,56 +258,53 @@ namespace csDBPF.Properties {
 			//Determine number of reps - reps = number of repetitions = number of values + 1 (e.g. one value -> 0 reps; 4 values -> 3 reps)
 			endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
 			int countOfReps = ByteArrayHelper.ReadTextIntoANumber(dData, offset, endPos - offset);
-			offset = endPos;
 
 			//Parse the values into a byte array
 			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
-
 			if (newProperty.DataType == DBPFPropertyDataType.FLOAT32) {
-				////Build a string from the byte values -- in this case, the byte values are literal, e.g., [0x38, 0x31, 0x2E, 0x35] = ["8", "1", ".", "5"] -> 81.5
-				//StringBuilder sb = new StringBuilder();
-				//float[] newVals = new float[countOfReps];
+				float[] newVals = new float[countOfReps];
 
-				//if (countOfReps == 1) {
-				//	endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, offset);
-				//	for (int idx = offset; idx < endPos-offset; idx++) {
-				//		sb.Append(BitConverter.ToChar(dData, idx));
-				//	}
-				//	float.TryParse(sb.ToString(), out float value);
-				//	newVals[0] = value;
-				//	newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
+				if (countOfReps == 1) {
+					endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
+					float value = (float) ByteArrayHelper.ReadTextIntoType(dData, newProperty.DataType.PrimitiveDataType, offset, endPos - offset);
+					newVals[0] = value;
+					newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
+				} 
+				
+				else {
+					//loop over the number of reps
+					for (int rep = 0; rep < countOfReps; rep++) {
+						int endRepPos;
+						if (rep != countOfReps - 1) {//get all except last rep (aka reps appended by a comma)
+							endRepPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Comma, offset);
+						} else { //get the last rep in the list (rep appended by a closing bracket
+							endRepPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
+						}
 
-				//} else {
-				//	endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.ClosingBrace, offset);
+						float value = (float) ByteArrayHelper.ReadTextIntoType(dData, newProperty.DataType.PrimitiveDataType, offset, endRepPos - offset);
+						newVals[rep] = value;
+						offset = endRepPos + 1;
+					}
 
-				//	//loop over the number of reps
-				//	for (int rep = 0; rep < countOfReps; rep++) {
-
-				//		//loop over the bytes for each rep
-				//		int endRepPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) TextSeparators.Comma, offset);
-				//		for (int idx = offset; idx < endRepPos - offset; idx++) {
-				//			sb.Append(BitConverter.ToChar(dData, idx));
-				//		}
-				//		float.TryParse(sb.ToString(), out float value);
-				//		newVals[rep] = value;
-				//	}
-				//	newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
-				//}
-			} else if (newProperty.DataType == DBPFPropertyDataType.STRING) {
+					newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
+				}
+			} 
+			
+			else if (newProperty.DataType == DBPFPropertyDataType.STRING) {
 				//strings are encoded with quotes, so we start one position after and end one position sooner to avoid incorporating them into the decoded string
 				endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset)-2;
 				//string result = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
 				byte[] result2 = new byte[endPos - offset];
 				Array.Copy(dData, offset+1, result2, 0, endPos - offset);
 				newProperty.SetValues(result2);
-			} else {
+			}
 
+			else {
 				Array newVals = Array.CreateInstance(newProperty.DataType.PrimitiveDataType, countOfReps + 1);
-				//byte[] result = new byte[newProperty.DataType.Length];
 
 				for (int rep = 0; rep < countOfReps+1; rep++) {
 					offset += 2; //skip "0x"
-					var result = ByteArrayHelper.ReadTextIntoType(dData, newProperty.DataType.PrimitiveDataType, offset);
+					var result = ByteArrayHelper.ReadTextIntoType(dData, newProperty.DataType.PrimitiveDataType, offset, (newProperty.DataType.Length) * 2);
 					switch (newProperty.DataType.Name) {
 						case "SINT32":
 							newVals.SetValue((int) result, rep);
@@ -334,14 +327,10 @@ namespace csDBPF.Properties {
 						default:
 							break;
 					}
-
-					//Array.Copy(dData, offset, result, rep*newProperty.DataType.Length, result.Length);
 					offset += (newProperty.DataType.Length) * 2 + 1;
 				}
-				
 				newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals)); //add unit tests to continue to validate this, especially with additional data types
 			}
-
 			return newProperty;
 		}
 
