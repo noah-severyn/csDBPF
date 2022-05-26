@@ -217,14 +217,14 @@ namespace csDBPF {
 			return result;
 		}
 
-		public static object ReadTextIntoType(byte[] data, Type type, int offset = 0) {
+		public static object ReadTextIntoType(byte[] data, Type type, int offset, int length = 0) {
 			//var result = 0;
 			switch (type.Name) {
 				case "Int32":
 					int.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_int);
 					return result_int;
-				case "Float32":
-					float.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out float result_float);
+				case "Double": //FLoat32
+					float.TryParse(ToAString(data, offset, length), NumberStyles.Float, CultureInfo.InvariantCulture, out float result_float);
 					return result_float;
 				case "UInt32":
 					uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result_uint);
@@ -236,7 +236,7 @@ namespace csDBPF {
 					} else {
 						return true;
 					}
-				case "Uint8":
+				case "Byte": //Uint8
 					byte.TryParse(ToAString(data, offset, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result_byte);
 					return result_byte;
 				case "Int64":
@@ -368,8 +368,8 @@ namespace csDBPF {
 					return ToByteArray((uint[]) data);
 				case "Bool":
 					return ToByteArray((bool[]) data);
-				case "Uint8":
-					return ToByteArray((byte[]) data);
+				case "Byte": //Uint8
+					return (byte[]) data;
 				case "Int64":
 					return ToByteArray((long[]) data);
 				case "UInt16":
