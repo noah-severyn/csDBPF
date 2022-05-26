@@ -331,6 +331,25 @@ namespace csDBPF.Properties {
 			return newProperty;
 		}
 
+
+
+		/// <summary>
+		/// Decodes either Binary or Text encoded data, and returns the property.
+		/// </summary>
+		/// <param name="dData">Byte array of decompressed data</param>
+		/// <param name="offset">Offset (location) to start reading from</param>
+		/// <returns>A <see cref="DBPFProperty"/></returns>
+		public static DBPFProperty DecodeExemplarProperty(byte[] dData, int offset = 0) {
+			switch (GetEncodingType(dData)) {
+				case 1: //Binary encoding
+					return DecodeExemplarProperty_Binary(dData, offset);
+				case 2: //Text encoding
+					return DecodeExemplarProperty_Text(dData, offset);
+				default:
+					return null;
+			}
+		}
+
 		///// <summary>
 		///// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar"/>
 		///// </summary>

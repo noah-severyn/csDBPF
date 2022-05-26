@@ -164,7 +164,7 @@ namespace csDBPF {
 			int pos = 24;
 			DBPFProperty property;
 			for (int idx = 0; idx < propertyCount; idx++) {
-				property = DBPFProperty.DecodeExemplarProperty_Binary(dData, pos);
+				property = DBPFProperty.DecodeExemplarProperty(dData, pos);
 				listOfProperties.Add(idx, property);
 				pos += property.ByteValues.Length + 9; //Skip 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
 				if (property.KeyType == 0x80) { //Skip 4 more for NumberOfValues
