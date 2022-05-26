@@ -112,7 +112,13 @@ namespace csDBPF.Properties {
 			_name = name;
 			_type = type;
 			_showAsHex = showAsHex;
-			_count = count; //TODO - The count can sometimes be negative ... not sure what this means. 
+			_count = count;
+			//TODO - figure exactly what the Count property means, especially for negative numbers
+			//if count is not present, it is assumed to be one.
+			//if it is specified, it must be whatever that number is
+			//if count is -1, can have any number of values
+			//if count is -2, paired list of values, any length
+			//if count is < -3, unsure? can have any number of reps up to that number? e.g. -8 can have 1-8 values?
 			if (defaultValue == null) {
 				_defaultValue = null;
 			} else {

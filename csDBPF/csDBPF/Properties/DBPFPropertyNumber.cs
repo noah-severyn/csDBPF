@@ -44,7 +44,7 @@ namespace csDBPF.Properties {
 
 		private uint _numberOfReps;
 		/// <summary>
-		/// Number of repetitions of the data type in this property. The byte size of this property's <see cref="DBPFPropertyDataType"/> multiplied by this number equals the byte size of this property's values in bytes. Initialized to 1.
+		/// Number of repetitions of the data type in this property. The byte size of this property's <see cref="DBPFPropertyDataType"/> multiplied by this number equals the byte size of this property's values in bytes. Initialized to 1. This is set automatically when <see cref="SetValues(byte[])"/> is called on the member.
 		/// </summary>
 		public override uint NumberOfReps {
 			get { return _numberOfReps; }
@@ -52,7 +52,7 @@ namespace csDBPF.Properties {
 
 		private byte[] _byteValues;
 		/// <summary>
-		/// The byte array of base data for the property. When this is set, <see cref="valuesDecoded"/> is also set to the equivalent value.
+		/// The byte array of base data for the property. This is set by calling <see cref="SetValues(byte[])"/> on the member.
 		/// </summary>
 		public override byte[] ByteValues {
 			get { return _byteValues; }
@@ -111,7 +111,9 @@ namespace csDBPF.Properties {
 				result.Add(item);
 			}
 			_byteValues = result.ToArray();
-			_numberOfReps = (uint) (_byteValues.Length / _dataType.Length)-1;
+			_numberOfReps = (uint) (_byteValues.Length / _dataType.Length)-1; //TODO - numberOfReps does not set to correct number when encoding is text ... see rules lined out below
+			//if text encoding number: 0 means one rep, 1 means can hold multiple but only contains one for now (problematic on macs with floats), n means it contains that many reps
+			//if text encoding string: always seems to be 1
 		}
 
 

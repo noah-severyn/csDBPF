@@ -233,6 +233,7 @@ namespace csDBPF.Properties {
 				offset = 85;
 			}
 
+			//Capture the Property ID
 			offset += 2; //skip first "0x"
 			uint propertyID = ByteArrayHelper.ReadTextIntoUint(dData, offset);
 			offset += 8;
@@ -240,7 +241,6 @@ namespace csDBPF.Properties {
 			//Capture the DataType
 			//Skip over the property name :{"Exemplar Type"}= or :{"Bulldoze Cost"}= are examples
 			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Equal, offset)+1;
-
 			int endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset); //represents the ending position (offset) of whatever we are looking for
 			string type = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
 			offset = endPos + 1;
@@ -255,11 +255,11 @@ namespace csDBPF.Properties {
 			}
 			newProperty.ID = propertyID;
 
-			//Determine number of reps - reps = number of repetitions = number of values + 1 (e.g. one value -> 0 reps; 4 values -> 3 reps)
+			//Determine number of reps; reps = number of repetitions = number of values + 1 (e.g. one value -> 0 reps; 4 values -> 3 reps)
 			endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
 			int countOfReps = ByteArrayHelper.ReadTextIntoANumber(dData, offset, endPos - offset);
 
-			//Parse the values into a byte array
+			//Parse the values into a byte array and set the property values equal to the array
 			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
 			if (newProperty.DataType == DBPFPropertyDataType.FLOAT32) {
 				float[] newVals = new float[countOfReps];
@@ -270,9 +270,7 @@ namespace csDBPF.Properties {
 					newVals[0] = value;
 					newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
 				} 
-				
 				else {
-					//loop over the number of reps
 					for (int rep = 0; rep < countOfReps; rep++) {
 						int endRepPos;
 						if (rep != countOfReps - 1) {//get all except last rep (aka reps appended by a comma)
@@ -285,7 +283,6 @@ namespace csDBPF.Properties {
 						newVals[rep] = value;
 						offset = endRepPos + 1;
 					}
-
 					newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
 				}
 			} 

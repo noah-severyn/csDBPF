@@ -44,7 +44,7 @@ namespace csDBPF.Properties {
 		
 		private uint _numberOfReps;
 		/// <summary>
-		/// Number of repetitions of the data type in this property. Describes the number of chars in the string (length of string).
+		/// Number of repetitions of the data type in this property. Describes the number of chars in the string (length of string). This is set automatically when <see cref="SetValues(byte[])"/> is called on the member.
 		/// </summary>
 		public override uint NumberOfReps {
 			get { return _numberOfReps; }
@@ -52,7 +52,7 @@ namespace csDBPF.Properties {
 
 		private byte[] _byteValues;
 		/// <summary>
-		/// The byte array of base data for the property. When this is set, <see cref="valuesDecoded"/> is also set to the equivalent value.
+		/// The byte array of base data for the property. This is set by calling <see cref="SetValues(byte[])"/> on the member.
 		/// </summary>
 		public override byte[] ByteValues {
 			get { return _byteValues; }
