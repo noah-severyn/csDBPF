@@ -10,13 +10,13 @@ namespace csDBPF.Properties {
 
 
 		//------------- DBPFPropertyNumber Fields ------------- \\
-		private uint _ID;
+		private uint _id;
 		/// <summary>
 		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
 		public override uint ID {
-			get { return _ID; }
-			set { _ID = value; }
+			get { return _id; }
+			set { _id = value; }
 		}
 
 		private DBPFPropertyDataType _dataType;
@@ -120,8 +120,12 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <returns>String value of the property</returns>
 		public override string ToString() {
-			StringBuilder sb = new StringBuilder(base.ToString());
-			sb.Append($"{DBPFUtil.PrintByteValues(_byteValues)}");
+			StringBuilder sb = new StringBuilder();
+			sb.Append($"ID: 0x{DBPFUtil.UIntToHexString(_id)}, ");
+			sb.Append($"Type: { _dataType}, ");
+			sb.Append($"Key: {_keyType}, ");
+			sb.Append($"Reps: {_numberOfReps}, ");
+			sb.Append($"Values: {DBPFUtil.PrintByteValues(_byteValues)}");
 			return sb.ToString();
 		}
 	}

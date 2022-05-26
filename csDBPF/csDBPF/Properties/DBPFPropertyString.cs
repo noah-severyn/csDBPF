@@ -99,8 +99,12 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <returns>String value of the property</returns>
 		public override string ToString() {
-			StringBuilder sb = new StringBuilder(base.ToString());
-			sb.Append(ByteArrayHelper.ToAString(_byteValues));
+			StringBuilder sb = new StringBuilder();
+			sb.Append($"ID: 0x{DBPFUtil.UIntToHexString(_id)}, ");
+			sb.Append($"Type: { _dataType}, ");
+			sb.Append($"Key: {_keyType}, ");
+			sb.Append($"Reps: {_numberOfReps}, ");
+			sb.Append($"Values: {ByteArrayHelper.ToAString(_byteValues)}");
 			return sb.ToString();
 		}
 	}
