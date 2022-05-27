@@ -146,6 +146,11 @@ namespace csDBPF {
 		}
 
 
+
+
+
+
+		//------------- DBPFEntry Static Methods ------------- \\
 		/// <summary>
 		/// Decodes the compressed data into a dictionary of one or more <see cref="DBPFProperty"/>.
 		/// </summary>
@@ -281,6 +286,22 @@ namespace csDBPF {
 				pos += 2;
 			}
 			return sb.ToString();
+		}
+
+
+		/// <summary>
+		/// Lookup and return the target property from a list of properties.
+		/// </summary>
+		/// <param name="idToGet">Property ID to find</param>
+		/// <param name="properties">Dictionary of properties to search</param>
+		/// <returns>DBPFProperty of the match if found; null otherwise</returns>
+		public static DBPFProperty GetPropertyByID(uint idToGet, Dictionary<int, DBPFProperty> properties) {
+			foreach (DBPFProperty property in properties.Values) {
+				if (property.ID == idToGet) {
+					return property;
+				}
+			}
+			return null;
 		}
 	}
 }
