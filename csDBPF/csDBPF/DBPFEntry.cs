@@ -9,6 +9,12 @@ namespace csDBPF {
 	/// An abstract form of an entry item of a <see cref="DBPFFile"/>, representing an instance of a subfile that may be contained in a DBPF file.
 	/// </summary>
 	public class DBPFEntry {
+		private const string EQZB1 = "EQZB1###";
+		private const string EQZT1 = "EQZT1###";
+		private const string CQZB1 = "CQZB1###";
+		private const string CQZT1 = "CQZT1###";
+
+
 		//------------- DBPFEntry Fields ------------- \\
 		/// <summary>
 		/// The <see cref="DBPFTGI"/>object representing the file type of the entry.
@@ -104,7 +110,7 @@ namespace csDBPF {
 			_offset = offset;
 			_index = index;
 			_compressedSize = size;
-			//Note the properties below cannot be definitively determined until after the data is read and set - assign placeholder defaults for now
+			//The properties below cannot be definitively determined until after the data is read and set - assign placeholder defaults for now
 			_uncompressedSize = size;
 			_isCompressed = true;
 		}
@@ -135,7 +141,7 @@ namespace csDBPF {
 
 
 
-		public Dictionary<int,DBPFProperty> DecodeEntry_EXMP() {
+		public Dictionary<int, DBPFProperty> DecodeEntry_EXMP() {
 			return DecodeEntry_EXMP(_data);
 		}
 
@@ -156,22 +162,101 @@ namespace csDBPF {
 			Dictionary<int, DBPFProperty> listOfProperties = new Dictionary<int, DBPFProperty>();
 
 			//Read cohort TGI info and determine the number of properties in this entry
-			uint parentCohortTID = BitConverter.ToUInt32(dData, 8);
-			uint parentCohortGID = BitConverter.ToUInt32(dData, 12);
-			uint parentCohortIID = BitConverter.ToUInt32(dData, 16);
-			uint propertyCount = BitConverter.ToUInt32(dData, 20);
+			uint parentCohortTID;
+			uint parentCohortGID;
+			uint parentCohortIID;
+			uint propertyCount;
+			int pos; //Offset position in dData. Initialized to the starting position of the properties after the header data
+			switch (GetEncodingType(dData)) {
+				case 1: //Binary encoding
+					parentCohortTID = BitConverter.ToUInt32(dData, 8);
+					parentCohortGID = BitConverter.ToUInt32(dData, 12);
+					parentCohortIID = BitConverter.ToUInt32(dData, 16);
+					propertyCount = BitConverter.ToUInt32(dData, 20);
+					pos = 24;
+					break;
+				case 2: //Text encoding
+					parentCohortTID = ByteArrayHelper.ReadTextIntoUint(dData, 30);
+					parentCohortGID = ByteArrayHelper.ReadTextIntoUint(dData, 41);
+					parentCohortIID = ByteArrayHelper.ReadTextIntoUint(dData, 52);
+					propertyCount = ByteArrayHelper.ReadTextIntoUint(dData, 75);
+					pos = 85;
+					break;
+				default:
+					propertyCount = 0;
+					pos = 0;
+					break;
+			}
 
-			int pos = 24;
+			//Create the Property
 			DBPFProperty property;
 			for (int idx = 0; idx < propertyCount; idx++) {
 				property = DBPFProperty.DecodeExemplarProperty(dData, pos);
 				listOfProperties.Add(idx, property);
-				pos += property.ByteValues.Length + 9; //Skip 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
-				if (property.KeyType == 0x80) { //Skip 4 more for NumberOfValues
-					pos += 4;
+
+				//Determine which bytes to skip to get to the start of the next property
+				switch (GetEncodingType(dData)) {
+					case 1: //Binary encoding
+						pos += property.ByteValues.Length + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
+						if (property.KeyType == 0x80) { //Skip 4 more for NumberOfValues
+							pos += 4;
+						}
+						break;
+					case 2: //Text encoding
+						pos = ByteArrayHelper.FindNextInstanceOf(dData, 0x0A, pos) + 1;
+						break;
 				}
 			}
+
 			return listOfProperties;
+		}
+
+
+		/// <summary>
+		/// Check if data is compressed and if fileIdentifier is valid. Throws ArgumentException if either is not true.
+		/// </summary>
+		/// <param name="dData">Decompressed byte data</param>
+		/// <param name="checkType">1 for Binary, 2 for Text, 3 for Either</param>
+		/// <returns>1 if Binary encoding, 2 if Text encoding</returns>
+		private static int ValidateData(byte[] dData, int checkType) {
+			if (DBPFCompression.IsCompressed(dData)) {
+				throw new ArgumentException("Data cannot be compressed!");
+			}
+			string fileIdentifier = ByteArrayHelper.ToAString(dData, 0, 8);
+			switch (checkType) {
+				case 1:
+					if (fileIdentifier != EQZB1 && fileIdentifier != CQZB1) {
+						throw new ArgumentException("Data provided does not represent an exemplar or cohort property, or is not in binary format!");
+					}
+					return 1;
+				case 2:
+					if (fileIdentifier != EQZT1 && fileIdentifier != CQZT1) {
+						throw new ArgumentException("Data provided does not represent an exemplar or cohort property, or is not in text format!");
+					}
+					return 2;
+				case 3:
+					if (fileIdentifier != EQZB1 && fileIdentifier != EQZT1 && fileIdentifier != CQZB1 && fileIdentifier != CQZT1) {
+						throw new ArgumentException("Data provided does not represent an exemplar or cohort property.");
+					}
+					if (fileIdentifier == EQZB1 || fileIdentifier == CQZB1) {
+						return 1;
+					} else {
+						return 2;
+					}
+				default:
+					return 0;
+			}
+		}
+
+
+
+		/// <summary>
+		/// Returns the encoding type of the property (Binary or Text).
+		/// </summary>
+		/// <param name="dData">Byte data for a property</param>
+		/// <returns>1 if Binary encoding, 2 if Text encoding</returns>
+		public static int GetEncodingType(byte[] dData) {
+			return ValidateData(dData, 3);
 		}
 
 

@@ -10,10 +10,7 @@ namespace csDBPF.Properties {
 	/// An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries.
 	/// </summary>
 	public abstract class DBPFProperty {
-		private const string EQZB1 = "EQZB1###";
-		private const string EQZT1 = "EQZT1###";
-		private const string CQZB1 = "CQZB1###";
-		private const string CQZT1 = "CQZT1###";
+		
 		public enum ExemplarTypes : uint {
 			T00,
 			Tuning,
@@ -156,8 +153,6 @@ namespace csDBPF.Properties {
 		/// <returns>The DBPFProperty; null if cannot be decoded</returns>
 		/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP"/>
 		public static DBPFProperty DecodeExemplarProperty_Binary(byte[] dData, int offset = 24) {
-			ValidateData(dData, 1);
-
 			//The first 24 bytes are features of the entry: ParentCohort TGI and property count. When examining a specific property in the entry we are not concerned about them.
 			if (offset < 24) {
 				offset = 24;
@@ -214,7 +209,7 @@ namespace csDBPF.Properties {
 		public static DBPFProperty DecodeExemplarProperty_Text(byte[] dData, int offset = 85) {
 			//The sequence 0D0A (i.e. {0x0D, 0x0A}) separates each piece of entry header information and each property
 
-			//The first 8 bytes are the fileIdentifier as usual (EQZT1### etc)
+			//The first 8 bytes are the fileIdentifier, as usual (EQZT1### etc)
 			//Next two bytes for the delimiter 0D0A
 			//Parent Cohort is the text `ParentCohort=Key:{0x00000000,0x00000000,0x00000000}`
 			//Next two bytes for the delimiter 0D0A
@@ -226,7 +221,6 @@ namespace csDBPF.Properties {
 				//An example is `:{"Exemplar Type"}=Uint32:0:{0x00000002}`
 				//If number of properties > 0 then rep list is comma separated, and for all but Float32 each rep is preceded with 0x
 				//If data type if Float32, byte values are interpreted literally, e.g., {0x38, 0x31, 0x2E, 0x35} = {"8", "1", ".", "5"} -> 81.5
-			ValidateData(dData, 2);
 
 			//The first 85 bytes are features of the entry: ParentCohort TGI and property count. When examining a specific property in the entry we are not concerned about them.
 			if (offset < 85) {
@@ -340,7 +334,7 @@ namespace csDBPF.Properties {
 		/// <param name="offset">Offset (location) to start reading from</param>
 		/// <returns>A <see cref="DBPFProperty"/></returns>
 		public static DBPFProperty DecodeExemplarProperty(byte[] dData, int offset = 0) {
-			switch (GetEncodingType(dData)) {
+			switch (DBPFEntry.GetEncodingType(dData)) {
 				case 1: //Binary encoding
 					return DecodeExemplarProperty_Binary(dData, offset);
 				case 2: //Text encoding
@@ -361,51 +355,7 @@ namespace csDBPF.Properties {
 		//}
 
 
-		/// <summary>
-		/// Check if data is compressed and if fileIdentifier is valid. Throws ArgumentException if either is not true.
-		/// </summary>
-		/// <param name="dData">Byte data</param>
-		/// <param name="checkType">1 for Binary, 2 for Text, 3 for Either</param>
-		/// <returns>1 if Binary encoding, 2 if Text encoding</returns>
-		private static int ValidateData(byte[] dData, int checkType) {
-			if (DBPFCompression.IsCompressed(dData)) {
-				throw new ArgumentException("Data cannot be compressed!");
-			}
-
-			string fileIdentifier = ByteArrayHelper.ToAString(dData, 0, 8);
-			switch (checkType) {
-				case 1:
-					if (fileIdentifier != EQZB1 && fileIdentifier != CQZB1) {
-						throw new ArgumentException("Data provided does not represent an exemplar or cohort property, or is not in binary format!");
-					}
-					return 1;
-				case 2:
-					if (fileIdentifier != EQZT1 && fileIdentifier != CQZT1) {
-						throw new ArgumentException("Data provided does not represent an exemplar or cohort property, or is not in text format!");
-					}
-					return 2;
-				case 3:
-					if (fileIdentifier != EQZB1 && fileIdentifier != EQZT1 && fileIdentifier != CQZB1 && fileIdentifier != CQZT1) {
-						throw new ArgumentException("Data provided does not represent an exemplar or cohort property.");
-					}
-					if (fileIdentifier == EQZB1 || fileIdentifier == CQZB1) {
-						return 1;
-					} else {
-						return 2;
-					}
-				default:
-					return 0;
-			}
-		}
-
-		/// <summary>
-		/// Returns the encoding type of the property, returning either Binary or Text.
-		/// </summary>
-		/// <param name="dData">Byte data for a property</param>
-		/// <returns>1 if Binary encoding, 2 if Text encoding</returns>
-		public static int GetEncodingType(byte[] dData) {
-			return ValidateData(dData, 3);
-		}
+		
 
 
 		/// <summary>
