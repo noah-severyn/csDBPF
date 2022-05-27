@@ -9,45 +9,8 @@ namespace csDBPF.Properties {
 	/// <summary>
 	/// An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries.
 	/// </summary>
-	public abstract class DBPFProperty {
+	public abstract partial class DBPFProperty {
 		
-		public enum ExemplarTypes : uint {
-			T00,
-			Tuning,
-			Building,
-			RCI,
-			Developer,
-			Simulator,
-			Road,
-			Bridge,
-			MiscNetwork,
-			Unknown,
-			Rail,
-			Highway,
-			PowerLine,
-			Terrain,
-			Ordinance,
-			FloraFauna,
-			LotConfiguration,
-			Foundation,
-			Lighting,
-			LotRetianingWall,
-			Vehicle,
-			Pedestrian,
-			Aircraft,
-			Prop,
-			Construction,
-			AutomataTuning,
-			NetworkLot,
-			Disaster,
-			DataView,
-			Crime,
-			Audio,
-			GodMode,
-			MayorMode,
-			TrendBar,
-			GraphControl
-		}
 		private enum SpecialChars : byte {
 			Colon = 0x3A, // :
 			Comma = 0x2C, // ,
@@ -138,17 +101,10 @@ namespace csDBPF.Properties {
 
 
 		//------------- DBPFProperty Methods ------------- \\
-		//public override string ToString() {
-		//	StringBuilder sb = new StringBuilder();
-
-		//	return sb.ToString();
-		//}
-
-
 		/// <summary>
-		/// Decodes the property from raw data at the given offset.
+		/// Decodes the property from raw binary data at the given offset.
 		/// </summary>
-		/// <param name="dData">Decompressed raw data</param>
+		/// <param name="dData">Decompressed binary data</param>
 		/// <param name="offset">Offset to start decoding from</param>
 		/// <returns>The DBPFProperty; null if cannot be decoded</returns>
 		/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP"/>
@@ -206,6 +162,13 @@ namespace csDBPF.Properties {
 		}
 
 
+
+		/// <summary>
+		/// Decodes the property from raw text data at the given offset.
+		/// </summary>
+		/// <param name="dData">Decompressed text data</param>
+		/// <param name="offset">Offset to start decoding from</param>
+		/// <returns>The DBPFProperty; null if cannot be decoded</returns>
 		public static DBPFProperty DecodeExemplarProperty_Text(byte[] dData, int offset = 85) {
 			//The sequence 0D0A (i.e. {0x0D, 0x0A}) separates each piece of entry header information and each property
 
@@ -293,7 +256,7 @@ namespace csDBPF.Properties {
 			else {
 				Array newVals = Array.CreateInstance(newProperty.DataType.PrimitiveDataType, countOfReps + 1);
 
-				for (int rep = 0; rep < countOfReps+1; rep++) {
+				for (int rep = 0; rep < countOfReps; rep++) {//TODO - whoa this is weird. why +1?
 					offset += 2; //skip "0x"
 					var result = ByteArrayHelper.ReadTextIntoType(dData, newProperty.DataType.PrimitiveDataType, offset, (newProperty.DataType.Length) * 2);
 					switch (newProperty.DataType.Name) {
