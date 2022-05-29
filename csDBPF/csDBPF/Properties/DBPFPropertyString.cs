@@ -6,23 +6,14 @@ using System.Text;
 namespace csDBPF.Properties {
 	public class DBPFPropertyString : DBPFProperty {
 
-
-
-
 		//------------- DBPFPropertyString Fields ------------- \\		
 		private uint _id;
-		/// <summary>
-		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
-		/// </summary>
 		public override uint ID {
 			get { return _id; }
 			set { _id = value; }
 		}
 
 		private DBPFPropertyDataType _dataType;
-		/// <summary>
-		/// The <see cref="DBPFPropertyDataType"/> for this property.
-		/// </summary>
 		public override DBPFPropertyDataType DataType {
 			get { return _dataType; }
 			set {
@@ -34,28 +25,21 @@ namespace csDBPF.Properties {
 		}
 
 		private ushort _keyType;
-		/// <summary>
-		/// The KeyType contains a value of 0x80 if the property has more than or equal to one repetition, and 0x00 if it has 0 repetitions. 0x80 is the only recorded KeyType
-		/// </summary>
 		public override ushort KeyType {
 			get { return _keyType; }
 			set { _keyType = value; }
 		}
 		
 		private uint _numberOfReps;
-		/// <summary>
-		/// Number of repetitions of the data type in this property. Describes the number of chars in the string (length of string). This is set automatically when <see cref="SetValues(byte[])"/> is called on the member.
-		/// </summary>
 		public override uint NumberOfReps {
 			get { return _numberOfReps; }
+			set { _numberOfReps = value; }
 		}
 
 		private byte[] _byteValues;
-		/// <summary>
-		/// The byte array of base data for the property. This is set by calling <see cref="SetValues(byte[])"/> on the member.
-		/// </summary>
 		public override byte[] ByteValues {
 			get { return _byteValues; }
+			set { _byteValues = value; }
 		}
 
 
@@ -63,12 +47,11 @@ namespace csDBPF.Properties {
 
 		//------------- DBPFPropertyString Constructor ------------- \\		
 		/// <summary>
-		/// Construct a new DBPFPropertyString.
+		/// Construct a new DBPFProperty with a string data type.
 		/// </summary>
-		/// <param name="dataType"></param>
-		public DBPFPropertyString(DBPFPropertyDataType dataType) : base(dataType) {
-			_dataType = dataType;
-			_numberOfReps = 1;
+		public DBPFPropertyString() {
+			_dataType = DBPFPropertyDataType.STRING;
+			_numberOfReps = 0;
 		}
 
 
@@ -88,10 +71,9 @@ namespace csDBPF.Properties {
 		/// Sets the value field to the provided string. Also sets the numberOfReps to the length of the string.
 		/// </summary>
 		/// <param name="newValue">String value</param>
-		public override void SetValues(byte[] newValue) {
-			_byteValues = newValue;
-			_numberOfReps = (uint) newValue.Length;
-		}
+		//public override void SetValues(byte[] newValue) {
+		//	_byteValues = newValue;
+		//}
 
 
 		/// <summary>

@@ -6,23 +6,14 @@ using System.Text;
 namespace csDBPF.Properties {
 	class DBPFPropertyNumber : DBPFProperty {
 
-
-
-
 		//------------- DBPFPropertyNumber Fields ------------- \\
 		private uint _id;
-		/// <summary>
-		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
-		/// </summary>
 		public override uint ID {
 			get { return _id; }
 			set { _id = value; }
 		}
 
 		private DBPFPropertyDataType _dataType;
-		/// <summary>
-		/// The <see cref="DBPFPropertyDataType"/> for this property.
-		/// </summary>
 		public override DBPFPropertyDataType DataType {
 			get { return _dataType; }
 			set {
@@ -34,28 +25,21 @@ namespace csDBPF.Properties {
 		}
 
 		private ushort _keyType;
-		/// <summary>
-		/// The KeyType contains a value of 0x80 if the property has more than or equal to one repetition, and 0x00 if it has 0 repetitions. 0x80 is the only recorded KeyType
-		/// </summary>
 		public override ushort KeyType {
 			get { return _keyType; }
 			set { _keyType = value; }
 		}
 
 		private uint _numberOfReps;
-		/// <summary>
-		/// Number of repetitions of the data type in this property. The byte size of this property's <see cref="DBPFPropertyDataType"/> multiplied by this number equals the byte size of this property's values in bytes. Initialized to 1. This is set automatically when <see cref="SetValues(byte[])"/> is called on the member.
-		/// </summary>
 		public override uint NumberOfReps {
 			get { return _numberOfReps; }
+			set { _numberOfReps = value; }
 		}
 
 		private byte[] _byteValues;
-		/// <summary>
-		/// The byte array of base data for the property. This is set by calling <see cref="SetValues(byte[])"/> on the member.
-		/// </summary>
 		public override byte[] ByteValues {
 			get { return _byteValues; }
+			set { _byteValues = value; }
 		}
 
 
@@ -63,12 +47,12 @@ namespace csDBPF.Properties {
 
 		//------------- DBPFPropertyNumber Constructor ------------- \\
 		/// <summary>
-		/// Construct a new DBPFPropertyInteger.
+		/// Construct a DBPFProperty with a numerical data type.
 		/// </summary>
 		/// <param name="dataType"></param>
-		public DBPFPropertyNumber(DBPFPropertyDataType dataType) : base(dataType) {
+		public DBPFPropertyNumber(DBPFPropertyDataType dataType) {
 			_dataType = dataType;
-			_numberOfReps = 1;
+			_numberOfReps = 0;
 		}
 
 
@@ -105,16 +89,16 @@ namespace csDBPF.Properties {
 		/// Sets the value field to the provided byte array. Also sets numberOfReps to the appropriate value.
 		/// </summary>
 		/// <param name="newValue">Byte array</param>
-		public override void SetValues(byte[] newValue) {
-			List<byte> result = new List<byte>();
-			foreach (byte item in newValue) {
-				result.Add(item);
-			}
-			_byteValues = result.ToArray();
-			_numberOfReps = (uint) (_byteValues.Length / _dataType.Length)-1; //TODO - numberOfReps does not set to correct number when encoding is text ... see rules lined out below
-			//if text encoding number: 0 means one rep, 1 means can hold multiple but only contains one for now (problematic on macs with floats), n means it contains that many reps
-			//if text encoding string: always seems to be 1
-		}
+		//public override void SetValues(byte[] newValue) {
+		//	List<byte> result = new List<byte>();
+		//	foreach (byte item in newValue) {
+		//		result.Add(item);
+		//	}
+		//	_byteValues = result.ToArray();
+		//	_numberOfReps = (uint) (_byteValues.Length / _dataType.Length)-1; //TODO - numberOfReps does not set to correct number when encoding is text ... see rules lined out below
+		//	//if text encoding number: 0 means one rep, 1 means can hold multiple but only contains one for now (problematic on macs with floats), n means it contains that many reps
+		//	//if text encoding string: always seems to be 1
+		//}
 
 
 		/// <summary>

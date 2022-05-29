@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Collections;
 
 namespace csDBPF.Properties {
-
 	/// <summary>
 	/// An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries.
 	/// </summary>
 	public abstract partial class DBPFProperty {
-		
+		/// <summary>
+		/// Enumeration for special delimiting characters when reading text encoded properties.
+		/// </summary>
 		private enum SpecialChars : byte {
 			Colon = 0x3A, // :
 			Comma = 0x2C, // ,
@@ -21,36 +22,34 @@ namespace csDBPF.Properties {
 		}
 
 
-
 		//------------- DBPFProperty Fields + Abstract Methods ------------- \\
-		private readonly uint _id;
 		/// <summary>
-		/// The Uint32 hex identifier for this property. See <see cref="ExemplarProperty"/>.
+		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
 		public abstract uint ID { get; set; }
 
-		private readonly uint _numberOfReps;
-		/// <summary>
-		/// The number of repetitions of <see cref="DBPFPropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. 
-		/// </summary>
-		public abstract uint NumberOfReps { get; }
-
-		private readonly DBPFPropertyDataType _dataType;
 		/// <summary>
 		/// The <see cref="DBPFPropertyDataType"/> for this property.
 		/// </summary>
 		public abstract DBPFPropertyDataType DataType { get; set; }
 
-		private readonly ushort _keyType;
 		/// <summary>
 		/// The KeyType contains a value of 0x80 if the property has more than or equal to one repetition, and 0x00 if it has 0 repetitions. 0x80 is the only recorded KeyType
 		/// </summary>
 		public abstract ushort KeyType { get; set; }
 
 		/// <summary>
+		/// The number of repetitions of <see cref="DBPFPropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
+		/// </summary>
+		/// <remarks>
+		/// Determining the count partially depends on the encoding type. For binary encoded string type: length of string. For text encoded string type: always 1. For binary encoded (all) and text encoded number types (except float): 0 reps = single value, 1 reps = multiple values but currently held to 1 value (problematic on macOS when the DataType is float), n reps = n number of values. For text encoded float type: n reps = n number of values.
+		/// </remarks>
+		public abstract uint NumberOfReps { get; set; }
+
+		/// <summary>
 		/// This is a byte array of the raw values in the property. Assignment of this value takes place in <see cref="DBPFPropertyString"/> or <see cref="DBPFPropertyNumber"/>.
 		/// </summary>
-		public abstract byte[] ByteValues { get; }
+		public abstract byte[] ByteValues { get; set; }
 
 		/// <summary>
 		/// Parse the byte values for this property depending on the property's <see cref="DBPFPropertyDataType"/>.
@@ -64,7 +63,7 @@ namespace csDBPF.Properties {
 		/// Sets the value field to the provided byte array. Also sets numberOfReps to the appropriate value.
 		/// </summary>
 		/// <param name="newValue">Byte array if <see cref="DBPFPropertyNumber"/> or string if <see cref="DBPFPropertyString"/>.</param>
-		public abstract void SetValues(byte[] newValue);
+		//public abstract void SetValues(byte[] newValue);
 
 
 
@@ -87,15 +86,6 @@ namespace csDBPF.Properties {
 		//		_numberOfReps = 0;
 		//	}
 		//}
-		/// <summary>
-		/// Create a new DBPFProperty with only a <see cref="DBPFPropertyDataType"/>. All other fields are initialized to 0.
-		/// </summary>
-		/// <param name="dataType"></param>
-		public DBPFProperty(DBPFPropertyDataType dataType) {
-			_dataType = dataType;
-			_id = 0;
-			_numberOfReps = 0;
-		}
 
 
 
@@ -106,15 +96,15 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <param name="dData">Decompressed binary data</param>
 		/// <param name="offset">Offset to start decoding from</param>
-		/// <returns>The DBPFProperty; null if cannot be decoded</returns>
+		/// <returns>The DBPFProperty; null if it cannot be decoded</returns>
 		/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP"/>
-		public static DBPFProperty DecodeExemplarProperty_Binary(byte[] dData, int offset = 24) {
+		public static DBPFProperty DecodeProperty_Binary(byte[] dData, int offset = 24) {
 			//The first 24 bytes are features of the entry: ParentCohort TGI and property count. When examining a specific property in the entry we are not concerned about them.
 			if (offset < 24) {
 				offset = 24;
 			}
 
-			//Get the property's numeric value (0x0000 0000)
+			//Get the property ID
 			uint propertyID = BitConverter.ToUInt32(dData, offset);
 			offset += 4;
 
@@ -130,7 +120,7 @@ namespace csDBPF.Properties {
 			//Create new decoded property then set id and dataType
 			DBPFProperty newProperty;
 			if (dataType.Name == "STRING") {
-				newProperty = new DBPFPropertyString(dataType);
+				newProperty = new DBPFPropertyString();
 			} else {
 				newProperty = new DBPFPropertyNumber(dataType);
 			}
@@ -138,6 +128,7 @@ namespace csDBPF.Properties {
 			newProperty.KeyType = keyType;
 
 			//Examine the keyType to determine how to set the values for the new property
+			//keyType == 0x80 ... this is one or more repetitions of the data type
 			if (keyType == 0x80) {
 				offset += 1; //There is a 1 byte unused flag
 				uint countOfReps = BitConverter.ToUInt32(dData, offset);
@@ -146,7 +137,9 @@ namespace csDBPF.Properties {
 				for (int idx = 0; idx < newValue.Length; idx++) {
 					newValue[idx] = dData[offset + idx];
 				}
-				newProperty.SetValues(newValue);
+				newProperty.NumberOfReps = countOfReps;
+				newProperty.ByteValues = newValue;
+				//newProperty.SetValues(newValue);
 			}
 
 			//keyType == 0x00 ... this is just a single value of the data type length
@@ -156,7 +149,9 @@ namespace csDBPF.Properties {
 				for (int idx = 0; idx < dataType.Length; idx++) {
 					newVals[idx] = dData[offset + idx];
 				}
-				newProperty.SetValues(newVals);
+				newProperty.NumberOfReps = 0;
+				newProperty.ByteValues = newVals;
+				//newProperty.SetValues(newVals);
 			}
 			return newProperty;
 		}
@@ -169,7 +164,7 @@ namespace csDBPF.Properties {
 		/// <param name="dData">Decompressed text data</param>
 		/// <param name="offset">Offset to start decoding from</param>
 		/// <returns>The DBPFProperty; null if cannot be decoded</returns>
-		public static DBPFProperty DecodeExemplarProperty_Text(byte[] dData, int offset = 85) {
+		public static DBPFProperty DecodeProperty_Text(byte[] dData, int offset = 85) {
 			//The sequence 0D0A (i.e. {0x0D, 0x0A}) separates each piece of entry header information and each property
 
 			//The first 8 bytes are the fileIdentifier, as usual (EQZT1### etc)
@@ -196,9 +191,9 @@ namespace csDBPF.Properties {
 			offset += 8;
 
 			//Capture the DataType
-			//Skip over the property name :{"Exemplar Type"}= or :{"Bulldoze Cost"}= are examples
+			//Skip over the property name `:{"Exemplar Type"}=` or `:{"Bulldoze Cost"}=` are examples
 			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Equal, offset)+1;
-			int endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset); //represents the ending position (offset) of whatever we are looking for
+			int endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset); //this represents the ending position (offset) of whatever we are looking for
 			string type = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
 			offset = endPos + 1;
 			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(type);
@@ -206,32 +201,33 @@ namespace csDBPF.Properties {
 			//Create new decoded property then set dataType and id
 			DBPFProperty newProperty;
 			if (dataType.Name == "STRING") {
-				newProperty = new DBPFPropertyString(dataType);
+				newProperty = new DBPFPropertyString();
 			} else {
 				newProperty = new DBPFPropertyNumber(dataType);
 			}
 			newProperty.ID = propertyID;
 
-			//Determine number of reps; reps = number of repetitions = number of values + 1 (e.g. one value -> 0 reps; 4 values -> 3 reps)
+			//Determine number of reps; see note on the field at the top for what this actually means
 			endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
 			int countOfReps = ByteArrayHelper.ReadTextIntoANumber(dData, offset, endPos - offset);
-			int countOfValues; //if 1 value, countOfReps = 0, otherwise countOfReps = countOfValues. This is a problem because the loop will not otherwise execute if countOfReps = 0
+			int countOfValues; //Problem if countOfReps = 0, then the loop below will not execute. If one value, the loop should run just once. Be careful with the difference between the "number of values" and "number of repetitions" difference.
 			if (countOfReps == 0) {
 				countOfValues = 1;
 			} else {
 				countOfValues = countOfReps;
 			}
 
-			//Parse the values into a byte array and set the property values equal to the array
+			//Parse the text values into a byte array and set the property values equal to the array. Algorithm differs depending on if the data type is float, string, or other number.
 			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
 			if (newProperty.DataType == DBPFPropertyDataType.FLOAT32) {
 				float[] newVals = new float[countOfReps];
-
 				if (countOfReps == 1) {
 					endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
 					float value = (float) ByteArrayHelper.ReadTextIntoType(dData, newProperty.DataType.PrimitiveDataType, offset, endPos - offset);
 					newVals[0] = value;
-					newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
+					newProperty.NumberOfReps = (uint) countOfReps;
+					newProperty.ByteValues = ByteArrayHelper.ToByteArray(newVals);
+					//newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
 				} 
 				else {
 					for (int rep = 0; rep < countOfReps; rep++) {
@@ -246,7 +242,9 @@ namespace csDBPF.Properties {
 						newVals[rep] = value;
 						offset = endRepPos + 1;
 					}
-					newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
+					newProperty.NumberOfReps = (uint) countOfReps;
+					newProperty.ByteValues = ByteArrayHelper.ToByteArray(newVals);
+					//newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals));
 				}
 			} 
 			
@@ -254,14 +252,15 @@ namespace csDBPF.Properties {
 				//strings are encoded with quotes, so we start one position after and end one position sooner to avoid incorporating them into the decoded string
 				endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset)-2;
 				//string result = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
-				byte[] result2 = new byte[endPos - offset];
-				Array.Copy(dData, offset+1, result2, 0, endPos - offset);
-				newProperty.SetValues(result2);
+				byte[] newVals = new byte[endPos - offset];
+				Array.Copy(dData, offset+1, newVals, 0, endPos - offset);
+				newProperty.NumberOfReps = 1;
+				newProperty.ByteValues = newVals;
+				//newProperty.SetValues(result2);
 			}
 
 			else {
-				Array newVals = Array.CreateInstance(newProperty.DataType.PrimitiveDataType, countOfReps + 1);
-
+				Array newVals = Array.CreateInstance(newProperty.DataType.PrimitiveDataType, countOfValues);
 				for (int rep = 0; rep < countOfValues; rep++) {
 					offset += 2; //skip "0x"
 					var result = ByteArrayHelper.ReadTextIntoType(dData, newProperty.DataType.PrimitiveDataType, offset, (newProperty.DataType.Length) * 2);
@@ -289,7 +288,9 @@ namespace csDBPF.Properties {
 					}
 					offset += (newProperty.DataType.Length) * 2 + 1;
 				}
-				newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals)); //add unit tests to continue to validate this, especially with additional data types
+				newProperty.ByteValues = ByteArrayHelper.ToByteArray(newVals);
+				newProperty.NumberOfReps = (uint) countOfReps;
+				//newProperty.SetValues(ByteArrayHelper.ToByteArray(newVals)); //add unit tests to continue to validate this, especially with additional data types
 			}
 			return newProperty;
 		}
@@ -305,9 +306,9 @@ namespace csDBPF.Properties {
 		public static DBPFProperty DecodeExemplarProperty(byte[] dData, int offset = 0) {
 			switch (DBPFEntry.GetEncodingType(dData)) {
 				case 1: //Binary encoding
-					return DecodeExemplarProperty_Binary(dData, offset);
+					return DecodeProperty_Binary(dData, offset);
 				case 2: //Text encoding
-					return DecodeExemplarProperty_Text(dData, offset);
+					return DecodeProperty_Text(dData, offset);
 				default:
 					return null;
 			}
