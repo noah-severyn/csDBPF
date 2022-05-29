@@ -70,7 +70,6 @@ namespace csDBPF {
 		/// </summary>
 		/// <param name="data">Compressed</param>
 		/// <returns>Decompressed data</returns>
-		/// <see cref="https://github.com/Killeroo/SC4Parser/blob/master/SC4Parser/Compression/QFS.cs"/>
 		public static byte[] Decompress(byte[] cData) {
 			//If data is not compressed do not run it through the algorithm otherwise it will return junk data
 			if (!IsCompressed(cData)) {

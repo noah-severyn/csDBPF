@@ -11,6 +11,10 @@ namespace csDBPF.Properties {
 		public static ImmutableDictionary<uint, XMLExemplarProperty> AllProperties;
 		private const string xmlPath = "C:\\Users\\Administrator\\OneDrive\\Documents\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml"; //TODO - make this path relative
 
+
+
+
+		//------------- XMLProperties Constructor ------------- \\
 		/// <summary>
 		/// Static constructor to populate the list of all properties from the XML file.
 		/// </summary>
@@ -20,8 +24,11 @@ namespace csDBPF.Properties {
 		}
 
 
+
+
+		//------------- XMLProperties Methods ------------- \\
 		/// <summary>
-		/// 
+		/// Reads new_properties.xml and loads it into the <see cref="AllProperties"/> ImmutableDictionary.
 		/// </summary>
 		/// <remarks>
 		/// The XML structure is as follows: each XML tag is an XElement (element). Each element can have one or more XAttributes (attributes) which help describe the element. See new_properties.xsd for required vs optional attributes for Properties.
@@ -76,7 +83,7 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <param name="id">Property ID to lookup</param>
 		/// <returns>XElement of the specified property ID</returns>
-		internal static XElement GetXMLProperty(uint id) {
+		private static XElement GetXMLProperty(uint id) {
 			XElement xml = XElement.Load(xmlPath);
 			//Within XML doc, there is a single element of PROPERTIES which contain many elements PROPERTY
 			string str = "0x" + DBPFUtil.UIntToHexString(id, 8).ToLower();
@@ -85,6 +92,22 @@ namespace csDBPF.Properties {
 															 select prop;
 			//LINQ query returns an IEnumerable object, but because of our filter there should always only be one result so we do not have to worry about iterating over the return
 			return matchingExemplarProperty.First();
+		}
+
+
+		/// <summary>
+		/// Look up a given property and return its identifier.
+		/// </summary>
+		/// <param name="nameToFind">Property name</param>
+		/// <remarks>Match is *not* case sensitive and will disregard spaces because some property names have spaces and others are camel cased.</remarks>
+		/// <returns>Property ID if found; 0 otherwise</returns>
+		public static uint LookupPropertyID(string nameToFind) {
+			foreach (XMLExemplarProperty property in AllProperties.Values) {
+				if (property.Name.ToLower().Replace(" ","") == nameToFind.ToLower().Replace(" ", "")) {
+					return property.ID;
+				}
+			}
+			return 0;
 		}
 
 		//TODO - some properties have values restricted to certain things - these are the OPTION lists ... currently unimplemented

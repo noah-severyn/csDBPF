@@ -113,6 +113,12 @@ namespace csDBPF {
 			return DateTimeOffset.FromUnixTimeSeconds(time).UtcDateTime;
 		}
 
+
+		/// <summary>
+		/// Appends an array of byte values sequentially into a string.
+		/// </summary>
+		/// <param name="data">Byte data to print.</param>
+		/// <returns>String of 2 character bytes, space separated</returns>
 		public static string PrintByteValues(byte[] data) {
 			StringBuilder sb = new StringBuilder();
 			foreach (byte b in data) {

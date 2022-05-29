@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Globalization;
 
 namespace csDBPF {
 	/// <summary>
@@ -170,34 +171,86 @@ namespace csDBPF {
 		/// <summary>
 		/// Sequentially reads 4 bytes and assigns them to a uint in big-endian order.
 		/// </summary>
-		/// <param name="data">Array of length 4 to convert</param>
-		/// <returns>Uint</returns>
-		public static uint ReadBytesToUintConstant(byte[] data) {
-			if (data.Length != 4) {
-				throw new ArgumentException("Length of data array must be 4");
-			}
-			return (uint) ((data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3]);
+		/// <param name="data">Array to read from</param>
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <returns>Uint value</returns>
+		public static uint ReadBytesIntoUint(byte[] data, int offset = 0) {
+			return (uint) ((data[offset] << 24) | (data[offset + 1] << 16) | (data[offset + 2] << 8) | data[offset + 3]);
 		}
-		/// <summary>
-		/// Sequentially reads 2 bytes and assigns them to a uint in big-endian order.
-		/// </summary>
-		/// <param name="data">Array of length 2 to convert</param>
-		/// <returns>Ushort</returns>
-		public static ushort ReadBytesToUshortConstant(byte[] data) {
-			if (data.Length != 2) {
-				throw new ArgumentException("Length of data array must be 2");
-			}
-			return (ushort) ((data[0] << 8) | data[1]);
-		}
+
 		/// <summary>
 		/// Sequentially reads 2 bytes from the specified position and assigns them to a uint in big-endian order.
 		/// </summary>
 		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at</param>
-		/// <returns>Ushort</returns>
-		public static ushort ReadBytesToUshortConstant(byte[] data, int offset) {
-			return (ushort) ((data[offset] << 8) | data[offset+1]);
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <returns>Ushort value</returns>
+		public static ushort ReadBytesIntoUshort(byte[] data, int offset = 0) {
+			return (ushort) ((data[offset] << 8) | data[offset + 1]);
 		}
+
+
+		/// <summary>
+		/// Sequentially reads 1 byte, converts it to string equivalent, then parses back into a byte.
+		/// </summary>
+		/// <param name="data">Array to read from</param>
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <returns>Byte value</returns>
+		public static byte ReadTextIntoByte(byte[] data, int offset = 0) {
+			byte.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result);
+			return result;
+		}
+
+		/// <summary>
+		/// Sequentially reads 4 bytes, converts them to string equivalents, then parses them into a uint.
+		/// </summary>
+		/// <param name="data">Array to read from</param>
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <returns>Uint value</returns>
+		public static uint ReadTextIntoUint(byte[] data, int offset = 0) {
+			uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result);
+			return result;
+		}
+
+
+		public static int ReadTextIntoANumber(byte[] data, int offset, int length) {
+			int.TryParse(ToAString(data, offset, length), out int result);
+			return result;
+		}
+
+		public static object ReadTextIntoType(byte[] data, Type type, int offset, int length = 0) {
+			//var result = 0;
+			switch (type.Name) {
+				case "Int32":
+					int.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_int);
+					return result_int;
+				case "Double": //FLoat32
+					float.TryParse(ToAString(data, offset, length), NumberStyles.Float, CultureInfo.InvariantCulture, out float result_float);
+					return result_float;
+				case "UInt32":
+					uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result_uint);
+					return result_uint;
+				case "Boolean":
+					int.TryParse(ToAString(data, offset, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_bool);
+					if (result_bool == 0) {
+						return false;
+					} else {
+						return true;
+					}
+				case "Byte": //Uint8
+					byte.TryParse(ToAString(data, offset, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result_byte);
+					return result_byte;
+				case "Int64":
+					long.TryParse(ToAString(data, offset, 16), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result_long);
+					return result_long;
+				case "UInt16":
+					ushort.TryParse(ToAString(data, offset, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort result_ushort);
+					return result_ushort;
+				default:
+					return null;
+			}
+		}
+
+
 		#endregion FromByteArrayToA
 
 
@@ -304,7 +357,46 @@ namespace csDBPF {
 			return result;
 		}
 
+		public static byte[] ToByteArray(Array data) {
+			Type type = data.GetType().GetElementType();
+			switch (type.Name) {
+				case "Int32":
+					return ToByteArray((int[]) data);
+				case "Float32":
+					return ToByteArray((float[]) data);
+				case "UInt32":
+					return ToByteArray((uint[]) data);
+				case "Boolean":
+					return ToByteArray((bool[]) data);
+				case "Byte": //Uint8
+					return (byte[]) data;
+				case "Int64":
+					return ToByteArray((long[]) data);
+				case "UInt16":
+					return ToByteArray((ushort[]) data);
+				default:
+					return null;
+			}
+		}
+
 
 		#endregion ToByteArrayFrom
+
+
+		/// <summary>
+		/// Finds the first instance of a given byte starting at the specified offset.
+		/// </summary>
+		/// <param name="data">Array to search in</param>
+		/// <param name="byteToFind">Byte value to find</param>
+		/// <param name="offset">Location in array to start at</param>
+		/// <returns>Index of next occurrence of the target byte; 0 if byte is not found</returns>
+		public static int FindNextInstanceOf(byte[] data, byte byteToFind, int offset = 0) {
+			for (int idx = offset; idx < data.Length; idx++) {
+				if (data[idx] == byteToFind) {
+					return idx;
+				}
+			}
+			return 0;
+		}
 	}
 }

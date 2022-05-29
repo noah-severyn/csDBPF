@@ -4,24 +4,27 @@ using System.Text;
 
 namespace csDBPF.Properties {
 	public class XMLExemplarProperty {
+
+		//------------- XMLExemplarProperty Fields ------------- \\
+
 		//These parameters are required
 		//<xs:attribute name = "ID" type="xs:string" use="required" />
 		//<xs:attribute name = "Name" type="xs:string" use="required" />
 		//<xs:attribute name = "Type" type="xs:string" use="required" />
 		//<xs:attribute name = "ShowAsHex" type="xs:string" use="required" />
-		private uint _id;
-		public uint id {
+		private readonly uint _id;
+		public uint ID {
 			get { return _id; }
 		}
-		private string _name;
+		private readonly string _name;
 		public string Name {
 			get { return _name; }
 		}
-		private DBPFPropertyDataType _type;
+		private readonly DBPFPropertyDataType _type;
 		public DBPFPropertyDataType Type {
 			get { return _type; }
 		}
-		private bool _showAsHex;
+		private readonly bool _showAsHex;
 		public bool ShowAsHex {
 			get { return _showAsHex; }
 		}
@@ -34,11 +37,11 @@ namespace csDBPF.Properties {
 		//<xs:attribute name = "MinValue" type="xs:string" use="optional" />
 		//<xs:attribute name = "MaxValue" type="xs:string" use="optional" />
 		//<xs:attribute name = "Step" type="xs:string" use="optional" />
-		private short? _count;
+		private readonly short? _count;
 		public short? Count {
 			get { return _count; }
 		}
-		private List<string> _defaultValue;
+		private readonly List<string> _defaultValue;
 		public List<string> DefaultValue {
 			get { return _defaultValue; }
 		}
@@ -47,23 +50,27 @@ namespace csDBPF.Properties {
 			get { return _minLength; }
 			set { _minLength = value; }
 		}
-		private int? _maxLength;
+		private readonly int? _maxLength;
 		public int? MaxLength {
 			get { return _maxLength; }
 		}
-		private string _minValue;
+		private readonly string _minValue;
 		public string MinValue {
 			get { return _minValue; }
 		}
-		private string _maxValue;
+		private readonly string _maxValue;
 		public string MaxValue {
 			get { return _maxValue; }
 		}
-		private uint? _step;
+		private readonly uint? _step;
 		public uint? Step {
 			get { return _step; }
 		}
 
+
+
+
+		//------------- XMLExemplarProperty Constructors ------------- \\
 		/// <summary>
 		/// Create a DBPFExemplarProperty, setting all required parameters to null. All optional parameters are null.
 		/// </summary>
@@ -105,7 +112,13 @@ namespace csDBPF.Properties {
 			_name = name;
 			_type = type;
 			_showAsHex = showAsHex;
-			_count = count; //TODO - The count can sometimes be negative ... not sure what this means. 
+			_count = count;
+			//TODO - figure exactly what the Count property means, especially for negative numbers
+			//if count is not present, it is assumed to be one.
+			//if it is specified, it must be whatever that number is
+			//if count is -1, can have any number of values
+			//if count is -2, paired list of values, any length
+			//if count is < -3, unsure? can have any number of reps up to that number? e.g. -8 can have 1-8 values?
 			if (defaultValue == null) {
 				_defaultValue = null;
 			} else {
@@ -120,6 +133,9 @@ namespace csDBPF.Properties {
 		}
 
 
+
+
+		//------------- XMLExemplarProperty Methods ------------- \\
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder();
 			sb.Append($"ID: {_id}, ");
