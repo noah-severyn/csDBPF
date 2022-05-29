@@ -53,6 +53,7 @@ namespace csDBPF {
 		public static readonly DBPFTGI INI_FONT; /** Font Table INI (0, 0x4a87bfe8, 0x2a87bffc) */
 		public static readonly DBPFTGI INI_NETWORK; /** Network INI: Remapping, Bridge Exemplars (0, 0x8a5971c5, 0x8a5993b9) */
 		public static readonly DBPFTGI INI; /** INI file (0, 0x8a5971c5, 0) */
+		public static readonly DBPFTGI XML; /** XML file (0x88777602, 0, 0) */
 		public static readonly DBPFTGI NULLTGI; /** NULLTGI (0, 0, 0) */
 
 
@@ -300,6 +301,7 @@ namespace csDBPF {
 			INI_NETWORK = new DBPFTGI(0, 0x8a5971c5, 0x8a5993b9, "INI (Networks)");
 			INI = new DBPFTGI(0, 0x8a5971c5, null, "INI");
 			RUL = new DBPFTGI(0x0a5bcf4b, 0xaa5bcf57, null, "RUL");
+			XML = new DBPFTGI(0x88777602, null, null, "XML");
 			EFFDIR = new DBPFTGI(0xea5118b0, null, null, "EFFDIR");
 			NULLTGI = new DBPFTGI(null, null, null, "UNKNOWN");
 
@@ -343,6 +345,7 @@ namespace csDBPF {
 			KnownEntries.Add(INI_FONT, "INI_FONT");
 			KnownEntries.Add(INI_NETWORK, "INI_NETWORK");
 			KnownEntries.Add(INI, "INI");
+			KnownEntries.Add(XML, "XML");
 			KnownEntries.Add(RUL, "RUL");
 			KnownEntries.Add(EFFDIR, "EFFDIR");
 			KnownEntries.Add(NULLTGI, "NULLTGI"); // NULLTGI matches with everything
