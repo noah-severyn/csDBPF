@@ -12,19 +12,19 @@ namespace csDBPF.Properties {
 		//<xs:attribute name = "Name" type="xs:string" use="required" />
 		//<xs:attribute name = "Type" type="xs:string" use="required" />
 		//<xs:attribute name = "ShowAsHex" type="xs:string" use="required" />
-		private uint _id;
-		public uint id {
+		private readonly uint _id;
+		public uint ID {
 			get { return _id; }
 		}
-		private string _name;
+		private readonly string _name;
 		public string Name {
 			get { return _name; }
 		}
-		private DBPFPropertyDataType _type;
+		private readonly DBPFPropertyDataType _type;
 		public DBPFPropertyDataType Type {
 			get { return _type; }
 		}
-		private bool _showAsHex;
+		private readonly bool _showAsHex;
 		public bool ShowAsHex {
 			get { return _showAsHex; }
 		}
@@ -37,11 +37,11 @@ namespace csDBPF.Properties {
 		//<xs:attribute name = "MinValue" type="xs:string" use="optional" />
 		//<xs:attribute name = "MaxValue" type="xs:string" use="optional" />
 		//<xs:attribute name = "Step" type="xs:string" use="optional" />
-		private short? _count;
+		private readonly short? _count;
 		public short? Count {
 			get { return _count; }
 		}
-		private List<string> _defaultValue;
+		private readonly List<string> _defaultValue;
 		public List<string> DefaultValue {
 			get { return _defaultValue; }
 		}
@@ -50,19 +50,19 @@ namespace csDBPF.Properties {
 			get { return _minLength; }
 			set { _minLength = value; }
 		}
-		private int? _maxLength;
+		private readonly int? _maxLength;
 		public int? MaxLength {
 			get { return _maxLength; }
 		}
-		private string _minValue;
+		private readonly string _minValue;
 		public string MinValue {
 			get { return _minValue; }
 		}
-		private string _maxValue;
+		private readonly string _maxValue;
 		public string MaxValue {
 			get { return _maxValue; }
 		}
-		private uint? _step;
+		private readonly uint? _step;
 		public uint? Step {
 			get { return _step; }
 		}

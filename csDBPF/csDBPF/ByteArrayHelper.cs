@@ -229,7 +229,7 @@ namespace csDBPF {
 				case "UInt32":
 					uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result_uint);
 					return result_uint;
-				case "Bool":
+				case "Boolean":
 					int.TryParse(ToAString(data, offset, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_bool);
 					if (result_bool == 0) {
 						return false;
@@ -366,7 +366,7 @@ namespace csDBPF {
 					return ToByteArray((float[]) data);
 				case "UInt32":
 					return ToByteArray((uint[]) data);
-				case "Bool":
+				case "Boolean":
 					return ToByteArray((bool[]) data);
 				case "Byte": //Uint8
 					return (byte[]) data;

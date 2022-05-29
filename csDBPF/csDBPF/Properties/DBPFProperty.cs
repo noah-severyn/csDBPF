@@ -215,6 +215,12 @@ namespace csDBPF.Properties {
 			//Determine number of reps; reps = number of repetitions = number of values + 1 (e.g. one value -> 0 reps; 4 values -> 3 reps)
 			endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
 			int countOfReps = ByteArrayHelper.ReadTextIntoANumber(dData, offset, endPos - offset);
+			int countOfValues; //if 1 value, countOfReps = 0, otherwise countOfReps = countOfValues. This is a problem because the loop will not otherwise execute if countOfReps = 0
+			if (countOfReps == 0) {
+				countOfValues = 1;
+			} else {
+				countOfValues = countOfReps;
+			}
 
 			//Parse the values into a byte array and set the property values equal to the array
 			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
@@ -256,7 +262,7 @@ namespace csDBPF.Properties {
 			else {
 				Array newVals = Array.CreateInstance(newProperty.DataType.PrimitiveDataType, countOfReps + 1);
 
-				for (int rep = 0; rep < countOfReps; rep++) {//TODO - whoa this is weird. why +1?
+				for (int rep = 0; rep < countOfValues; rep++) {
 					offset += 2; //skip "0x"
 					var result = ByteArrayHelper.ReadTextIntoType(dData, newProperty.DataType.PrimitiveDataType, offset, (newProperty.DataType.Length) * 2);
 					switch (newProperty.DataType.Name) {
