@@ -94,6 +94,22 @@ namespace csDBPF.Properties {
 			return matchingExemplarProperty.First();
 		}
 
+
+		/// <summary>
+		/// Look up a given property and return its identifier.
+		/// </summary>
+		/// <param name="nameToFind">Property name</param>
+		/// <remarks>Match is *not* case sensitive and will disregard spaces because some property names have spaces and others are camel cased.</remarks>
+		/// <returns>Property ID if found; 0 otherwise</returns>
+		public static uint LookupPropertyID(string nameToFind) {
+			foreach (XMLExemplarProperty property in AllProperties.Values) {
+				if (property.Name.ToLower().Replace(" ","") == nameToFind.ToLower().Replace(" ", "")) {
+					return property.ID;
+				}
+			}
+			return 0;
+		}
+
 		//TODO - some properties have values restricted to certain things - these are the OPTION lists ... currently unimplemented
 	}
 }

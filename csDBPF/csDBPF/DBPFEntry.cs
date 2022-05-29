@@ -147,6 +147,29 @@ namespace csDBPF {
 
 
 
+		/// <summary>
+		/// Lookup and return the target property from a list of properties.
+		/// </summary>
+		/// <param name="idToGet">Property ID to find</param>
+		/// <param name="properties">Dictionary of properties to search</param>
+		/// <returns>DBPFProperty of the match if found; null otherwise</returns>
+		public DBPFProperty GetProperty(uint idToGet, Dictionary<int, DBPFProperty> properties) {
+			foreach (DBPFProperty property in properties.Values) {
+				if (property.ID == idToGet) {
+					return property;
+				}
+			}
+			return null;
+		}
+
+		public DBPFProperty GetProperty(string name, Dictionary<int, DBPFProperty> properties) {
+			//XMLProperties.AllProperties.
+			return null;
+		}
+
+
+		//handy to have a function to get the exemplar type
+
 
 
 
@@ -289,19 +312,6 @@ namespace csDBPF {
 		}
 
 
-		/// <summary>
-		/// Lookup and return the target property from a list of properties.
-		/// </summary>
-		/// <param name="idToGet">Property ID to find</param>
-		/// <param name="properties">Dictionary of properties to search</param>
-		/// <returns>DBPFProperty of the match if found; null otherwise</returns>
-		public static DBPFProperty GetPropertyByID(uint idToGet, Dictionary<int, DBPFProperty> properties) {
-			foreach (DBPFProperty property in properties.Values) {
-				if (property.ID == idToGet) {
-					return property;
-				}
-			}
-			return null;
-		}
+
 	}
 }
