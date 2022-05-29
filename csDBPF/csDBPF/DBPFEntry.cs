@@ -15,70 +15,75 @@ namespace csDBPF {
 		private const string CQZT1 = "CQZT1###";
 
 
+
 		//------------- DBPFEntry Fields ------------- \\
+		private DBPFTGI _tgi;
 		/// <summary>
 		/// The <see cref="DBPFTGI"/>object representing the file type of the entry.
 		/// </summary>
-		private DBPFTGI _tgi;
 		public DBPFTGI TGI {
 			get { return _tgi; }
 		}
-		/// <summary>
-		/// Byte position of this entry within the DBPFFile.
-		/// </summary>
+
 		private uint _offset;
+		/// <summary>
+		/// Byte position of this entry within the <see cref="DBPFFile"/>.
+		/// </summary>
 		public uint Offset {
 			get { return _offset; }
-			//set { _offset = value; }
 		}
-		/// <summary>
-		/// Position of this entry in relation to the other entries in the DBPFFile.
-		/// </summary>
+
 		private uint _index;
+		/// <summary>
+		/// Position of this entry in relation to the other entries in the <see cref="DBPFFile"/>, 0-n.
+		/// </summary>
 		public uint IndexPos {
 			get { return _index; }
-			//set { _index = value; }
 		}
+
+		private uint _uncompressedSize;
 		/// <summary>
 		/// Uncompressed size of the entry data, in bytes.
 		/// </summary>
 		/// <remarks>
 		/// Initially all data is assumed to be compressed until the first bytes of data can be read to determine actual compression status.
 		/// </remarks>
-		private uint _uncompressedSize;
 		public uint UncompressedSize {
 			get { return _uncompressedSize; }
 			set { _uncompressedSize = value; }
 		}
+
+		private uint _compressedSize;
 		/// <summary>
 		/// Compressed size of the entry data, in bytes.
 		/// </summary>
 		/// <remarks>
 		/// Initially all data is assumed to be compressed until the first bytes of data can be read to determine actual compression status.
 		/// </remarks>
-		private uint _compressedSize;
 		public uint CompressedSize {
 			get { return _compressedSize; }
 			set { _compressedSize = value; }
 		}
+
+		private bool _isCompressed;
 		/// <summary>
-		/// Compression status of the entry data.
+		/// Compression status of this entry.
 		/// </summary>
 		/// <remarks>
 		/// Assume TRUE until the first bytes of data can be read to determine actual compression status. 
 		/// </remarks>
-		private bool _isCompressed;
 		public bool IsCompressed {
 			get { return _isCompressed; }
 			set { _isCompressed = value; }
 		}
+
+		private byte[] _data;
 		/// <summary>
 		/// Byte array of data pertaining to this entry. Depending on the value is IsCompressed, this data could be compressed or not.
 		/// </summary>
 		/// <remarks>
 		/// The interpretation of the entry data depends on the compression status of the entry and also on the file type of the entry (known through its <see cref="TGI"/>). Always check if the data is compressed before processing.
 		/// </remarks>
-		private byte[] _data;
 		public byte[] Data {
 			get { return _data; }
 			set { _data = value; }
@@ -94,13 +99,14 @@ namespace csDBPF {
 		public DBPFEntry(DBPFTGI tgi) {
 			_tgi = tgi;
 		}
+
 		/// <summary>
 		/// Create a new DBPFEntry object.
 		/// </summary>
 		/// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
 		/// <param name="offset">Offset (location) of the entry within the DBPF file</param>
 		/// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
-		/// <param name="index">Entry position in the file. 0-n</param>
+		/// <param name="index">Entry position in the file, 0-n</param>
 		public DBPFEntry(DBPFTGI tgi, uint offset, uint size, uint index) {
 			if (tgi == null) {
 				_tgi = DBPFTGI.NULLTGI;
@@ -110,7 +116,7 @@ namespace csDBPF {
 			_offset = offset;
 			_index = index;
 			_compressedSize = size;
-			//The properties below cannot be definitively determined until after the data is read and set - assign placeholder defaults for now
+			//The following properties cannot be definitively determined until after the data is read and set, so assume for now
 			_uncompressedSize = size;
 			_isCompressed = true;
 		}
@@ -124,6 +130,7 @@ namespace csDBPF {
 			return sb.ToString();
 		}
 
+
 		/// <summary>
 		/// Parses the byte values of the entry depending on the entry's data type.
 		/// </summary>
@@ -131,20 +138,19 @@ namespace csDBPF {
 		public object DecodeEntry() {
 			switch (TGI.Label) {
 				case "EXEMPLAR":
-					return DecodeEntry_EXMP(_data); //return Dictionary<int, DBPFProperty>
+					return DecodeEntry_EXMP(_data); //returns Dictionary<int, DBPFProperty>
 				case "LTEXT":
-					return DecodeEntry_LTEXT(_data); //return string
+					return DecodeEntry_LTEXT(_data); //returns string
 				default:
 					return null;
 			}
 		}
 
 
-
+		//TODO - this should be internal? or not exist?. Access through .DecodeEntry only
 		public Dictionary<int, DBPFProperty> DecodeEntry_EXMP() {
 			return DecodeEntry_EXMP(_data);
 		}
-
 
 
 		/// <summary>
@@ -162,13 +168,12 @@ namespace csDBPF {
 			return null;
 		}
 
+
 		public DBPFProperty GetProperty(string name, Dictionary<int, DBPFProperty> properties) {
+			//TODO - implement GetProperty(string name, Dictionary<int, DBPFProperty> properties)
 			//XMLProperties.AllProperties.
 			return null;
 		}
-
-
-		//handy to have a function to get the exemplar type
 
 
 
@@ -278,6 +283,25 @@ namespace csDBPF {
 
 
 
+
+		//handy to have a function to get the exemplar type
+		/// <summary>
+		/// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar"/>
+		/// </summary>
+		/// <param name="dData"></param>
+		/// <returns></returns>
+		public int GetExemplarType(byte[] dData) {
+			if (!TGI.MatchesKnownTGI(DBPFTGI.EXEMPLAR)) {
+				return 0;
+			}
+
+
+
+			return 0;
+		}
+
+
+
 		/// <summary>
 		/// Returns the encoding type of the property (Binary or Text).
 		/// </summary>
@@ -288,11 +312,14 @@ namespace csDBPF {
 		}
 
 
+
+		//TODO - this should be internal? or not exist?. Access through .DecodeEntry only
 		/// <summary>
 		/// Decodes the LTEXT string from raw data. Data is not compressed.
 		/// </summary>
 		/// <param name="data">Raw data of the LTEXT entry (not compressed)</param>
 		/// <returns>A string</returns>
+		/// 
 		public static string DecodeEntry_LTEXT(byte[] data) {
 			int pos = 0;
 			ushort numberOfChars = BitConverter.ToUInt16(data, pos);
