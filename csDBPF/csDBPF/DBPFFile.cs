@@ -244,11 +244,11 @@ namespace csDBPF {
 						byte[] readData = new byte[entry.UncompressedSize];
 						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
 						readData = br.ReadBytes(readData.Length);
-						entry.Data = readData;
+						entry.ByteData = readData;
 
 						//After the data is set, we can know the other properties of the DBPFEntry, like isCompressed, compressedSize, etc.
-						entry.IsCompressed = DBPFCompression.IsCompressed(entry.Data);
-						entry.CompressedSize = DBPFCompression.GetDecompressedSize(entry.Data);
+						entry.IsCompressed = DBPFCompression.IsCompressed(entry.ByteData);
+						entry.CompressedSize = DBPFCompression.GetDecompressedSize(entry.ByteData);
 						
 					}
 				}
@@ -277,6 +277,16 @@ namespace csDBPF {
 			}
 			ListOfEntries.Add(entry.IndexPos, entry);
 			ListOfTGIs.Add(entry.IndexPos, entry.TGI);
+		}
+
+
+		/// <summary>
+		/// Decodes all entries in the file. See <see cref="DBPFEntry.DecodeEntry"/> for more information
+		/// </summary>
+		public void DecodeAllEntries() {
+			foreach (DBPFEntry entry in ListOfEntries) {
+				entry.DecodeEntry();
+			}
 		}
 
 

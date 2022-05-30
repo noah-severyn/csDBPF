@@ -598,23 +598,31 @@ namespace csDBPF_Test {
 				propertiesKnown.Add(13, DBPFProperty.DecodeProperty_Binary(TestArrays.decompresseddata_b, 384));
 				propertiesKnown.Add(14, DBPFProperty.DecodeProperty_Binary(TestArrays.decompresseddata_b, 433));
 
-				Dictionary<int, DBPFProperty> propertiesReturned = DBPFEntry.DecodeEntry_EXMP(TestArrays.decompresseddata_b);
-				CollectionAssert.AreEqual(propertiesKnown.Keys, propertiesReturned.Keys);
+				DBPFEntry entry = new DBPFEntry(DBPFTGI.EXEMPLAR);
+				entry.DecodeEntry(TestArrays.decompresseddata_b);
+
+				CollectionAssert.AreEqual(propertiesKnown.Keys, entry.ListOfProperties.Keys);
 				foreach (int key in propertiesKnown.Keys) {
 					propertiesKnown.TryGetValue(key, out DBPFProperty outk);
-					propertiesReturned.TryGetValue(key, out DBPFProperty outr);
+					entry.ListOfProperties.TryGetValue(key, out DBPFProperty outr);
 					Assert.AreEqual(outk.ID, outr.ID);
 					Assert.AreEqual(outk.NumberOfReps, outr.NumberOfReps);
 					Assert.AreEqual(outk.DataType, outr.DataType);
 					Assert.AreEqual(outk.KeyType, outr.KeyType);
 					CollectionAssert.AreEqual(outk.ByteValues, outr.ByteValues);
 				}
+
+
+				//TODO - add text encoding tests here
 			}
 
 			[TestMethod]
 			public void Test_110b_ParseLTEXTEntries() {
-				string ltext = DBPFEntry.DecodeEntry_LTEXT(TestArrays.notcompresseddata_b);
-				Assert.AreEqual("Parks Aura (by Cori)", ltext);
+				DBPFEntry entryb = new DBPFEntry(DBPFTGI.LTEXT);
+				entryb.DecodeEntry(TestArrays.notcompresseddata_b);
+				Assert.AreEqual("Parks Aura (by Cori)", ByteArrayHelper.ToAString(entryb.DecodedData));
+
+				//TODO - add text encoding tests here
 			}
 
 			[TestMethod]
@@ -638,12 +646,12 @@ namespace csDBPF_Test {
 
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 
-				DBPFEntry e0 = (DBPFEntry) dbpf.ListOfEntries[0];
-				Dictionary<int, DBPFProperty> propertiesReturned = (Dictionary<int, DBPFProperty>) e0.DecodeEntry();
-				CollectionAssert.AreEqual(propertiesKnown.Keys, propertiesReturned.Keys);
+				DBPFEntry entry0 = (DBPFEntry) dbpf.ListOfEntries[0];
+				entry0.DecodeEntry();
+				CollectionAssert.AreEqual(propertiesKnown.Keys, entry0.ListOfProperties.Keys);
 				foreach (int key in propertiesKnown.Keys) {
 					propertiesKnown.TryGetValue(key, out DBPFProperty outk);
-					propertiesReturned.TryGetValue(key, out DBPFProperty outr);
+					entry0.ListOfProperties.TryGetValue(key, out DBPFProperty outr);
 					Assert.AreEqual(outk.ID, outr.ID);
 					Assert.AreEqual(outk.NumberOfReps, outr.NumberOfReps);
 					Assert.AreEqual(outk.DataType, outr.DataType);
@@ -651,8 +659,13 @@ namespace csDBPF_Test {
 					CollectionAssert.AreEqual(outk.ByteValues, outr.ByteValues);
 				}
 
-				Assert.AreEqual("Parks Aura (by Cori)", ((DBPFEntry) dbpf.ListOfEntries[1]).DecodeEntry());
-				Assert.AreEqual("+100  to +165", ((DBPFEntry) dbpf.ListOfEntries[dbpf.ListOfEntries.Count - 2]).DecodeEntry());
+				DBPFEntry entry1 = (DBPFEntry) dbpf.ListOfEntries[1];
+				entry1.DecodeEntry();
+				Assert.AreEqual("Parks Aura (by Cori)", ByteArrayHelper.ToAString(entry1.DecodedData));
+
+				DBPFEntry entry11 = (DBPFEntry) dbpf.ListOfEntries[dbpf.ListOfEntries.Count - 2];
+				entry11.DecodeEntry();
+				Assert.AreEqual("+100  to +165", ByteArrayHelper.ToAString(entry11.DecodedData));
 			}
 
 			[Ignore]
@@ -661,10 +674,10 @@ namespace csDBPF_Test {
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\SC4 MODPACC\\B62\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
 				OrderedDictionary entries = dbpf.ListOfEntries;
 				DBPFEntry entry = (DBPFEntry) entries[0];
-				Dictionary<int, DBPFProperty> properties = entry.DecodeEntry_EXMP();
+				entry.DecodeEntry();
 
-				uint[] val = (uint[]) properties[0].DecodeValues();
-				Assert.AreEqual(DBPFProperty.ExemplarTypes.Building, val[0]);
+				//uint[] val = (uint[]) properties[0].DecodeValues();
+				//Assert.AreEqual(DBPFProperty.ExemplarTypes.Building, val[0]);
 			}
 		}
 	}
