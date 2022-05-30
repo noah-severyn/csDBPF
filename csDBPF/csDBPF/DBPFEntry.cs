@@ -244,7 +244,7 @@ namespace csDBPF {
 			}
 
 			Array propertyType = Array.CreateInstance(property.DataType.PrimitiveDataType, property.NumberOfReps); //Create new array to hold the values
-			propertyType = (Array) property.DecodeValues(); //Set the values from the decoded property
+			propertyType = property.DecodedValues; //Set the values from the decoded property
 			//return unchecked((int) propertyType.GetValue(0)); //We know exemplar type can only hold one value, so grab the first one.... BUT HOW?????????
 			return Convert.ToInt32(propertyType.GetValue(0));
 		}
