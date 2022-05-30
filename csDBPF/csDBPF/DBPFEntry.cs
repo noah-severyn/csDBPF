@@ -3,86 +3,116 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-//See: https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFEntry.java
 namespace csDBPF {
 	/// <summary>
-	/// An abstract form of an entry item of a <see cref="DBPFFile"/>, representing an instance of a subfile that may be contained in a DBPF file.
+	/// An abstract form of an entry item of a <see cref="DBPFFile"/>, representing an instance of a subfile that may be contained in a DBPF file. The data for each entry is not parsed or decoded until <see cref="DecodeEntry"/> is called to decompress and set the actual entry data.
 	/// </summary>
-	public class DBPFEntry {
+	public partial class DBPFEntry {
 		private const string EQZB1 = "EQZB1###";
 		private const string EQZT1 = "EQZT1###";
 		private const string CQZB1 = "CQZB1###";
 		private const string CQZT1 = "CQZT1###";
 
 
+
 		//------------- DBPFEntry Fields ------------- \\
+		private DBPFTGI _tgi;
 		/// <summary>
 		/// The <see cref="DBPFTGI"/>object representing the file type of the entry.
 		/// </summary>
-		private DBPFTGI _tgi;
 		public DBPFTGI TGI {
 			get { return _tgi; }
 		}
-		/// <summary>
-		/// Byte position of this entry within the DBPFFile.
-		/// </summary>
+
 		private uint _offset;
+		/// <summary>
+		/// Byte position of this entry within the <see cref="DBPFFile"/>.
+		/// </summary>
 		public uint Offset {
 			get { return _offset; }
-			//set { _offset = value; }
 		}
-		/// <summary>
-		/// Position of this entry in relation to the other entries in the DBPFFile.
-		/// </summary>
+
 		private uint _index;
+		/// <summary>
+		/// Position of this entry in relation to the other entries in the <see cref="DBPFFile"/>, 0-n.
+		/// </summary>
 		public uint IndexPos {
 			get { return _index; }
-			//set { _index = value; }
 		}
+
+		private uint _uncompressedSize;
 		/// <summary>
 		/// Uncompressed size of the entry data, in bytes.
 		/// </summary>
 		/// <remarks>
 		/// Initially all data is assumed to be compressed until the first bytes of data can be read to determine actual compression status.
 		/// </remarks>
-		private uint _uncompressedSize;
 		public uint UncompressedSize {
 			get { return _uncompressedSize; }
 			set { _uncompressedSize = value; }
 		}
+
+		private uint _compressedSize;
 		/// <summary>
 		/// Compressed size of the entry data, in bytes.
 		/// </summary>
 		/// <remarks>
 		/// Initially all data is assumed to be compressed until the first bytes of data can be read to determine actual compression status.
 		/// </remarks>
-		private uint _compressedSize;
 		public uint CompressedSize {
 			get { return _compressedSize; }
 			set { _compressedSize = value; }
 		}
+
+		private bool _isCompressed;
 		/// <summary>
-		/// Compression status of the entry data.
+		/// Compression status of this entry.
 		/// </summary>
 		/// <remarks>
 		/// Assume TRUE until the first bytes of data can be read to determine actual compression status. 
 		/// </remarks>
-		private bool _isCompressed;
 		public bool IsCompressed {
 			get { return _isCompressed; }
 			set { _isCompressed = value; }
 		}
+
+		private byte[] _byteData;
 		/// <summary>
-		/// Byte array of data pertaining to this entry. Depending on the value is IsCompressed, this data could be compressed or not.
+		/// Byte array of raw (not decoded) data pertaining to this entry. Depending on the value is IsCompressed, this data could be compressed.
 		/// </summary>
 		/// <remarks>
 		/// The interpretation of the entry data depends on the compression status of the entry and also on the file type of the entry (known through its <see cref="TGI"/>). Always check if the data is compressed before processing.
 		/// </remarks>
-		private byte[] _data;
-		public byte[] Data {
-			get { return _data; }
-			set { _data = value; }
+		public byte[] ByteData {
+			get { return _byteData; }
+			set { _byteData = value; }
 		}
+
+		private Dictionary<int, DBPFProperty> _listOfProperties;
+		/// <summary>
+		/// Dictionary of one or more <see cref="DBPFProperty"/> associated with this entry.
+		/// </summary>
+		/// <remarks>
+		/// Relevant for only Exemplar and Cohort type entries. This is null for all other type entries. Use <see cref="DecodedData"/> for other type entries.
+		/// </remarks>
+		public Dictionary<int, DBPFProperty> ListOfProperties {
+			get { return _listOfProperties; }
+			set { _listOfProperties = value; }
+		}
+
+		private byte[] _decodedData;
+		/// <summary>
+		/// Byte array of decoded data for this entry. This is always uncompressed.
+		/// </summary>
+		/// <remarks>
+		/// Relevant for all type entries except Exemplars and Cohorts. This is null for those type entries. Use <see cref="ListOfProperties"/> for Exemplars and Cohorts.
+		/// </remarks>
+		public byte[] DecodedData {
+			get { return _decodedData; }
+			set { _decodedData = value; }
+		}
+
+
 
 
 
@@ -94,13 +124,14 @@ namespace csDBPF {
 		public DBPFEntry(DBPFTGI tgi) {
 			_tgi = tgi;
 		}
+
 		/// <summary>
 		/// Create a new DBPFEntry object.
 		/// </summary>
 		/// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
 		/// <param name="offset">Offset (location) of the entry within the DBPF file</param>
 		/// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
-		/// <param name="index">Entry position in the file. 0-n</param>
+		/// <param name="index">Entry position in the file, 0-n</param>
 		public DBPFEntry(DBPFTGI tgi, uint offset, uint size, uint index) {
 			if (tgi == null) {
 				_tgi = DBPFTGI.NULLTGI;
@@ -110,9 +141,12 @@ namespace csDBPF {
 			_offset = offset;
 			_index = index;
 			_compressedSize = size;
-			//The properties below cannot be definitively determined until after the data is read and set - assign placeholder defaults for now
+			
+			//The following properties cannot be definitively determined until after the data is read and set, so assume for now
 			_uncompressedSize = size;
 			_isCompressed = true;
+			_listOfProperties = null;
+			_decodedData = null;
 		}
 
 
@@ -124,25 +158,45 @@ namespace csDBPF {
 			return sb.ToString();
 		}
 
+
 		/// <summary>
-		/// Parses the byte values of the entry depending on the entry's data type.
+		/// Parses the byte values of the entry depending on the entry's data type. If Exemplar or Cohort sets <see cref="ListOfProperties"/>, otherwise <see cref="DecodedData"/> is set.
 		/// </summary>
-		/// <returns>Decoded object. Object type differs depending on the entry data type.</returns>
-		public object DecodeEntry() {
+		/// <remarks>
+		/// This is the default function and should be used in most circumstances when there is already data associated with the entry, e.g. when reading from a file.
+		/// </remarks>
+		public void DecodeEntry() {
 			switch (TGI.Label) {
 				case "EXEMPLAR":
-					return DecodeEntry_EXMP(_data); //return Dictionary<int, DBPFProperty>
+				case "COHORT":
+					_listOfProperties = DecodeEntry_EXMP(_byteData);
+					break;
 				case "LTEXT":
-					return DecodeEntry_LTEXT(_data); //return string
+					_decodedData = DecodeEntry_LTEXT(_byteData);
+					break;
 				default:
-					return null;
+					break;
 			}
 		}
-
-
-
-		public Dictionary<int, DBPFProperty> DecodeEntry_EXMP() {
-			return DecodeEntry_EXMP(_data);
+		/// <summary>
+		/// Parses the byte values of the entry depending on the entry's data type. If Exemplar or Cohort sets <see cref="ListOfProperties"/>, otherwise <see cref="DecodedData"/> is set.
+		/// </summary>
+		/// <param name="data">Byte data to decode</param>
+		/// <remarks>
+		/// This alternative can be used when creating entries that do not already have data associated with them.
+		/// </remarks>
+		public void DecodeEntry(byte[] data) {
+			switch (TGI.Label) {
+				case "EXEMPLAR":
+				case "COHORT":
+					_listOfProperties = DecodeEntry_EXMP(data);
+					break;
+				case "LTEXT":
+					_decodedData = DecodeEntry_LTEXT(data);
+					break;
+				default:
+					break;
+			}
 		}
 
 
@@ -153,8 +207,12 @@ namespace csDBPF {
 		/// <param name="idToGet">Property ID to find</param>
 		/// <param name="properties">Dictionary of properties to search</param>
 		/// <returns>DBPFProperty of the match if found; null otherwise</returns>
-		public DBPFProperty GetProperty(uint idToGet, Dictionary<int, DBPFProperty> properties) {
-			foreach (DBPFProperty property in properties.Values) {
+		public DBPFProperty GetProperty(uint idToGet) {
+			if (_listOfProperties is null) {
+				throw new InvalidOperationException("This entry must be decoded before it can be analyzed!");
+			}
+
+			foreach (DBPFProperty property in _listOfProperties.Values) {
 				if (property.ID == idToGet) {
 					return property;
 				}
@@ -162,82 +220,40 @@ namespace csDBPF {
 			return null;
 		}
 
-		public DBPFProperty GetProperty(string name, Dictionary<int, DBPFProperty> properties) {
+
+		public DBPFProperty GetProperty(string name) {
+			//TODO - implement GetProperty(string name)
 			//XMLProperties.AllProperties.
 			return null;
 		}
 
 
-		//handy to have a function to get the exemplar type
+
+		/// <summary>
+		/// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="DBPFProperty.ExemplarTypes"/> for the full list.
+		/// </summary>
+		/// <returns>Exemplar Type if found; -1 if entry is not Exemplar or Cohort; -2 if "ExemplarType" property is not found</returns>
+		public int GetExemplarType() {
+			if (!(_tgi.MatchesKnownTGI(DBPFTGI.EXEMPLAR) || _tgi.MatchesKnownTGI(DBPFTGI.COHORT))) {
+				return -1;
+			}
+			DBPFProperty property = GetProperty(0x00000010);
+
+			if (property is null) {
+				return -2;
+			}
+
+			Array propertyType = Array.CreateInstance(property.DataType.PrimitiveDataType, property.NumberOfReps); //Create new array to hold the values
+			propertyType = (Array) property.DecodeValues(); //Set the values from the decoded property
+			//return unchecked((int) propertyType.GetValue(0)); //We know exemplar type can only hold one value, so grab the first one.... BUT HOW?????????
+			return Convert.ToInt32(propertyType.GetValue(0));
+		}
 
 
 
 
 		//------------- DBPFEntry Static Methods ------------- \\
-		/// <summary>
-		/// Decodes the compressed data into a dictionary of one or more <see cref="DBPFProperty"/>.
-		/// </summary>
-		/// <param name="cData">Compressed data</param>
-		/// <returns>Dictionary of <see cref="DBPFProperty"/> indexed by their order in the entry</returns>
-		public static Dictionary<int, DBPFProperty> DecodeEntry_EXMP(byte[] cData) {
-			byte[] dData;
-			if (DBPFCompression.IsCompressed(cData)) {
-				dData = DBPFCompression.Decompress(cData);
-			} else {
-				dData = cData;
-			}
 
-			Dictionary<int, DBPFProperty> listOfProperties = new Dictionary<int, DBPFProperty>();
-
-			//Read cohort TGI info and determine the number of properties in this entry
-			uint parentCohortTID;
-			uint parentCohortGID;
-			uint parentCohortIID;
-			uint propertyCount;
-			int pos; //Offset position in dData. Initialized to the starting position of the properties after the header data
-			switch (GetEncodingType(dData)) {
-				case 1: //Binary encoding
-					parentCohortTID = BitConverter.ToUInt32(dData, 8);
-					parentCohortGID = BitConverter.ToUInt32(dData, 12);
-					parentCohortIID = BitConverter.ToUInt32(dData, 16);
-					propertyCount = BitConverter.ToUInt32(dData, 20);
-					pos = 24;
-					break;
-				case 2: //Text encoding
-					parentCohortTID = ByteArrayHelper.ReadTextIntoUint(dData, 30);
-					parentCohortGID = ByteArrayHelper.ReadTextIntoUint(dData, 41);
-					parentCohortIID = ByteArrayHelper.ReadTextIntoUint(dData, 52);
-					propertyCount = ByteArrayHelper.ReadTextIntoUint(dData, 75);
-					pos = 85;
-					break;
-				default:
-					propertyCount = 0;
-					pos = 0;
-					break;
-			}
-
-			//Create the Property
-			DBPFProperty property;
-			for (int idx = 0; idx < propertyCount; idx++) {
-				property = DBPFProperty.DecodeExemplarProperty(dData, pos);
-				listOfProperties.Add(idx, property);
-
-				//Determine which bytes to skip to get to the start of the next property
-				switch (GetEncodingType(dData)) {
-					case 1: //Binary encoding
-						pos += property.ByteValues.Length + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
-						if (property.KeyType == 0x80) { //Skip 4 more for NumberOfValues
-							pos += 4;
-						}
-						break;
-					case 2: //Text encoding
-						pos = ByteArrayHelper.FindNextInstanceOf(dData, 0x0A, pos) + 1;
-						break;
-				}
-			}
-
-			return listOfProperties;
-		}
 
 
 		/// <summary>
@@ -278,6 +294,7 @@ namespace csDBPF {
 
 
 
+
 		/// <summary>
 		/// Returns the encoding type of the property (Binary or Text).
 		/// </summary>
@@ -288,28 +305,8 @@ namespace csDBPF {
 		}
 
 
-		/// <summary>
-		/// Decodes the LTEXT string from raw data. Data is not compressed.
-		/// </summary>
-		/// <param name="data">Raw data of the LTEXT entry (not compressed)</param>
-		/// <returns>A string</returns>
-		public static string DecodeEntry_LTEXT(byte[] data) {
-			int pos = 0;
-			ushort numberOfChars = BitConverter.ToUInt16(data, pos);
-			pos += 2;
-			ushort textControlChar = ByteArrayHelper.ReadBytesIntoUshort(data, pos);
-			pos += 2;
-			if (textControlChar != 0x0010) {
-				throw new ArgumentException("Data is not valid LTEXT format!");
-			}
 
-			StringBuilder sb = new StringBuilder();
-			for (int idx = 0; idx < numberOfChars; idx++) {
-				sb.Append(BitConverter.ToChar(data, pos));
-				pos += 2;
-			}
-			return sb.ToString();
-		}
+
 
 
 
