@@ -202,7 +202,7 @@ namespace csDBPF {
 
 
 		/// <summary>
-		/// Lookup and return the target property from a list of properties.
+		/// Lookup and return a property from a list of properties in the entry.
 		/// </summary>
 		/// <param name="idToGet">Property ID to find</param>
 		/// <param name="properties">Dictionary of properties to search</param>
@@ -219,12 +219,17 @@ namespace csDBPF {
 			}
 			return null;
 		}
-
-
+		/// <summary>
+		/// Lookup and return a property from a list of properties in the entry.
+		/// </summary>
+		/// <param name="name">Name of property</param>
+		/// <returns>DBPFProperty of the match if found; null otherwise</returns>
+		/// <remarks>
+		/// Lookup name is case insensitive and ignores spaces (the XML properties can be inconsistently named).
+		/// </remarks>
 		public DBPFProperty GetProperty(string name) {
-			//TODO - implement GetProperty(string name)
-			//XMLProperties.AllProperties.
-			return null;
+			uint id = XMLProperties.LookupPropertyID(name);
+			return GetProperty(id);
 		}
 
 
