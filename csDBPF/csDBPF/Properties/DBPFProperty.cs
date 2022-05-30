@@ -57,6 +57,13 @@ namespace csDBPF.Properties {
 		/// <remarks>
 		/// For <see cref="DBPFPropertyString"/> this will always be an array of length 1 with the only value equal to the string value. For <see cref="DBPFPropertyNumber"/> this can be an array of length 1 to <see cref="NumberOfReps"/>.
 		/// </remarks>
+		/// <example>
+		/// To use,
+		/// <code>
+		/// Array values = Array.CreateInstance(property.DataType.PrimitiveDataType, property.NumberOfReps);
+		/// values = property.DecodedValues;
+		/// </code>
+		/// </example>
 		public abstract Array DecodedValues { get; set; }
 
 		/// <summary>
