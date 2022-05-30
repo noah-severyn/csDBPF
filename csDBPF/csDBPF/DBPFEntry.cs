@@ -208,6 +208,10 @@ namespace csDBPF {
 		/// <param name="properties">Dictionary of properties to search</param>
 		/// <returns>DBPFProperty of the match if found; null otherwise</returns>
 		public DBPFProperty GetProperty(uint idToGet) {
+			if (_listOfProperties is null) {
+				throw new InvalidOperationException("This entry must be decoded before it can be analyzed!");
+			}
+
 			foreach (DBPFProperty property in _listOfProperties.Values) {
 				if (property.ID == idToGet) {
 					return property;
@@ -241,7 +245,8 @@ namespace csDBPF {
 
 			Array propertyType = Array.CreateInstance(property.DataType.PrimitiveDataType, property.NumberOfReps); //Create new array to hold the values
 			propertyType = (Array) property.DecodeValues(); //Set the values from the decoded property
-			return (int) propertyType.GetValue(0); //We know exemplar type can only hold one value, so grab the first one.... BUT HOW?????????
+			//return unchecked((int) propertyType.GetValue(0)); //We know exemplar type can only hold one value, so grab the first one.... BUT HOW?????????
+			return Convert.ToInt32(propertyType.GetValue(0));
 		}
 
 
