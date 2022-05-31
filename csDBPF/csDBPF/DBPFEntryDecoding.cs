@@ -53,7 +53,7 @@ namespace csDBPF {
 			//Create the Property
 			DBPFProperty property;
 			for (int idx = 0; idx < propertyCount; idx++) {
-				property = DBPFProperty.DecodeExemplarProperty(dData, pos);
+				property = DBPFProperty.DecodeProperty(dData, pos);
 				listOfProperties.Add(idx, property);
 
 				//Determine which bytes to skip to get to the start of the next property

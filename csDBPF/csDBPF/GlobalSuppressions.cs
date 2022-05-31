@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0066:Convert switch statement to expression", Justification = "<Pending>", Scope = "member", Target = "~M:csDBPF.Properties.DBPFProperty.DecodeExemplarProperty(System.Byte[],System.Int32)~csDBPF.Properties.DBPFProperty")]
+[assembly: SuppressMessage("Style", "IDE0066:Convert switch statement to expression", Justification = "<Pending>", Scope = "member", Target = "~M:csDBPF.Properties.DBPFProperty.DecodeProperty(System.Byte[],System.Int32)~csDBPF.Properties.DBPFProperty")]

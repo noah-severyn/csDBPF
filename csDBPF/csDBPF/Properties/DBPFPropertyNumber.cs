@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace csDBPF.Properties {
-	class DBPFPropertyNumber : DBPFProperty {
+	/// <summary>
+	/// This class represents a numeric type property. The difference form <see cref="DBPFPropertyString"/> is how the <see cref="ByteValues"/> field is interpreted.
+	/// </summary>
+	public class DBPFPropertyNumber : DBPFProperty {
 
 		//------------- DBPFPropertyNumber Fields ------------- \\
 		private uint _id;
@@ -42,6 +45,18 @@ namespace csDBPF.Properties {
 			set { _byteValues = value; }
 		}
 
+		private Array _decodedValues;
+		public override Array DecodedValues {
+			get {
+				if (_decodedValues is null) {
+					throw new InvalidOperationException("This property must be decoded before it can be analyzed!");
+				}
+				return _decodedValues;
+			}
+			set { _decodedValues = value; }
+		}
+
+
 
 
 
@@ -63,24 +78,31 @@ namespace csDBPF.Properties {
 		/// Parse the byte values for this property to return an array of the property's <see cref="DBPFPropertyDataType"/>.
 		/// </summary>
 		/// <returns>An array <see cref="NumberOfReps"/> long of <see cref="DBPFPropertyDataType"/> numbers</returns>
-		public override object DecodeValues() {
+		public override void DecodeValues() {
 			switch (_dataType.Name) {
 				case "BOOL":
-					return ByteArrayHelper.ToBoolArray(_byteValues);
+					_decodedValues = ByteArrayHelper.ToBoolArray(_byteValues);
+					break;
 				case "UINT8":
-					return ByteArrayHelper.ToUint8Array(_byteValues);
+					_decodedValues = ByteArrayHelper.ToUint8Array(_byteValues);
+					break;
 				case "UINT16":
-					return ByteArrayHelper.ToUInt16Array(_byteValues);
+					_decodedValues = ByteArrayHelper.ToUInt16Array(_byteValues);
+					break;
 				case "SINT32":
-					return ByteArrayHelper.ToSInt32Array(_byteValues);
+					_decodedValues = ByteArrayHelper.ToSInt32Array(_byteValues);
+					break;
 				case "FLOAT32":
-					return ByteArrayHelper.ToFloat32Array(_byteValues);
+					_decodedValues = ByteArrayHelper.ToFloat32Array(_byteValues);
+					break;
 				case "UINT32":
-					return ByteArrayHelper.ToUInt32Array(_byteValues);
+					_decodedValues = ByteArrayHelper.ToUInt32Array(_byteValues);
+					break;
 				case "SINT64":
-					return ByteArrayHelper.ToSInt64Array(_byteValues);
+					_decodedValues = ByteArrayHelper.ToSInt64Array(_byteValues);
+					break;
 				default:
-					return null;
+					break;
 			}
 		}
 

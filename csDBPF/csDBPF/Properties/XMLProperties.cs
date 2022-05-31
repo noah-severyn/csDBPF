@@ -8,8 +8,11 @@ using System.Xml.Linq;
 namespace csDBPF.Properties {
 	public static class XMLProperties {
 		private static readonly Dictionary<uint, XMLExemplarProperty> xmlProperties = new Dictionary<uint, XMLExemplarProperty>();
+		/// <summary>
+		/// Dictionary of all properties from new_properties.xml indexed by their ID.
+		/// </summary>
 		public static ImmutableDictionary<uint, XMLExemplarProperty> AllProperties;
-		private const string xmlPath = "C:\\Users\\Administrator\\OneDrive\\Documents\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml"; //TODO - make this path relative
+		private const string xmlPath = "C:\\Users\\Administrator\\OneDrive\\Documents\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml"; //TODO - make new_properties.xml path relative
 
 
 

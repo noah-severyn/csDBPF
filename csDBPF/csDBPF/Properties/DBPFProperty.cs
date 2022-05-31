@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace csDBPF.Properties {
 	/// <summary>
-	/// An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries.
+	/// An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries. The data for the property is not parsed or decoded until <see cref="DecodeValues"/> is called to set the actual entry data.
 	/// </summary>
 	public abstract partial class DBPFProperty {
 		/// <summary>
@@ -52,12 +52,24 @@ namespace csDBPF.Properties {
 		public abstract byte[] ByteValues { get; set; }
 
 		/// <summary>
-		/// Parse the byte values for this property depending on the property's <see cref="DBPFPropertyDataType"/>.
+		/// This Array of type <see cref="DataType"/> holds the decoded values for this property. It is only set after <see cref="DecodeValues"/> is called on the member.
 		/// </summary>
 		/// <remarks>
-		/// This method can return an array of a variety of numerical data types, so use something like: <code>Array.CreateInstance(DecodeValues().GetType().GetElementType(), NumberOfReps)</code>
+		/// For <see cref="DBPFPropertyString"/> this will always be an array of length 1 with the only value equal to the string value. For <see cref="DBPFPropertyNumber"/> this can be an array of length 1 to <see cref="NumberOfReps"/>.
 		/// </remarks>
-		public abstract object DecodeValues();
+		/// <example>
+		/// To use,
+		/// <code>
+		/// Array values = Array.CreateInstance(property.DataType.PrimitiveDataType, property.NumberOfReps);
+		/// values = property.DecodedValues;
+		/// </code>
+		/// </example>
+		public abstract Array DecodedValues { get; set; }
+
+		/// <summary>
+		/// Parse the byte values for this property to set <see cref="DecodedValues"/>.
+		/// </summary>
+		public abstract void DecodeValues();
 
 		/// <summary>
 		/// Sets the value field to the provided byte array. Also sets numberOfReps to the appropriate value.
@@ -91,6 +103,28 @@ namespace csDBPF.Properties {
 
 
 		//------------- DBPFProperty Methods ------------- \\
+
+
+
+		/// <summary>
+		/// Decodes either Binary or Text encoded data, and returns the property.
+		/// </summary>
+		/// <param name="dData">Byte array of decompressed data</param>
+		/// <param name="offset">Offset (location) to start reading from</param>
+		/// <returns>A <see cref="DBPFProperty"/></returns>
+		public static DBPFProperty DecodeProperty(byte[] dData, int offset = 0) {
+			switch (DBPFEntry.GetEncodingType(dData)) {
+				case 1: //Binary encoding
+					return DecodeProperty_Binary(dData, offset);
+				case 2: //Text encoding
+					return DecodeProperty_Text(dData, offset);
+				default:
+					return null;
+			}
+		}
+
+
+
 		/// <summary>
 		/// Decodes the property from raw binary data at the given offset.
 		/// </summary>
@@ -98,7 +132,7 @@ namespace csDBPF.Properties {
 		/// <param name="offset">Offset to start decoding from</param>
 		/// <returns>The DBPFProperty; null if it cannot be decoded</returns>
 		/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP"/>
-		public static DBPFProperty DecodeProperty_Binary(byte[] dData, int offset = 24) {
+		private static DBPFProperty DecodeProperty_Binary(byte[] dData, int offset = 24) {
 			//The first 24 bytes are features of the entry: ParentCohort TGI and property count. When examining a specific property in the entry we are not concerned about them.
 			if (offset < 24) {
 				offset = 24;
@@ -164,7 +198,7 @@ namespace csDBPF.Properties {
 		/// <param name="dData">Decompressed text data</param>
 		/// <param name="offset">Offset to start decoding from</param>
 		/// <returns>The DBPFProperty; null if cannot be decoded</returns>
-		public static DBPFProperty DecodeProperty_Text(byte[] dData, int offset = 85) {
+		private static DBPFProperty DecodeProperty_Text(byte[] dData, int offset = 85) {
 			//The sequence 0D0A (i.e. {0x0D, 0x0A}) separates each piece of entry header information and each property
 
 			//The first 8 bytes are the fileIdentifier, as usual (EQZT1### etc)
@@ -295,37 +329,6 @@ namespace csDBPF.Properties {
 			return newProperty;
 		}
 
-
-
-		/// <summary>
-		/// Decodes either Binary or Text encoded data, and returns the property.
-		/// </summary>
-		/// <param name="dData">Byte array of decompressed data</param>
-		/// <param name="offset">Offset (location) to start reading from</param>
-		/// <returns>A <see cref="DBPFProperty"/></returns>
-		public static DBPFProperty DecodeExemplarProperty(byte[] dData, int offset = 0) {
-			switch (DBPFEntry.GetEncodingType(dData)) {
-				case 1: //Binary encoding
-					return DecodeProperty_Binary(dData, offset);
-				case 2: //Text encoding
-					return DecodeProperty_Text(dData, offset);
-				default:
-					return null;
-			}
-		}
-
-		///// <summary>
-		///// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar"/>
-		///// </summary>
-		///// <param name="dData"></param>
-		///// <returns></returns>
-		//public static uint GetExemplarType(byte[] dData) {
-		//	ValidateData(dData,1);
-		//	return BitConverter.ToUInt32(dData, 33);
-		//}
-
-
-		
 
 
 		/// <summary>

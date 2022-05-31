@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace csDBPF.Properties {
+	/// <summary>
+	/// This class represents a string property. The difference form <see cref="DBPFPropertyNumber"/> is how the <see cref="ByteValues"/> field is interpreted.
+	/// </summary>
 	public class DBPFPropertyString : DBPFProperty {
 
 		//------------- DBPFPropertyString Fields ------------- \\		
@@ -42,6 +45,17 @@ namespace csDBPF.Properties {
 			set { _byteValues = value; }
 		}
 
+		private Array _decodedValues;
+		public override Array DecodedValues {
+			get {
+				if (_decodedValues is null) {
+					throw new InvalidOperationException("This property must be decoded before it can be analyzed!");
+				}
+				return _decodedValues; 
+			}
+			set { _decodedValues = value; }
+		}
+
 
 
 
@@ -61,9 +75,11 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// Parse the byte values for this property to return a string.
 		/// </summary>
-		/// <returns>A string</returns>
-		public override object DecodeValues() {
-			return ByteArrayHelper.ToAString(_byteValues);
+		/// <returns>An array of length 1, with the only element being the string value</returns>
+		public override void DecodeValues() {
+			string[] result = new string[1];
+			result[0] = ByteArrayHelper.ToAString(_byteValues);
+			_decodedValues = result;
 		}
 
 

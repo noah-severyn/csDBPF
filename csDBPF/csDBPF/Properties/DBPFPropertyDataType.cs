@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace csDBPF.Properties {
+	/// <summary>
+	/// This class stores information related to the possible data types for properties.
+	/// </summary>
+	/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP#ValueType"/>
 	public class DBPFPropertyDataType {
 		private static readonly Dictionary<string, DBPFPropertyDataType> dataTypes = new Dictionary<string, DBPFPropertyDataType>();
 		public static readonly DBPFPropertyDataType SINT32;
@@ -20,7 +24,7 @@ namespace csDBPF.Properties {
 		//------------- DBPFPropertyDataType Fields ------------- \\
 		private string _name;
 		/// <summary>
-		/// Data type identifier
+		/// Data type identifier.
 		/// </summary>
 		public string Name {
 			get { return _name; }
@@ -28,7 +32,7 @@ namespace csDBPF.Properties {
 
 		private ushort _identifyingNumber;
 		/// <summary>
-		/// Numeric value encoded in the exemplar data used to identify the property data type
+		/// Numeric value encoded in the exemplar data used to identify the property data type.
 		/// </summary>
 		public ushort IdentifyingNumber {
 			get { return _identifyingNumber; }
@@ -36,7 +40,7 @@ namespace csDBPF.Properties {
 
 		private int _length;
 		/// <summary>
-		/// Length in bytes of the property
+		/// Length in bytes of the property.
 		/// </summary>
 		public int Length {
 			get { return _length; }
@@ -67,6 +71,9 @@ namespace csDBPF.Properties {
 			_primitiveType = baseType;
 		}
 
+		/// <summary>
+		/// Statically create the dictionary of possible property data types.
+		/// </summary>
 		static DBPFPropertyDataType() {
 			SINT32 = new DBPFPropertyDataType("SINT32", 0x700, 4, Type.GetType("System.Int32"));
 			FLOAT32 = new DBPFPropertyDataType("FLOAT32", 0x900, 4, Type.GetType("System.Double"));
@@ -104,7 +111,7 @@ namespace csDBPF.Properties {
 		/// Returns the <see cref="DBPFPropertyDataType"/> from the specified value.
 		/// </summary>
 		/// <param name="value">Value from raw data</param>
-		/// <returns>Corresponding DBPFPropertyType to the specified value; exception thrown if no result is found</returns>
+		/// <returns>Corresponding DBPFPropertyType to the specified value; exception thrown if no result is found.</returns>
 		public static DBPFPropertyDataType LookupDataType(ushort value) {
 			foreach (DBPFPropertyDataType type in dataTypes.Values) {
 				if (type.IdentifyingNumber == value) {
@@ -113,6 +120,11 @@ namespace csDBPF.Properties {
 			}
 			throw new KeyNotFoundException($"Value {DBPFUtil.UIntToHexString(value, 2)} does not match a known property data type!");
 		}
+		/// <summary>
+		/// Returns the <see cref="DBPFPropertyDataType"/> from the specified name.
+		/// </summary>
+		/// <param name="value">Name of data type</param>
+		/// <returns>Corresponding DBPFPropertyType to the specified value; exception thrown if no result is found.</returns>
 		public static DBPFPropertyDataType LookupDataType(string value) {
 			foreach (DBPFPropertyDataType type in dataTypes.Values) {
 				if (type.Name.ToUpper() == value.ToUpper()) {

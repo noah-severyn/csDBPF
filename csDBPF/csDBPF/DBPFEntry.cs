@@ -202,7 +202,7 @@ namespace csDBPF {
 
 
 		/// <summary>
-		/// Lookup and return the target property from a list of properties.
+		/// Lookup and return a property from a list of properties in the entry.
 		/// </summary>
 		/// <param name="idToGet">Property ID to find</param>
 		/// <param name="properties">Dictionary of properties to search</param>
@@ -219,12 +219,17 @@ namespace csDBPF {
 			}
 			return null;
 		}
-
-
+		/// <summary>
+		/// Lookup and return a property from a list of properties in the entry.
+		/// </summary>
+		/// <param name="name">Name of property</param>
+		/// <returns>DBPFProperty of the match if found; null otherwise</returns>
+		/// <remarks>
+		/// Lookup name is case insensitive and ignores spaces (the XML properties can be inconsistently named).
+		/// </remarks>
 		public DBPFProperty GetProperty(string name) {
-			//TODO - implement GetProperty(string name)
-			//XMLProperties.AllProperties.
-			return null;
+			uint id = XMLProperties.LookupPropertyID(name);
+			return GetProperty(id);
 		}
 
 
@@ -244,7 +249,8 @@ namespace csDBPF {
 			}
 
 			Array propertyType = Array.CreateInstance(property.DataType.PrimitiveDataType, property.NumberOfReps); //Create new array to hold the values
-			propertyType = (Array) property.DecodeValues(); //Set the values from the decoded property
+			property.DecodeValues();
+			propertyType = property.DecodedValues; //Set the values from the decoded property
 			//return unchecked((int) propertyType.GetValue(0)); //We know exemplar type can only hold one value, so grab the first one.... BUT HOW?????????
 			return Convert.ToInt32(propertyType.GetValue(0));
 		}
