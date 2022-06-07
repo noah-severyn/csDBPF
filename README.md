@@ -10,11 +10,11 @@ For Exemplar and Cohort type entries, each entry is then composed of one or more
 
 For other types of entries, the data is interpreted directly from its byte array.
 
-## Example: List all the props and textures used on a lot
-The standard DBPFFile constructor requires the full path of the file. We then grab the list of entries and iterate over it to look for Exemplar type entries only. Once we have an Exemplar entry, decode it. The output is a collection of properties. Examine these properties for those of type [LotConfigPropertyLotObjectData](https://www.wiki.sc4devotion.com/index.php?title=LotConfigPropertyLotObject) (ID: 0x88EDC903). Out of these, we want those with tyes 0x1 (props) and 0x2 (textures).
-```
-... code here ...
-```
+Note that the data for a particular entry or property will remain in its raw byte form until a `DecodeEntry()` or `DecodeProperty()` function is called to turn the byte data into a useable format.
+
+
+## Code Examples
+Refer to the [wiki](https://github.com/noah-severyn/csDBPF/wiki) for functional code samples and an explanation of how they work.
 
 
 ## Other DBPF Libraries:
