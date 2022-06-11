@@ -145,6 +145,13 @@ namespace csDBPF {
 		}
 
 
+		//! https://github.com/kchapelier/decode-dxt
+		//! https://github.com/BraveSirAndrew/ManagedSquish/blob/master/ManagedSquish/Squish.cs
+		//? https://github.com/castano/nvidia-texture-tools/tree/master/src/nvimage
+		//? https://github.com/nominom/bcnencoder.net
+		//? https://www.c-sharpcorner.com/blogs/convert-image-into-base64-and-retrieve-image-from-base64-using-c-sharp
+
+
 		private class FSHHeader {
 			byte RecordID;
 			int BlockSize; //3 bytes only
