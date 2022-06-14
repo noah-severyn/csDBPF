@@ -8,10 +8,10 @@ namespace csDBPF {
 	/// An abstract form of an entry item of a <see cref="DBPFFile"/>, representing an instance of a subfile that may be contained in a DBPF file. The data for each entry is not parsed or decoded until <see cref="DecodeEntry"/> is called to decompress and set the actual entry data.
 	/// </summary>
 	public partial class DBPFEntry {
-		private const string EQZB1 = "EQZB1###";
-		private const string EQZT1 = "EQZT1###";
-		private const string CQZB1 = "CQZB1###";
-		private const string CQZT1 = "CQZT1###";
+		private const string EQZB = "EQZB";
+		private const string EQZT = "EQZT";
+		private const string CQZB = "CQZB";
+		private const string CQZT = "CQZT";
 
 
 
@@ -272,23 +272,23 @@ namespace csDBPF {
 			if (DBPFCompression.IsCompressed(dData)) {
 				throw new ArgumentException("Data cannot be compressed!");
 			}
-			string fileIdentifier = ByteArrayHelper.ToAString(dData, 0, 8);
+			string fileIdentifier = ByteArrayHelper.ToAString(dData, 0, 4);
 			switch (checkType) {
 				case 1:
-					if (fileIdentifier != EQZB1 && fileIdentifier != CQZB1) {
+					if (fileIdentifier != EQZB && fileIdentifier != CQZB) {
 						throw new ArgumentException("Data provided does not represent an exemplar or cohort property, or is not in binary format!");
 					}
 					return 1;
 				case 2:
-					if (fileIdentifier != EQZT1 && fileIdentifier != CQZT1) {
+					if (fileIdentifier != EQZT && fileIdentifier != CQZT) {
 						throw new ArgumentException("Data provided does not represent an exemplar or cohort property, or is not in text format!");
 					}
 					return 2;
 				case 3:
-					if (fileIdentifier != EQZB1 && fileIdentifier != EQZT1 && fileIdentifier != CQZB1 && fileIdentifier != CQZT1) {
+					if (fileIdentifier != EQZB && fileIdentifier != EQZT && fileIdentifier != CQZB && fileIdentifier != CQZT) {
 						throw new ArgumentException("Data provided does not represent an exemplar or cohort property.");
 					}
-					if (fileIdentifier == EQZB1 || fileIdentifier == CQZB1) {
+					if (fileIdentifier == EQZB || fileIdentifier == CQZB) {
 						return 1;
 					} else {
 						return 2;
