@@ -209,7 +209,7 @@ namespace csDBPF {
 
 
 		public override string ToString() {
-			return $"T:0x{DBPFUtil.UIntToHexString(_type, 8)}, G:0x{DBPFUtil.UIntToHexString(_group, 8)}, I:0x{DBPFUtil.UIntToHexString(_instance, 8)}";
+			return $"0x{DBPFUtil.UIntToHexString(_type, 8)}, 0x{DBPFUtil.UIntToHexString(_group, 8)}, 0x{DBPFUtil.UIntToHexString(_instance, 8)}";
 		}
 
 

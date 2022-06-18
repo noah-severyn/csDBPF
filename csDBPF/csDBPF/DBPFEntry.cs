@@ -166,6 +166,11 @@ namespace csDBPF {
 		/// This is the default function and should be used in most circumstances when there is already data associated with the entry, e.g. when reading from a file.
 		/// </remarks>
 		public void DecodeEntry() {
+
+			//should have something in here to check if there is actually any data associated with the entry besides its header, and if not dont parse or mark for deletion or something else. example an exemplar entry with no properties - byte size = 24 = size of header
+			//although be careful with blank LTEXT - those should exist still
+
+
 			switch (TGI.Label) {
 				case "EXEMPLAR":
 				case "COHORT":
