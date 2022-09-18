@@ -182,20 +182,39 @@ namespace csDBPF {
 				return dData;
 			}
 
+			//Performance calibration constants for compression
+			//TODO - what do these values actually do???
 			const int MAXOFFSET = 0x20000;
 			const int MAXCOPYCOUNT = 0x404;
 			const int QFSMAXITER = 0X80; //used to fine tune the lookup: small values increase the compression for big files
+
+
 			Dictionary<int, ArrayList> cmpmap = new Dictionary<int, ArrayList>(); //contains the latest offset for a combination of two characters
 			byte[] cData = new byte[dData.Length + MAXCOPYCOUNT]; //max size = uncompressedSize + MAXCOPYCOUNT
 
+
+			//Write the header. First 4 bytes are size of header and compressed data. We obviously don't know this yet so skip. Bytes 5-6 are compression code, then bytes 7-9 bytes the decompressed size
+			cData[4] = 0x10;
+			cData[5] = 0xFB;
+			cData[6] = (byte) (dData.Length >> 16);
+			cData[7] = (byte) (dData.Length >> 8);
+			cData[8] = (byte) dData.Length;
+
+			int cPos = 9; //represents the current position in cData
+
+
 			int writeIdx = 9; //leave 9 bytes for the header
 			int lastReadIdx = 0;
-			//ArrayList locsOfCurrentIdx = new ArrayList();
 			ArrayList locsOfCurrentIdx; //DO NOT USE ARRAY LIST USE LIST<T> INSTEAD
 			ArrayList ret;
+
+
+			int copyOffset = 0;
+			int copyCount = 0;
 			int idx = 0;
 			bool end = false;
 
+			//main compression loop
 			while (idx < dData.Length - 3) {
 				//get all compression candidates (list of offsets for all occurrences of the current 3 bytes
 				do {
@@ -219,12 +238,104 @@ namespace csDBPF {
 				//find the longest repeating byte sequence in the index list (for offset copy)
 				int offsetCopyCount = 0;
 				int loopcount = 1;
-				//while (loopcount < locsOfCurrentIdx.Count && loopcount < QFSMAXITER) {
+				while (loopcount < locsOfCurrentIdx.Count && loopcount < QFSMAXITER) {
+					int foundIdx = (int) locsOfCurrentIdx[locsOfCurrentIdx.Count - 1 - loopcount];
+					if (idx - foundIdx >= MAXOFFSET) {
+						break;
+					}
+					loopcount++;
+					offsetCopyCount = 3;
+					while ((dData.Length > idx + copyCount) && (dData[idx + copyCount] == dData[foundIdx + copyCount]) && (copyCount < MAXCOPYCOUNT)) {
+						copyCount++;
+					}
+					if (copyCount > offsetCopyCount) {
+						offsetCopyCount = copyCount;
+						copyOffset = idx - foundIdx;
+					}
+				}
 
-				//}
-				//TODO finish compression implementation https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/util/DBPFPackager.java#L202
 
+				//check if we can compress this
+				if (offsetCopyCount > dData.Length - idx) {
+					offsetCopyCount = idx - dData.Length;
+				}
+				if (offsetCopyCount <= 2) {
+					offsetCopyCount = 0;
+				} else if ((offsetCopyCount == 3) && (copyOffset > 0x400)) { //1024
+					offsetCopyCount = 0;
+				} else if ((offsetCopyCount == 4) && (copyOffset > 0x4000)) {//16384
+					offsetCopyCount = 0;
+				}
+
+				//is this offset compressible? if so do the compression
+				if (offsetCopyCount > 0) {
+					//plain copy
+					while (idx - lastReadIdx >= 4) {
+						copyCount = (idx - lastReadIdx) / 4 - 1;
+						if (copyCount > 0x1B) {
+							copyCount = 0x1B;
+						}
+						cData[cPos++] = (byte) (0xE0 + copyCount);
+						copyCount = 4 * copyCount + 4;
+
+						LZCompliantCopy(ref dData, lastReadIdx, ref cData, cPos, copyCount);
+						lastReadIdx += copyCount;
+						cPos += copyCount;
+					}
+
+					//offset copy
+					copyCount = idx - lastReadIdx;
+					copyOffset--;
+					//2 byte control character
+					if ((offsetCopyCount <= 0x0A) && (copyOffset < 0x400)) {
+						cData[cPos++] = (byte) (((copyOffset >> 8) << 5) + ((offsetCopyCount - 3) << 2) + copyCount);
+						cData[cPos++] = (byte) copyOffset;
+						//3 byte control character
+					} else if ((offsetCopyCount <= 0x43) && (copyOffset < 0x4000)) {
+						cData[cPos++] = (byte) (0x80 + (offsetCopyCount - 4));
+						cData[cPos++] = (byte) ((copyCount << 6) + (copyOffset >> 8));
+						cData[cPos++] = (byte) copyOffset;
+						//4 byte control character
+					} else if ((offsetCopyCount <= MAXCOPYCOUNT) && (copyOffset < MAXOFFSET)) {
+						cData[cPos++] = (byte) (0xc0 + ((copyOffset >> 16) << 4) + (((offsetCopyCount - 5) >> 8) << 2) + copyCount);
+						cData[cPos++] = (byte) ((copyOffset >> 8) & 0xff);
+						cData[cPos++] = (byte) (copyOffset & 0xff);
+						cData[cPos++] = (byte) ((offsetCopyCount - 5) & 0xff);
+					}
+
+					//do the offset copy
+					LZCompliantCopy(ref dData, lastReadIdx, ref cData, cPos, copyCount);
+					cPos += copyCount;
+					lastReadIdx += copyCount;
+					lastReadIdx += offsetCopyCount;
+				}
 			}
+
+			//Add end record
+			idx = dData.Length;
+			while (idx - lastReadIdx >= 4) {
+				copyCount = (idx - lastReadIdx) / 4 - 1;
+				if (copyCount > 0x1B) {
+					copyCount = 0x1B;
+				}
+				cData[cPos++] = (byte) (0xE0 + copyCount);
+				copyCount = 4 * copyCount + 4;
+
+				LZCompliantCopy(ref dData, lastReadIdx, ref cData, cPos, copyCount);
+				lastReadIdx += copyCount;
+				cPos += copyCount;
+			}
+
+			copyCount = idx - lastReadIdx;
+			cData[cPos++] = (byte) (0xFC + copyCount);
+			LZCompliantCopy(ref dData, lastReadIdx, ref cData, cPos, copyCount);
+			cPos += copyCount;
+			lastReadIdx += copyCount;
+
+			//write header for the compressed data
+			//set compressed size
+			//...
+
 			throw new NotImplementedException();
 		}
 
