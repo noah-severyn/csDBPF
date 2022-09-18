@@ -96,6 +96,13 @@ namespace csDBPF {
 				CollectionAssert.AreEquivalent(notcompresseddata, DBPFCompression.Decompress(notcompresseddata));
 				CollectionAssert.AreEquivalent(decompresseddata, DBPFCompression.Decompress(compresseddata));
 			}
+
+			[TestMethod]
+			public void Test_026_DBPFCompression_Compress() {
+				//CollectionAssert.AreEqual(notcompresseddata, DBPFCompression.Compress(notcompresseddata));
+				CollectionAssert.AreEqual(compresseddata, DBPFCompression.Compress(compresseddata));
+				CollectionAssert.AreEqual(compresseddata, DBPFCompression.Compress(decompresseddata));
+			}
 		}
 
 		// 03x Test Methods for ByteArrayHelper class

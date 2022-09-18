@@ -87,8 +87,8 @@ namespace csDBPF {
 			byte[] dData = new byte[GetDecompressedSize(cData)]; //Set destination array of decompressed data
 			int dPos = 0;
 
-			byte ctrlByte1 = 0; //The control character (CC) determines which type of decompression algorithm needs to be performed; overall CC can be 1 to 4 bytes, depending on byte1 of CC
-			int cPos = 9; //bytes 0-1 are header identifier, 2-4 are uncompressed size, 5-8 are unused by SC4
+			byte ctrlByte1 = 0; //The control character (CC) determines which type of decompression algorithm needs to be performed; CC can be 1 to 4 bytes. CC length known from byte1 of CC.
+			int cPos = 9; //bytes 0-3 are compressed size, 4-5 are header identifier, 6-8 are uncompressed size
 
 			while (cPos < cData.Length && ctrlByte1 < 0xFC) {
 				ctrlByte1 = cData[cPos]; //this is byte0 = the first byte of the CC
@@ -190,25 +190,49 @@ namespace csDBPF {
 				return dData;
 			}
 
+			//Performance calibration constants for compression.
+			const int QFSMAXITER = 0x80;
 			const int MAXOFFSET = 0x20000;
 			const int MAXCOPYCOUNT = 0x404;
-			const int QFSMAXITER = 0X80; //used to fine tune the lookup: small values increase the compression for big files
+			
+			byte[] cData = new byte[dData.Length + MAXCOPYCOUNT];
 			Dictionary<int, ArrayList> cmpmap = new Dictionary<int, ArrayList>(); //contains the latest offset for a combination of two characters
-			byte[] cData = new byte[dData.Length + MAXCOPYCOUNT]; //max size = uncompressedSize + MAXCOPYCOUNT
+																				  
+			//Write the header. First 4 bytes are size of header and compressed data. We obviously don't know this yet so skip. Bytes 5-6 are compression code, then bytes 7-9 bytes the decompressed size
+			cData[4] = 0x10;
+			cData[5] = 0xFB;
+			cData[6] = (byte) (dData.Length >> 16);
+			cData[7] = (byte) (dData.Length >> 8);
+			cData[8] = (byte) dData.Length;
 
-			int writeIdx = 9; //leave 9 bytes for the header
+			int cPos = 9; //represents the current position in cData
+
+			//This is the occurrence table where integers are stored for every input position
+			//int[] offsetToLastOccurence = new int[256];
+			//Array.Fill(offsetToLastOccurence, -1);
+
+			//for (int idx = 0; idx < dData.Length; idx++) {
+
+			//}
+
+
+
+
+
+
 			int lastReadIdx = 0;
-			//ArrayList locsOfCurrentIdx = new ArrayList();
 			ArrayList locsOfCurrentIdx;
 			int copyOffset = 0;
 			int copyCount = 0;
-			int idx = -1;
+			int idx = 0;
 			bool end = false;
 
+
+			//main compression loop
 			while (idx < dData.Length - 3) {
-				//get all compression candidates (list of offsets for all occurrences of the current 3 bytes)
+				//get all compression candidates(list of offsets for all occurrences of the current 3 bytes)
 				do {
-					idx++;
+
 					if (idx >= dData.Length - 2) {
 						end = true;
 						break;
@@ -220,16 +244,25 @@ namespace csDBPF {
 						cmpmap.Add(mapindex, locsOfCurrentIdx);
 					}
 					locsOfCurrentIdx.Add(idx);
+					idx++;
 				} while (idx < lastReadIdx);
 				if (end) {
 					break;
 				}
 
+
+
+				//return null;
+
+
+
+				locsOfCurrentIdx = new ArrayList();
+
 				//find the longest repeating byte sequence in the index list (for offset copy)
 				int offsetCopyCount = 0;
 				int loopcount = 1;
 				while (loopcount < locsOfCurrentIdx.Count && loopcount < QFSMAXITER) {
-					int foundIdx = locsOfCurrentIdx((locsOfCurrentIdx.Count - 1) - loopcount);
+					int foundIdx = (int) locsOfCurrentIdx[locsOfCurrentIdx.Count - 1 - loopcount];
 					if (idx - foundIdx >= MAXOFFSET) {
 						break;
 					}
@@ -251,13 +284,13 @@ namespace csDBPF {
 				}
 				if (offsetCopyCount <= 2) {
 					offsetCopyCount = 0;
-				} else if ((offsetCopyCount == 3 ) && (copyOffset > 0x400)) { //1024
+				} else if ((offsetCopyCount == 3) && (copyOffset > 0x400)) { //1024
 					offsetCopyCount = 0;
 				} else if ((offsetCopyCount == 4) && (copyOffset > 0x4000)) {//16384
 					offsetCopyCount = 0;
 				}
 
-				//is this offset compressable? if so do the compression
+				//is this offset compressible? if so do the compression
 				if (offsetCopyCount > 0) {
 					//plain copy
 					while (idx - lastReadIdx >= 4) {
@@ -265,34 +298,37 @@ namespace csDBPF {
 						if (copyCount > 0x1B) {
 							copyCount = 0x1B;
 						}
-						cData[writeIdx++] = (byte) (0xE0 + copyCount);
+						cData[cPos++] = (byte) (0xE0 + copyCount);
 						copyCount = 4 * copyCount + 4;
 
-						LZCompliantCopy(ref dData, lastReadIdx, ref cData, writeIdx, copyCount);
+						LZCompliantCopy(ref dData, lastReadIdx, ref cData, cPos, copyCount);
 						lastReadIdx += copyCount;
-						writeIdx += copyCount;
+						cPos += copyCount;
 					}
 
 					//offset copy
 					copyCount = idx - lastReadIdx;
 					copyOffset--;
+					//2 byte control character
 					if ((offsetCopyCount <= 0x0A) && (copyOffset < 0x400)) {
-						cData[writeIdx++] = (byte) (((copyOffset >> 8) << 5) + ((offsetCopyCount - 3) << 2) + copyCount);
-						cData[writeIdx++] = (byte) copyOffset;
+						cData[cPos++] = (byte) (((copyOffset >> 8) << 5) + ((offsetCopyCount - 3) << 2) + copyCount);
+						cData[cPos++] = (byte) copyOffset;
+						//3 byte control character
 					} else if ((offsetCopyCount <= 0x43) && (copyOffset < 0x4000)) {
-						cData[writeIdx++] = (byte) (0x80 + (offsetCopyCount - 4));
-						cData[writeIdx++] = (byte) ((copyCount << 6) + (copyOffset >> 8));
-						cData[writeIdx++] = (byte) copyOffset;
+						cData[cPos++] = (byte) (0x80 + (offsetCopyCount - 4));
+						cData[cPos++] = (byte) ((copyCount << 6) + (copyOffset >> 8));
+						cData[cPos++] = (byte) copyOffset;
+						//4 byte control character
 					} else if ((offsetCopyCount <= MAXCOPYCOUNT) && (copyOffset < MAXOFFSET)) {
-						cData[writeIdx++] = (byte) (0xc0 + ((copyOffset >> 16) << 4) + (((offsetCopyCount - 5) >> 8) << 2) + copyCount);
-						cData[writeIdx++] = (byte) ((copyOffset >> 8) & 0xff);
-						cData[writeIdx++] = (byte) (copyOffset & 0xff);
-						cData[writeIdx++] = (byte) ((offsetCopyCount - 5) & 0xff);
+						cData[cPos++] = (byte) (0xc0 + ((copyOffset >> 16) << 4) + (((offsetCopyCount - 5) >> 8) << 2) + copyCount);
+						cData[cPos++] = (byte) ((copyOffset >> 8) & 0xff);
+						cData[cPos++] = (byte) (copyOffset & 0xff);
+						cData[cPos++] = (byte) ((offsetCopyCount - 5) & 0xff);
 					}
 
 					//do the offset copy
-					LZCompliantCopy(ref dData, lastReadIdx, ref cData, writeIdx, copyCount);
-					writeIdx += copyCount;
+					LZCompliantCopy(ref dData, lastReadIdx, ref cData, cPos, copyCount);
+					cPos += copyCount;
 					lastReadIdx += copyCount;
 					lastReadIdx += offsetCopyCount;
 				}
@@ -305,18 +341,18 @@ namespace csDBPF {
 				if (copyCount > 0x1B) {
 					copyCount = 0x1B;
 				}
-				cData[writeIdx++] = (byte) (0xE0 + copyCount);
+				cData[cPos++] = (byte) (0xE0 + copyCount);
 				copyCount = 4 * copyCount + 4;
 
-				LZCompliantCopy(ref dData, lastReadIdx, ref cData, writeIdx, copyCount);
+				LZCompliantCopy(ref dData, lastReadIdx, ref cData, cPos, copyCount);
 				lastReadIdx += copyCount;
-				writeIdx += copyCount;
+				cPos += copyCount;
 			}
 
 			copyCount = idx - lastReadIdx;
-			cData[writeIdx++] = (byte) (0xFC + copyCount);
-			LZCompliantCopy(ref dData, lastReadIdx, ref cData, writeIdx, copyCount);
-			writeIdx += copyCount;
+			cData[cPos++] = (byte) (0xFC + copyCount);
+			LZCompliantCopy(ref dData, lastReadIdx, ref cData, cPos, copyCount);
+			cPos += copyCount;
 			lastReadIdx += copyCount;
 
 			//write header for the compressed data
