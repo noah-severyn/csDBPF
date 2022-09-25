@@ -596,22 +596,23 @@ namespace csDBPF_Test {
 
 			[TestMethod]
 			public void Test_110a_DecodeExemplarEntries() {
-				List<DBPFProperty> propertiesKnown = new List<DBPFProperty>();
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 24));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 37));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 70));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 115));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 125));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 135));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 148));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 273));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 286));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 296));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 309));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 322));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 335));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 384));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 433));
+				List<DBPFProperty> propertiesKnown = new List<DBPFProperty> {
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 24),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 37),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 70),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 115),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 125),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 135),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 148),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 273),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 286),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 296),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 309),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 322),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 335),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 384),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 433)
+				};
 
 				DBPFEntry entry = new DBPFEntry(DBPFTGI.EXEMPLAR);
 				entry.DecodeEntry(TestArrays.decompresseddata_b);
@@ -640,26 +641,27 @@ namespace csDBPF_Test {
 
 			[TestMethod]
 			public void Test_111_ParseAllEntries() {
-				List<DBPFProperty> propertiesKnown = new List<DBPFProperty>();
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 24));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 37));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 70));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 115));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 125));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 135));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 148));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 273));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 286));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 296));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 309));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 322));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 335));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 384));
-				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 433));
+				List<DBPFProperty> propertiesKnown = new List<DBPFProperty> {
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 24),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 37),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 70),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 115),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 125),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 135),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 148),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 273),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 286),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 296),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 309),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 322),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 335),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 384),
+					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 433)
+				};
 
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 
-				DBPFEntry entry0 = (DBPFEntry) dbpf.ListOfEntries[0];
+				DBPFEntry entry0 = dbpf.ListOfEntries[0];
 				entry0.DecodeEntry();
 				for (int idx = 0; idx < propertiesKnown.Count; idx++) {
 					DBPFProperty outk = propertiesKnown[idx];
@@ -671,11 +673,11 @@ namespace csDBPF_Test {
 					CollectionAssert.AreEqual(outk.ByteValues, outr.ByteValues);
 				}
 
-				DBPFEntry entry1 = (DBPFEntry) dbpf.ListOfEntries[1];
+				DBPFEntry entry1 = dbpf.ListOfEntries[1];
 				entry1.DecodeEntry();
 				Assert.AreEqual("Parks Aura (by Cori)", ByteArrayHelper.ToAString(entry1.DecodedData));
 
-				DBPFEntry entry11 = (DBPFEntry) dbpf.ListOfEntries[dbpf.ListOfEntries.Count - 2];
+				DBPFEntry entry11 = dbpf.ListOfEntries[dbpf.ListOfEntries.Count - 2];
 				entry11.DecodeEntry();
 				Assert.AreEqual("+100  to +165", ByteArrayHelper.ToAString(entry11.DecodedData));
 			}
@@ -684,8 +686,8 @@ namespace csDBPF_Test {
 			[TestMethod]
 			public void Test_112_ParseBuildingExemplar() {
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\SC4 MODPACC\\B62\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
-				OrderedDictionary entries = dbpf.ListOfEntries;
-				DBPFEntry entry = (DBPFEntry) entries[0];
+				List<DBPFEntry> entries = dbpf.ListOfEntries;
+				DBPFEntry entry = entries[0];
 				entry.DecodeEntry();
 
 				//uint[] val = (uint[]) properties[0].DecodeValues();

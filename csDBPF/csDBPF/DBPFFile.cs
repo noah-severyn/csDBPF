@@ -19,8 +19,8 @@ namespace csDBPF {
 	public class DBPFFile {
 		public DBPFHeader Header;
 		public FileInfo File;
-		public OrderedDictionary ListOfEntries; //TODO - make these unmodifiable outside of this scope. see (Java) Collections.unmodifiableSet
-		public Dictionary<uint, DBPFTGI> ListOfTGIs; //TODO - make these unmodifiable outside of this scope. see (Java) Collections.unmodifiableSet
+		public List<DBPFEntry> ListOfEntries; //TODO - make these unmodifiable outside of this scope. see https://stackoverflow.com/a/1710910/10802255
+		public List<DBPFTGI> ListOfTGIs; //TODO - make these unmodifiable outside of this scope. see https://stackoverflow.com/a/1710910/10802255
 
 		//------------- BEGIN DBPFFile.Header ------------- \\
 		/// <summary>
@@ -164,8 +164,8 @@ namespace csDBPF {
 		public DBPFFile(string filePath) {
 			File = new FileInfo(filePath);
 			Header = new DBPFHeader();
-			ListOfEntries = new OrderedDictionary();
-			ListOfTGIs = new Dictionary<uint, DBPFTGI>();
+			ListOfEntries = new List<DBPFEntry>();
+			ListOfTGIs = new List<DBPFTGI>();
 
 			bool map = false;
 			if (map) {
@@ -226,7 +226,7 @@ namespace csDBPF {
 				}
 
 				//Check for a DIR Record, aka the list of all compressed files (https://www.wiki.sc4devotion.com/index.php?title=DBDF)
-				foreach (DBPFEntry entry in ListOfEntries.Values) {
+				foreach (DBPFEntry entry in ListOfEntries) {
 					if (entry.TGI.MatchesKnownTGI(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
 						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
 						int numRecords = (int) entry.CompressedSize / 16;
@@ -239,7 +239,7 @@ namespace csDBPF {
 				}
 
 				//Populate data for non directory entries
-				foreach (DBPFEntry entry in ListOfEntries.Values) {
+				foreach (DBPFEntry entry in ListOfEntries) {
 					if (!entry.TGI.MatchesKnownTGI(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
 						byte[] readData = new byte[entry.UncompressedSize];
 						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
@@ -261,7 +261,7 @@ namespace csDBPF {
 
 
 			//Parse the properties of each entry
-			foreach (DBPFEntry entry in ListOfEntries.Values) {
+			foreach (DBPFEntry entry in ListOfEntries) {
 				//GetSubfileFormat(DBPFCompression.Decompress(entry.data));
 			}
 		}
@@ -275,8 +275,8 @@ namespace csDBPF {
 			if (entry == null) {
 				throw new ArgumentNullException();
 			}
-			ListOfEntries.Add(entry.IndexPos, entry);
-			ListOfTGIs.Add(entry.IndexPos, entry.TGI);
+			ListOfEntries.Add(entry);
+			ListOfTGIs.Add(entry.TGI);
 		}
 
 
