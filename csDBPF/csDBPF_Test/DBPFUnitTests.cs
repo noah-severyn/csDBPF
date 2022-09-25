@@ -32,11 +32,11 @@ namespace csDBPF_Test {
 			[TestMethod]
 			public void Test_010_DBPFUtil_IsFileDBPF() {
 				Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_GraphModd. V2.dat"));
-				Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\CAS_AutoHistorical_v0.0.2.dat"));
-				Assert.IsFalse(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\CAS_AutoHistorical_v0.0.2.dll"));
-				Assert.IsFalse(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\NBVC_Surfer\\nbvc.jpg"));
-				Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\!Deps\\BSC MEGA Props - Gascooker Vol01.dat"));
-				Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\UK Bungelow\\BungelowA10-0x5ad0e817_0x55278ec9_0x30000.sc4model"));
+				Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dat"));
+				Assert.IsFalse(DBPFUtil.IsFileDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll"));
+				Assert.IsFalse(DBPFUtil.IsFileDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.jpg"));
+				Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\!Deps 2\\PLOP_1x1_blank_602135f4.SC4Lot"));
+				//Assert.IsTrue(DBPFUtil.IsFileDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\mntoes\\UK Bungelow\\BungelowA10-0x5ad0e817_0x55278ec9_0x30000.sc4model"));
 			}
 
 			[TestMethod]
@@ -250,17 +250,17 @@ namespace csDBPF_Test {
 			public void Test_056a_DBPFTGI_ModifyTGIusingDBPFTGI() {
 				DBPFTGI exemplar = new DBPFTGI(0x6534284a, 0, 0);
 				DBPFTGI exemplar2 = exemplar.ModifyTGI(DBPFTGI.EXEMPLAR_AVENUE);
-				Assert.AreEqual("T:0x6534284A, G:0xCB730FAC, I:0x00000000", exemplar2.ToString());
+				Assert.AreEqual("0x6534284A, 0xCB730FAC, 0x00000000", exemplar2.ToString());
 				Assert.AreEqual(exemplar.ToString(), exemplar.ModifyTGI(DBPFTGI.NULLTGI).ToString());
 				DBPFTGI exemplar4 = new DBPFTGI(0, 2, 3);
-				Assert.AreEqual("T:0xCA63E2A3, G:0x4A5E8EF6, I:0x00000003", exemplar4.ModifyTGI(DBPFTGI.LUA).ToString());
+				Assert.AreEqual("0xCA63E2A3, 0x4A5E8EF6, 0x00000003", exemplar4.ModifyTGI(DBPFTGI.LUA).ToString());
 			}
 
 			[TestMethod]
 			public void Test_056b_DBPFTGI_ModifyTGIusingUint() {
 				DBPFTGI exemplar = new DBPFTGI(0x6534284a, 0, 1000001);
-				Assert.AreEqual("T:0x6534284A, G:0x00000000, I:0x00000064", exemplar.ModifyTGI(null, null, 100).ToString());
-				Assert.AreEqual("T:0x00000064, G:0x00000064, I:0x00000064", exemplar.ModifyTGI(100, 100, 100).ToString());
+				Assert.AreEqual("0x6534284A, 0x00000000, 0x00000064", exemplar.ModifyTGI(null, null, 100).ToString());
+				Assert.AreEqual("0x00000064, 0x00000064, 0x00000064", exemplar.ModifyTGI(100, 100, 100).ToString());
 			}
 		}
 
@@ -589,37 +589,35 @@ namespace csDBPF_Test {
 			[TestMethod]
 			public void Test_102_DBPFFile_NotValidDBPF() {
 				//These should fail : not valid DBPF file
-				Exception ex = Assert.ThrowsException<Exception>(() => new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\CAS_AutoHistorical_v0.0.2.dll"));
+				Exception ex = Assert.ThrowsException<Exception>(() => new DBPFFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll"));
 				Assert.IsTrue(ex.Message.Contains("File is not a DBPF file!"));
 				//example: Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => account.Debit(debitAmount));
 			}
 
 			[TestMethod]
 			public void Test_110a_DecodeExemplarEntries() {
-				Dictionary<int, DBPFProperty> propertiesKnown = new Dictionary<int, DBPFProperty>();
-				propertiesKnown.Add(0, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 24));
-				propertiesKnown.Add(1, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 37));
-				propertiesKnown.Add(2, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 70));
-				propertiesKnown.Add(3, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 115));
-				propertiesKnown.Add(4, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 125));
-				propertiesKnown.Add(5, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 135));
-				propertiesKnown.Add(6, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 148));
-				propertiesKnown.Add(7, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 273));
-				propertiesKnown.Add(8, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 286));
-				propertiesKnown.Add(9, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 296));
-				propertiesKnown.Add(10, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 309));
-				propertiesKnown.Add(11, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 322));
-				propertiesKnown.Add(12, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 335));
-				propertiesKnown.Add(13, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 384));
-				propertiesKnown.Add(14, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 433));
+				List<DBPFProperty> propertiesKnown = new List<DBPFProperty>();
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 24));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 37));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 70));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 115));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 125));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 135));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 148));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 273));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 286));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 296));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 309));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 322));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 335));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 384));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 433));
 
 				DBPFEntry entry = new DBPFEntry(DBPFTGI.EXEMPLAR);
 				entry.DecodeEntry(TestArrays.decompresseddata_b);
-
-				CollectionAssert.AreEqual(propertiesKnown.Keys, entry.ListOfProperties.Keys);
-				foreach (int key in propertiesKnown.Keys) {
-					propertiesKnown.TryGetValue(key, out DBPFProperty outk);
-					entry.ListOfProperties.TryGetValue(key, out DBPFProperty outr);
+				for (int idx = 0; idx < propertiesKnown.Count; idx++) {
+					DBPFProperty outk = entry.ListOfProperties[idx];
+					DBPFProperty outr = entry.ListOfProperties[idx];
 					Assert.AreEqual(outk.ID, outr.ID);
 					Assert.AreEqual(outk.NumberOfReps, outr.NumberOfReps);
 					Assert.AreEqual(outk.DataType, outr.DataType);
@@ -642,31 +640,30 @@ namespace csDBPF_Test {
 
 			[TestMethod]
 			public void Test_111_ParseAllEntries() {
-				Dictionary<int, DBPFProperty> propertiesKnown = new Dictionary<int, DBPFProperty>();
-				propertiesKnown.Add(0, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 24));
-				propertiesKnown.Add(1, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 37));
-				propertiesKnown.Add(2, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 70));
-				propertiesKnown.Add(3, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 115));
-				propertiesKnown.Add(4, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 125));
-				propertiesKnown.Add(5, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 135));
-				propertiesKnown.Add(6, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 148));
-				propertiesKnown.Add(7, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 273));
-				propertiesKnown.Add(8, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 286));
-				propertiesKnown.Add(9, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 296));
-				propertiesKnown.Add(10, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 309));
-				propertiesKnown.Add(11, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 322));
-				propertiesKnown.Add(12, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 335));
-				propertiesKnown.Add(13, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 384));
-				propertiesKnown.Add(14, DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 433));
+				List<DBPFProperty> propertiesKnown = new List<DBPFProperty>();
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 24));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 37));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 70));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 115));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 125));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 135));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 148));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 273));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 286));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 296));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 309));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 322));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 335));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 384));
+				propertiesKnown.Add(DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 433));
 
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 
 				DBPFEntry entry0 = (DBPFEntry) dbpf.ListOfEntries[0];
 				entry0.DecodeEntry();
-				CollectionAssert.AreEqual(propertiesKnown.Keys, entry0.ListOfProperties.Keys);
-				foreach (int key in propertiesKnown.Keys) {
-					propertiesKnown.TryGetValue(key, out DBPFProperty outk);
-					entry0.ListOfProperties.TryGetValue(key, out DBPFProperty outr);
+				for (int idx = 0; idx < propertiesKnown.Count; idx++) {
+					DBPFProperty outk = propertiesKnown[idx];
+					DBPFProperty outr = entry0.ListOfProperties[idx];
 					Assert.AreEqual(outk.ID, outr.ID);
 					Assert.AreEqual(outk.NumberOfReps, outr.NumberOfReps);
 					Assert.AreEqual(outk.DataType, outr.DataType);

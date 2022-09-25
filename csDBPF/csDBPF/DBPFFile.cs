@@ -364,5 +364,15 @@ namespace csDBPF {
 		//		return sb.ToString();
 		//	}
 		//}
+
+
+
+
+
+
+		//------------- DBPFFile Static Methods ------------- \\
+		public static OrderedDictionary FilterEntries(OrderedDictionary listOfEntries) {
+			throw new NotImplementedException();
+		}
 	}
 }

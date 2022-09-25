@@ -13,7 +13,7 @@ namespace csDBPF {
 		/// </summary>
 		/// <param name="cData">Compressed data</param>
 		/// <returns>Dictionary of <see cref="DBPFProperty"/> indexed by their order in the entry</returns>
-		internal static Dictionary<int, DBPFProperty> DecodeEntry_EXMP(byte[] cData) {
+		internal static List<DBPFProperty> DecodeEntry_EXMP(byte[] cData) {
 			byte[] dData;
 			if (DBPFCompression.IsCompressed(cData)) {
 				dData = DBPFCompression.Decompress(cData);
@@ -21,7 +21,7 @@ namespace csDBPF {
 				dData = cData;
 			}
 
-			Dictionary<int, DBPFProperty> listOfProperties = new Dictionary<int, DBPFProperty>();
+			List<DBPFProperty> listOfProperties = new List<DBPFProperty>();
 
 			//Read cohort TGI info and determine the number of properties in this entry
 			uint parentCohortTID;
@@ -54,7 +54,7 @@ namespace csDBPF {
 			DBPFProperty property;
 			for (int idx = 0; idx < propertyCount; idx++) {
 				property = DBPFProperty.DecodeProperty(dData, pos);
-				listOfProperties.Add(idx, property);
+				listOfProperties.Add(property);
 
 				//Determine which bytes to skip to get to the start of the next property
 				switch (GetEncodingType(dData)) {

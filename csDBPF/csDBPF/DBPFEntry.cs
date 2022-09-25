@@ -88,14 +88,14 @@ namespace csDBPF {
 			set { _byteData = value; }
 		}
 
-		private Dictionary<int, DBPFProperty> _listOfProperties;
+		private List<DBPFProperty> _listOfProperties;
 		/// <summary>
 		/// Dictionary of one or more <see cref="DBPFProperty"/> associated with this entry.
 		/// </summary>
 		/// <remarks>
 		/// Relevant for only Exemplar and Cohort type entries. This is null for all other type entries. Use <see cref="DecodedData"/> for other type entries.
 		/// </remarks>
-		public Dictionary<int, DBPFProperty> ListOfProperties {
+		public List<DBPFProperty> ListOfProperties {
 			get { return _listOfProperties; }
 			set { _listOfProperties = value; }
 		}
@@ -217,7 +217,7 @@ namespace csDBPF {
 				throw new InvalidOperationException("This entry must be decoded before it can be analyzed!");
 			}
 
-			foreach (DBPFProperty property in _listOfProperties.Values) {
+			foreach (DBPFProperty property in _listOfProperties) {
 				if (property.ID == idToGet) {
 					return property;
 				}
