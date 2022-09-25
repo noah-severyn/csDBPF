@@ -207,6 +207,33 @@ namespace csDBPF {
 
 
 		/// <summary>
+		/// Decode all properties in the entry. Only valid for Exemplar/Cohort type entries.
+		/// </summary>
+		public void DecodeAllProperties() {
+			if (!(_tgi.MatchesKnownTGI(DBPFTGI.COHORT) || _tgi.MatchesKnownTGI(DBPFTGI.EXEMPLAR))) {
+				throw new InvalidOperationException("This function can only be called on Exemplar and Cohort type entries!");
+			}
+
+			foreach (DBPFProperty property in _listOfProperties) {
+				property.DecodeValues();
+			}
+		}
+
+
+
+		/// <summary>
+		/// Determine if the entry is the same entry type as the specifified one
+		/// </summary>
+		/// <param name="known"><see cref="DBPFTGI"/> to compare against</param>
+		/// <returns>TRUE if this Entry matches the specified; FALSE otherwise.</returns>
+		/// <remarks>This is a shortcut to accessing DBPFEntry.TGI.MatchesKnownEntryType instead.</remarks>
+		public bool MatchesKnownEntryType(DBPFTGI known) {
+			return _tgi.MatchesKnownTGI(known);
+		}
+
+
+
+		/// <summary>
 		/// Lookup and return a property from a list of properties in the entry.
 		/// </summary>
 		/// <param name="idToGet">Property ID to find</param>

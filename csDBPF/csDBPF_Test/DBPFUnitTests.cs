@@ -213,6 +213,7 @@ namespace csDBPF_Test {
 
 			[TestMethod]
 			public void Test_054_DBPFTGI_MatchesKnownTGI() {
+				//If called from a TGI object
 				DBPFTGI tgi_blank = new DBPFTGI(0, 0, 0);
 				DBPFTGI tgi_exemplar = new DBPFTGI(0x6534284a, 0, 0);
 				DBPFTGI tgi_exemplarRail = new DBPFTGI(0x6534284a, 0xe8347989, 0);
@@ -228,6 +229,24 @@ namespace csDBPF_Test {
 				Assert.IsFalse(tgi_exemplar.MatchesKnownTGI(DBPFTGI.COHORT));
 				Assert.IsTrue(tgi_exemplar.MatchesKnownTGI(DBPFTGI.NULLTGI));
 				Assert.IsFalse(tgi_exemplar.MatchesKnownTGI(DBPFTGI.PNG));
+
+
+				//If called from an Entry object
+				DBPFEntry entry_blank = new DBPFEntry(tgi_blank);
+				DBPFEntry entry_exemplar = new DBPFEntry(tgi_exemplar);
+				DBPFEntry entry_exemplarRail = new DBPFEntry(tgi_exemplarRail);
+				DBPFEntry entry_exemplarRail2 = new DBPFEntry(tgi_exemplarRail2);
+
+				Assert.IsTrue(entry_blank.MatchesKnownEntryType(DBPFTGI.BLANKTGI));
+				Assert.IsTrue(entry_blank.MatchesKnownEntryType(DBPFTGI.NULLTGI));
+
+				Assert.IsTrue(entry_exemplar.MatchesKnownEntryType(DBPFTGI.EXEMPLAR));
+				Assert.IsTrue(entry_exemplarRail.MatchesKnownEntryType(DBPFTGI.EXEMPLAR_RAIL));
+				Assert.IsTrue(entry_exemplarRail2.MatchesKnownEntryType(DBPFTGI.EXEMPLAR_RAIL));
+				Assert.IsTrue(entry_exemplarRail2.MatchesKnownEntryType(DBPFTGI.EXEMPLAR));
+				Assert.IsFalse(entry_exemplar.MatchesKnownEntryType(DBPFTGI.COHORT));
+				Assert.IsTrue(entry_exemplar.MatchesKnownEntryType(DBPFTGI.NULLTGI));
+				Assert.IsFalse(entry_exemplar.MatchesKnownEntryType(DBPFTGI.PNG));
 			}
 
 			[TestMethod]
