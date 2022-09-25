@@ -47,7 +47,6 @@ namespace csDBPF.Properties {
 			GraphControl
 		}
 
-
 		/// <summary>
 		/// The first rep (0) of a LotConfigPropertyLotObject (LCPLO) describes its type. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=LotConfigPropertyLotObject#Specification"/>.
 		/// </summary>
@@ -63,6 +62,10 @@ namespace csDBPF.Properties {
 			NetworkNode
 		}
 
+
+		/// <summary>
+		/// Defines the RCI type for a lot. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
+		/// </summary>
 		public enum LotConfigPropertyPurposeTypes {
 			None = 0,
 			Residential = 1,
@@ -74,6 +77,9 @@ namespace csDBPF.Properties {
 			IndustryHighTech = 8
 		}
 
+		/// <summary>
+		/// Defines the wealth for a lot. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
+		/// </summary>
 		public enum LotConfigPropertyWealthTypes {
 			None,
 			Low,
@@ -81,6 +87,9 @@ namespace csDBPF.Properties {
 			High
 		}
 
+		/// <summary>
+		/// Defines the zone type for a lot (what type of zones the lot will grow on). See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
+		/// </summary>
 		public enum LotConfigPropertyZoneTypes {
 			None,
 			LowDensityR,
@@ -100,10 +109,13 @@ namespace csDBPF.Properties {
 			CivicPlopped
 		}
 
+		/// <summary>
+		/// Defines the road orientation for a lot. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
+		/// </summary>
 		public enum LotConfigPropertyRoadRequirement {
-			RightCorner = 0x0c,
+			Normal = 0x08,
 			LeftCorner = 0x09,
-			Normal = 0x08
+			RightCorner = 0x0C
 		}
 	}
 }
