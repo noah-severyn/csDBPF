@@ -62,5 +62,48 @@ namespace csDBPF.Properties {
 			LandConstraint,
 			NetworkNode
 		}
+
+		public enum LotConfigPropertyPurposeTypes {
+			None = 0,
+			Residential = 1,
+			CommercialService = 2,
+			CommercialOffice = 3,
+			Agriculture = 5,
+			IndustryDirty = 6,
+			IndustryMfg = 7,
+			IndustryHighTech = 8
+		}
+
+		public enum LotConfigPropertyWealthTypes {
+			None,
+			Low,
+			Medium,
+			High
+		}
+
+		public enum LotConfigPropertyZoneTypes {
+			None,
+			LowDensityR,
+			MediumDensityR,
+			HighDensityR,
+			LowDensityC,
+			MediumDensityC,
+			HighDensityC,
+			Agriculture,
+			MediumDensityI,
+			HighDensityI,
+			Military,
+			Airport,
+			Seaport,
+			SpacePort,
+			Landmark,
+			CivicPlopped
+		}
+
+		public enum LotConfigPropertyRoadRequirement {
+			RightCorner = 0x0c,
+			LeftCorner = 0x09,
+			Normal = 0x08
+		}
 	}
 }
