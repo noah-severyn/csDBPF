@@ -10,6 +10,8 @@
     <OutputType>Library</OutputType>
 
     <StartupObject />
+
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
