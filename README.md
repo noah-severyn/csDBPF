@@ -25,4 +25,4 @@ Refer to the [wiki](https://github.com/noah-severyn/csDBPF/wiki) for functional 
 - go: https://github.com/marcboudreau/godbpf
 - python: https://github.com/fbstj/dbpf (also stale C#, c, ... branches are here in varying states of completion, but most are far from complete)
 - php: https://www.wiki.sc4devotion.com/index.php?title=DBPF_Source_Code
-- js: https://github.com/sebamarynissen/sc4/blob/master/lib/dbpf.js
+- js: https://github.com/sebamarynissen/sc4
