@@ -160,17 +160,14 @@ namespace csDBPF {
 
 
 		/// <summary>
-		/// Parses the byte values of the entry depending on the entry's data type. If Exemplar or Cohort sets <see cref="ListOfProperties"/>, otherwise <see cref="DecodedData"/> is set.
+		/// Parses the byte values of the entry depending on the entry's data type. This exposes the list of properties (what properties are present) but does not expose the contents of those properties. If Exemplar or Cohort this sets <see cref="ListOfProperties"/>, otherwise <see cref="DecodedData"/> is set.
 		/// </summary>
 		/// <remarks>
 		/// This is the default function and should be used in most circumstances when there is already data associated with the entry, e.g. when reading from a file.
 		/// </remarks>
 		public void DecodeEntry() {
-
-			//should have something in here to check if there is actually any data associated with the entry besides its header, and if not dont parse or mark for deletion or something else. example an exemplar entry with no properties - byte size = 24 = size of header
+			//TODO - should have something in here to check if there is actually any data associated with the entry besides its header, and if not dont parse or mark for deletion or something else. example an exemplar entry with no properties - byte size = 24 = size of header
 			//although be careful with blank LTEXT - those should exist still
-
-
 			switch (TGI.Label) {
 				case "EXEMPLAR":
 				case "COHORT":
@@ -184,7 +181,7 @@ namespace csDBPF {
 			}
 		}
 		/// <summary>
-		/// Parses the byte values of the entry depending on the entry's data type. If Exemplar or Cohort sets <see cref="ListOfProperties"/>, otherwise <see cref="DecodedData"/> is set.
+		/// Parses the byte values of the entry depending on the entry's data type. This exposes the list of properties (what properties are present) but does not expose the contents of those properties. If Exemplar or Cohort this sets <see cref="ListOfProperties"/>, otherwise <see cref="DecodedData"/> is set.
 		/// </summary>
 		/// <param name="data">Byte data to decode</param>
 		/// <remarks>

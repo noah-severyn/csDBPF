@@ -78,7 +78,7 @@ namespace csDBPF {
 		/// Decodes the LTEXT string from raw data. Data is not compressed.
 		/// </summary>
 		/// <param name="data">Raw data of the LTEXT entry (not compressed)</param>
-		/// <returns>A string</returns>
+		/// <returns>A string; null if the entry cannot be read.</returns>
 		internal static byte[] DecodeEntry_LTEXT(byte[] data) {
 			int pos = 0;
 			ushort numberOfChars = BitConverter.ToUInt16(data, pos);
@@ -86,12 +86,13 @@ namespace csDBPF {
 			ushort textControlChar = ByteArrayHelper.ReadBytesIntoUshort(data, pos);
 			pos += 2;
 			if (textControlChar != 0x0010) {
-				throw new ArgumentException("Data is not valid LTEXT format!");
+				return null;
 			}
 
 			StringBuilder sb = new StringBuilder();
 			for (int idx = 0; idx < numberOfChars; idx++) {
-				sb.Append(BitConverter.ToChar(data, pos));
+				//Important to read two bytes to account for non english unicode characters
+				sb.Append(BitConverter.ToInt16(data, pos));
 				pos += 2;
 			}
 			return ByteArrayHelper.ToByteArray(sb.ToString());

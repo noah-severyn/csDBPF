@@ -133,10 +133,11 @@ namespace csDBPF.Properties {
 		/// <returns>The DBPFProperty; null if it cannot be decoded</returns>
 		/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP"/>
 		private static DBPFProperty DecodeProperty_Binary(byte[] dData, int offset = 24) {
+			//Check for exemplars with no properties
+			if (dData.Length <= 24) return null;
+			
 			//The first 24 bytes are features of the entry: ParentCohort TGI and property count. When examining a specific property in the entry we are not concerned about them.
-			if (offset < 24) {
-				offset = 24;
-			}
+			if (offset < 24) offset = 24;
 
 			//Get the property ID
 			uint propertyID = BitConverter.ToUInt32(dData, offset);
@@ -145,6 +146,7 @@ namespace csDBPF.Properties {
 			//Get the data value type
 			ushort valueType = BitConverter.ToUInt16(dData, offset);
 			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(valueType);
+			if (dataType is null) return null;
 			offset += 2;
 
 			//Get the property keyType

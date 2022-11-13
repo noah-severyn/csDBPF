@@ -111,31 +111,27 @@ namespace csDBPF.Properties {
 		/// Returns the <see cref="DBPFPropertyDataType"/> from the specified value.
 		/// </summary>
 		/// <param name="value">Value from raw data</param>
-		/// <returns>Corresponding DBPFPropertyType to the specified value; exception thrown if no result is found.</returns>
+		/// <returns>Corresponding DBPFPropertyType to the specified value; null if no result is found.</returns>
 		public static DBPFPropertyDataType LookupDataType(ushort value) {
 			foreach (DBPFPropertyDataType type in dataTypes.Values) {
 				if (type.IdentifyingNumber == value) {
 					return type;
 				}
 			}
-			throw new KeyNotFoundException($"Value {DBPFUtil.UIntToHexString(value, 2)} does not match a known property data type!");
+			return null;
 		}
 		/// <summary>
 		/// Returns the <see cref="DBPFPropertyDataType"/> from the specified name.
 		/// </summary>
 		/// <param name="value">Name of data type</param>
-		/// <returns>Corresponding DBPFPropertyType to the specified value; exception thrown if no result is found.</returns>
+		/// <returns>Corresponding DBPFPropertyType to the specified value; null if no result is found.</returns>
 		public static DBPFPropertyDataType LookupDataType(string value) {
 			foreach (DBPFPropertyDataType type in dataTypes.Values) {
 				if (type.Name.ToUpper() == value.ToUpper()) {
 					return type;
 				}
 			}
-			throw new KeyNotFoundException($"Value {value} does not match a known property data type!");
+			return null;
 		}
-
-
-		
 	}
-
 }

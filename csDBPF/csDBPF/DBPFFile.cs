@@ -227,7 +227,7 @@ namespace csDBPF {
 
 				//Check for a DIR Record, aka the list of all compressed files (https://www.wiki.sc4devotion.com/index.php?title=DBDF)
 				foreach (DBPFEntry entry in ListOfEntries) {
-					if (entry.TGI.MatchesKnownTGI(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
+					if (entry.MatchesKnownEntryType(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
 						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
 						int numRecords = (int) entry.CompressedSize / 16;
 						for (int idx = 0; idx < numRecords; idx++) {
@@ -240,7 +240,7 @@ namespace csDBPF {
 
 				//Populate data for non directory entries
 				foreach (DBPFEntry entry in ListOfEntries) {
-					if (!entry.TGI.MatchesKnownTGI(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
+					if (!entry.MatchesKnownEntryType(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
 						byte[] readData = new byte[entry.UncompressedSize];
 						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
 						readData = br.ReadBytes(readData.Length);
