@@ -6,6 +6,7 @@ using System.Linq;
 using System.IO;
 using System.Diagnostics;
 using csDBPF.Properties;
+using System.Net;
 
 namespace csDBPF {
 	/// <summary>
@@ -24,7 +25,7 @@ namespace csDBPF {
 
 		//------------- BEGIN DBPFFile.Header ------------- \\
 		/// <summary>
-		/// Contains DBPFFile header data, including all related fields.
+		/// Stores key information about the DBPFFile.
 		/// </summary>
 		public class DBPFHeader {
 			private string _identifier;
@@ -41,7 +42,7 @@ namespace csDBPF {
 				set {
 					string identifierDbpf = "DBPF";
 					if (value.CompareTo(identifierDbpf) != 0) {
-						throw new Exception("File is not a DBPF file!");
+						throw new InvalidDataException("File is not a DBPF file!");
 					} else {
 						_identifier = value;
 					}
@@ -51,7 +52,7 @@ namespace csDBPF {
 				get { return _majorVersion; }
 				set {
 					if (value != 1) {
-						throw new Exception("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
+						throw new InvalidDataException("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
 					} else {
 						_majorVersion = value;
 					}
@@ -61,7 +62,7 @@ namespace csDBPF {
 				get { return _minorVersion; }
 				set {
 					if (value != 0) {
-						throw new Exception("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
+						throw new InvalidDataException("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
 					} else {
 						_minorVersion = value;
 					}
@@ -79,7 +80,7 @@ namespace csDBPF {
 				get { return _indexMajorVersion; }
 				set {
 					if (value != 7) {
-						throw new Exception("Unsupported index version. Only 7 is supported for SC4 DBPF files.");
+						throw new InvalidDataException("Unsupported index version. Only 7 is supported for SC4 DBPF files.");
 					} else {
 						_indexMajorVersion = value;
 					}
@@ -100,46 +101,32 @@ namespace csDBPF {
 
 
 			/// <summary>
-			/// Blank constructor used when also creating a new DBPFFile.
+			/// Constructor for creating the file Header by reading the first 48 bytes of the DBPFFile.
 			/// </summary>
-			internal DBPFHeader() { }
+			public DBPFHeader() { }
 
 
 			/// <summary>
-			/// External constructor for creating just a Header for the file. Often used when no other info about the file is required, resulting in much lower overhead as only the few bytes of the file that make up the <see cref="DBPFFile.DBPFHeader"/> are examined.
+			/// Create a new Header. Stores key information about the DBPFFile.
 			/// </summary>
-			/// <param name="filePath"></param>
-			public DBPFHeader(string filePath) {
-				ReadHeader(filePath);
+			/// <param name="br">Stream to read from.</param>
+			/// <returns></returns>
+			/// <exception cref="InvalidDataException">If file is not valid DBPF format.</exception>
+			public DBPFHeader Initialize(BinaryReader br) {
+				Identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
+				MajorVersion = br.ReadUInt32();
+				MinorVersion = br.ReadUInt32();
+				br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
+				DateCreated = br.ReadUInt32();
+				DateModified = br.ReadUInt32();
+				IndexMajorVersion = br.ReadUInt32();
+				IndexEntryCount = br.ReadUInt32();
+				IndexEntryOffset = br.ReadUInt32();
+				IndexSize = br.ReadUInt32();
+
+				return this;
 			}
 
-			/// <summary>
-			/// Read and parse the first 48 bytes of a file.
-			/// </summary>
-			/// <param name="filePath">Full path of file to examine</param>
-			private void ReadHeader(string filePath) {
-				FileInfo file = new FileInfo(filePath);
-				FileStream fs = new FileStream(file.FullName, FileMode.Open); //TODO - https://docs.microsoft.com/en-us/dotnet/standard/io/handling-io-errors
-				BinaryReader br = new BinaryReader(fs);
-
-				try {
-					// Read Header Info
-					Identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
-					MajorVersion = br.ReadUInt32();
-					MinorVersion = br.ReadUInt32();
-					br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
-					DateCreated = br.ReadUInt32();
-					DateModified = br.ReadUInt32();
-					IndexMajorVersion = br.ReadUInt32();
-					IndexEntryCount = br.ReadUInt32();
-					IndexEntryOffset = br.ReadUInt32();
-					IndexSize = br.ReadUInt32();
-				}
-				finally {
-					br.Close();
-					fs.Close();
-				}
-			}
 
 			public override string ToString() {
 				StringBuilder sb = new StringBuilder();
@@ -161,7 +148,7 @@ namespace csDBPF {
 		/// Read from an existing DBPF file and instantiate a new DBPFFile object.
 		/// </summary>
 		/// <param name="filePath">Full path of file to read, including filename and extension.</param>
-		public DBPFFile(string filePath) {
+		private DBPFFile(string filePath) {
 			File = new FileInfo(filePath);
 			Header = new DBPFHeader();
 			ListOfEntries = new List<DBPFEntry>();
@@ -173,8 +160,21 @@ namespace csDBPF {
 			} else {
 				Read(File);
 			}
+		}
 
-
+		/// <summary>
+		/// Creates a new <see cref="DBPFFile"/> if the given filepath points to a file with valid DBPF format.
+		/// </summary>
+		/// <param name="filePath">Full File path to read from</param>
+		/// <returns>A DBPFFile; null if filePath points to a non-DBPF file</returns>
+		/// TODO - I'm not the happiest with this function but its good enough for now
+		public static DBPFFile CreateIfValidDBPF(string filePath) {
+			try {
+				return new DBPFFile(filePath);
+			}
+			catch (InvalidDataException) {
+				return null;
+			}
 		}
 
 
@@ -195,20 +195,11 @@ namespace csDBPF {
 		/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=DBPF#Pseudocode"/>
 		private void Read(FileInfo file) {
 			FileStream fs = new FileStream(file.FullName, FileMode.Open); //TODO - https://docs.microsoft.com/en-us/dotnet/standard/io/handling-io-errors
-			BinaryReader br = new BinaryReader(fs);
+			BinaryReader br = new BinaryReader(fs); 
 
 			try {
 				// Read Header Info
-				Header.Identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
-				Header.MajorVersion = br.ReadUInt32();
-				Header.MinorVersion = br.ReadUInt32();
-				br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
-				Header.DateCreated = br.ReadUInt32();
-				Header.DateModified = br.ReadUInt32();
-				Header.IndexMajorVersion = br.ReadUInt32();
-				Header.IndexEntryCount = br.ReadUInt32();
-				Header.IndexEntryOffset = br.ReadUInt32();
-				Header.IndexSize = br.ReadUInt32();
+				Header = Header.Initialize(br);
 
 				//Read Index Info
 				long len = br.BaseStream.Length;
@@ -254,6 +245,7 @@ namespace csDBPF {
 				}
 
 			}
+
 			finally {
 				br.Close();
 				fs.Close();
@@ -281,7 +273,7 @@ namespace csDBPF {
 
 
 		/// <summary>
-		/// Decodes all entries in the file. See <see cref="DBPFEntry.DecodeEntry"/> for more information
+		/// Decodes all entries in the file. See <see cref="DBPFEntry.DecodeEntry()"/> for more information
 		/// </summary>
 		public void DecodeAllEntries() {
 			foreach (DBPFEntry entry in ListOfEntries) {

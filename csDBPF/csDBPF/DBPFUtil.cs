@@ -16,38 +16,65 @@ namespace csDBPF {
 		/// Filters a list of file paths based on SC4 file extensions.
 		/// </summary>
 		/// <param name="filesToFilter">List of all files to filter through</param>
-		/// <returns>Tuple of List <string> (sc4Files,skippedFiles)</returns>
-		public static (List<string>, List<string>) SortFilesByExtension(List<string> filesToFilter) {
-			List<string> sc4Files = new List<string>();
-			List<string> skippedFiles = new List<string>();
+		/// <param name="examineFileContents">Optionally examine the Header (first 28 bytes) of each file to determine if valid DBPF format. If set to false only the file extension will be examined.</param>
+		/// <returns>Tuple of List&lt;string&gt;(dbpfFiles,skippedFiles)</returns>
+		public static (List<FileInfo>, List<FileInfo>) FilterDBPFFiles(List<FileInfo> filesToFilter, bool examineFileContents) {
+			List<FileInfo> dbpfFiles = new List<FileInfo>();
+			List<FileInfo> skippedFiles = new List<FileInfo>();
 
-			string extension;
-			foreach (string file in filesToFilter) {
-				extension = file.Substring(file.LastIndexOf(".") + 1);
-				if (sc4Extensions.Any(extension.Contains) && IsFileDBPF(file)) { //https://stackoverflow.com/a/2912483/10802255
-					sc4Files.Add(file);
+			foreach (FileInfo file in filesToFilter) {
+				if (!examineFileContents) {
+					if (sc4Extensions.Any(file.Extension.Contains)) {
+						dbpfFiles.Add(file);
+					} else {
+						skippedFiles.Add(file);
+					}
 				} else {
-					skippedFiles.Add(file);
+					if (sc4Extensions.Any(file.Extension.Contains) && IsValidDBPF(file)) { //https://stackoverflow.com/a/2912483/10802255
+						dbpfFiles.Add(file);
+					} else {
+						skippedFiles.Add(file);
+					}
 				}
 			}
 
-			return (sc4Files, skippedFiles);
+			return (dbpfFiles, skippedFiles);
 		}
 
 		/// <summary>
 		/// Examines the file <see cref="DBPFFile.DBPFHeader"/> to determine if the file is valid DBPF or not.
 		/// </summary>
-		/// <param name="fileName">Full path of file</param>
+		/// <param name="file">File to examine.</param>
 		/// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
-		public static bool IsFileDBPF(string fileName) {
+		public static bool IsValidDBPF(FileInfo file) {
+			FileStream fs = new FileStream(file.FullName, FileMode.Open); //TODO - https://docs.microsoft.com/en-us/dotnet/standard/io/handling-io-errors
+			BinaryReader br = new BinaryReader(fs);
+
+			//To determine if the file is DBPF or not, can just look at the first few bytes which make up the header - no need to examine any of the rest of the file.
 			try {
-				//In order to determine if the file is DBPF or not, all we need to look at is first few bytes which make up the header - no need to examine any of the rest of the file, so we just create a Header here instead of a DBPFFile.
-				DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader(fileName);
-				return true;
+				DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader();
+				header.Initialize(br);
 			}
-			catch (Exception) {
+
+			catch (InvalidDataException) {
 				return false;
 			}
+
+			finally {
+				br.Close();
+				fs.Close();
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// Examines the file <see cref="DBPFFile.DBPFHeader"/> to determine if the file is valid DBPF or not.
+		/// </summary>
+		/// <param name="filePath">Full File path of the file to examine.</param>
+		/// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
+		public static bool IsValidDBPF(string filePath) {
+			return IsValidDBPF(new FileInfo(filePath));
 		}
 
 

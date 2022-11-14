@@ -134,6 +134,8 @@ namespace csDBPF {
 		/// <param name="data">Data to parse</param>
 		/// <returns>A string of parsed data</returns>
 		public static string ToAString(byte[] data) {
+			if (data is null) return null;
+
 			return ToAString(data, 0, data.Length);
 		}
 		/// <summary>
@@ -143,6 +145,8 @@ namespace csDBPF {
 		/// <param name="start">Location to start parsing at</param>
 		/// <returns>A string of parsed data</returns>
 		public static string ToAString(byte[] data, int start) {
+			if (data is null) return null;
+
 			return ToAString(data, start, data.Length - start);
 		}
 		/// <summary>
@@ -156,6 +160,8 @@ namespace csDBPF {
 		/// Any non-printable characters are replaced with a period ('.').
 		/// </remarks>
 		public static string ToAString(byte[] data, int start, int length) {
+			if (data is null) return null;
+
 			StringBuilder sb = new StringBuilder();
 			for (int idx = start; idx < start + length; idx++) {
 				//Check to avoid problematic non-printable characters
