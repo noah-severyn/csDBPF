@@ -18,11 +18,13 @@ namespace csDBPF {
 		/// <param name="filesToFilter">List of all files to filter through</param>
 		/// <param name="examineFileContents">Optionally examine the Header (first 28 bytes) of each file to determine if valid DBPF format. If set to false only the file extension will be examined.</param>
 		/// <returns>Tuple of List&lt;string&gt;(dbpfFiles,skippedFiles)</returns>
-		public static (List<FileInfo>, List<FileInfo>) FilterDBPFFiles(List<FileInfo> filesToFilter, bool examineFileContents) {
+		public static (List<FileInfo>, List<FileInfo>) FilterDBPFFiles(List<string> filesToFilter, bool examineFileContents) {
 			List<FileInfo> dbpfFiles = new List<FileInfo>();
 			List<FileInfo> skippedFiles = new List<FileInfo>();
 
-			foreach (FileInfo file in filesToFilter) {
+
+			foreach (string item in filesToFilter) {
+				FileInfo file = new FileInfo(item);
 				if (!examineFileContents) {
 					if (sc4Extensions.Any(file.Extension.Contains)) {
 						dbpfFiles.Add(file);
