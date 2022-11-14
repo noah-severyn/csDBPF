@@ -147,9 +147,9 @@ namespace csDBPF {
 		/// <summary>
 		/// Read from an existing DBPF file and instantiate a new DBPFFile object.
 		/// </summary>
-		/// <param name="filePath">Full path of file to read, including filename and extension.</param>
-		private DBPFFile(string filePath) {
-			File = new FileInfo(filePath);
+		/// <param name="file">File to read.</param>
+		private DBPFFile(FileInfo file) {
+			File = file;
 			Header = new DBPFHeader();
 			ListOfEntries = new List<DBPFEntry>();
 			ListOfTGIs = new List<DBPFTGI>();
@@ -162,15 +162,31 @@ namespace csDBPF {
 			}
 		}
 
+
+
 		/// <summary>
 		/// Creates a new <see cref="DBPFFile"/> if the given filepath points to a file with valid DBPF format.
 		/// </summary>
-		/// <param name="filePath">Full File path to read from</param>
+		/// <param name="filePath">Full file path to read from.</param>
 		/// <returns>A DBPFFile; null if filePath points to a non-DBPF file</returns>
 		/// TODO - I'm not the happiest with this function but its good enough for now
 		public static DBPFFile CreateIfValidDBPF(string filePath) {
 			try {
-				return new DBPFFile(filePath);
+				return new DBPFFile(new FileInfo(filePath));
+			}
+			catch (InvalidDataException) {
+				return null;
+			}
+		}
+		/// <summary>
+		/// Creates a new <see cref="DBPFFile"/> if the given filepath points to a file with valid DBPF format.
+		/// </summary>
+		/// <param name="file">File to read from.</param>
+		/// <returns>A DBPFFile; null if filePath points to a non-DBPF file</returns>
+		/// TODO - I'm not the happiest with this function but its good enough for now
+		public static DBPFFile CreateIfValidDBPF(FileInfo file) {
+			try {
+				return new DBPFFile(file);
 			}
 			catch (InvalidDataException) {
 				return null;
