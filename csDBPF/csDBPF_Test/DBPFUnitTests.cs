@@ -512,6 +512,20 @@ namespace csDBPF_Test {
 
 				prop = DBPFProperty.DecodeProperty(TestArrays.nullproperty_extradata);
 				Assert.AreEqual(null, prop);
+
+				//Use an IRL example
+				DBPFFile jimspack = DBPFFile.CreateIfValidDBPF("C:\\Users\\Administrator\\OneDrive\\SC4 Deps\\Jim CarProp Pack 1.2.dat");
+				jimspack.DecodeAllEntries();
+				
+				DBPFEntry entry = jimspack.GetEntry(0);
+				entry.DecodeAllProperties();
+				Assert.AreEqual(0, entry.ListOfProperties.Count);
+
+				entry = jimspack.GetEntry(178);
+				entry.DecodeAllProperties();
+				Assert.AreEqual(0, entry.ListOfProperties.Count);
+
+
 			}
 
 

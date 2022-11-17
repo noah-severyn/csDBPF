@@ -276,6 +276,22 @@ namespace csDBPF {
 
 
 		/// <summary>
+		/// Reads a DBPF file and maps the file from disk to memory.
+		/// </summary>
+		/// <remarks>
+		/// Serves a similar purpose to <see cref="Read(FileInfo)"/>, but it is capable of writing large amount of entries quicker - suitable for large files and files of which the ______ methods will be called frequently.
+		/// </remarks>
+		/// <see cref="Read(FileInfo)"/>
+		/// <param name="file">File of the DBPF object to be used.</param>
+		private DBPFFile ReadAndMap(FileInfo file) {
+			//this.Read(this.file);
+			throw new NotImplementedException();
+		}
+
+		//TODO - also implement readCached https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFFile.java#L721
+
+
+		/// <summary>
 		/// Adds an entry to the entryMap and the TGI of that entry to the tgiMap.
 		/// </summary>
 		/// <param name="entry">Entry to add</param>
@@ -297,44 +313,30 @@ namespace csDBPF {
 			}
 		}
 
-
 		/// <summary>
-		/// Reads a DBPF file and maps the file from disk to memory.
+		/// Return the nth entry in the file by index.
 		/// </summary>
-		/// <remarks>
-		/// Serves a similar purpose to <see cref="Read(FileInfo)"/>, but it is capable of writing large amount of entries quicker - suitable for large files and files of which the ______ methods will be called frequently.
-		/// </remarks>
-		/// <see cref="Read(FileInfo)"/>
-		/// <param name="file">File of the DBPF object to be used.</param>
-		private DBPFFile ReadAndMap(FileInfo file) {
-			//this.Read(this.file);
+		/// <param name="index">Index position in file.</param>
+		/// <returns></returns>
+		public DBPFEntry GetEntry(int index) {
+			return ListOfEntries[index];
+		}
+		/// <summary>
+		/// Return the entry matching the specified Instance ID.
+		/// </summary>
+		/// <param name="instance">IID to search for</param>
+		/// <returns></returns>
+		public DBPFEntry GetEntry(uint instance) {
+			return ListOfEntries.Find(i => i.TGI.Instance == instance);
+		}
+		/// <summary>
+		/// Return the entry matching the specified TGI set.
+		/// </summary>
+		/// <param name="TGI">TGI set to search for</param>
+		/// <returns></returns>
+		public DBPFEntry GetEntry(DBPFTGI TGI) {
 			throw new NotImplementedException();
 		}
-
-		//TODO - also implement readCached https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFFile.java#L721
-
-
-		//private string GetSubfileFormat(byte[] dData) {
-		//	string identifier;
-		//	StringBuilder sb = new StringBuilder();
-		//	for (int idx = 0; idx < 5; idx++) {
-		//		sb.Append(dData[idx]);
-		//	}
-		//	identifier = sb.ToString();
-
-		//	//Exemplars (EXMP) first 5 bytes EQZB1 or EQZT1
-		//	if (identifier == "EQZB1" || identifier == "EQZT1") {
-		//		return "EXMP";
-		//	}
-
-		//	//Cohorts (EXMP) first 5 bytes CQZB1 or CQZT1
-		//	if (identifier == "CQZB1" || identifier == "CQZT1") {
-		//		return "EXMP";
-		//	}
-
-		//	return null;
-		//}
-
 
 
 
