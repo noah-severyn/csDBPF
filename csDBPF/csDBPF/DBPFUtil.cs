@@ -32,7 +32,7 @@ namespace csDBPF {
 						skippedFiles.Add(file);
 					}
 				} else {
-					if (sc4Extensions.Any(file.Extension.Contains) && IsValidDBPF(file)) { //https://stackoverflow.com/a/2912483/10802255
+					if (IsValidDBPF(file)) { //https://stackoverflow.com/a/2912483/10802255
 						dbpfFiles.Add(file);
 					} else {
 						skippedFiles.Add(file);

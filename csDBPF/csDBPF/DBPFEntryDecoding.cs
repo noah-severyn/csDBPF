@@ -80,6 +80,10 @@ namespace csDBPF {
 		/// <param name="data">Raw data of the LTEXT entry (not compressed)</param>
 		/// <returns>A string; null if the entry cannot be read.</returns>
 		internal static byte[] DecodeEntry_LTEXT(byte[] data) {
+			if (data.Length < 4) {
+				return null;
+			}
+
 			int pos = 0;
 			ushort numberOfChars = BitConverter.ToUInt16(data, pos);
 			pos += 2;
