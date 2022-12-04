@@ -7,6 +7,9 @@ using System.Text;
 using System.Globalization;
 
 namespace csDBPF {
+	/// <summary>
+	/// Collection of miscellaneous utility methods to use with DBPFFiles.
+	/// </summary>
 	public static class DBPFUtil {
 		private static readonly string[] sc4Extensions = { "dat", "sc4lot", "sc4desc", "sc4model" };
 
