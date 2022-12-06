@@ -7,15 +7,17 @@ using System.IO;
 using System.Diagnostics;
 using csDBPF.Properties;
 using System.Net;
+using System.Drawing;
+using csDBPF.EntryTypes;
 
 namespace csDBPF {
 	/// <summary>
 	/// Represents the header data and entry list as read from a DBPF file.
 	/// </summary>
 	/// <remarks>
-	/// At a high level, a <see cref="DBPFFile"/> ("file") is the container for the DBPF data. This takes the form of a dat/sc4lot/sc4model/sc4desc file. Each file is broken into one or more <see cref="DBPFEntry"/> ("entries" or "subfiles"). 
+	/// At a high level, a <see cref="DBPFFile"/> ("file") is the container for the DBPF data. This takes the form of a .dat/.sc4lot/.sc4model/.sc4desc file. Each file is broken into one or more <see cref="DBPFEntry"/> ("entries" or "subfiles"). 
 	/// For Exemplar and Cohort type entries, each entry is composed of one or more <see cref="DBPFProperty"/> ("properties"). Each property corresponds to one of <see cref="XMLExemplarProperty"/> which are generated from the properties XML file. This file stores useful and human friendly information about the property including name, min/max value, default values, etc.
-	/// For other type entries, their data is stored in a byte array, and is interpreted (read) differently depending on the type of the entry.
+	/// For other type entries, their data is stored in a byte array, and is interpreted differently depending on the type of the entry.
 	/// </remarks>
 	public class DBPFFile {
 		public DBPFHeader Header;
@@ -25,7 +27,7 @@ namespace csDBPF {
 
 		//------------- BEGIN DBPFFile.Header ------------- \\
 		/// <summary>
-		/// Stores key information about the DBPFFile.
+		/// Stores key information about the DBPFFile. The Header is the first 48 bytes of the DBPFFile. 
 		/// </summary>
 		public class DBPFHeader {
 			private string _identifier;
@@ -37,6 +39,10 @@ namespace csDBPF {
 			private uint _indexEntryCount;
 			private uint _indexEntryOffset;
 			private uint _indexSize;
+
+			/// <summary>
+			/// File type identifier. Must be "DBPF".
+			/// </summary>
 			public string Identifier {
 				get { return _identifier; }
 				set {
@@ -48,6 +54,9 @@ namespace csDBPF {
 					}
 				}
 			}
+			/// <summary>
+			/// DBPF format major version. Always 1 for SC4.
+			/// </summary>
 			public uint MajorVersion {
 				get { return _majorVersion; }
 				set {
@@ -58,6 +67,9 @@ namespace csDBPF {
 					}
 				}
 			}
+			/// <summary>
+			/// DBPF format minor version. Always 0 for SC4.
+			/// </summary>
 			public uint MinorVersion {
 				get { return _minorVersion; }
 				set {
@@ -68,14 +80,23 @@ namespace csDBPF {
 					}
 				}
 			}
+			/// <summary>
+			/// Creation time in Unix timestamp format.
+			/// </summary>
 			public uint DateCreated {
 				get { return _dateCreated; }
 				set { _dateCreated = value; }
 			}
+			/// <summary>
+			/// Modification time in Unix timestamp format.
+			/// </summary>
 			public uint DateModified {
 				get { return _dateModified; }
 				set { _dateModified = value; }
 			}
+			/// <summary>
+			/// Defines the Index verion. Always 7 for SC4.
+			/// </summary>
 			public uint IndexMajorVersion {
 				get { return _indexMajorVersion; }
 				set {
@@ -86,14 +107,24 @@ namespace csDBPF {
 					}
 				}
 			}
+			/// <summary>
+			/// Number of subfiles within this file.
+			/// </summary>
+			/// <remarks>The index table is very similar to the directory file (DIR) within a DPBF package. The difference being that the Index Table lists every file in the package, whereas the directory file only lists the compressed files within the package. Reader presents a directory file that is a mashup of these two entities, listing every file in the package, as well as indicating whether or not that particular file is compressed. </remarks>
 			public uint IndexEntryCount {
 				get { return _indexEntryCount; }
 				set { _indexEntryCount = value; }
 			}
+			/// <summary>
+			/// Byte location of the first index in the file.
+			/// </summary>
 			public uint IndexEntryOffset {
 				get { return _indexEntryOffset; }
 				set { _indexEntryOffset = value; }
 			}
+			/// <summary>
+			/// Size of the index table in bytes.
+			/// </summary>
 			public uint IndexSize {
 				get { return _indexSize; }
 				set { _indexSize = value; }
@@ -101,38 +132,53 @@ namespace csDBPF {
 
 
 			/// <summary>
-			/// Constructor for creating the file Header by reading the first 48 bytes of the DBPFFile.
+			/// Instantiate a new DBPFHeader. All properties remain unset until one of the Intialize() functions are called.
 			/// </summary>
 			public DBPFHeader() { }
 
 
 			/// <summary>
-			/// Create a new Header. Stores key information about the DBPFFile.
+			/// Initialize Header information from an existing stream.
 			/// </summary>
 			/// <param name="br">Stream to read from.</param>
-			/// <returns></returns>
 			/// <exception cref="InvalidDataException">If file is not valid DBPF format.</exception>
-			public DBPFHeader Initialize(BinaryReader br) {
-				Identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
-				MajorVersion = br.ReadUInt32();
-				MinorVersion = br.ReadUInt32();
+			public void Initialize(BinaryReader br) {
+				_identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
+				_majorVersion = br.ReadUInt32();
+				_minorVersion = br.ReadUInt32();
 				br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
-				DateCreated = br.ReadUInt32();
-				DateModified = br.ReadUInt32();
-				IndexMajorVersion = br.ReadUInt32();
-				IndexEntryCount = br.ReadUInt32();
-				IndexEntryOffset = br.ReadUInt32();
-				IndexSize = br.ReadUInt32();
-
-				return this;
+				_dateCreated = br.ReadUInt32();
+				_dateModified = br.ReadUInt32();
+				_indexMajorVersion = br.ReadUInt32();
+				_indexEntryCount = br.ReadUInt32();
+				_indexEntryOffset = br.ReadUInt32();
+				_indexSize = br.ReadUInt32();
 			}
 
+			/// <summary>
+			/// Initialize Header information with default values.
+			/// </summary>
+			public void InitializeBlank() {
+				_identifier = "DBPF";
+				_majorVersion = 1;
+				_minorVersion = 0;
+				_dateCreated = (uint) DateTimeOffset.Now.ToUnixTimeSeconds();
+				_dateModified = 0;
+				_indexMajorVersion = 7;
+				_indexEntryCount = 0;
+				_indexEntryOffset = 0;
+				_indexSize = 0;
+			}
 
+			/// <summary>
+			/// Returns a string that represents the current object.
+			/// </summary>
+			/// <returns>Returns a string that represents the current object.</returns>
 			public override string ToString() {
 				StringBuilder sb = new StringBuilder();
 				sb.Append($"Version: {MajorVersion}.{MinorVersion}; ");
-				sb.Append($"Created: {DateCreated}; "); //Unix DateTime
-				sb.Append($"Modified: {DateModified}; "); //Unix DateTime
+				sb.Append($"Created: {DateCreated}; ");
+				sb.Append($"Modified: {DateModified}; ");
 				sb.Append($"Index Major Version: {IndexMajorVersion}; ");
 				sb.Append($"Index Entry Count: {IndexEntryCount}; ");
 				sb.Append($"Index Offset Location: {IndexEntryOffset}; ");
@@ -145,57 +191,45 @@ namespace csDBPF {
 
 		//------------- BEGIN DBPFFile ------------- \\
 		/// <summary>
-		/// Read from an existing DBPF file and instantiate a new DBPFFile object.
+		/// Instantiates a DBPFFile from a file path. If the file exists, its contents are read into the new DBPFFile; if the file does not exist then a new DBPFFile is created with default values.
 		/// </summary>
-		/// <param name="file">File to read.</param>
-		private DBPFFile(FileInfo file) {
+		/// <param name="fileName">File to read</param>
+		public DBPFFile(string fileName) : this(new FileInfo(fileName)) {}
+
+		/// <summary>
+		/// Instantiates a DBPFFile from a FileInfo object. If the file exists, its contents are read into the new DBPFFile; if the file does not exist then a new DBPFFile is created with default values.
+		/// </summary>
+		/// <param name="file">File to read</param>
+		public DBPFFile(FileInfo file) {
 			File = file;
 			Header = new DBPFHeader();
 			ListOfEntries = new List<DBPFEntry>();
 			ListOfTGIs = new List<DBPFTGI>();
 
+			if (!file.Exists) {
+				Header.InitializeBlank();
+				return;
+			}
+
 			bool map = false;
-			if (map) {
-				ReadAndMap(File);
-			} else {
-				Read(File);
+			try {
+				if (map) {
+					ReadAndMap(File);
+				} else {
+					Read(File);
+				}
+			} 
+			catch (InvalidDataException) { 
+				
 			}
 		}
-
-
 
 		/// <summary>
-		/// Creates a new <see cref="DBPFFile"/> if the given filepath points to a file with valid DBPF format.
+		/// Returns a string that represents the current object.
 		/// </summary>
-		/// <param name="filePath">Full file path to read from.</param>
-		/// <returns>A DBPFFile; null if filePath points to a non-DBPF file</returns>
-		/// TODO - I'm not the happiest with this function but its good enough for now
-		public static DBPFFile CreateIfValidDBPF(string filePath) {
-			try {
-				return new DBPFFile(new FileInfo(filePath));
-			}
-			catch (InvalidDataException) {
-				return null;
-			}
-		}
-		/// <summary>
-		/// Creates a new <see cref="DBPFFile"/> if the given filepath points to a file with valid DBPF format.
-		/// </summary>
-		/// <param name="file">File to read from.</param>
-		/// <returns>A DBPFFile; null if filePath points to a non-DBPF file</returns>
-		/// TODO - I'm not the happiest with this function but its good enough for now
-		public static DBPFFile CreateIfValidDBPF(FileInfo file) {
-			try {
-				return new DBPFFile(file);
-			}
-			catch (InvalidDataException) {
-				return null;
-			}
-		}
-
-
-		public override string ToString() { //TODO - implement DBPFFile.ToString
-			return base.ToString();
+		/// <returns>Returns a string that represents the current object.</returns>
+		public override string ToString() {
+			return $"{File.Name}: {Header.IndexEntryCount} subfiles";
 		}
 
 
@@ -208,17 +242,20 @@ namespace csDBPF {
 		/// </remarks>
 		/// <param name="file">File of the DBPF object to be used.</param>
 		/// <returns>A new DBPFFile object</returns>
-		/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=DBPF#Pseudocode"/>
+		/// <see ref="https://www.wiki.sc4devotion.com/index.php?title=DBPF#Pseudocode"/>
 		private void Read(FileInfo file) {
 			FileStream fs = new FileStream(file.FullName, FileMode.Open); //TODO - https://docs.microsoft.com/en-us/dotnet/standard/io/handling-io-errors
 			BinaryReader br = new BinaryReader(fs); 
 
 			try {
 				// Read Header Info
-				Header = Header.Initialize(br);
+				Header.Initialize(br);
 
 				//Read Index Info
-				long len = br.BaseStream.Length;
+				List<uint> offsets = new List<uint>();
+				List<uint> sizes = new List<uint>();
+				byte[] byteData;
+
 				br.BaseStream.Seek((Header.IndexEntryOffset), SeekOrigin.Begin);
 				for (int idx = 0; idx < (Header.IndexEntryCount); idx++) {
 					uint typeID = br.ReadUInt32();
@@ -228,38 +265,58 @@ namespace csDBPF {
 					uint size = br.ReadUInt32();
 
 					DBPFTGI tgi = new DBPFTGI(typeID, groupID, instanceID);
-					DBPFEntry entry = new DBPFEntry(tgi, offset, size, (uint) idx);
-					AddEntry(entry);
+					ListOfTGIs.Add(tgi);
+					offsets.Add(offset);
+					sizes.Add(size);
 				}
 
-				//Check for a DIR Record, aka the list of all compressed files (https://www.wiki.sc4devotion.com/index.php?title=DBDF)
-				foreach (DBPFEntry entry in ListOfEntries) {
-					if (entry.MatchesKnownEntryType(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
-						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
-						int numRecords = (int) entry.CompressedSize / 16;
-						for (int idx = 0; idx < numRecords; idx++) {
-							//TODO - set uncompressed size here
-						}
+				for (int idx = 0; idx < ListOfTGIs.Count; idx++) {
+					br.BaseStream.Seek(offsets[idx], SeekOrigin.Begin);
+					byteData = br.ReadBytes((int) sizes[idx]);
+
+					//TODO - should add two levels of label: base and detail
+					switch (ListOfTGIs[idx].) {
+						case "EXEMPLAR":
+							ListOfEntries.Add(new EntryLTEXT(ListOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 
 
+
+						default:
+							break;
 					}
+					ListOfEntries.Add(entry);
 				}
 
-				//Populate data for non directory entries
-				foreach (DBPFEntry entry in ListOfEntries) {
-					if (!entry.MatchesKnownEntryType(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
-						byte[] readData = new byte[entry.UncompressedSize];
-						br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
-						readData = br.ReadBytes(readData.Length);
-						entry.ByteData = readData;
 
-						//After the data is set, we can know the other properties of the DBPFEntry, like isCompressed, compressedSize, etc.
-						entry.IsCompressed = DBPFCompression.IsCompressed(entry.ByteData);
-						entry.CompressedSize = DBPFCompression.GetDecompressedSize(entry.ByteData);
-						
-					}
-				}
 
+				//foreach (DBPFTGI tgi in ListOfTGIs) {
+				//	//Check for a DIR Record, aka the list of all compressed files (https://www.wiki.sc4devotion.com/index.php?title=DBDF)
+				//	//Also a DIR is never compressed so CompressedSize=UncompressedSize
+					
+				//	if (entry.MatchesKnownEntryType(DBPFTGI.DIRECTORY)) { //Type: e86b1eef
+				//		br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
+				//		entry.ByteData = br.ReadBytes((int) entry.CompressedSize);
+				//		entry.IsCompressed = false;
+
+				//		int numRecords = (int) entry.CompressedSize / 16;
+				//	}
+
+				//	//Populate data for non directory entries
+				//	else {
+				//		byte[] readData = new byte[entry.UncompressedSize];
+				//		br.BaseStream.Seek(entry.Offset, SeekOrigin.Begin);
+				//		readData = br.ReadBytes(readData.Length);
+				//		entry.ByteData = readData;
+
+				//		//After the data is set, we can know the other properties of the DBPFEntry, like isCompressed, compressedSize, etc.
+				//		entry.IsCompressed = DBPFCompression.IsCompressed(entry.ByteData);
+				//		if (entry.IsCompressed) {
+				//			entry.CompressedSize = DBPFCompression.GetDecompressedSize(entry.ByteData);
+				//		}
+				//	}
+
+					
+				//}
 			}
 
 			finally {
@@ -291,17 +348,6 @@ namespace csDBPF {
 		//TODO - also implement readCached https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFFile.java#L721
 
 
-		/// <summary>
-		/// Adds an entry to the entryMap and the TGI of that entry to the tgiMap.
-		/// </summary>
-		/// <param name="entry">Entry to add</param>
-		private void AddEntry(DBPFEntry entry) {
-			if (entry == null) {
-				throw new ArgumentNullException();
-			}
-			ListOfEntries.Add(entry);
-			ListOfTGIs.Add(entry.TGI);
-		}
 
 
 		/// <summary>
@@ -338,8 +384,58 @@ namespace csDBPF {
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Saves the current instance to disk using the <see cref="File">File</see> property.
+		/// <param name="file">File to save as</param>
+		/// </summary>
+		public void Save(string? filePath) {
+			FileInfo file;
+			if (filePath is null) {
+				file = File;
+			} else {
+				file = new FileInfo(filePath);
+			}
 
+			using FileStream fs = new(file.FullName, FileMode.Create);
+			//Write Header
+			fs.Write(ByteArrayHelper.ToByteArray(Header.Identifier));
+			fs.Write(BitConverter.GetBytes(Header.MajorVersion));
+			fs.Write(BitConverter.GetBytes(Header.MinorVersion));
+			fs.Write(new byte[12]); //12 bytes are unused
+			fs.Write(BitConverter.GetBytes(Header.DateCreated));
+			fs.Write(BitConverter.GetBytes(Header.DateModified));
+			fs.Write(BitConverter.GetBytes(Header.IndexMajorVersion));
+			fs.Write(BitConverter.GetBytes(Header.IndexEntryCount));
+			fs.Write(BitConverter.GetBytes(Header.IndexEntryOffset));
+			fs.Write(BitConverter.GetBytes(Header.IndexSize));
+			fs.Write(new byte[48]);
 
+			//Write Entries
+			foreach (DBPFEntry entry in ListOfEntries) {
+				fs.Write(entry.ByteData);
+			}
+
+			//Write directory file
+			//foreach (DBPFEntry entry in ListOfEntries) {
+			//	if (entry.IsCompressed) {
+			//		fs.Write(BitConverter.GetBytes(entry.TGI.Type.Value));
+			//		fs.Write(BitConverter.GetBytes(entry.TGI.Group.Value));
+			//		fs.Write(BitConverter.GetBytes(entry.TGI.Instance.Value));
+			//		fs.Write(BitConverter.GetBytes(entry.CompressedSize));
+			//	}
+			//}
+
+			//Write Index
+			//--should be done after all content has been written because we need to know the location of each file in the archive and its size.
+			foreach (DBPFEntry entry in ListOfEntries) {
+				fs.Write(BitConverter.GetBytes(entry.TGI.Type.Value));
+				fs.Write(BitConverter.GetBytes(entry.TGI.Group.Value));
+				fs.Write(BitConverter.GetBytes(entry.TGI.Instance.Value));
+				fs.Write(BitConverter.GetBytes(entry.Offset));
+				fs.Write(BitConverter.GetBytes(entry.CompressedSize));
+
+			}
+		}
 
 
 		//public class DirectDBPFEntry : DBPFEntry {

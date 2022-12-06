@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.IO;
 
 namespace csDBPF_Test {
 	[TestClass]
@@ -514,7 +515,7 @@ namespace csDBPF_Test {
 				Assert.AreEqual(null, prop);
 
 				//Use an IRL example
-				DBPFFile jimspack = DBPFFile.CreateIfValidDBPF("C:\\Users\\Administrator\\OneDrive\\SC4 Deps\\Jim CarProp Pack 1.2.dat");
+				DBPFFile jimspack = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\SC4 Deps\\Jim CarProp Pack 1.2.dat");
 				jimspack.DecodeAllEntries();
 				
 				DBPFEntry entry = jimspack.GetEntry(0);
@@ -620,20 +621,25 @@ namespace csDBPF_Test {
 		[TestClass]
 		public class _1xx_DBPFFile {
 			[TestMethod]
-			public void Test_101_DBPFFile_ValidDBPF() {
-				DBPFFile dbpf = DBPFFile.CreateIfValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+			public void Test_101a_DBPFFile_ValidDBPF() {
+				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 				Assert.AreEqual("DBPF", dbpf.Header.Identifier);
 				Assert.AreEqual((uint) 1, dbpf.Header.MajorVersion);
 				Assert.AreEqual((uint) 0, dbpf.Header.MinorVersion);
 				Assert.AreEqual((uint) 7, dbpf.Header.IndexMajorVersion);
 			}
 
-			//[Ignore]
 			[TestMethod]
-			public void Test_102_DBPFFile_NotValidDBPF() {
-				DBPFFile notdbpf = DBPFFile.CreateIfValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll");
+			public void Test_101b_DBPFFile_NotValidDBPF() {
+				DBPFFile notdbpf = new DBPFFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll");
 				Assert.AreEqual(null, notdbpf);
 			}
+
+			[TestMethod]
+			public void Test_102_DBPFFile_CreateBlank() {
+				
+			}
+
 
 			[TestMethod]
 			public void Test_110a_DecodeExemplarEntries() {
@@ -700,7 +706,7 @@ namespace csDBPF_Test {
 					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 433)
 				};
 
-				DBPFFile dbpf = DBPFFile.CreateIfValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 
 				DBPFEntry entry0 = dbpf.ListOfEntries[0];
 				entry0.DecodeEntry();
@@ -726,7 +732,7 @@ namespace csDBPF_Test {
 			[Ignore]
 			[TestMethod]
 			public void Test_112_ParseBuildingExemplar() {
-				DBPFFile dbpf = DBPFFile.CreateIfValidDBPF("C:\\Users\\Administrator\\OneDrive\\SC4 MODPACC\\B62\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
+				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\SC4 MODPACC\\B62\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
 				List<DBPFEntry> entries = dbpf.ListOfEntries;
 				DBPFEntry entry = entries[0];
 				entry.DecodeEntry();
