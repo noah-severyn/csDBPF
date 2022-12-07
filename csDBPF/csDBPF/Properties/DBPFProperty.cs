@@ -3,12 +3,14 @@ using System.Text;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Collections;
+using csDBPF.Entries;
 
-namespace csDBPF.Properties {
-	/// <summary>
-	/// An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries. The data for the property is not parsed or decoded until <see cref="DecodeValues"/> is called to set the actual entry data.
-	/// </summary>
-	public abstract partial class DBPFProperty {
+namespace csDBPF.Properties
+{
+    /// <summary>
+    /// An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries. The data for the property is not parsed or decoded until <see cref="DecodeValues"/> is called to set the actual entry data.
+    /// </summary>
+    public abstract partial class DBPFProperty {
 		/// <summary>
 		/// Enumeration for special delimiting characters when reading text encoded properties.
 		/// </summary>

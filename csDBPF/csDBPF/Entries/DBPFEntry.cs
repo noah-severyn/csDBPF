@@ -3,13 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace csDBPF {
+namespace csDBPF.Entries {
 	/// <summary>
 	/// An abstract form of an entry item of a <see cref="DBPFFile"/>, representing an instance of a subfile that may be contained in a DBPF file. The data for each entry is not parsed or decoded until <see cref="DecodeEntry"/> is called to decompress and set the actual entry data.
 	/// </summary>
 	public abstract class DBPFEntry {
-		#region Fields
-
 		/// <summary>
 		/// The <see cref="DBPFTGI"/>object representing the file type of the entry.
 		/// </summary>
@@ -63,7 +61,6 @@ namespace csDBPF {
 		/// </remarks>
 		public byte[] ByteData { get; protected set; }
 
-		#endregion Fields
 
 
 		/// <summary>
@@ -76,6 +73,9 @@ namespace csDBPF {
 			IsCompressedNow = true;
 		}
 
+
+
+
 		/// <summary>
 		/// Create a new DBPFEntry object.
 		/// </summary>
@@ -83,7 +83,8 @@ namespace csDBPF {
 		/// <param name="offset">Offset (location) of the entry within the DBPF file</param>
 		/// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
 		/// <param name="index">Entry position in the file, 0-n</param>
-		public DBPFEntry(DBPFTGI tgi, uint offset, uint size, uint index) {
+		/// <param name="bytes">Byte data for this entry</param>
+		public DBPFEntry(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) {
 			if (tgi == null) {
 				TGI = DBPFTGI.NULLTGI;
 			} else {
@@ -92,6 +93,7 @@ namespace csDBPF {
 			Offset = offset;
 			IndexPos = index;
 			CompressedSize = size;
+			ByteData = bytes;
 
 			//The following properties cannot be definitively determined until after the data is read and set, so assume for now
 			UncompressedSize = size;
@@ -100,16 +102,6 @@ namespace csDBPF {
 		}
 
 
-		/// <summary>
-		/// Returns a string that represents the current object.
-		/// </summary>
-		/// <returns>Returns a string that represents the current object.</returns>
-		public override string ToString() {
-			StringBuilder sb = new StringBuilder(TGI.ToString());
-			sb.AppendLine($", Type: {TGI.Label}, IndexPos: {IndexPos}, Offset: {Offset}, uSize: {UncompressedSize}, Compressed: {IsCompressed}, cSize: {CompressedSize} ");
-			return sb.ToString();
-		}
-
 
 		//TODO - should have something in here to check if there is actually any data associated with the entry besides its header, and if not dont parse or mark for deletion or something else. example an exemplar entry with no properties - byte size = 24 = size of header
 		//although be careful with blank LTEXT - those should exist still
@@ -117,6 +109,18 @@ namespace csDBPF {
 		/// Decompresses the data and sets the entry's data object.
 		/// </summary>
 		public abstract void DecodeEntry();
+
+
+
+		/// <summary>
+		/// Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>Returns a string that represents the current object.</returns>
+		public override string ToString() {
+			StringBuilder sb = new StringBuilder(TGI.ToString());
+			sb.AppendLine($", Type: {TGI.Category}, IndexPos: {IndexPos}, Offset: {Offset}, uSize: {UncompressedSize}, Compressed: {IsCompressed}, cSize: {CompressedSize} ");
+			return sb.ToString();
+		}
 
 
 
@@ -142,7 +146,7 @@ namespace csDBPF {
 				IsCompressedNow = false;
 			}
 			string fileIdentifier = ByteArrayHelper.ToAString(ByteData, 0, 4);
-			return (fileIdentifier == "EQZB" || fileIdentifier == "EQZT" || fileIdentifier == "CQZB" || fileIdentifier == "CQZT");
+			return fileIdentifier == "EQZB" || fileIdentifier == "EQZT" || fileIdentifier == "CQZB" || fileIdentifier == "CQZT";
 		}
 	}
 }

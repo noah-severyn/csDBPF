@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace csDBPF.EntryTypes {
+namespace csDBPF.Entries {
 	//https://wiki.sc4devotion.com/index.php?title=LTEXT
 
 
-	public class EntryLTEXT : DBPFEntry {
+	public class DBPFEntryLTEXT : DBPFEntry {
 		private bool _isDecoded;
-		private string _text;
 
+		private string _text;
 		/// <summary>
 		/// Text string for this entry.
 		/// </summary>
 		public string Text {
 			get { return _text; }
-			set { 
+			set {
 				_text = value;
 				ByteData = EncodeEntry(value);
 			}
@@ -26,7 +26,7 @@ namespace csDBPF.EntryTypes {
 
 
 
-		public EntryLTEXT(DBPFTGI tgi, uint offset, uint size, uint index) : base(tgi, offset, size, index) {
+		public DBPFEntryLTEXT(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
 			_text = null;
 			_isDecoded = false;
 		}
@@ -62,12 +62,12 @@ namespace csDBPF.EntryTypes {
 			_text = sb.ToString();
 			_isDecoded = true;
 		}
-		
+
 
 		private static byte[] EncodeEntry(string text) {
 			List<byte> bytes = new List<byte>();
 			bytes.AddRange(BitConverter.GetBytes((ushort) text.Length)); //Number of characters
-			bytes.AddRange(new byte[] { 0x00, 0x10}); //Text control character
+			bytes.AddRange(new byte[] { 0x00, 0x10 }); //Text control character
 			bytes.AddRange(ByteArrayHelper.ToByteArray(text));
 			return bytes.ToArray();
 		}
