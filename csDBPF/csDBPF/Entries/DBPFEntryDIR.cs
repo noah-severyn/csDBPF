@@ -8,7 +8,7 @@ namespace csDBPF.Entries {
 
 	//https://wiki.sc4devotion.com/index.php?title=DBDF
 
-	internal class DBPFEntryDIR : DBPFEntry {
+	public class DBPFEntryDIR : DBPFEntry {
 
 
 

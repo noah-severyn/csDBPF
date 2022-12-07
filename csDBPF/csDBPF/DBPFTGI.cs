@@ -9,7 +9,7 @@ namespace csDBPF {
 		//In general Dictionary items are kept in the order they are added, and since we're not doing a lot of adding/deleting/otherwise sorting, its not as big of a deal and we don't need to use a special type like SortedDictionary
 		//QUESTION - Fix KnownEntries to use sorted dictionary type? https://stackoverflow.com/questions/1453190/does-the-enumerator-of-a-dictionarytkey-tvalue-return-key-value-pairs-in-the
 		//TODO - also make this dictionary immutable
-		private static readonly Dictionary<DBPFTGI, string> KnownEntries = new Dictionary<DBPFTGI, string>();
+		private static readonly List<DBPFTGI> KnownEntries = new List<DBPFTGI>();
 		public static readonly DBPFTGI BLANKTGI; /** BLANKTGI (0, 0, 0) */
 		public static readonly DBPFTGI DIRECTORY; /** Directory file (0xe86b1eef, 0xe86b1eef, 0x286b1f03) */
 		public static readonly DBPFTGI LD; /** LD file (0x6be74c60, 0x6be74c60, 0) */
@@ -58,39 +58,36 @@ namespace csDBPF {
 
 
 		//------------- DBPFTGI Fields ------------- \\
-		private readonly uint? _type;
+		private uint? _type;
 		/// <summary>
-		/// Type ID. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Type_ID">Type ID</see>
+		/// Type ID. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Type_ID">Type ID</see>
 		/// </summary>
-		public uint? Type {
-			get { return _type; }
-			//set { myVar = value; }
-		}
-		
-		private readonly uint? _group;
+		public uint? Type { get; private set; }
+
+		private uint? _group;
 		/// <summary>
-		/// Group ID. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Group_ID">Group ID</see>
+		/// Group ID. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Group_ID">Group ID</see>
 		/// </summary>
-		public uint? Group {
-			get { return _group; }
-			//set { myVar = value; }
-		}
-		
-		private readonly uint? _instance;
+		public uint? Group { get; private set; }
+
+		private uint? _instance;
 		/// <summary>
-		/// Instance ID. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Instance_ID">Instance ID</see>
+		/// Instance ID. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Instance_ID">Instance ID</see>
 		/// </summary>
-		public uint? Instance {
-			get { return _instance; }
-			//set { myVar = value; }
-		}
-		private readonly string _label;
+		public uint? Instance { get; private set; }
+
+		private string _category;
 		/// <summary>
-		/// 
+		/// The general file type this TGI represents.
 		/// </summary>
-		public string Label {
-			get { return _label; }
-		}
+		public string Category { get; private set; }
+
+		private string _detail;
+		/// <summary>
+		/// The detailed description of the file type this TGI represents.
+		/// </summary>
+		public string Detail { get; private set; }
+
 
 
 
@@ -108,7 +105,7 @@ namespace csDBPF {
 			_type = type;
 			_group = group;
 			_instance = instance;
-			_label = MatchesAnyKnownTGI();
+			_category = MatchesAnyKnownTGI().Category;
 		}
 
 		/// <summary>
@@ -117,12 +114,12 @@ namespace csDBPF {
 		/// <remarks>
 		/// If any component of the known entry is null the new component is set to 0.
 		/// </remarks>
-		/// <param name="existingType">Known entry type</param>
+		/// <param name="knownEntry">Known entry type</param>
 		public DBPFTGI(DBPFTGI knownEntry) {
 			_type = knownEntry.Type != null ? knownEntry.Type : 0;
 			_group = knownEntry.Group != null ? knownEntry.Group : 0;
 			_instance = knownEntry.Instance != null ? knownEntry.Instance : 0;
-			_label = MatchesAnyKnownTGI();
+			_category = MatchesAnyKnownTGI().Category;
 		}
 
 
@@ -135,7 +132,7 @@ namespace csDBPF {
 		/// If any component of the provided DBPFTGI of knownType is null it will be skipped. This is opposed to Equals which explicitly checks every component.
 		/// Only the provided DBPFTGI of knownType is checked for null components.
 		/// </remarks>
-		/// <param name="tgi">A DBPFTGI to check against</param>
+		/// <param name="knownType">A DBPFTGI to check against</param>
 		/// <returns>TRUE if check passes; FALSE otherwise</returns>
 		public bool MatchesKnownTGI(DBPFTGI knownType) {
 			bool isTIDok, isGIDok, isIIDok;
@@ -163,13 +160,13 @@ namespace csDBPF {
 
 
 		/// <summary>
-		/// Checks if this DBPFTGI matches any of the known DBPFTGI entry types.
+		/// Checks if this DBPFTGI matches any of the known DBPFTGI entry types and returns the DBPFTGI if a match is found.
 		/// </summary>
-		/// <returns>The label of the known entry type if found; null otherwise.</returns>
-		public string MatchesAnyKnownTGI() {
-			foreach (KeyValuePair<DBPFTGI, string> entry in KnownEntries) {
-				if (Equals(entry.Key)) {
-					return entry.Value;
+		/// <returns>The DBPFTGI of the known entry type if found; null otherwise.</returns>
+		public DBPFTGI MatchesAnyKnownTGI() {
+			foreach (DBPFTGI TGI in KnownEntries) {
+				if (Equals(TGI)) {
+					return TGI;
 				}
 			}
 			return null;
@@ -184,19 +181,18 @@ namespace csDBPF {
 		/// <returns>TRUE if check passes; FALSE otherwise</returns>
 		public override bool Equals(object obj) {
 			bool evalT, evalG, evalI;
-			if (obj is DBPFTGI) {
-				DBPFTGI checkTGI = (DBPFTGI) obj;
-				if (!(checkTGI.Type is null)) {
+			if (obj is DBPFTGI checkTGI) {
+				if (checkTGI.Type is not null) {
 					evalT = Type == checkTGI.Type;
 				} else {
 					evalT = true;
 				}
-				if (!(checkTGI.Group is null)) {
+				if (checkTGI.Group is not null) {
 					evalG = Group == checkTGI.Group;
 				} else {
 					evalG = true;
 				}
-				if (!(checkTGI.Instance is null)) {
+				if (checkTGI.Instance is not null) {
 					evalI = Instance == checkTGI.Instance;
 				} else {
 					evalI = true;
@@ -213,42 +209,75 @@ namespace csDBPF {
 		}
 
 
+		///// <summary>
+		///// Returns a new DBPFTGI with the fields of this and the provided TGI.
+		///// </summary>
+		///// <remarks>
+		///// Each component is replaced by the corresponding component of the modifier. If any modifier component is null, the original component is used instead.
+		///// </remarks>
+		///// <param name="modifier">Provided DBPFTGI to modify this DBPFTGI</param>
+		///// <returns>A new DBPFTGI object with modified TGI components.</returns>
+		//public DBPFTGI ModifyTGI(DBPFTGI modifier) {
+		//	//if modifier.type != null then use modifier.type else use this.type
+		//	return new DBPFTGI(
+		//		modifier.Type != null ? (uint) modifier.Type : (uint) Type,
+		//		modifier.Group != null ? (uint) modifier.Group : (uint) Group,
+		//		modifier.Instance != null ? (uint) modifier.Instance : (uint) Instance
+		//	);
+		//}
+
+
+		///// <summary>
+		///// Returns a new DBPFTGI with the specified TGI components.
+		///// </summary>
+		///// <remarks>
+		///// If any provided value is null it will be skipped and the existing component is used instead.
+		///// </remarks>
+		///// <param name="t">Specified type value</param>
+		///// <param name="g">Specified group value</param>
+		///// <param name="i">Specified instance value</param>
+		///// <returns>A new DBPFTGI object with specified TGI components.</returns>
+		//public DBPFTGI ModifyTGI(uint? t, uint? g, uint? i) {
+		//	//if t != null then use t else use this.type
+		//	return new DBPFTGI(
+		//		t != null ? (uint) t : (uint) Type,
+		//		g != null ? (uint) g : (uint) Group,
+		//		i != null ? (uint) i : (uint) Instance
+		//	);
+		//}
+
 		/// <summary>
-		/// Returns a new DBPFTGI with the fields of this and the provided TGI.
+		/// Update the Type, Group, or Instance of this TGI instance.
 		/// </summary>
-		/// <remarks>
-		/// Each component is replaced by the corresponding component of the modifier. If any modifier component is null, the original component is used instead.
-		/// </remarks>
-		/// <param name="modifier">Provided DBPFTGI to modify this DBPFTGI</param>
-		/// <returns>A new DBPFTGI object with modified TGI components.</returns>
-		public DBPFTGI ModifyTGI(DBPFTGI modifier) {
-			//if modifier.type != null then use modifier.type else use this.type
-			return new DBPFTGI(
-				modifier.Type != null ? (uint) modifier.Type : (uint) Type,
-				modifier.Group != null ? (uint) modifier.Group : (uint) Group,
-				modifier.Instance != null ? (uint) modifier.Instance : (uint) Instance
-			);
+		/// <param name="type"></param>
+		/// <param name="group"></param>
+		/// <param name="instance"></param>
+		public void UpdateTGI(uint? type = null, uint? group = null, uint? instance = null) {
+			if (type != null) {
+				_type = type;
+			}
+			if (group != null) {
+				_group = group;
+			}
+			if (instance != null) {
+				_instance = instance;
+			}
 		}
+		//TODO - add tests to make sure the other fields (label, etc) are updated after this is changed
 
 
 		/// <summary>
-		/// Returns a new DBPFTGI with the specified TGI components.
+		/// Set the Type, Group, and Instance of this TGI instance.
 		/// </summary>
-		/// <remarks>
-		/// If any provided value is null it will be skipped and the existing component is used instead.
-		/// </remarks>
-		/// <param name="t">Specified type value</param>
-		/// <param name="g">Specified group value</param>
-		/// <param name="i">Specified instance value</param>
-		/// <returns>A new DBPFTGI object with specified TGI components.</returns>
-		public DBPFTGI ModifyTGI(uint? t, uint? g, uint? i) {
-			//if t != null then use t else use this.type
-			return new DBPFTGI(
-				t != null ? (uint) t : (uint) Type,
-				g != null ? (uint) g : (uint) Group,
-				i != null ? (uint) i : (uint) Instance
-			);
+		/// <param name="type">Type to set</param>
+		/// <param name="group">Group to set</param>
+		/// <param name="instance">Instance to set</param>
+		public void SetTGI(uint type, uint group, uint instance) {
+			_type = type;
+			_group = group;
+			_instance = instance;
 		}
+
 
 
 		/// <summary>
@@ -256,99 +285,99 @@ namespace csDBPF {
 		/// Known types need to be ordered "bottom-up", that is, specialized entries need to be inserted first, more general ones later.
 		/// </summary>
 		static DBPFTGI() {
-			BLANKTGI = new DBPFTGI(0, 0, 0, "-");
-			DIRECTORY = new DBPFTGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03, "DIR");
-			LD = new DBPFTGI(0x6be74c60, 0x6be74c60, null, "LD");
-			S3D_MAXIS = new DBPFTGI(0x5ad0e817, 0xbadb57f1, null, "S3D");
-			S3D = new DBPFTGI(0x5ad0e817, null, null, "S3D");
-			COHORT = new DBPFTGI(0x05342861, null, null, "COHORT");
+			BLANKTGI = new DBPFTGI(0, 0, 0, null, null);
+			DIRECTORY = new DBPFTGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03, "DIR", "DIR");
+			LD = new DBPFTGI(0x6be74c60, 0x6be74c60, null, "LD", "LD");
+			S3D_MAXIS = new DBPFTGI(0x5ad0e817, 0xbadb57f1, null, "S3D", "S3D");
+			S3D = new DBPFTGI(0x5ad0e817, null, null, "S3D", "S3D");
+			COHORT = new DBPFTGI(0x05342861, null, null, "EXMP", "COHORT");
 
-			EXEMPLAR_ROAD = new DBPFTGI(0x6534284a, 0x2821ed93, null, "EXEMPLAR (Road)");
-			EXEMPLAR_STREET = new DBPFTGI(0x6534284a, 0xa92a02ea, null, "EXEMPLAR (Street)");
-			EXEMPLAR_ONEWAYROAD = new DBPFTGI(0x6534284a, 0xcbe084cb, null, "EXEMPLAR (One-Way Road)");
-			EXEMPLAR_AVENUE = new DBPFTGI(0x6534284a, 0xcb730fac, null, "EXEMPLAR (Avenue)");
-			EXEMPLAR_HIGHWAY = new DBPFTGI(0x6534284a, 0xa8434037, null, "EXEMPLAR (Highway)");
-			EXEMPLAR_GROUNDHIGHWAY = new DBPFTGI(0x6534284a, 0xebe084d1, null, "EXEMPLAR (Ground Highway)");
-			EXEMPLAR_DIRTROAD = new DBPFTGI(0x6534284a, 0x6be08658, null, "EXEMPLAR (Dirtroad)");
-			EXEMPLAR_RAIL = new DBPFTGI(0x6534284a, 0xe8347989, null, "EXEMPLAR (Rail)");
-			EXEMPLAR_LIGHTRAIL = new DBPFTGI(0x6534284a, 0x2b79dffb, null, "EXEMPLAR (Lightrail)");
-			EXEMPLAR_MONORAIL = new DBPFTGI(0x6534284a, 0xebe084c2, null, "EXEMPLAR (Monorail)");
-			EXEMPLAR_POWERPOLE = new DBPFTGI(0x6534284a, 0x088e1962, null, "EXEMPLAR (Power Pole)");
-			EXEMPLAR_T21 = new DBPFTGI(0x6534284a, 0x89ac5643, null, "EXEMPLAR (T21)");
-			EXEMPLAR = new DBPFTGI(0x6534284a, null, null, "EXEMPLAR");
+			EXEMPLAR_ROAD = new DBPFTGI(0x6534284a, 0x2821ed93, null, "EXMP", "EXEMPLAR_ROAD"); //EXEMPLAR (Road)
+			EXEMPLAR_STREET = new DBPFTGI(0x6534284a, 0xa92a02ea, null, "EXMP", "EXEMPLAR_STREET"); //EXEMPLAR (Street)
+			EXEMPLAR_ONEWAYROAD = new DBPFTGI(0x6534284a, 0xcbe084cb, null, "EXMP", "EXEMPLAR_ONEWAYROAD"); //EXEMPLAR (One-Way Road)
+			EXEMPLAR_AVENUE = new DBPFTGI(0x6534284a, 0xcb730fac, null, "EXMP", "EXEMPLAR_AVENUE"); //EXEMPLAR (Avenue)
+			EXEMPLAR_HIGHWAY = new DBPFTGI(0x6534284a, 0xa8434037, null, "EXMP", "EXEMPLAR_HIGHWAY"); //EXEMPLAR (Highway)
+			EXEMPLAR_GROUNDHIGHWAY = new DBPFTGI(0x6534284a, 0xebe084d1, null, "EXMP", "EXEMPLAR_GROUNDHIGHWAY"); //EXEMPLAR (Ground Highway)
+			EXEMPLAR_DIRTROAD = new DBPFTGI(0x6534284a, 0x6be08658, null, "EXMP", "EXEMPLAR_DIRTROAD"); //EXEMPLAR (Dirtroad)
+			EXEMPLAR_RAIL = new DBPFTGI(0x6534284a, 0xe8347989, null, "EXMP", "EXEMPLAR_RAIL"); //EXEMPLAR (Rail)
+			EXEMPLAR_LIGHTRAIL = new DBPFTGI(0x6534284a, 0x2b79dffb, null, "EXMP", "EXEMPLAR_LIGHTRAIL"); //EXEMPLAR (Lightrail)
+			EXEMPLAR_MONORAIL = new DBPFTGI(0x6534284a, 0xebe084c2, null, "EXMP", "EXEMPLAR_MONORAIL"); //EXEMPLAR (Monorail)
+			EXEMPLAR_POWERPOLE = new DBPFTGI(0x6534284a, 0x088e1962, null, "EXMP", "EXEMPLAR_POWERPOLE"); //EXEMPLAR (Power Pole)
+			EXEMPLAR_T21 = new DBPFTGI(0x6534284a, 0x89ac5643, null, "EXMP", "EXEMPLAR_T21"); //EXEMPLAR (T21)
+			EXEMPLAR = new DBPFTGI(0x6534284a, null, null, "EXMP", "EXEMPLAR");
 
-			FSH_MISC = new DBPFTGI(0x7ab50e44, 0x1abe787d, null, "FSH (Misc)");
-			FSH_TRANSIT = new DBPFTGI(0x7ab50e44, 0x1abe787d, null, "FSH (Misc)");
-			FSH_BASE_OVERLAY = new DBPFTGI(0x7ab50e44, 0x0986135e, null, "FSH (Base/Overlay Texture)");
-			FSH_SHADOW = new DBPFTGI(0x7ab50e44, 0x2bC2759a, null, "FSH (Shadow DBPFTGI)");
-			FSH_ANIM_PROPS = new DBPFTGI(0x7ab50e44, 0x2a2458f9, null, "FSH (Animation Sprites (Props)");
-			FSH_ANIM_NONPROPS = new DBPFTGI(0x7ab50e44, 0x49a593e7, null, "FSH (Animation Sprites (Non Props)");
-			FSH_TERRAIN_FOUNDATION = new DBPFTGI(0x7ab50e44, 0x891b0e1a, null, "FSH (Terrain/Foundation)");
-			FSH_UI = new DBPFTGI(0x7ab50e44, 0x46a006b0, null, "FSH (UI Image)");
-			FSH = new DBPFTGI(0x7ab50e44, null, null, "FSH");
+			FSH_MISC = new DBPFTGI(0x7ab50e44, 0x1abe787d, null, "FSH", "FSH_MISC"); //FSH (Misc)
+			FSH_TRANSIT = new DBPFTGI(0x7ab50e44, 0x1abe787d, null, "FSH", "FSH_MISC"); //FSH (Misc)
+			FSH_BASE_OVERLAY = new DBPFTGI(0x7ab50e44, 0x0986135e, null, "FSH", "FSH_BASE_OVERLAY"); //FSH (Base/Overlay Texture)
+			FSH_SHADOW = new DBPFTGI(0x7ab50e44, 0x2bC2759a, null, "FSH", "FSH_SHADOW"); //FSH (Shadow Mask)
+			FSH_ANIM_PROPS = new DBPFTGI(0x7ab50e44, 0x2a2458f9, null, "FSH", "FSH_ANIM_PROPS"); //FSH (Animation Sprites (Props))
+			FSH_ANIM_NONPROPS = new DBPFTGI(0x7ab50e44, 0x49a593e7, null, "FSH", "FSH_ANIM_NONPROPS"); //FSH (Animation Sprites (Non Props))
+			FSH_TERRAIN_FOUNDATION = new DBPFTGI(0x7ab50e44, 0x891b0e1a, null, "FSH", "FSH_TERRAIN_FOUNDATION"); //FSH (Terrain/Foundation)
+			FSH_UI = new DBPFTGI(0x7ab50e44, 0x46a006b0, null, "FSH", "FSH_UI"); //FSH (UI Image)
+			FSH = new DBPFTGI(0x7ab50e44, null, null, "FSH", "FSH");
 
-			SC4PATH_2D = new DBPFTGI(0x296678f7, 0x69668828, null, "SC4PATH (2D)");
-			SC4PATH_3D = new DBPFTGI(0x296678f7, 0xa966883f, null, "SC4PATH (3D)");
-			SC4PATH = new DBPFTGI(0x296678f7, null, null, "SC4PATH");
+			SC4PATH_2D = new DBPFTGI(0x296678f7, 0x69668828, null, "PATH", "SC4PATH_2D"); //SC4PATH (2D)
+			SC4PATH_3D = new DBPFTGI(0x296678f7, 0xa966883f, null, "PATH", "SC4PATH_3D"); //SC4PATH (3D)
+			SC4PATH = new DBPFTGI(0x296678f7, null, null, "PATH", "SC4PATH");
 
-			PNG_ICON = new DBPFTGI(0x856ddbac, 0x6a386d26, null, "PNG (Icon)");
-			PNG = new DBPFTGI(0x856ddbac, null, null, "PNG");
-			LUA = new DBPFTGI(0xca63e2a3, 0x4a5e8ef6, null, "LUA");
-			LUA_GEN = new DBPFTGI(0xca63e2a3, 0x4a5e8f3f, null, "LUA (Generators)");
-			WAV = new DBPFTGI(0x2026960b, 0xaa4d1933, null, "WAV");
-			LTEXT = new DBPFTGI(0x2026960b, null, null, "LTEXT");
-			INI_FONT = new DBPFTGI(0, 0x4a87bfe8, 0x2a87bffc, "INI (Font Table)");
-			INI_NETWORK = new DBPFTGI(0, 0x8a5971c5, 0x8a5993b9, "INI (Networks)");
-			INI = new DBPFTGI(0, 0x8a5971c5, null, "INI");
-			RUL = new DBPFTGI(0x0a5bcf4b, 0xaa5bcf57, null, "RUL");
-			XML = new DBPFTGI(0x88777602, null, null, "XML");
-			EFFDIR = new DBPFTGI(0xea5118b0, null, null, "EFFDIR");
-			NULLTGI = new DBPFTGI(null, null, null, "UNKNOWN");
+			PNG_ICON = new DBPFTGI(0x856ddbac, 0x6a386d26, null, "PNG", "PNG_ICON"); //PNG (Icon)
+			PNG = new DBPFTGI(0x856ddbac, null, null, "PNG", "PNG");
+			LUA = new DBPFTGI(0xca63e2a3, 0x4a5e8ef6, null, "LUA", "LUA");
+			LUA_GEN = new DBPFTGI(0xca63e2a3, 0x4a5e8f3f, null, "LUA", "LUA_GEN"); //LUA (Generators)
+			WAV = new DBPFTGI(0x2026960b, 0xaa4d1933, null, "WAV", "WAV");
+			LTEXT = new DBPFTGI(0x2026960b, null, null, "LTEXT", "LTEXT");
+			INI_FONT = new DBPFTGI(0, 0x4a87bfe8, 0x2a87bffc, "INI", "INI_FONT"); //INI (Font Table)
+			INI_NETWORK = new DBPFTGI(0, 0x8a5971c5, 0x8a5993b9, "INI", "INI_NETWORK"); //INI (Networks)
+			INI = new DBPFTGI(0, 0x8a5971c5, null, "INI", "INI");
+			RUL = new DBPFTGI(0x0a5bcf4b, 0xaa5bcf57, null, "RUL", "RUL");
+			XML = new DBPFTGI(0x88777602, null, null, "XML", "XML");
+			EFFDIR = new DBPFTGI(0xea5118b0, null, null, "EFF", "EFFDIR");
+			NULLTGI = new DBPFTGI(null, null, null, "NULL", "NULLTGI"); // NULLTGI matches with everything
 
-			KnownEntries.Add(BLANKTGI, "BLANKTGI");
-			KnownEntries.Add(DIRECTORY, "DIRECTORY");
-			KnownEntries.Add(LD, "LD");
-			KnownEntries.Add(S3D_MAXIS, "S3D_MAXIS");
-			KnownEntries.Add(S3D, "S3D");
-			KnownEntries.Add(COHORT, "COHORT");
-			KnownEntries.Add(EXEMPLAR_ROAD, "EXEMPLAR_ROAD");
-			KnownEntries.Add(EXEMPLAR_STREET, "EXEMPLAR_STREET");
-			KnownEntries.Add(EXEMPLAR_ONEWAYROAD, "EXEMPLAR_ONEWAYROAD");
-			KnownEntries.Add(EXEMPLAR_AVENUE, "EXEMPLAR_AVENUE");
-			KnownEntries.Add(EXEMPLAR_HIGHWAY, "EXEMPLAR_HIGHWAY");
-			KnownEntries.Add(EXEMPLAR_GROUNDHIGHWAY, "EXEMPLAR_GROUNDHIGHWAY");
-			KnownEntries.Add(EXEMPLAR_DIRTROAD, "EXEMPLAR_DIRTROAD");
-			KnownEntries.Add(EXEMPLAR_RAIL, "EXEMPLAR_RAIL");
-			KnownEntries.Add(EXEMPLAR_LIGHTRAIL, "EXEMPLAR_LIGHTRAIL");
-			KnownEntries.Add(EXEMPLAR_MONORAIL, "EXEMPLAR_MONORAIL");
-			KnownEntries.Add(EXEMPLAR_POWERPOLE, "EXEMPLAR_POWERPOLE");
-			KnownEntries.Add(EXEMPLAR_T21, "EXEMPLAR_T21");
-			KnownEntries.Add(EXEMPLAR, "EXEMPLAR");
-			KnownEntries.Add(FSH_MISC, "FSH_MISC");
-			KnownEntries.Add(FSH_TRANSIT, "FSH_TRANSIT");
-			KnownEntries.Add(FSH_BASE_OVERLAY, "FSH_BASE_OVERLAY");
-			KnownEntries.Add(FSH_SHADOW, "FSH_SHADOW");
-			KnownEntries.Add(FSH_ANIM_PROPS, "FSH_ANIM_PROPS");
-			KnownEntries.Add(FSH_ANIM_NONPROPS, "FSH_ANIM_NONPROPS");
-			KnownEntries.Add(FSH_TERRAIN_FOUNDATION, "FSH_TERRAIN_FOUNDATION");
-			KnownEntries.Add(FSH_UI, "FSH_UI");
+			KnownEntries.Add(BLANKTGI);
+			KnownEntries.Add(DIRECTORY);
+			KnownEntries.Add(LD);
+			KnownEntries.Add(S3D_MAXIS);
+			KnownEntries.Add(S3D);
+			KnownEntries.Add(COHORT);
+			KnownEntries.Add(EXEMPLAR_ROAD);
+			KnownEntries.Add(EXEMPLAR_STREET);
+			KnownEntries.Add(EXEMPLAR_ONEWAYROAD);
+			KnownEntries.Add(EXEMPLAR_AVENUE);
+			KnownEntries.Add(EXEMPLAR_HIGHWAY);
+			KnownEntries.Add(EXEMPLAR_GROUNDHIGHWAY);
+			KnownEntries.Add(EXEMPLAR_DIRTROAD);
+			KnownEntries.Add(EXEMPLAR_RAIL);
+			KnownEntries.Add(EXEMPLAR_LIGHTRAIL);
+			KnownEntries.Add(EXEMPLAR_MONORAIL);
+			KnownEntries.Add(EXEMPLAR_POWERPOLE);
+			KnownEntries.Add(EXEMPLAR_T21);
+			KnownEntries.Add(EXEMPLAR);
+			KnownEntries.Add(FSH_MISC);
+			KnownEntries.Add(FSH_TRANSIT);
+			KnownEntries.Add(FSH_BASE_OVERLAY);
+			KnownEntries.Add(FSH_SHADOW);
+			KnownEntries.Add(FSH_ANIM_PROPS);
+			KnownEntries.Add(FSH_ANIM_NONPROPS);
+			KnownEntries.Add(FSH_TERRAIN_FOUNDATION);
+			KnownEntries.Add(FSH_UI);
 			KnownEntries.Add(FSH, "FSH");
-			KnownEntries.Add(SC4PATH_2D, "SC4PATH_2D");
-			KnownEntries.Add(SC4PATH_3D, "SC4PATH_3D");
-			KnownEntries.Add(SC4PATH, "SC4PATH");
-			KnownEntries.Add(PNG_ICON, "PNG_ICON");
-			KnownEntries.Add(PNG, "PNG");
-			KnownEntries.Add(LUA, "LUA");
-			KnownEntries.Add(LUA_GEN, "LUA_GEN");
-			KnownEntries.Add(WAV, "WAV");
-			KnownEntries.Add(LTEXT, "LTEXT");
-			KnownEntries.Add(INI_FONT, "INI_FONT");
-			KnownEntries.Add(INI_NETWORK, "INI_NETWORK");
-			KnownEntries.Add(INI, "INI");
-			KnownEntries.Add(XML, "XML");
-			KnownEntries.Add(RUL, "RUL");
-			KnownEntries.Add(EFFDIR, "EFFDIR");
-			KnownEntries.Add(NULLTGI, "NULLTGI"); // NULLTGI matches with everything
+			KnownEntries.Add(SC4PATH_2D);
+			KnownEntries.Add(SC4PATH_3D);
+			KnownEntries.Add(SC4PATH);
+			KnownEntries.Add(PNG_ICON);
+			KnownEntries.Add(PNG);
+			KnownEntries.Add(LUA);
+			KnownEntries.Add(LUA_GEN);
+			KnownEntries.Add(WAV);
+			KnownEntries.Add(LTEXT);
+			KnownEntries.Add(INI_FONT);
+			KnownEntries.Add(INI_NETWORK);
+			KnownEntries.Add(INI);
+			KnownEntries.Add(XML);
+			KnownEntries.Add(RUL);
+			KnownEntries.Add(EFFDIR);
+			KnownEntries.Add(NULLTGI); 
 		}
 
 		/// <summary>
@@ -358,11 +387,13 @@ namespace csDBPF {
 		/// <param name="group"></param>
 		/// <param name="instance"></param>
 		/// <param name="label"></param>
-		private DBPFTGI(uint? type, uint? group, uint? instance, string label) {
+		/// <param name="detailLabel"></param>
+		private DBPFTGI(uint? type, uint? group, uint? instance, string label, string detailLabel) {
 			_type = type;
 			_group = group;
 			_instance = instance;
-			_label = label;
+			_category = label;
+			_detail = detailLabel;
 		}
 
 	}

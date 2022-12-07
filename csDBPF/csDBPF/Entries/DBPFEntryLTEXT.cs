@@ -26,6 +26,9 @@ namespace csDBPF.Entries {
 
 
 
+		public DBPFEntryLTEXT(DBPFTGI tgi) : base(tgi) {
+
+		}
 		public DBPFEntryLTEXT(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
 			_text = null;
 			_isDecoded = false;

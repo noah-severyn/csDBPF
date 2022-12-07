@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using csDBPF.Properties;
 
 namespace csDBPF.Entries {
-	internal class DBPFEntryEXMP : DBPFEntry {
+	public class DBPFEntryEXMP : DBPFEntry {
 
 		private List<DBPFProperty> _listOfProperties;
 		/// <summary>
@@ -20,6 +20,10 @@ namespace csDBPF.Entries {
 		public DBPFTGI ParentCohort { get; set; }
 
 
+
+		public DBPFEntryEXMP(DBPFTGI tgi) : base(tgi) {
+
+		}
 		public DBPFEntryEXMP(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
 			_listOfProperties = null;
 		}

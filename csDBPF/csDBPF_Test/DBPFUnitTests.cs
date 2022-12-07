@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
+using csDBPF.Entries;
 
-namespace csDBPF_Test {
-	[TestClass]
+namespace csDBPF_Test
+{
+    [TestClass]
 	public class DBPFUnitTests {
 		internal class TestArrays {
 			//Sample data from z_DataView - Parks Aura.dat --- in BINARY encoding ---
@@ -189,11 +191,6 @@ namespace csDBPF_Test {
 		[TestClass]
 		public class _05x_DBPFTGI {
 			[TestMethod]
-			public void Test_050_DBPFTGI_CreateNew() {
-
-			}
-
-			[TestMethod]
 			public void Test_052_DBPFTGI_Equals() {
 				DBPFTGI tgi1 = new DBPFTGI(0, 0, 0);
 				DBPFTGI tgi2 = new DBPFTGI(0, 0, 0);
@@ -211,12 +208,11 @@ namespace csDBPF_Test {
 				Assert.IsFalse(tgi3.Equals(tgi1));
 
 				Assert.IsFalse(tgi1.Equals("string"));
-				DBPFEntry e1 = new DBPFEntry(tgi1, 0, 0, 0);
-				Assert.IsFalse(tgi1.Equals(e1));
+				Assert.IsFalse(tgi1.Equals(0));
 			}
 
 			[TestMethod]
-			public void Test_054_DBPFTGI_MatchesKnownTGI() {
+			public void Test_053_DBPFTGI_MatchesKnownTGI() {
 				//If called from a TGI object
 				DBPFTGI tgi_blank = new DBPFTGI(0, 0, 0);
 				DBPFTGI tgi_exemplar = new DBPFTGI(0x6534284a, 0, 0);
@@ -236,10 +232,10 @@ namespace csDBPF_Test {
 
 
 				//If called from an Entry object
-				DBPFEntry entry_blank = new DBPFEntry(tgi_blank);
-				DBPFEntry entry_exemplar = new DBPFEntry(tgi_exemplar);
-				DBPFEntry entry_exemplarRail = new DBPFEntry(tgi_exemplarRail);
-				DBPFEntry entry_exemplarRail2 = new DBPFEntry(tgi_exemplarRail2);
+				DBPFEntry entry_blank = new DBPFEntryEXMP(tgi_blank);
+				DBPFEntry entry_exemplar = new DBPFEntryEXMP(tgi_exemplar);
+				DBPFEntry entry_exemplarRail = new DBPFEntryEXMP(tgi_exemplarRail);
+				DBPFEntry entry_exemplarRail2 = new DBPFEntryEXMP(tgi_exemplarRail2);
 
 				Assert.IsTrue(entry_blank.MatchesKnownEntryType(DBPFTGI.BLANKTGI));
 				Assert.IsTrue(entry_blank.MatchesKnownEntryType(DBPFTGI.NULLTGI));
@@ -261,12 +257,18 @@ namespace csDBPF_Test {
 				DBPFTGI tgi_exemplarRail2 = new DBPFTGI(0x6534284a, 0xe8347989, 0x1ab4e56a);
 				DBPFTGI tgi_PNG_Icon = new DBPFTGI(0x856ddbac, 0x6a386d26, 0x1ab4e56f);
 				DBPFTGI tgi_PNG = new DBPFTGI(0x856ddbac, 0x6a386d27, 0x1ab4e56f);
-				Assert.AreEqual("BLANKTGI", tgi_blank.MatchesAnyKnownTGI());
-				Assert.AreEqual("EXEMPLAR", tgi_exemplar.MatchesAnyKnownTGI());
-				Assert.AreEqual("EXEMPLAR_RAIL", tgi_exemplarRail.MatchesAnyKnownTGI());
-				Assert.AreEqual("EXEMPLAR_RAIL", tgi_exemplarRail2.MatchesAnyKnownTGI());
-				Assert.AreEqual("PNG_ICON", tgi_PNG_Icon.MatchesAnyKnownTGI());
-				Assert.AreEqual("PNG", tgi_PNG.MatchesAnyKnownTGI());
+
+				Assert.AreEqual(null, tgi_blank.MatchesAnyKnownTGI());
+				Assert.AreEqual("EXMP", tgi_exemplar.MatchesAnyKnownTGI().Category);
+				Assert.AreEqual("EXEMPLAR", tgi_exemplar.MatchesAnyKnownTGI().Detail);
+				Assert.AreEqual("EXMP", tgi_exemplarRail.MatchesAnyKnownTGI().Category);
+				Assert.AreEqual("EXEMPLAR_RAIL", tgi_exemplarRail.MatchesAnyKnownTGI().Detail);
+				Assert.AreEqual("EXMP", tgi_exemplarRail2.MatchesAnyKnownTGI().Category);
+				Assert.AreEqual("EXEMPLAR_RAIL", tgi_exemplarRail2.MatchesAnyKnownTGI().Detail);
+				Assert.AreEqual("PNG", tgi_PNG_Icon.MatchesAnyKnownTGI().Category);
+				Assert.AreEqual("PNG_ICON", tgi_PNG_Icon.MatchesAnyKnownTGI().Detail);
+				Assert.AreEqual("PNG", tgi_PNG.MatchesAnyKnownTGI().Category);
+				Assert.AreEqual("PNG", tgi_PNG.MatchesAnyKnownTGI().Detail);
 			}
 
 			[TestMethod]
