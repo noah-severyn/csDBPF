@@ -30,15 +30,11 @@ namespace csDBPF
 		/// Stores key information about the DBPFFile. The Header is the first 48 bytes of the DBPFFile. 
 		/// </summary>
 		public class DBPFHeader {
+			//Only have backing fields for the fields with setter logic
 			private string _identifier;
 			private uint _majorVersion;
 			private uint _minorVersion;
-			private uint _dateCreated;
-			private uint _dateModified;
 			private uint _indexMajorVersion;
-			private uint _indexEntryCount;
-			private uint _indexEntryOffset;
-			private uint _indexSize;
 
 			/// <summary>
 			/// File type identifier. Must be "DBPF".
@@ -83,17 +79,11 @@ namespace csDBPF
 			/// <summary>
 			/// Creation time in Unix timestamp format.
 			/// </summary>
-			public uint DateCreated {
-				get { return _dateCreated; }
-				set { _dateCreated = value; }
-			}
+			public uint DateCreated { get; private set; }
 			/// <summary>
 			/// Modification time in Unix timestamp format.
 			/// </summary>
-			public uint DateModified {
-				get { return _dateModified; }
-				set { _dateModified = value; }
-			}
+			public uint DateModified { get; private set; }
 			/// <summary>
 			/// Defines the Index verion. Always 7 for SC4.
 			/// </summary>
@@ -111,24 +101,15 @@ namespace csDBPF
 			/// Number of subfiles within this file.
 			/// </summary>
 			/// <remarks>The index table is very similar to the directory file (DIR) within a DPBF package. The difference being that the Index Table lists every file in the package, whereas the directory file only lists the compressed files within the package. Reader presents a directory file that is a mashup of these two entities, listing every file in the package, as well as indicating whether or not that particular file is compressed. </remarks>
-			public uint IndexEntryCount {
-				get { return _indexEntryCount; }
-				set { _indexEntryCount = value; }
-			}
+			public uint IndexEntryCount { get; private set; }
 			/// <summary>
 			/// Byte location of the first index in the file.
 			/// </summary>
-			public uint IndexEntryOffset {
-				get { return _indexEntryOffset; }
-				set { _indexEntryOffset = value; }
-			}
+			public uint IndexEntryOffset { get; private set; }
 			/// <summary>
 			/// Size of the index table in bytes.
 			/// </summary>
-			public uint IndexSize {
-				get { return _indexSize; }
-				set { _indexSize = value; }
-			}
+			public uint IndexSize { get; private set; }
 
 
 			/// <summary>
@@ -143,31 +124,31 @@ namespace csDBPF
 			/// <param name="br">Stream to read from.</param>
 			/// <exception cref="InvalidDataException">If file is not valid DBPF format.</exception>
 			public void Initialize(BinaryReader br) {
-				_identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
-				_majorVersion = br.ReadUInt32();
-				_minorVersion = br.ReadUInt32();
+				Identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
+				MajorVersion = br.ReadUInt32();
+				MinorVersion = br.ReadUInt32();
 				br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
-				_dateCreated = br.ReadUInt32();
-				_dateModified = br.ReadUInt32();
-				_indexMajorVersion = br.ReadUInt32();
-				_indexEntryCount = br.ReadUInt32();
-				_indexEntryOffset = br.ReadUInt32();
-				_indexSize = br.ReadUInt32();
+				DateCreated = br.ReadUInt32();
+				DateModified = br.ReadUInt32();
+				IndexMajorVersion = br.ReadUInt32();
+				IndexEntryCount = br.ReadUInt32();
+				IndexEntryOffset = br.ReadUInt32();
+				IndexSize = br.ReadUInt32();
 			}
 
 			/// <summary>
 			/// Initialize Header information with default values.
 			/// </summary>
 			public void InitializeBlank() {
-				_identifier = "DBPF";
-				_majorVersion = 1;
-				_minorVersion = 0;
-				_dateCreated = (uint) DateTimeOffset.Now.ToUnixTimeSeconds();
-				_dateModified = 0;
-				_indexMajorVersion = 7;
-				_indexEntryCount = 0;
-				_indexEntryOffset = 0;
-				_indexSize = 0;
+				Identifier = "DBPF";
+				MajorVersion = 1;
+				MinorVersion = 0;
+				DateCreated = (uint) DateTimeOffset.Now.ToUnixTimeSeconds();
+				DateModified = 0;
+				IndexMajorVersion = 7;
+				IndexEntryCount = 0;
+				IndexEntryOffset = 0;
+				IndexSize = 0;
 			}
 
 			/// <summary>
