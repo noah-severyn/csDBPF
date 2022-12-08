@@ -62,33 +62,46 @@ namespace csDBPF {
 		/// <summary>
 		/// Type ID. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Type_ID">Type ID</see>
 		/// </summary>
-		public uint? Type { get; private set; }
+		public uint? Type {
+			get { return _type; }
+			private set { _type = value; }
+		}
 
 		private uint? _group;
 		/// <summary>
 		/// Group ID. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Group_ID">Group ID</see>
 		/// </summary>
-		public uint? Group { get; private set; }
+		public uint? Group {
+			get { return _group; }
+			private set { _group = value; }
+		}
 
 		private uint? _instance;
 		/// <summary>
 		/// Instance ID. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Instance_ID">Instance ID</see>
 		/// </summary>
-		public uint? Instance { get; private set; }
+		public uint? Instance {
+			get { return _instance; }
+			private set { _instance = value; }
+		}
 
 		private string _category;
 		/// <summary>
 		/// The general file type this TGI represents.
 		/// </summary>
-		public string Category { get; private set; }
+		public string Category {
+			get { return _category; }
+			private set { _category = value; }
+		}
 
 		private string _detail;
 		/// <summary>
 		/// The detailed description of the file type this TGI represents.
 		/// </summary>
-		public string Detail { get; private set; }
-
-
+		public string Detail {
+			get { return _detail; }
+			private set { _detail = value; }
+		}
 
 
 		//------------- DBPFTGI Constructors ------------- \\
@@ -106,6 +119,7 @@ namespace csDBPF {
 			_group = group;
 			_instance = instance;
 			_category = MatchesAnyKnownTGI().Category;
+			_detail = MatchesAnyKnownTGI().Detail;
 		}
 
 		/// <summary>
@@ -119,7 +133,8 @@ namespace csDBPF {
 			_type = knownEntry.Type != null ? knownEntry.Type : 0;
 			_group = knownEntry.Group != null ? knownEntry.Group : 0;
 			_instance = knownEntry.Instance != null ? knownEntry.Instance : 0;
-			_category = MatchesAnyKnownTGI().Category;
+			_category = knownEntry.Category;
+			_detail = knownEntry.Detail;
 		}
 
 
@@ -137,22 +152,22 @@ namespace csDBPF {
 		public bool MatchesKnownTGI(DBPFTGI knownType) {
 			bool isTIDok, isGIDok, isIIDok;
 
-			if (!knownType.Type.HasValue) {
+			if (!knownType._type.HasValue) {
 				isTIDok = true;
 			} else {
-				isTIDok = Type == knownType.Type;
+				isTIDok = _type == knownType.Type;
 			}
 
 			if (!knownType.Group.HasValue) {
 				isGIDok = true;
 			} else {
-				isGIDok = Group == knownType.Group;
+				isGIDok = _group == knownType.Group;
 			}
 
 			if (!knownType.Instance.HasValue) {
 				isIIDok = true;
 			} else {
-				isIIDok = Instance == knownType.Instance;
+				isIIDok = _instance == knownType.Instance;
 			}
 
 			return isTIDok && isGIDok && isIIDok;
@@ -162,7 +177,7 @@ namespace csDBPF {
 		/// <summary>
 		/// Checks if this DBPFTGI matches any of the known DBPFTGI entry types and returns the DBPFTGI if a match is found.
 		/// </summary>
-		/// <returns>The DBPFTGI of the known entry type if found; null otherwise.</returns>
+		/// <returns>A DBPFTGI of the matched known type if found; null otherwise.</returns>
 		public DBPFTGI MatchesAnyKnownTGI() {
 			foreach (DBPFTGI TGI in KnownEntries) {
 				if (Equals(TGI)) {
@@ -183,17 +198,17 @@ namespace csDBPF {
 			bool evalT, evalG, evalI;
 			if (obj is DBPFTGI checkTGI) {
 				if (checkTGI.Type is not null) {
-					evalT = Type == checkTGI.Type;
+					evalT = _type == checkTGI.Type;
 				} else {
 					evalT = true;
 				}
 				if (checkTGI.Group is not null) {
-					evalG = Group == checkTGI.Group;
+					evalG = _group == checkTGI.Group;
 				} else {
 					evalG = true;
 				}
 				if (checkTGI.Instance is not null) {
-					evalI = Instance == checkTGI.Instance;
+					evalI = _instance == checkTGI.Instance;
 				} else {
 					evalI = true;
 				}
@@ -205,46 +220,10 @@ namespace csDBPF {
 
 
 		public override string ToString() {
-			return $"0x{DBPFUtil.UIntToHexString(_type, 8)}, 0x{DBPFUtil.UIntToHexString(_group, 8)}, 0x{DBPFUtil.UIntToHexString(_instance, 8)}";
+			return $"0x{DBPFUtil.UIntToHexString(_type, 8)}, 0x{DBPFUtil.UIntToHexString(_group, 8)}, 0x{DBPFUtil.UIntToHexString(_instance, 8)}, {_category}, {_detail}";
 		}
 
 
-		///// <summary>
-		///// Returns a new DBPFTGI with the fields of this and the provided TGI.
-		///// </summary>
-		///// <remarks>
-		///// Each component is replaced by the corresponding component of the modifier. If any modifier component is null, the original component is used instead.
-		///// </remarks>
-		///// <param name="modifier">Provided DBPFTGI to modify this DBPFTGI</param>
-		///// <returns>A new DBPFTGI object with modified TGI components.</returns>
-		//public DBPFTGI ModifyTGI(DBPFTGI modifier) {
-		//	//if modifier.type != null then use modifier.type else use this.type
-		//	return new DBPFTGI(
-		//		modifier.Type != null ? (uint) modifier.Type : (uint) Type,
-		//		modifier.Group != null ? (uint) modifier.Group : (uint) Group,
-		//		modifier.Instance != null ? (uint) modifier.Instance : (uint) Instance
-		//	);
-		//}
-
-
-		///// <summary>
-		///// Returns a new DBPFTGI with the specified TGI components.
-		///// </summary>
-		///// <remarks>
-		///// If any provided value is null it will be skipped and the existing component is used instead.
-		///// </remarks>
-		///// <param name="t">Specified type value</param>
-		///// <param name="g">Specified group value</param>
-		///// <param name="i">Specified instance value</param>
-		///// <returns>A new DBPFTGI object with specified TGI components.</returns>
-		//public DBPFTGI ModifyTGI(uint? t, uint? g, uint? i) {
-		//	//if t != null then use t else use this.type
-		//	return new DBPFTGI(
-		//		t != null ? (uint) t : (uint) Type,
-		//		g != null ? (uint) g : (uint) Group,
-		//		i != null ? (uint) i : (uint) Instance
-		//	);
-		//}
 
 		/// <summary>
 		/// Update the Type, Group, or Instance of this TGI instance.
@@ -252,6 +231,7 @@ namespace csDBPF {
 		/// <param name="type">Type to set</param>
 		/// <param name="group">Group to set</param>
 		/// <param name="instance">Instance to set</param>
+		/// <remarks>If the TGI set matches a known combination then Category and Detail are set too.</remarks>
 		public void SetTGI(uint? type = null, uint? group = null, uint? instance = null) {
 			if (type != null) {
 				_type = type;
@@ -262,12 +242,34 @@ namespace csDBPF {
 			if (instance != null) {
 				_instance = instance;
 			}
+
+			DBPFTGI match = MatchesAnyKnownTGI();
+			if (match is not null) {
+				_category = match.Category;
+				_detail = match.Detail;
+			}
 		}
+
+
 		//TODO - add tests to make sure the other fields (label, etc) are updated after this is changed
-
-
+		//TODO - if t g or i is null then set to a random one
 		public void SetTGI(DBPFTGI tgi) {
-			//if t g or i is null then set to a random one
+			
+			if (tgi.Type != null) {
+				_type = tgi.Type;
+			}
+			if (tgi.Group != null) {
+				_group = tgi.Group;
+			}
+			if (tgi.Instance != null) {
+				_instance = tgi.Instance;
+			}
+
+			DBPFTGI match = MatchesAnyKnownTGI();
+			if (match is not null) {
+				_category = match.Category;
+				_detail = match.Detail;
+			}
 		}
 
 

@@ -2,16 +2,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using csDBPF;
 using csDBPF.Properties;
-using System.Xml.Linq;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.IO;
 using csDBPF.Entries;
 
-namespace csDBPF_Test
-{
-    [TestClass]
+namespace csDBPF_Test {
+	[TestClass]
 	public class DBPFUnitTests {
 		internal class TestArrays {
 			//Sample data from z_DataView - Parks Aura.dat --- in BINARY encoding ---
@@ -27,11 +22,15 @@ namespace csDBPF_Test
 			public static byte[] nullproperty_extradata = { 0x45, 0x51, 0x5A, 0x42, 0x31, 0x23, 0x23, 0x23, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x57, 0xDF, 0x81, 0x70, 0x00, 0x49, 0x00 };
 		}
 
+
+
 		// 00x Misc Test Methods
 		[TestClass]
 		public class _00x_MiscTests {
 
 		}
+
+
 
 		// 01x Test Methods for DBPFUtil class
 		[TestClass]
@@ -116,6 +115,8 @@ namespace csDBPF_Test
 			}
 		}
 
+
+
 		// 02x Test methods for DBPFCompression class
 		[TestClass]
 		public class _02x_DBPFCompression {
@@ -140,6 +141,8 @@ namespace csDBPF_Test
 				CollectionAssert.AreEqual(TestArrays.decompresseddata_b, DBPFCompression.Decompress(TestArrays.compresseddata_b));
 			}
 		}
+
+
 
 		// 03x Test Methods for ByteArrayHelper class
 		[TestClass]
@@ -186,6 +189,8 @@ namespace csDBPF_Test
 				Assert.AreEqual((uint) 0x07000030, ByteArrayHelper.ReadBytesIntoUint(arr2));
 			}
 		}
+
+
 
 		// 05x Test Methods for DBPFTGI Class
 		[TestClass]
@@ -258,36 +263,56 @@ namespace csDBPF_Test
 				DBPFTGI tgi_PNG_Icon = new DBPFTGI(0x856ddbac, 0x6a386d26, 0x1ab4e56f);
 				DBPFTGI tgi_PNG = new DBPFTGI(0x856ddbac, 0x6a386d27, 0x1ab4e56f);
 
-				Assert.AreEqual(null, tgi_blank.MatchesAnyKnownTGI());
-				Assert.AreEqual("EXMP", tgi_exemplar.MatchesAnyKnownTGI().Category);
-				Assert.AreEqual("EXEMPLAR", tgi_exemplar.MatchesAnyKnownTGI().Detail);
-				Assert.AreEqual("EXMP", tgi_exemplarRail.MatchesAnyKnownTGI().Category);
-				Assert.AreEqual("EXEMPLAR_RAIL", tgi_exemplarRail.MatchesAnyKnownTGI().Detail);
-				Assert.AreEqual("EXMP", tgi_exemplarRail2.MatchesAnyKnownTGI().Category);
-				Assert.AreEqual("EXEMPLAR_RAIL", tgi_exemplarRail2.MatchesAnyKnownTGI().Detail);
-				Assert.AreEqual("PNG", tgi_PNG_Icon.MatchesAnyKnownTGI().Category);
-				Assert.AreEqual("PNG_ICON", tgi_PNG_Icon.MatchesAnyKnownTGI().Detail);
-				Assert.AreEqual("PNG", tgi_PNG.MatchesAnyKnownTGI().Category);
-				Assert.AreEqual("PNG", tgi_PNG.MatchesAnyKnownTGI().Detail);
+				DBPFTGI returned = tgi_blank.MatchesAnyKnownTGI();
+				Assert.AreEqual(DBPFTGI.BLANKTGI, returned);
+				Assert.AreEqual(null, returned.Category);
+
+				returned = tgi_exemplar.MatchesAnyKnownTGI();
+				Assert.AreEqual(DBPFTGI.EXEMPLAR, returned);
+				Assert.AreEqual("EXMP", returned.Category);
+				Assert.AreEqual("EXEMPLAR", returned.Detail);
+
+				returned = tgi_exemplarRail.MatchesAnyKnownTGI();
+				Assert.AreEqual("EXMP", returned.Category);
+				Assert.AreEqual("EXEMPLAR_RAIL", returned.Detail);
+
+				returned = tgi_exemplarRail2.MatchesAnyKnownTGI();
+				Assert.AreEqual("EXMP", returned.Category);
+				Assert.AreEqual("EXEMPLAR_RAIL", returned.Detail);
+
+				returned = tgi_PNG_Icon.MatchesAnyKnownTGI();
+				Assert.AreEqual("PNG", returned.Category);
+				Assert.AreEqual("PNG_ICON", returned.Detail);
+
+				returned = tgi_PNG.MatchesAnyKnownTGI();
+				Assert.AreEqual("PNG", returned.Category);
+				Assert.AreEqual("PNG", returned.Detail);
 			}
 
 			[TestMethod]
 			public void Test_056a_DBPFTGI_ModifyTGIusingDBPFTGI() {
 				DBPFTGI exemplar = new DBPFTGI(0x6534284a, 0, 0);
-				DBPFTGI exemplar2 = exemplar.ModifyTGI(DBPFTGI.EXEMPLAR_AVENUE);
-				Assert.AreEqual("0x6534284A, 0xCB730FAC, 0x00000000", exemplar2.ToString());
-				Assert.AreEqual(exemplar.ToString(), exemplar.ModifyTGI(DBPFTGI.NULLTGI).ToString());
+				DBPFTGI exemplar2 = exemplar;
+				exemplar2.SetTGI(DBPFTGI.EXEMPLAR_AVENUE);
+				Assert.AreEqual("0x6534284A, 0xCB730FAC, 0x00000000, EXMP, EXEMPLAR_AVENUE", exemplar2.ToString());
+				exemplar.SetTGI(DBPFTGI.NULLTGI);
+				Assert.AreEqual(exemplar.ToString(), exemplar.ToString());
 				DBPFTGI exemplar4 = new DBPFTGI(0, 2, 3);
-				Assert.AreEqual("0xCA63E2A3, 0x4A5E8EF6, 0x00000003", exemplar4.ModifyTGI(DBPFTGI.LUA).ToString());
+				exemplar4.SetTGI(DBPFTGI.LUA);
+				Assert.AreEqual("0xCA63E2A3, 0x4A5E8EF6, 0x00000003, LUA, LUA", exemplar4.ToString());
 			}
 
 			[TestMethod]
 			public void Test_056b_DBPFTGI_ModifyTGIusingUint() {
 				DBPFTGI exemplar = new DBPFTGI(0x6534284a, 0, 1000001);
-				Assert.AreEqual("0x6534284A, 0x00000000, 0x00000064", exemplar.ModifyTGI(null, null, 100).ToString());
-				Assert.AreEqual("0x00000064, 0x00000064, 0x00000064", exemplar.ModifyTGI(100, 100, 100).ToString());
+				exemplar.SetTGI(null, null, 100);
+				Assert.AreEqual("0x6534284A, 0x00000000, 0x00000064, EXMP, EXEMPLAR", exemplar.ToString());
+				exemplar.SetTGI(100, 100, 100);
+				Assert.AreEqual("0x00000064, 0x00000064, 0x00000064, NULL, NULLTGI", exemplar.ToString());
 			}
 		}
+
+
 
 		// 06x Test Methods for DBPFProperty Class
 		[TestClass]
@@ -520,11 +545,11 @@ namespace csDBPF_Test
 				DBPFFile jimspack = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\SC4 Deps\\Jim CarProp Pack 1.2.dat");
 				jimspack.DecodeAllEntries();
 				
-				DBPFEntry entry = jimspack.GetEntry(0);
+				DBPFEntryEXMP entry = (DBPFEntryEXMP) jimspack.GetEntry(0);
 				entry.DecodeAllProperties();
 				Assert.AreEqual(0, entry.ListOfProperties.Count);
 
-				entry = jimspack.GetEntry(178);
+				entry = (DBPFEntryEXMP) jimspack.GetEntry(178);
 				entry.DecodeAllProperties();
 				Assert.AreEqual(0, entry.ListOfProperties.Count);
 
@@ -543,6 +568,8 @@ namespace csDBPF_Test
 				Assert.AreEqual(t, a.GetType().GetElementType());
 			}
 		}
+
+
 
 		// 07x Test Methods for Property XML Parsing
 		[TestClass]
@@ -619,6 +646,8 @@ namespace csDBPF_Test
 			}
 		}
 
+
+
 		// 1xx Test Methods for DBPFFile Class
 		[TestClass]
 		public class _1xx_DBPFFile {
@@ -663,8 +692,8 @@ namespace csDBPF_Test
 					DBPFProperty.DecodeProperty(TestArrays.decompresseddata_b, 433)
 				};
 
-				DBPFEntry entry = new DBPFEntry(DBPFTGI.EXEMPLAR);
-				entry.DecodeEntry(TestArrays.decompresseddata_b);
+				DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR,0,0,0, TestArrays.decompresseddata_b);
+				entry.DecodeEntry();
 				for (int idx = 0; idx < propertiesKnown.Count; idx++) {
 					DBPFProperty outk = entry.ListOfProperties[idx];
 					DBPFProperty outr = entry.ListOfProperties[idx];
@@ -681,9 +710,9 @@ namespace csDBPF_Test
 
 			[TestMethod]
 			public void Test_110b_ParseLTEXTEntries() {
-				DBPFEntry entryb = new DBPFEntry(DBPFTGI.LTEXT);
-				entryb.DecodeEntry(TestArrays.notcompresseddata_b);
-				Assert.AreEqual("Parks Aura (by Cori)", ByteArrayHelper.ToAString(entryb.DecodedData));
+				DBPFEntryLTEXT entryb = new DBPFEntryLTEXT(DBPFTGI.LTEXT,0,0,0, TestArrays.notcompresseddata_b);
+				entryb.DecodeEntry();
+				Assert.AreEqual("Parks Aura (by Cori)", entryb.Text);
 
 				//TODO - add text encoding tests here
 			}
@@ -710,7 +739,7 @@ namespace csDBPF_Test
 
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 
-				DBPFEntry entry0 = dbpf.ListOfEntries[0];
+				DBPFEntryEXMP entry0 = (DBPFEntryEXMP) dbpf.ListOfEntries[0];
 				entry0.DecodeEntry();
 				for (int idx = 0; idx < propertiesKnown.Count; idx++) {
 					DBPFProperty outk = propertiesKnown[idx];
@@ -722,13 +751,13 @@ namespace csDBPF_Test
 					CollectionAssert.AreEqual(outk.ByteValues, outr.ByteValues);
 				}
 
-				DBPFEntry entry1 = dbpf.ListOfEntries[1];
+				DBPFEntryLTEXT entry1 = (DBPFEntryLTEXT) dbpf.ListOfEntries[1];
 				entry1.DecodeEntry();
-				Assert.AreEqual("Parks Aura (by Cori)", ByteArrayHelper.ToAString(entry1.DecodedData));
+				Assert.AreEqual("Parks Aura (by Cori)", entry1.Text);
 
-				DBPFEntry entry11 = dbpf.ListOfEntries[dbpf.ListOfEntries.Count - 2];
+				DBPFEntryLTEXT entry11 = (DBPFEntryLTEXT) dbpf.ListOfEntries[dbpf.ListOfEntries.Count - 2];
 				entry11.DecodeEntry();
-				Assert.AreEqual("+100  to +165", ByteArrayHelper.ToAString(entry11.DecodedData));
+				Assert.AreEqual("+100  to +165", entry11.Text);
 			}
 
 			[Ignore]

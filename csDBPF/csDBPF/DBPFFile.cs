@@ -20,10 +20,27 @@ namespace csDBPF
     /// For other type entries, their data is stored in a byte array, and is interpreted differently depending on the type of the entry.
     /// </remarks>
     public class DBPFFile {
+		/// <summary>
+		/// Stores key information about the DBPFFile. The Header is the first 48 bytes of the DBPFFile. 
+		/// </summary>
 		public DBPFHeader Header;
+		/// <summary>
+		/// Represents the file system file for this instance. 
+		/// </summary>
 		public FileInfo File;
+		/// <summary>
+		/// List of all entries in this file.
+		/// </summary>
 		public List<DBPFEntry> ListOfEntries; //TODO - make these unmodifiable outside of this scope. see https://stackoverflow.com/a/1710910/10802255
+		/// <summary>
+		/// List of all TGIs in this file.
+		/// </summary>
+		/// <remarks>
+		/// Can be used for quick inspection because no entry data is processed.
+		/// </remarks>
 		public List<DBPFTGI> ListOfTGIs; //TODO - make these unmodifiable outside of this scope. see https://stackoverflow.com/a/1710910/10802255
+
+		//TODO - add file size property
 
 		//------------- BEGIN DBPFFile.Header ------------- \\
 		/// <summary>
@@ -172,13 +189,13 @@ namespace csDBPF
 
 		//------------- BEGIN DBPFFile ------------- \\
 		/// <summary>
-		/// Instantiates a DBPFFile from a file path. If the file exists, its contents are read into the new DBPFFile; if the file does not exist then a new DBPFFile is created with default values.
+		/// Instantiates a DBPFFile from a file path. If the file exists, its contents are read into the new DBPFFile; if the file does not exist then a new DBPFFile is created with default Header values.
 		/// </summary>
 		/// <param name="fileName">File to read</param>
 		public DBPFFile(string fileName) : this(new FileInfo(fileName)) {}
 
 		/// <summary>
-		/// Instantiates a DBPFFile from a FileInfo object. If the file exists, its contents are read into the new DBPFFile; if the file does not exist then a new DBPFFile is created with default values.
+		/// Instantiates a DBPFFile from a FileInfo object. If the file exists, its contents are read into the new DBPFFile; if the file does not exist then a new DBPFFile is created with default Header values.
 		/// </summary>
 		/// <param name="file">File to read</param>
 		public DBPFFile(FileInfo file) {
@@ -257,7 +274,7 @@ namespace csDBPF
 
 					//TODO - should add two levels of label: base and detail
 					switch (ListOfTGIs[idx].Category) {
-						case "EXEMPLAR":
+						case "EXMP":
 							ListOfEntries.Add(new DBPFEntryEXMP(ListOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
 						case "LTEXT":
