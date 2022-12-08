@@ -7,7 +7,7 @@ namespace csDBPF.Properties {
 
 	public abstract partial class DBPFProperty {
 		/// <summary>
-		/// The Exemplar Type is one of the properties of an exemplar, and is used for grouping exemplars into similar categories. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar#Exemplar_Types"/>.
+		/// The Exemplar Type is one of the properties of an exemplar, and is used for grouping exemplars into similar categories. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar#Exemplar_Types"/>.
 		/// </summary>
 		public enum ExemplarTypes {
 			T00,
@@ -48,7 +48,7 @@ namespace csDBPF.Properties {
 		}
 
 		/// <summary>
-		/// The first rep (0) of a LotConfigPropertyLotObject (LCPLO) describes its type. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=LotConfigPropertyLotObject#Specification"/>.
+		/// The first rep (0) of a LotConfigPropertyLotObject (LCPLO) describes its type. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=LotConfigPropertyLotObject#Specification"/>.
 		/// </summary>
 		public enum LotConfigPropertyLotObjectTypes {
 			Building,
@@ -64,7 +64,7 @@ namespace csDBPF.Properties {
 
 
 		/// <summary>
-		/// Defines the RCI type for a lot. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
+		/// Defines the RCI type for a lot. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
 		/// </summary>
 		public enum LotConfigPropertyPurposeTypes {
 			None = 0,
@@ -78,7 +78,7 @@ namespace csDBPF.Properties {
 		}
 
 		/// <summary>
-		/// Defines the wealth for a lot. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
+		/// Defines the wealth for a lot. See <seecref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
 		/// </summary>
 		public enum LotConfigPropertyWealthTypes {
 			None,
@@ -88,7 +88,7 @@ namespace csDBPF.Properties {
 		}
 
 		/// <summary>
-		/// Defines the zone type for a lot (what type of zones the lot will grow on). See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
+		/// Defines the zone type for a lot (what type of zones the lot will grow on). See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
 		/// </summary>
 		public enum LotConfigPropertyZoneTypes {
 			None,
@@ -110,7 +110,7 @@ namespace csDBPF.Properties {
 		}
 
 		/// <summary>
-		/// Defines the road orientation for a lot. See <see cref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
+		/// Defines the road orientation for a lot. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>.
 		/// </summary>
 		public enum LotConfigPropertyRoadRequirement {
 			Normal = 0x08,

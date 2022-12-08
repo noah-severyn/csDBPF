@@ -249,10 +249,10 @@ namespace csDBPF {
 		/// <summary>
 		/// Update the Type, Group, or Instance of this TGI instance.
 		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="group"></param>
-		/// <param name="instance"></param>
-		public void UpdateTGI(uint? type = null, uint? group = null, uint? instance = null) {
+		/// <param name="type">Type to set</param>
+		/// <param name="group">Group to set</param>
+		/// <param name="instance">Instance to set</param>
+		public void SetTGI(uint? type = null, uint? group = null, uint? instance = null) {
 			if (type != null) {
 				_type = type;
 			}
@@ -266,16 +266,8 @@ namespace csDBPF {
 		//TODO - add tests to make sure the other fields (label, etc) are updated after this is changed
 
 
-		/// <summary>
-		/// Set the Type, Group, and Instance of this TGI instance.
-		/// </summary>
-		/// <param name="type">Type to set</param>
-		/// <param name="group">Group to set</param>
-		/// <param name="instance">Instance to set</param>
-		public void SetTGI(uint type, uint group, uint instance) {
-			_type = type;
-			_group = group;
-			_instance = instance;
+		public void SetTGI(DBPFTGI tgi) {
+			//if t g or i is null then set to a random one
 		}
 
 
@@ -361,7 +353,7 @@ namespace csDBPF {
 			KnownEntries.Add(FSH_ANIM_NONPROPS);
 			KnownEntries.Add(FSH_TERRAIN_FOUNDATION);
 			KnownEntries.Add(FSH_UI);
-			KnownEntries.Add(FSH, "FSH");
+			KnownEntries.Add(FSH);
 			KnownEntries.Add(SC4PATH_2D);
 			KnownEntries.Add(SC4PATH_3D);
 			KnownEntries.Add(SC4PATH);

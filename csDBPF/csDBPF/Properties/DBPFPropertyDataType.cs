@@ -6,7 +6,7 @@ namespace csDBPF.Properties {
 	/// <summary>
 	/// This class stores information related to the possible data types for properties.
 	/// </summary>
-	/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP#ValueType"/>
+	/// <see ref="https://www.wiki.sc4devotion.com/index.php?title=EXMP#ValueType"/>
 	public class DBPFPropertyDataType {
 		private static readonly Dictionary<string, DBPFPropertyDataType> dataTypes = new Dictionary<string, DBPFPropertyDataType>();
 		public static readonly DBPFPropertyDataType SINT32;
@@ -20,8 +20,6 @@ namespace csDBPF.Properties {
 
 
 
-
-		//------------- DBPFPropertyDataType Fields ------------- \\
 		private string _name;
 		/// <summary>
 		/// Data type identifier.
