@@ -290,25 +290,45 @@ namespace csDBPF_Test {
 			}
 
 			[TestMethod]
-			public void Test_056a_DBPFTGI_ModifyTGIusingDBPFTGI() {
-				DBPFTGI exemplar = new DBPFTGI(0x6534284a, 0, 0);
-				DBPFTGI exemplar2 = exemplar;
-				exemplar2.SetTGI(DBPFTGI.EXEMPLAR_AVENUE);
-				Assert.AreEqual("0x6534284A, 0xCB730FAC, 0x00000000, EXMP, EXEMPLAR_AVENUE", exemplar2.ToString());
-				exemplar.SetTGI(DBPFTGI.NULLTGI);
-				Assert.AreEqual(exemplar.ToString(), exemplar.ToString());
-				DBPFTGI exemplar4 = new DBPFTGI(0, 2, 3);
-				exemplar4.SetTGI(DBPFTGI.LUA);
-				Assert.AreEqual("0xCA63E2A3, 0x4A5E8EF6, 0x00000003, LUA, LUA", exemplar4.ToString());
+			public void Test_056a_DBPFTGI_SetTGIusingDBPFTGI() {
+				DBPFTGI tgi1 = new DBPFTGI(0x6534284a, 0, 0);
+				DBPFTGI tgi2 = tgi1;
+				tgi2.SetTGI(DBPFTGI.EXEMPLAR_AVENUE);
+				Assert.AreEqual("0x6534284A, 0xCB730FAC, 0x00000000, EXMP, EXEMPLAR_AVENUE", tgi2.ToString());
+				tgi1.SetTGI(DBPFTGI.NULLTGI);
+				Assert.AreEqual(tgi1.ToString(), tgi1.ToString());
+				DBPFTGI tgi3 = new DBPFTGI(0, 2, 3);
+				tgi3.SetTGI(DBPFTGI.LUA);
+				Assert.AreEqual("0xCA63E2A3, 0x4A5E8EF6, 0x00000003, LUA, LUA", tgi3.ToString());
 			}
 
 			[TestMethod]
-			public void Test_056b_DBPFTGI_ModifyTGIusingUint() {
-				DBPFTGI exemplar = new DBPFTGI(0x6534284a, 0, 1000001);
-				exemplar.SetTGI(null, null, 100);
-				Assert.AreEqual("0x6534284A, 0x00000000, 0x00000064, EXMP, EXEMPLAR", exemplar.ToString());
-				exemplar.SetTGI(100, 100, 100);
-				Assert.AreEqual("0x00000064, 0x00000064, 0x00000064, NULL, NULLTGI", exemplar.ToString());
+			public void Test_056b_DBPFTGI_SetTGIusingUint() {
+				DBPFTGI tgi1 = new DBPFTGI(0x6534284a, 0, 1000001);
+				tgi1.SetTGI(null, null, 100);
+				Assert.AreEqual("0x6534284A, 0x00000000, 0x00000064, EXMP, EXEMPLAR", tgi1.ToString());
+				tgi1.SetTGI(100, 100, 100);
+				Assert.AreEqual("0x00000064, 0x00000064, 0x00000064, NULL, NULLTGI", tgi1.ToString());
+
+				DBPFTGI tgi2 = new DBPFTGI(DBPFTGI.LUA);
+				tgi2.SetTGI(null,null,100);
+				Assert.AreEqual("0xCA63E2A3, 0x4A5E8EF6, 0x00000064, LUA, LUA", tgi2.ToString());
+			}
+
+			[TestMethod]
+			public void Test_057_DBPFTGI_SetRandomIdentifier() {
+				DBPFTGI tgi1 = new DBPFTGI(DBPFTGI.EXEMPLAR);
+				tgi1.SetRandomInstance();
+				tgi1.SetRandomGroup();
+				Assert.AreEqual(DBPFTGI.EXEMPLAR.Category, tgi1.Category);
+
+				DBPFTGI tgi2 = new DBPFTGI(DBPFTGI.EXEMPLAR_ROAD);
+				tgi2.SetRandomInstance();
+				Assert.AreEqual(DBPFTGI.EXEMPLAR_ROAD.Category, tgi2.Category);
+				tgi2.SetRandomGroup();
+				Assert.AreEqual(DBPFTGI.EXEMPLAR_ROAD.Category, tgi2.Category);
+				Assert.AreNotEqual(DBPFTGI.EXEMPLAR_ROAD.Detail, tgi2.Detail);
+				Assert.AreEqual(DBPFTGI.EXEMPLAR.Category, tgi2.Category);
 			}
 		}
 

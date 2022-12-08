@@ -5,7 +5,7 @@ using System.Text;
 
 namespace csDBPF.Entries {
 	/// <summary>
-	/// An abstract form of an entry item of a <see cref="DBPFFile"/>, representing an instance of a subfile that may be contained in a DBPF file. The data for each entry is not parsed or decoded until <see cref="DecodeEntry"/> is called to decompress and set the actual entry data.
+	/// An abstract form of an entry item, representing an instance of a subfile that may be contained in a <see cref="DBPFFile"/>. The data for each entry is not parsed or decoded until <see cref="DecodeEntry"/> is called to decompress and set the actual entry data.
 	/// </summary>
 	public abstract class DBPFEntry {
 		/// <summary>
@@ -72,9 +72,6 @@ namespace csDBPF.Entries {
 			IsCompressed = true;
 			IsCompressedNow = true;
 		}
-
-
-
 
 		/// <summary>
 		/// Create a new DBPFEntry object.

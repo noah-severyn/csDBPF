@@ -7,7 +7,15 @@ using csDBPF.Properties;
 using static System.Net.WebRequestMethods;
 
 namespace csDBPF.Entries {
+	/// <summary>
+	/// An implementation of <see cref="DBPFEntry"/> for Exemplar and Cohort entries. Object data is stored in <see cref="ListOfProperties"/>.
+	/// </summary>
+	/// <see ref="https://wiki.sc4devotion.com/index.php?title=EXMP"/>
 	public class DBPFEntryEXMP : DBPFEntry {
+		/// <summary>
+		/// Stores if this entry has been decoded yet.
+		/// </summary>
+		private bool _isDecoded;
 
 		private List<DBPFProperty> _listOfProperties;
 		/// <summary>
@@ -18,15 +26,38 @@ namespace csDBPF.Entries {
 			set { _listOfProperties = value; }
 		}
 
-		public DBPFTGI ParentCohort { get; set; }
-
-
-
-		public DBPFEntryEXMP(DBPFTGI tgi) : base(tgi) {
-
+		private DBPFTGI _parentCohort;
+		/// <summary>
+		/// TGI set representing the Parent Cohort for this exemplar.
+		/// </summary>
+		/// <see ref="https://www.wiki.sc4devotion.com/index.php?title=Cohort"/>
+		public DBPFTGI ParentCohort {
+			get { return _parentCohort; }
+			set { _parentCohort = value; }
 		}
+
+
+
+		/// <summary>
+		/// Create a new instance. Use when creating new exemplars.
+		/// </summary>
+		/// <param name="tgi">TGI set to assign</param>
+		public DBPFEntryEXMP(DBPFTGI tgi) : base(tgi) {
+			if (tgi is null) {
+				TGI.SetTGI(DBPFTGI.EXEMPLAR);
+			}
+		}
+
+		/// <summary>
+		/// Create a new instance. Use when reading existing exemplars from a file.
+		/// </summary>
+		/// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
+		/// <param name="offset">Offset (location) of the entry within the DBPF file</param>
+		/// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
+		/// <param name="index">Entry position in the file, 0-n</param>
+		/// <param name="bytes">Byte data for this entry</param>
 		public DBPFEntryEXMP(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
-			_listOfProperties = null;
+			_listOfProperties = new List<DBPFProperty>();
 		}
 
 
@@ -35,7 +66,11 @@ namespace csDBPF.Entries {
 		/// </summary>
 		/// <returns>Dictionary of <see cref="DBPFProperty"/> indexed by their order in the entry</returns>
 		public override void DecodeEntry() {
-			byte[] cData = base.ByteData;
+			if (_isDecoded) {
+				return;
+			}
+
+			byte[] cData = ByteData;
 			byte[] dData;
 			if (DBPFCompression.IsCompressed(cData)) {
 				dData = DBPFCompression.Decompress(cData);
@@ -55,12 +90,14 @@ namespace csDBPF.Entries {
 				parentCohortTID = BitConverter.ToUInt32(dData, 8);
 				parentCohortGID = BitConverter.ToUInt32(dData, 12);
 				parentCohortIID = BitConverter.ToUInt32(dData, 16);
+				_parentCohort.SetTGI(parentCohortTID,parentCohortGID,parentCohortIID);
 				propertyCount = BitConverter.ToUInt32(dData, 20);
 				pos = 24;
 			} else {
 				parentCohortTID = ByteArrayHelper.ReadTextIntoUint(dData, 30);
 				parentCohortGID = ByteArrayHelper.ReadTextIntoUint(dData, 41);
 				parentCohortIID = ByteArrayHelper.ReadTextIntoUint(dData, 52);
+				_parentCohort.SetTGI(parentCohortTID, parentCohortGID, parentCohortIID);
 				propertyCount = ByteArrayHelper.ReadTextIntoUint(dData, 75);
 				pos = 85;
 			}

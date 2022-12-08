@@ -52,7 +52,7 @@ namespace csDBPF {
 		/// <param name="file">File to examine.</param>
 		/// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
 		public static bool IsValidDBPF(FileInfo file) {
-			FileStream fs = new FileStream(file.FullName, FileMode.Open); //TODO - https://docs.microsoft.com/en-us/dotnet/standard/io/handling-io-errors
+			FileStream fs = new FileStream(file.FullName, FileMode.Open);
 			BinaryReader br = new BinaryReader(fs);
 
 			//To determine if the file is DBPF or not, can just look at the first few bytes which make up the header - no need to examine any of the rest of the file.
