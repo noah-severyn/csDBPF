@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace csDBPF.Properties {
 	/// <summary>
@@ -128,6 +129,24 @@ namespace csDBPF.Properties {
 		public override string ToString() {
 			return _name;
 		}
+
+
+
+		/// <summary>
+		/// Tests for equality of DBPFTGI objects by comparing T, G, I components of each. This method is reflexive.
+		/// </summary>
+		/// <remarks>If any component of the passed DBPFTGI is null that component is ignored in the evaluation.</remarks>
+		/// <param name="obj">Any object to compare</param>
+		/// <returns>TRUE if check passes; FALSE otherwise</returns>
+		public override bool Equals(object obj) {
+			if (obj is DBPFPropertyDataType checkType) {
+				if (checkType.Name == Name) {
+					return true;
+				}
+			} 
+			return false;
+		}
+
 
 
 		/// <summary>

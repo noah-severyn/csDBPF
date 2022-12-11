@@ -8,6 +8,8 @@ namespace csDBPF {
 	/// Helper methods to parse a byte array into an array of one of the DBPF data types. 
 	/// </summary>
 	public static class ByteArrayHelper {
+		//TODO - replace all of these as MemoryMarshall.Case<To,From> https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.memorymarshal.cast?view=net-7.0
+
 		//Convert from a byte[] to the specific data type
 		#region FromByteArrayToArray
 		/// <summary>
@@ -108,6 +110,24 @@ namespace csDBPF {
 			return result;
 		}
 		/// <summary>
+		/// Convert byte array to Float32 List.
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>List of float values</returns>
+		public static List<float> ToFloat32List(byte[] data) {
+			if (data.Length % 2 != 0) {
+				throw new ArgumentException("Length of data array cannot be odd!");
+			} else if (data.Length % 4 != 0) {
+				throw new ArgumentException("Length of data array must be a multiple of 4!");
+			}
+
+			List<float> result = new List<float>();
+			for (int idx = 0; idx < data.Length / 4; idx++) {
+				result.Add(BitConverter.ToSingle(data, idx * 4)); //float aka single
+			}
+			return result;
+		}
+		/// <summary>
 		/// Convert byte array to SInt64 array.
 		/// </summary>
 		/// <param name="data">Data to parse</param>
@@ -122,6 +142,24 @@ namespace csDBPF {
 			long[] result = new long[data.Length / 8];
 			for (int idx = 0; idx < data.Length / 8; idx++) {
 				result[idx] = BitConverter.ToInt64(data, idx * 8);
+			}
+			return result;
+		}
+		/// <summary>
+		/// Convert byte array to long List
+		/// </summary>
+		/// <param name="data">Data to parse</param>
+		/// <returns>List of long values</returns>
+		public static List<long> ToSInt64List(byte[] data) {
+			if (data.Length % 2 != 0) {
+				throw new ArgumentException("Length of data array cannot be odd!");
+			} else if (data.Length % 8 != 0) {
+				throw new ArgumentException("Length of data array must be a multiple of 8!");
+			}
+
+			List<long> result = new List<long>();
+			for (int idx = 0; idx < data.Length / 8; idx++) {
+				result.Add(BitConverter.ToInt64(data, idx * 8));
 			}
 			return result;
 		}
@@ -212,49 +250,59 @@ namespace csDBPF {
 		/// <param name="data">Array to read from</param>
 		/// <param name="offset">Location in array to start at. Default is 0</param>
 		/// <returns>Uint value</returns>
-		public static uint ReadTextIntoUint(byte[] data, int offset = 0) {
+		public static uint ReadTextToUint(byte[] data, int offset = 0) {
 			uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result);
 			return result;
 		}
 
 
-		public static int ReadTextIntoANumber(byte[] data, int offset, int length) {
+		public static int ReadTextToInt(byte[] data, int offset, int length) {
 			int.TryParse(ToAString(data, offset, length), out int result);
 			return result;
 		}
 
-		public static object ReadTextIntoType(byte[] data, Type type, int offset, int length = 0) {
-			//var result = 0;
-			switch (type.Name) {
-				case "Int32":
-					int.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_int);
-					return result_int;
-				case "Double": //FLoat32
-					float.TryParse(ToAString(data, offset, length), NumberStyles.Float, CultureInfo.InvariantCulture, out float result_float);
-					return result_float;
-				case "UInt32":
-					uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result_uint);
-					return result_uint;
-				case "Boolean":
-					int.TryParse(ToAString(data, offset, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_bool);
-					if (result_bool == 0) {
-						return false;
-					} else {
-						return true;
-					}
-				case "Byte": //Uint8
-					byte.TryParse(ToAString(data, offset, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result_byte);
-					return result_byte;
-				case "Int64":
-					long.TryParse(ToAString(data, offset, 16), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result_long);
-					return result_long;
-				case "UInt16":
-					ushort.TryParse(ToAString(data, offset, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort result_ushort);
-					return result_ushort;
-				default:
-					return null;
-			}
+		public static long ReadTextToLong(byte[] data, int offset, int length) {
+			long.TryParse(ToAString(data, offset, length), out long result);
+			return result;
 		}
+
+		public static float ReadTextToFloat(byte[] data, int offset, int length) {
+			float.TryParse(ToAString(data, offset, length), out float result);
+			return result;
+		}
+
+		//public static object ReadTextIntoType(byte[] data, Type type, int offset, int length = 0) {
+		//	//var result = 0;
+		//	switch (type.Name) {
+		//		case "Int32":
+		//			int.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_int);
+		//			return result_int;
+		//		case "Double": //FLoat32
+		//			float.TryParse(ToAString(data, offset, length), NumberStyles.Float, CultureInfo.InvariantCulture, out float result_float);
+		//			return result_float;
+		//		case "UInt32":
+		//			uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result_uint);
+		//			return result_uint;
+		//		case "Boolean":
+		//			int.TryParse(ToAString(data, offset, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_bool);
+		//			if (result_bool == 0) {
+		//				return false;
+		//			} else {
+		//				return true;
+		//			}
+		//		case "Byte": //Uint8
+		//			byte.TryParse(ToAString(data, offset, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result_byte);
+		//			return result_byte;
+		//		case "Int64":
+		//			long.TryParse(ToAString(data, offset, 16), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result_long);
+		//			return result_long;
+		//		case "UInt16":
+		//			ushort.TryParse(ToAString(data, offset, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort result_ushort);
+		//			return result_ushort;
+		//		default:
+		//			return null;
+		//	}
+		//}
 
 
 		#endregion FromByteArrayToA

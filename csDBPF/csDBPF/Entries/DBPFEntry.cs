@@ -47,7 +47,6 @@ namespace csDBPF.Entries {
 		/// </remarks>
 		public bool IsCompressed { get; protected set; }
 
-
 		/// <summary>
 		/// Stores the current compression state of <see cref="ByteData"/>. TRUE = compressed; FALSE = uncompressed
 		/// </summary>
