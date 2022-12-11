@@ -9,13 +9,37 @@ namespace csDBPF.Properties {
 	/// <see ref="https://www.wiki.sc4devotion.com/index.php?title=EXMP#ValueType"/>
 	public class DBPFPropertyDataType {
 		private static readonly Dictionary<string, DBPFPropertyDataType> dataTypes = new Dictionary<string, DBPFPropertyDataType>();
+		/// <summary>
+		/// Numeric value 0x700.
+		/// </summary>
 		public static readonly DBPFPropertyDataType SINT32;
+		/// <summary>
+		/// Numeric value 0x900.
+		/// </summary>
 		public static readonly DBPFPropertyDataType FLOAT32;
+		/// <summary>
+		/// Numeric value 0x300.
+		/// </summary>
 		public static readonly DBPFPropertyDataType UINT32;
+		/// <summary>
+		/// Numeric value 0xB00.
+		/// </summary>
 		public static readonly DBPFPropertyDataType BOOL;
+		/// <summary>
+		/// Numeric value 0x100.
+		/// </summary>
 		public static readonly DBPFPropertyDataType UINT8;
+		/// <summary>
+		/// Numeric value 0x800.
+		/// </summary>
 		public static readonly DBPFPropertyDataType SINT64;
+		/// <summary>
+		/// Numeric value 0x200.
+		/// </summary>
 		public static readonly DBPFPropertyDataType UINT16;
+		/// <summary>
+		/// Numeric value 0xC00.
+		/// </summary>
 		public static readonly DBPFPropertyDataType STRING;
 
 
@@ -62,6 +86,7 @@ namespace csDBPF.Properties {
 		/// <param name="name">Data type identifier</param>
 		/// <param name="value">Numeric value encoded in the exemplar data used to identify the property data type</param>
 		/// <param name="length">Length in bytes of the property</param>
+		/// <param name="baseType">Data type of this property</param>
 		private DBPFPropertyDataType(string name, ushort value, int length, Type baseType) {
 			_name = name;
 			_identifyingNumber = value;
