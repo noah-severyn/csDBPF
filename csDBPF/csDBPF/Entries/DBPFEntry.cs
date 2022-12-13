@@ -144,5 +144,20 @@ namespace csDBPF.Entries {
 			string fileIdentifier = ByteArrayHelper.ToAString(ByteData, 0, 4);
 			return fileIdentifier == "EQZB" || fileIdentifier == "EQZT" || fileIdentifier == "CQZB" || fileIdentifier == "CQZT";
 		}
+
+
+		/// <summary>
+		/// Specifies the encoding type for an entry or properties.
+		/// </summary>
+		public static class EncodingType {
+			/// <summary>
+			/// Entry/property is encoded in binary format.
+			/// </summary>
+			public const bool Binary = false;
+			/// <summary>
+			/// Entry/property is encoded in text format.
+			/// </summary>
+			public const bool Text = true;
+		}
 	}
 }

@@ -257,12 +257,12 @@ namespace csDBPF {
 
 
 		public static int ReadTextToInt(byte[] data, int offset, int length) {
-			int.TryParse(ToAString(data, offset, length), out int result);
+			int.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result);
 			return result;
 		}
 
 		public static long ReadTextToLong(byte[] data, int offset, int length) {
-			long.TryParse(ToAString(data, offset, length), out long result);
+			long.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result);
 			return result;
 		}
 

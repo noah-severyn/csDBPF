@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using csDBPF.Entries;
+using static csDBPF.Entries.DBPFEntry;
 
 namespace csDBPF.Properties {
 	/// <summary>
@@ -14,7 +16,7 @@ namespace csDBPF.Properties {
 		/// </summary>
 		public override uint ID {
 			get { return _id; }
-			internal set { _id = value; }
+			set { _id = value; }
 		}
 
 		private readonly DBPFPropertyDataType _dataType;
@@ -36,28 +38,49 @@ namespace csDBPF.Properties {
 			get { return _numberOfReps; }
 		}
 
-		private string _dataValue;
+		private bool _isTextEncoding;
 		/// <summary>
-		/// List of data values which are stored in this property.
+		/// Specifies the encoding style (Binary or Text) of the property.
 		/// </summary>
+		/// <remarks>
+		/// This property affects <see cref="NumberOfReps"/>. This also determines how this property will be written to file. 
+		/// </remarks>
+		public override bool IsTextEncoding {
+			get { return _isTextEncoding; }
+			set { _isTextEncoding = value; }
+		}
+
+		/// <summary>
+		/// The data value stored in this property.
+		/// </summary>
+		private string _dataValue;
 
 
-	
+
+
 		/// <summary>
 		/// Construct a new DBPFProperty with a string data type.
 		/// </summary>
-		public DBPFPropertyString() {
+		/// <param name="encodingType">Encoding type: binary or text</param>
+		public DBPFPropertyString(bool encodingType = EncodingType.Binary) {
 			_dataType = DBPFPropertyDataType.STRING;
+			_isTextEncoding = encodingType;
 			_numberOfReps = 0;
 		}
 		/// <summary>
 		/// Construct a DBPFProperty with a string data type holding a specified string.
 		/// </summary>
-		/// <param name="value"></param>
-		public DBPFPropertyString(string value) {
+		/// <param name="value">String to set</param>
+		/// <param name="encodingType">Encoding type: binary or text</param>
+		public DBPFPropertyString(string value, bool encodingType = EncodingType.Binary) {
 			_dataType = DBPFPropertyDataType.STRING;
 			_dataValue = value;
-			_numberOfReps = _dataValue.Length;
+			_isTextEncoding = encodingType;
+			if (_isTextEncoding) {
+				_numberOfReps = 1;
+			} else {
+				_numberOfReps = _dataValue.Length;
+			}
 		}
 
 
@@ -94,7 +117,11 @@ namespace csDBPF.Properties {
 				throw new ArgumentException($"Argument to DBPFPropertyString.SetDataValues must be string. {value.GetType()} was provided.");
 			}
 			_dataValue = (string) value;
-			_numberOfReps = _dataValue.Length;
+			if (_isTextEncoding) {
+				_numberOfReps = 1;
+			} else {
+				_numberOfReps = _dataValue.Length;
+			}
 		}
 
 

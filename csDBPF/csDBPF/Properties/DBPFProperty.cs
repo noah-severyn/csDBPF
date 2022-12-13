@@ -14,7 +14,7 @@ namespace csDBPF.Properties
 		/// <summary>
 		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
-		public abstract uint ID { get; internal set; }
+		public abstract uint ID { get; set; }
 
 		/// <summary>
 		/// The <see cref="DBPFPropertyDataType"/> for this property.
@@ -28,6 +28,14 @@ namespace csDBPF.Properties
 		/// Determining the count partially depends on the encoding type. For binary encoded string type: length of string. For text encoded string type: always 1. For binary encoded (all) and text encoded number types (except float): 0 reps = single value, 1 reps = multiple values but currently held to 1 value (problematic on macOS when the DataType is float), n reps = n number of values. For text encoded float type: n reps = n number of values. This property is necessary because of uneven implementation of the DataValues property in implementing types.
 		/// </remarks>
 		public abstract int NumberOfReps { get; }
+
+		/// <summary>
+		/// Specifies the encoding style (Binary or Text) of the property.
+		/// </summary>
+		/// <remarks>
+		/// May affect implementation of other fields, namely <see cref="NumberOfReps"/>. Property is presented so the default value (false) will be binary encoding which we want to use most of the time.
+		/// </remarks>
+		public abstract bool IsTextEncoding { get; set; }
 
 		/// <summary>
 		/// Return the values(s) stored in this property.

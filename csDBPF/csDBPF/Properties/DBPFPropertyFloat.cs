@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using csDBPF.Entries;
 
 namespace csDBPF.Properties {
 	/// <summary>
@@ -15,7 +16,7 @@ namespace csDBPF.Properties {
 		/// </summary>
 		public override uint ID {
 			get { return _id; }
-			internal set { _id = value; }
+			set { _id = value; }
 		}
 
 		private readonly DBPFPropertyDataType _dataType;
@@ -37,6 +38,21 @@ namespace csDBPF.Properties {
 			get { return _numberOfReps; }
 		}
 
+		private bool _isTextEncoding;
+		/// <summary>
+		/// Specifies the encoding style (Binary or Text) of the property.
+		/// </summary>
+		/// <remarks>
+		/// This property affects <see cref="NumberOfReps"/>. This also determines how this property will be written to file. 
+		/// </remarks>
+		public override bool IsTextEncoding {
+			get { return _isTextEncoding; }
+			set { _isTextEncoding = value; }
+		}
+
+		/// <summary>
+		/// List of data values which are stored in this property.
+		/// </summary>
 		private List<float> _dataValues;
 
 
@@ -44,28 +60,42 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// Construct a new DBPFProperty with a float data type.
 		/// </summary>
-		public DBPFPropertyFloat() {
+		/// <param name="encodingType">Encoding type: binary or text</param>
+		public DBPFPropertyFloat(bool encodingType = DBPFEntry.EncodingType.Binary) {
 			_dataType = DBPFPropertyDataType.FLOAT32;
+			_isTextEncoding = encodingType;
 			_numberOfReps = 0;
 		}
 		/// <summary>
 		/// Construct a DBPFProperty with a float data type holding a single value.
 		/// </summary>
 		/// <param name="value">Value of this property</param>
-		public DBPFPropertyFloat(float value) {
+		/// <param name="encodingType">Encoding type: binary or text</param>
+		public DBPFPropertyFloat(float value, bool encodingType = DBPFEntry.EncodingType.Binary) {
 			_dataType = DBPFPropertyDataType.FLOAT32;
 			_dataValues = new List<float> { value };
-			_numberOfReps = _dataValues.Count;
+			_isTextEncoding = encodingType;
+			_numberOfReps = 0;
 		}
 		/// <summary>
 		/// Construct a DBPFProperty with a float data type holding multiple values.
 		/// </summary>
 		/// <param name="values">Values this property holds</param>
-		/// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-		public DBPFPropertyFloat(List<float> values) {
+		/// <param name="encodingType">Encoding type: binary or text</param>
+		public DBPFPropertyFloat(List<float> values, bool encodingType = DBPFEntry.EncodingType.Binary) {
 			_dataType = DBPFPropertyDataType.FLOAT32;
 			_dataValues = values;
-			_numberOfReps = _dataValues.Count;
+			_isTextEncoding = encodingType;
+			if (_isTextEncoding) {
+				_numberOfReps = _dataValues.Count;
+			} else {
+				//Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
+				if (_dataValues.Count <= 1) {
+					_numberOfReps = 0;
+				} else {
+					_numberOfReps = _dataValues.Count;
+				}
+			}
 		}
 
 
@@ -90,10 +120,16 @@ namespace csDBPF.Properties {
 				throw new ArgumentException($"Argument to DBPFPropertyFloat.SetDataValues must be List<float>. {value.GetType()} was provided.");
 			}
 			_dataValues = (List<float>) value;
-			if (_dataValues.Count <= 1) {
-				_numberOfReps = 0;
-			} else {
+
+			if (_isTextEncoding) {
 				_numberOfReps = _dataValues.Count;
+			} else {
+				//Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
+				if (_dataValues.Count <= 1) {
+					_numberOfReps = 0;
+				} else {
+					_numberOfReps = _dataValues.Count;
+				}
 			}
 		}
 

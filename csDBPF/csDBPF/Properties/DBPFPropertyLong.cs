@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using csDBPF.Entries;
+using static csDBPF.Entries.DBPFEntry;
 
 namespace csDBPF.Properties {
 	/// <summary>
@@ -11,14 +13,14 @@ namespace csDBPF.Properties {
 	/// <remarks>
 	/// All numbers are stored internally as long (equal to largest used DBPFPropertyDataType of SINT64). The actual underlying data type is defined by the <see cref="DBPFPropertyDataType"/>.
 	/// </remarks>
-	public class DBPFPropertyNumber : DBPFProperty {
+	public class DBPFPropertyLong : DBPFProperty {
 		private uint _id;
 		/// <summary>
 		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
 		public override uint ID {
 			get { return _id; }
-			internal set { _id = value; }
+			set { _id = value; }
 		}
 
 		private DBPFPropertyDataType _dataType;
@@ -40,6 +42,21 @@ namespace csDBPF.Properties {
 			get { return _numberOfReps; }
 		}
 
+		private bool _isTextEncoding;
+		/// <summary>
+		/// Specifies the encoding style (Binary or Text) of the property.
+		/// </summary>
+		/// <remarks>
+		/// This only determines how this property will be written to file. No properties of this instance are affected by this. 
+		/// </remarks>
+		public override bool IsTextEncoding {
+			get { return _isTextEncoding; }
+			set { _isTextEncoding = value; }
+		}
+
+		/// <summary>
+		/// List of data values which are stored in this property.
+		/// </summary>
 		private List<long> _dataValues;
 
 
@@ -48,13 +65,15 @@ namespace csDBPF.Properties {
 		/// Construct a DBPFProperty with a numerical data type.
 		/// </summary>
 		/// <param name="dataType">Data type of this property</param>
+		/// <param name="encodingType">Encoding type: binary or text</param>
 		/// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-		public DBPFPropertyNumber(DBPFPropertyDataType dataType) {
+		public DBPFPropertyLong(DBPFPropertyDataType dataType, bool encodingType = EncodingType.Binary) {
 			if (dataType == DBPFPropertyDataType.FLOAT32 || dataType == DBPFPropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			_dataType = dataType;
 			_dataValues = null;
+			_isTextEncoding = encodingType;
 			_numberOfReps = 0;
 		}
 		/// <summary>
@@ -62,28 +81,36 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <param name="dataType">Data type of this property</param>
 		/// <param name="value">Value of this property</param>
+		/// <param name="encodingType">Encoding type: binary or text</param>
 		/// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-		public DBPFPropertyNumber(DBPFPropertyDataType dataType, long value) {
+		public DBPFPropertyLong(DBPFPropertyDataType dataType, long value, bool encodingType = EncodingType.Binary) {
 			if (dataType == DBPFPropertyDataType.FLOAT32 || dataType == DBPFPropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			_dataType = dataType;
 			_dataValues = new List<long> { value };
-			_numberOfReps = _dataValues.Count;
+			_isTextEncoding = encodingType;
+			_numberOfReps = 0;
 		}
 		/// <summary>
 		/// Construct a DBPFProperty with a numerical data type holding multiple values.
 		/// </summary>
 		/// <param name="dataType">Data type of this property</param>
 		/// <param name="values">Values this property holds</param>
+		/// <param name="encodingType">Encoding type: binary or text</param>
 		/// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-		public DBPFPropertyNumber(DBPFPropertyDataType dataType, List<long> values) {
+		public DBPFPropertyLong(DBPFPropertyDataType dataType, List<long> values, bool encodingType = EncodingType.Binary) {
 			if (dataType == DBPFPropertyDataType.FLOAT32 || dataType == DBPFPropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			_dataType = dataType;
 			_dataValues = values;
-			_numberOfReps = _dataValues.Count;
+			_isTextEncoding = encodingType;
+			if (_dataValues.Count == 1) {
+				_numberOfReps = 0;
+			} else {
+				_numberOfReps = _dataValues.Count;
+			}
 		}
 
 
