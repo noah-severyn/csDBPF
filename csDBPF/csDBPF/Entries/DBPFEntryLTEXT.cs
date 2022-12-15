@@ -24,7 +24,6 @@ namespace csDBPF.Entries {
 			get { return _text; }
 			set {
 				_text = value;
-				ByteData = EncodeEntry(value);
 			}
 		}
 
@@ -73,28 +72,32 @@ namespace csDBPF.Entries {
 			ushort numberOfChars = BitConverter.ToUInt16(ByteData, pos);
 			pos += 2;
 			ushort textControlChar = ByteArrayHelper.ReadBytesIntoUshort(ByteData, pos);
-			pos += 2;
 			if (textControlChar != 0x0010) {
 				_text = null;
+				return;
 			}
+			pos += 2;
 
 			StringBuilder sb = new StringBuilder();
 			for (int idx = 0; idx < numberOfChars; idx++) {
 				//Important to read two bytes to account for non english unicode characters
-				sb.Append(BitConverter.ToInt16(ByteData, pos));
+				int twoBytes = BitConverter.ToInt16(ByteData, pos);
+				sb.Append(Convert.ToChar(twoBytes));
 				pos += 2;
 			}
 			_text = sb.ToString();
 			_isDecoded = true;
 		}
 
-
-		private static byte[] EncodeEntry(string text) {
+		/// <summary>
+		/// Set this instance's byte array with the current state.
+		/// </summary>
+		public override void EncodeEntry() {
 			List<byte> bytes = new List<byte>();
-			bytes.AddRange(BitConverter.GetBytes((ushort) text.Length)); //Number of characters
+			bytes.AddRange(BitConverter.GetBytes((ushort) _text.Length)); //Number of characters
 			bytes.AddRange(new byte[] { 0x00, 0x10 }); //Text control character
-			bytes.AddRange(ByteArrayHelper.ToByteArray(text));
-			return bytes.ToArray();
+			bytes.AddRange(ByteArrayHelper.ToByteArray(_text, false));
+			ByteData = bytes.ToArray();
 		}
 	}
 }

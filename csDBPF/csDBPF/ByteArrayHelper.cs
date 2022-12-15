@@ -255,54 +255,41 @@ namespace csDBPF {
 			return result;
 		}
 
-
+		/// <summary>
+		/// Sequentially reads a number of bytes, converts them to string equivalents, then parses them into an int.
+		/// </summary>
+		/// <param name="data">Array to read from</param>
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <param name="length">Length to read</param>
+		/// <returns></returns>
 		public static int ReadTextToInt(byte[] data, int offset, int length) {
 			int.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result);
 			return result;
 		}
 
+		/// <summary>
+		/// Sequentially reads a number of bytes, converts them to string equivalents, then parses them into a long.
+		/// </summary>
+		/// <param name="data">Array to read from</param>
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <param name="length">Length to read</param>
+		/// <returns></returns>
 		public static long ReadTextToLong(byte[] data, int offset, int length) {
 			long.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result);
 			return result;
 		}
 
+		/// <summary>
+		/// Sequentially reads a number of bytes, converts them to string equivalents, then parses them into a float.
+		/// </summary>
+		/// <param name="data">Array to read from</param>
+		/// <param name="offset">Location in array to start at. Default is 0</param>
+		/// <param name="length">Length to read</param>
+		/// <returns></returns>
 		public static float ReadTextToFloat(byte[] data, int offset, int length) {
 			float.TryParse(ToAString(data, offset, length), out float result);
 			return result;
 		}
-
-		//public static object ReadTextIntoType(byte[] data, Type type, int offset, int length = 0) {
-		//	//var result = 0;
-		//	switch (type.Name) {
-		//		case "Int32":
-		//			int.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_int);
-		//			return result_int;
-		//		case "Double": //FLoat32
-		//			float.TryParse(ToAString(data, offset, length), NumberStyles.Float, CultureInfo.InvariantCulture, out float result_float);
-		//			return result_float;
-		//		case "UInt32":
-		//			uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result_uint);
-		//			return result_uint;
-		//		case "Boolean":
-		//			int.TryParse(ToAString(data, offset, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result_bool);
-		//			if (result_bool == 0) {
-		//				return false;
-		//			} else {
-		//				return true;
-		//			}
-		//		case "Byte": //Uint8
-		//			byte.TryParse(ToAString(data, offset, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result_byte);
-		//			return result_byte;
-		//		case "Int64":
-		//			long.TryParse(ToAString(data, offset, 16), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result_long);
-		//			return result_long;
-		//		case "UInt16":
-		//			ushort.TryParse(ToAString(data, offset, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort result_ushort);
-		//			return result_ushort;
-		//		default:
-		//			return null;
-		//	}
-		//}
 
 
 		#endregion FromByteArrayToA
@@ -314,17 +301,19 @@ namespace csDBPF {
 		/// Reads a string and parses into a byte array the same length as the string
 		/// </summary>
 		/// <param name="data">Data to parse</param>
+		/// <param name="singleByte">Parse type. FALSE (Default) is two byte output per char: Unicode; TRUE is one byte per char: ANSI (Windows-1252) </param>
 		/// <returns>A byte array of parsed data</returns>
-		/// <remarks>
-		/// String encoding is single byte ANSI (Windows-1252)
-		/// </remarks>
-		public static byte[] ToByteArray(string data) {
-			char[] chars = data.ToCharArray();
-			byte[] result = new byte[data.Length];
-			for (int idx = 0; idx < data.Length; idx++) {
-				result[idx] = Convert.ToByte(chars[idx]);
+		public static byte[] ToByteArray(string data, bool singleByte = false) {
+			List<byte> bytes = new List<byte>();
+			foreach (char c in data) {
+				if (singleByte) {
+					bytes.Add(Convert.ToByte(c));
+				} else {
+					//Convert char to two byte int, then get the bytes of that int
+					bytes.AddRange(BitConverter.GetBytes(Convert.ToInt16(c)));
+				}
 			}
-			return result;
+			return bytes.ToArray();
 		}
 		/// <summary>
 		/// Pareses the boolean array and returns the corresponding byte array.

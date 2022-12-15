@@ -53,7 +53,7 @@ namespace csDBPF.Entries {
 		public bool IsCompressedNow { get; protected set; }
 
 		/// <summary>
-		/// Byte array of raw  data pertaining to this entry. Depending on <see cref="IsCompressed"/> and <see cref="IsCompressedNow"/>, this data may be compressed.
+		/// Byte array of raw data pertaining to this entry. Depending on <see cref="IsCompressed"/> and <see cref="IsCompressedNow"/>, this data may be compressed.
 		/// </summary>
 		/// <remarks>
 		/// The interpretation of the entry data depends on the compression status and the entry type (known through its <see cref="TGI"/>). Always check if the data is compressed before processing.
@@ -105,6 +105,11 @@ namespace csDBPF.Entries {
 		/// Decompresses the data and sets the entry's data object.
 		/// </summary>
 		public abstract void DecodeEntry();
+
+		/// <summary>
+		/// Set <see cref="ByteData"/> with the current state according to the implementing type's implementation.
+		/// </summary>
+		public abstract void EncodeEntry();
 
 
 
