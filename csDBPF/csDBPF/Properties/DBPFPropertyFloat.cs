@@ -101,6 +101,21 @@ namespace csDBPF.Properties {
 
 
 		/// <summary>
+		/// Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>Returns a string that represents the current object.</returns>
+		public override string ToString() {
+			StringBuilder sb = new StringBuilder();
+			sb.Append($"ID: 0x{DBPFUtil.UIntToHexString(_id)}, ");
+			sb.Append($"Type: {_dataType}, ");
+			sb.Append($"Reps: {_numberOfReps}, ");
+			sb.Append($"Values: {_dataValues.ToString()}");
+			return sb.ToString();
+		}
+
+
+
+		/// <summary>
 		/// Returns a list of data values which are stored in this property.
 		/// </summary>
 		/// <returns>List of data values which are stored in this property</returns>

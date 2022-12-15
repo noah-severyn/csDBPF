@@ -117,6 +117,9 @@ namespace csDBPF.Entries {
 			DBPFProperty property;
 			for (int idx = 0; idx < propertyCount; idx++) {
 				property = DecodeProperty(pos);
+				if (property is null) {
+					return;
+				}
 				_listOfProperties.Add(property.ID, property);
 
 				//Determine which bytes to skip to get to the start of the next property
@@ -352,6 +355,7 @@ namespace csDBPF.Entries {
 					offset += 2; //skip "0x"
 					long result = ByteArrayHelper.ReadTextToLong(dData, offset, dataType.Length * 2);
 					((List<long>) dataValues).Add(result);
+					offset += (dataType.Length * 2) + 1; //skip comma
 				}
 			}
 
