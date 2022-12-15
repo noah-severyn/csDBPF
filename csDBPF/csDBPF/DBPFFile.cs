@@ -472,9 +472,17 @@ namespace csDBPF
 		}
 
 
-		//TODO Implement UpdateDirectory
+		
+
+		/// <summary>
+		/// Updates the directory subfile with all compressed items in this file.
+		/// </summary>
 		public void UpdateDirectory() {
-			throw new NotImplementedException();
+			DBPFEntryDIR dir = (DBPFEntryDIR) GetEntry(DBPFTGI.DIRECTORY);
+			if (dir is null) {
+				dir = new DBPFEntryDIR();
+			}
+			dir.Update(ListOfEntries);
 		}
 	}
 }

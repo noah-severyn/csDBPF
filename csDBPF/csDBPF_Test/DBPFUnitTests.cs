@@ -776,14 +776,34 @@ namespace csDBPF_Test {
 				DBPFEntryDIR entryd = new DBPFEntryDIR(DBPFTGI.DIRECTORY, 0, 0, 0, dirbytes);
 				entryd.DecodeEntry();
 				Assert.AreEqual(1, entryd.CompressedItems.Count);
-				DBPFTGI key = new DBPFTGI(0x6534284A, 0x690F693F, 0x4A0B6819);
-				Assert.IsTrue(entryd.CompressedItems.ContainsKey(key));
-				Assert.IsTrue(entryd.CompressedItems.TryGetValue(key, out uint size));
-				Assert.AreEqual((uint) 446, size);
+				Assert.AreEqual((uint) 0x6534284A, entryd.CompressedItems[0].TID);
+				Assert.AreEqual((uint) 0x690F693F, entryd.CompressedItems[0].GID);
+				Assert.AreEqual((uint) 0x4A0B6819, entryd.CompressedItems[0].IID);
+				Assert.AreEqual((uint) 446, entryd.CompressedItems[0].Size);
 
 				//Parse from file
+				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+				DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
+				dir.DecodeEntry();
+				Assert.AreEqual(1, entryd.CompressedItems.Count);
+				Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
+				Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
+				Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
+				Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
 
+				dir.Update(dbpf.ListOfEntries);
+				Assert.AreEqual(1, entryd.CompressedItems.Count);
+				Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
+				Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
+				Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
+				Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
 
+				dbpf.UpdateDirectory();
+				Assert.AreEqual(1, entryd.CompressedItems.Count);
+				Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
+				Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
+				Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
+				Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
 			}
 
 			[TestMethod]
