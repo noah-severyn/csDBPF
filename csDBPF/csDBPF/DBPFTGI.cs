@@ -12,6 +12,7 @@ namespace csDBPF {
 	/// Common known entry types are listed in <see cref="KnownEntries"/>.
 	/// </remarks>
 	public class DBPFTGI {
+		#region KnownTGIs
 		//In general Dictionary items are kept in the order they are added, and since we're not doing a lot of adding/deleting/otherwise sorting, its not as big of a deal and we don't need to use a special type like SortedDictionary
 		private static readonly List<DBPFTGI> KnownEntries = new List<DBPFTGI>();
 		/// <summary>BLANKTGI (0, 0, 0)</summary>
@@ -103,34 +104,35 @@ namespace csDBPF {
 		public static readonly DBPFTGI XML;
 		/// <summary>NULLTGI (#, #, #)</summary>
 		public static readonly DBPFTGI NULLTGI;
+		#endregion KnownTGIs
 
 
-		//------------- DBPFTGI Fields ------------- \\
-		private uint? _type;
+
+		private uint? _typeID;
 		/// <summary>
-		/// Type ID. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Type_ID"/>
+		/// Type ID (TID). See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Type_ID"/>
 		/// </summary>
-		public uint? Type {
-			get { return _type; }
-			private set { _type = value; }
+		public uint? TypeID {
+			get { return _typeID; }
+			private set { _typeID = value; }
 		}
 
-		private uint? _group;
+		private uint? _groupID;
 		/// <summary>
-		/// Group ID. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Group_ID"/>
+		/// Group ID (GID). See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Group_ID"/>
 		/// </summary>
-		public uint? Group {
-			get { return _group; }
-			private set { _group = value; }
+		public uint? GroupID {
+			get { return _groupID; }
+			private set { _groupID = value; }
 		}
 
-		private uint? _instance;
+		private uint? _instanceID;
 		/// <summary>
-		/// Instance ID. See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Instance_ID"/>
+		/// Instance ID (IID). See <see ref="https://www.wiki.sc4devotion.com/index.php?title=Instance_ID"/>
 		/// </summary>
-		public uint? Instance {
-			get { return _instance; }
-			private set { _instance = value; }
+		public uint? InstanceID {
+			get { return _instanceID; }
+			private set { _instanceID = value; }
 		}
 
 		private string _category;
@@ -152,42 +154,43 @@ namespace csDBPF {
 		}
 
 
-		//------------- DBPFTGI Constructors ------------- \\
+		
 		/// <summary>
 		/// Create a new DBPFTGI from the specified Type Group and Instance.
 		/// </summary>
-		/// <remarks>
-		/// Important: Never allow creation of null TID, GID, or IID because they interfere with the lookups of KnownType.
-		/// </remarks>
 		/// <param name="type"></param>
 		/// <param name="group"></param>
 		/// <param name="instance"></param>
 		public DBPFTGI(uint type, uint group, uint instance) {
-			_type = type;
-			_group = group;
-			_instance = instance;
-			_category = MatchesAnyKnownTGI().Category;
-			_detail = MatchesAnyKnownTGI().Detail;
+			//Important: Never allow creation of null TID, GID, or IID because they interfere with the lookups of KnownType.
+			SetTGI(type, group, instance);
 		}
 
 		/// <summary>
 		/// Create a new DBPFTGI based on a known entry type.
 		/// </summary>
 		/// <remarks>
-		/// If any component of the known entry is null the new component is set to 0.
+		/// If knownEntry TID is null, the new TID is 0, if knownEntry GID or IID is null a random ID is assigned.
 		/// </remarks>
 		/// <param name="knownEntry">Known entry type</param>
 		public DBPFTGI(DBPFTGI knownEntry) {
-			_type = knownEntry.Type != null ? knownEntry.Type : 0;
-			_group = knownEntry.Group != null ? knownEntry.Group : 0;
-			_instance = knownEntry.Instance != null ? knownEntry.Instance : 0;
+			_typeID = knownEntry.TypeID != null ? knownEntry.TypeID : 0;
+			if (knownEntry.GroupID is null) {
+				SetRandomGroup();
+			} else {
+				_groupID = knownEntry.GroupID;
+			}
+			if (knownEntry.InstanceID is null) {
+				SetRandomInstance();
+			} else {
+				_instanceID = knownEntry.InstanceID;
+			}
 			_category = knownEntry.Category;
 			_detail = knownEntry.Detail;
 		}
 
 
 
-		//------------- DBPFTGI Methods ------------- \\
 		/// <summary>
 		/// Check if this DBPFTGI matches a specific known DBPFTGI entry type. Unlike equals, this method is not reflexive.
 		/// </summary>
@@ -200,22 +203,22 @@ namespace csDBPF {
 		public bool MatchesKnownTGI(DBPFTGI knownType) {
 			bool isTIDok, isGIDok, isIIDok;
 
-			if (!knownType._type.HasValue) {
+			if (!knownType._typeID.HasValue) {
 				isTIDok = true;
 			} else {
-				isTIDok = _type == knownType.Type;
+				isTIDok = _typeID == knownType.TypeID;
 			}
 
-			if (!knownType.Group.HasValue) {
+			if (!knownType.GroupID.HasValue) {
 				isGIDok = true;
 			} else {
-				isGIDok = _group == knownType.Group;
+				isGIDok = _groupID == knownType.GroupID;
 			}
 
-			if (!knownType.Instance.HasValue) {
+			if (!knownType.InstanceID.HasValue) {
 				isIIDok = true;
 			} else {
-				isIIDok = _instance == knownType.Instance;
+				isIIDok = _instanceID == knownType.InstanceID;
 			}
 
 			return isTIDok && isGIDok && isIIDok;
@@ -245,18 +248,18 @@ namespace csDBPF {
 		public override bool Equals(object obj) {
 			bool evalT, evalG, evalI;
 			if (obj is DBPFTGI checkTGI) {
-				if (checkTGI.Type is not null) {
-					evalT = _type == checkTGI.Type;
+				if (checkTGI.TypeID is not null) {
+					evalT = _typeID == checkTGI.TypeID;
 				} else {
 					evalT = true;
 				}
-				if (checkTGI.Group is not null) {
-					evalG = _group == checkTGI.Group;
+				if (checkTGI.GroupID is not null) {
+					evalG = _groupID == checkTGI.GroupID;
 				} else {
 					evalG = true;
 				}
-				if (checkTGI.Instance is not null) {
-					evalI = _instance == checkTGI.Instance;
+				if (checkTGI.InstanceID is not null) {
+					evalI = _instanceID == checkTGI.InstanceID;
 				} else {
 					evalI = true;
 				}
@@ -273,7 +276,7 @@ namespace csDBPF {
 		/// </summary>
 		/// <returns>A string that represents the current object</returns>
 		public override string ToString() {
-			return $"0x{DBPFUtil.UIntToHexString(_type, 8)}, 0x{DBPFUtil.UIntToHexString(_group, 8)}, 0x{DBPFUtil.UIntToHexString(_instance, 8)}, {_category}, {_detail}";
+			return $"0x{DBPFUtil.UIntToHexString(_typeID, 8)}, 0x{DBPFUtil.UIntToHexString(_groupID, 8)}, 0x{DBPFUtil.UIntToHexString(_instanceID, 8)}, {_category}, {_detail}";
 		}
 
 
@@ -287,20 +290,16 @@ namespace csDBPF {
 		/// <remarks>If the TGI set matches a known combination then Category and Detail are set too.</remarks>
 		public void SetTGI(uint? type = null, uint? group = null, uint? instance = null) {
 			if (type != null) {
-				_type = type;
+				_typeID = type;
 			}
 			if (group != null) {
-				_group = group;
+				_groupID = group;
 			}
 			if (instance != null) {
-				_instance = instance;
+				_instanceID = instance;
 			}
 
-			DBPFTGI match = MatchesAnyKnownTGI();
-			if (match is not null) {
-				_category = match.Category;
-				_detail = match.Detail;
-			}
+			UpdateCategoryAndDetail();
 		}
 
 
@@ -309,23 +308,23 @@ namespace csDBPF {
 		/// Set the Type, Group, and Instance of this TGI instance.
 		/// </summary>
 		/// <param name="tgi">TGI set to set this instace to</param>
-		/// <remarks>If the TGI set matches a known combination then Category and Detail are set too.</remarks>
+		/// <remarks>If the TGI set matches a known combination then Category and Detail are set too. A random G or I if that parameter in the provided TGI is null.</remarks>
 		public void SetTGI(DBPFTGI tgi) {
-			if (tgi.Type != null) {
-				_type = tgi.Type;
+			if (tgi.TypeID != null) {
+				_typeID = tgi.TypeID;
 			}
-			if (tgi.Group != null) {
-				_group = tgi.Group;
+			if (tgi.GroupID != null) {
+				_groupID = tgi.GroupID;
+			} else {
+				SetRandomGroup();
 			}
-			if (tgi.Instance != null) {
-				_instance = tgi.Instance;
+			if (tgi.InstanceID != null) {
+				_instanceID = tgi.InstanceID;
+			} else {
+				SetRandomInstance();
 			}
 
-			DBPFTGI match = MatchesAnyKnownTGI();
-			if (match is not null) {
-				_category = match.Category;
-				_detail = match.Detail;
-			}
+			UpdateCategoryAndDetail();
 		}
 
 
@@ -336,7 +335,9 @@ namespace csDBPF {
 		public void SetRandomGroup() {
 			//https://stackoverflow.com/a/18332307/10802255
 			Random rand = new Random();
-			SetTGI(null, (uint) (rand.Next(1 << 30)) << 2 | (uint) (rand.Next(1 << 2)), null);
+			_groupID = (uint) (rand.Next(1 << 30)) << 2 | (uint) (rand.Next(1 << 2));
+
+			UpdateCategoryAndDetail();
 		}
 
 		/// <summary>
@@ -344,7 +345,25 @@ namespace csDBPF {
 		/// </summary>
 		public void SetRandomInstance() {
 			Random rand = new Random();
-			SetTGI(null, null, (uint) (rand.Next(1 << 30)) << 2 | (uint) (rand.Next(1 << 2)));
+			_instanceID = (uint) (rand.Next(1 << 30)) << 2 | (uint) (rand.Next(1 << 2));
+
+			UpdateCategoryAndDetail();
+		}
+
+
+
+		/// <summary>
+		/// Update the category and detail properties of this instance based on the current TGI.
+		/// </summary>
+		private void UpdateCategoryAndDetail() {
+			DBPFTGI match = MatchesAnyKnownTGI();
+			if (match is null) {
+				_category = null;
+				_detail = null;
+			} else {
+				_category = match.Category;
+				_detail = match.Detail;
+			}
 		}
 
 
@@ -353,7 +372,7 @@ namespace csDBPF {
 		/// This static constructor will be called as soon as the class is loaded into memory, and not necessarily when an object is created.
 		/// Known types need to be ordered "bottom-up", that is, specialized entries need to be inserted first, more general ones later.
 		/// </summary>
-		
+
 		static DBPFTGI() {
 			BLANKTGI = new DBPFTGI(0, 0, 0, null, null);
 			DIRECTORY = new DBPFTGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03, "DIR", "DIR");
@@ -459,9 +478,9 @@ namespace csDBPF {
 		/// <param name="label"></param>
 		/// <param name="detailLabel"></param>
 		private DBPFTGI(uint? type, uint? group, uint? instance, string label, string detailLabel) {
-			_type = type;
-			_group = group;
-			_instance = instance;
+			_typeID = type;
+			_groupID = group;
+			_instanceID = instance;
 			_category = label;
 			_detail = detailLabel;
 		}

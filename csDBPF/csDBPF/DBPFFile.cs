@@ -359,7 +359,7 @@ namespace csDBPF
 		/// <param name="instance">IID to search for</param>
 		/// <returns></returns>
 		public DBPFEntry GetEntry(uint instance) {
-			return _listOfEntries.Find(i => i.TGI.Instance == instance);
+			return _listOfEntries.Find(i => i.TGI.InstanceID == instance);
 		}
 		/// <summary>
 		/// Return the entry matching the specified TGI set.
@@ -414,9 +414,9 @@ namespace csDBPF
 			//Write Index
 			//--should be done after all content has been written because we need to know the location of each file in the archive and its size.
 			foreach (DBPFEntry entry in _listOfEntries) {
-				fs.Write(BitConverter.GetBytes(entry.TGI.Type.Value));
-				fs.Write(BitConverter.GetBytes(entry.TGI.Group.Value));
-				fs.Write(BitConverter.GetBytes(entry.TGI.Instance.Value));
+				fs.Write(BitConverter.GetBytes(entry.TGI.TypeID.Value));
+				fs.Write(BitConverter.GetBytes(entry.TGI.GroupID.Value));
+				fs.Write(BitConverter.GetBytes(entry.TGI.InstanceID.Value));
 				fs.Write(BitConverter.GetBytes(entry.Offset));
 				fs.Write(BitConverter.GetBytes(entry.CompressedSize));
 

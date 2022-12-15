@@ -294,12 +294,21 @@ namespace csDBPF_Test {
 				DBPFTGI tgi1 = new DBPFTGI(0x6534284a, 0, 0);
 				DBPFTGI tgi2 = tgi1;
 				tgi2.SetTGI(DBPFTGI.EXEMPLAR_AVENUE);
-				Assert.AreEqual("0x6534284A, 0xCB730FAC, 0x00000000, EXMP, EXEMPLAR_AVENUE", tgi2.ToString());
+				Assert.AreEqual((uint) 0x6534284A, tgi2.TypeID);
+				Assert.AreEqual((uint) 0xCB730FAC, tgi2.GroupID);
+				Assert.AreNotEqual(0, tgi2.InstanceID);
+				Assert.AreEqual("EXMP", tgi2.Category);
+				Assert.AreEqual("EXEMPLAR_AVENUE", tgi2.Detail);
 				tgi1.SetTGI(DBPFTGI.NULLTGI);
 				Assert.AreEqual(tgi1.ToString(), tgi1.ToString());
+				
 				DBPFTGI tgi3 = new DBPFTGI(0, 2, 3);
 				tgi3.SetTGI(DBPFTGI.LUA);
-				Assert.AreEqual("0xCA63E2A3, 0x4A5E8EF6, 0x00000003, LUA, LUA", tgi3.ToString());
+				Assert.AreEqual((uint) 0xCA63E2A3, tgi3.TypeID);
+				Assert.AreEqual((uint) 0x4A5E8EF6, tgi3.GroupID);
+				Assert.AreNotEqual(0, tgi3.InstanceID);
+				Assert.AreEqual("LUA", tgi3.Category);
+				Assert.AreEqual("LUA", tgi3.Detail);
 			}
 
 			[TestMethod]
@@ -329,6 +338,18 @@ namespace csDBPF_Test {
 				Assert.AreEqual(DBPFTGI.EXEMPLAR_ROAD.Category, tgi2.Category);
 				Assert.AreNotEqual(DBPFTGI.EXEMPLAR_ROAD.Detail, tgi2.Detail);
 				Assert.AreEqual(DBPFTGI.EXEMPLAR.Category, tgi2.Category);
+
+				uint group = (uint) tgi2.GroupID;
+				tgi2.SetRandomGroup();
+				Assert.AreNotEqual(group, tgi2.GroupID);
+			}
+
+			public void Test_058_DBPFTGI_SetRandomFromNewInstance() {
+				DBPFTGI tgi1 = new DBPFTGI(DBPFTGI.EXEMPLAR);
+				Assert.AreNotEqual(null,tgi1.GroupID);
+				Assert.AreNotEqual(null, tgi1.InstanceID);
+
+
 			}
 		}
 
@@ -749,6 +770,7 @@ namespace csDBPF_Test {
 				Assert.AreEqual("Parks Aura (by Cori)", entryb.Text);
 
 				//TODO - add text encoding tests here
+				DBPFEntryLTEXT entryknown = new DBPFEntryLTEXT(DBPFTGI.LTEXT);
 			}
 
 			[TestMethod]
