@@ -4,6 +4,7 @@ using csDBPF;
 using csDBPF.Properties;
 using System.Collections.Generic;
 using csDBPF.Entries;
+using System.Security.Cryptography;
 
 namespace csDBPF_Test {
 	[TestClass]
@@ -99,8 +100,8 @@ namespace csDBPF_Test {
 				byte[] b1 = { 0x54, 0x65, 0x73, 0x74 };
 				string s2 = "Parks Aura";
 				byte[] b2 = { 0x50, 0x61, 0x72, 0x6b, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61 };
-				CollectionAssert.AreEqual(b1, ByteArrayHelper.ToByteArray(s1, true));
-				CollectionAssert.AreEqual(b2, ByteArrayHelper.ToByteArray(s2, true));
+				CollectionAssert.AreEqual(b1, ByteArrayHelper.ToBytes(s1, true));
+				CollectionAssert.AreEqual(b2, ByteArrayHelper.ToBytes(s2, true));
 			}
 
 			[TestMethod]
@@ -669,28 +670,15 @@ namespace csDBPF_Test {
 		// 07x Test Methods for Property XML Parsing
 		[TestClass]
 		public class _07x_XMLPropertyParsing {
-			//[TestMethod]
-			//public void Test_070_DBPFProperty_GetXMLProperty() {
-			//	XElement el = XMLProperties.GetXMLProperty(0x00000010);
-			//	Assert.AreEqual("0x00000010", el.Attribute("ID").Value);
-			//	Assert.AreEqual("Exemplar Type", el.Attribute("Name").Value);
-
-			//	el = XMLProperties.GetXMLProperty(0x87cd6345);
-			//	Assert.AreEqual("0x87cd6345", el.Attribute("ID").Value);
-			//	Assert.AreEqual("R$$$ Proximity Effect", el.Attribute("Name").Value);
-
-			//	el = XMLProperties.GetXMLProperty(0x8a2602bb);
-			//	Assert.AreEqual("0x8a2602bb", el.Attribute("ID").Value);
-			//	Assert.AreEqual("Item Button ID", el.Attribute("Name").Value);
-			//	Assert.AreEqual("Uint32", el.Attribute("Type").Value);
-			//	Assert.AreEqual("Y", el.Attribute("ShowAsHex").Value);
-			//	Assert.AreEqual("0x00000000", el.Attribute("Default").Value);
-			//}
+			[TestMethod]
+			public void Test_070_XMLProperties_AllProperties() {
+				Assert.AreEqual(0x56f, XMLProperties.AllProperties.Count);
+			}
 
 			[TestMethod]
-			public void Text_071_DBPFProperty_AllProperties() {
+			public void Text_071_XMLProperties_GetPropertyByID() {
 				//< PROPERTY Name = "Item Button ID" ID = "0x8a2602bb" Type = "Uint32" Default = "0x00000000" ShowAsHex = "Y" >
-				XMLProperties.AllProperties.TryGetValue(0x8a2602bb, out XMLExemplarProperty exmp);
+				XMLExemplarProperty exmp = XMLProperties.GetXMLProperty(0x8a2602bb);
 				Assert.AreEqual(0x8a2602bb, exmp.ID);
 				Assert.AreEqual("Item Button ID", exmp.Name);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, exmp.Type);
@@ -699,45 +687,92 @@ namespace csDBPF_Test {
 				Assert.AreEqual(null, exmp.MaxValue);
 
 				//<PROPERTY Name="Path Offset Range for Peds" ID="0x29dd40c1" Type="Float32" Count="2" Default="-1 3" ShowAsHex="Y">
-				XMLProperties.AllProperties.TryGetValue(0x29dd40c1, out XMLExemplarProperty exmp2);
-				Assert.AreEqual((uint) 0x29dd40c1, exmp2.ID);
-				Assert.AreEqual("Path Offset Range for Peds", exmp2.Name);
-				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp2.Type);
-				Assert.AreEqual(true, exmp2.ShowAsHex);
-				CollectionAssert.AreEqual(new List<string> { "-1", "3" }, exmp2.DefaultValue);
-				Assert.AreEqual((short) 2, exmp2.Count);
+				exmp = XMLProperties.GetXMLProperty(0x29dd40c1);
+				Assert.AreEqual((uint) 0x29dd40c1, exmp.ID);
+				Assert.AreEqual("Path Offset Range for Peds", exmp.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+				Assert.AreEqual(true, exmp.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "-1", "3" }, exmp.DefaultValue);
+				Assert.AreEqual((short) 2, exmp.Count);
 
 				//<PROPERTY Name="WaveMinTimeInState" ID="0x6932dc06" Type="Float32" Count="4" Default="12 0.230 0.5 2" ShowAsHex="Y">
-				XMLProperties.AllProperties.TryGetValue(0x6932dc06, out XMLExemplarProperty exmp3);
-				Assert.AreEqual((uint) 0x6932dc06, exmp3.ID);
-				Assert.AreEqual("WaveMinTimeInState", exmp3.Name);
-				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp3.Type);
-				Assert.AreEqual(true, exmp3.ShowAsHex);
-				CollectionAssert.AreEqual(new List<string> { "12", "0.230", "0.5", "2" }, exmp3.DefaultValue);
-				Assert.AreEqual((short) 4, exmp3.Count);
-				Assert.AreEqual(null, exmp3.Step);
+				exmp = XMLProperties.GetXMLProperty(0x6932dc06);
+				Assert.AreEqual((uint) 0x6932dc06, exmp.ID);
+				Assert.AreEqual("WaveMinTimeInState", exmp.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+				Assert.AreEqual(true, exmp.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "12", "0.230", "0.5", "2" }, exmp.DefaultValue);
+				Assert.AreEqual((short) 4, exmp.Count);
+				Assert.AreEqual(null, exmp.Step);
 
 				//<PROPERTY Name="Health Effectiveness vs. Distance Effect" ID="0x891b3ae6" Type="Float32" Count="-2" Default="0 100" MinValue="0" MaxValue="100" ShowAsHex="Y">
-				XMLProperties.AllProperties.TryGetValue(0x891b3ae6, out XMLExemplarProperty exmp4);
-				Assert.AreEqual(0x891b3ae6, exmp4.ID);
-				Assert.AreEqual("Health Effectiveness vs. Distance Effect", exmp4.Name);
-				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp4.Type);
-				Assert.AreEqual(true, exmp4.ShowAsHex);
-				CollectionAssert.AreEqual(new List<string> { "0", "100" }, exmp4.DefaultValue);
-				Assert.AreEqual((short) -2, exmp4.Count);
-				Assert.AreEqual("0", exmp4.MinValue);
-				Assert.AreEqual("100", exmp4.MaxValue);
-				Assert.AreEqual(null, exmp4.MaxLength);
+				exmp = XMLProperties.GetXMLProperty(0x891b3ae6);
+				Assert.AreEqual(0x891b3ae6, exmp.ID);
+				Assert.AreEqual("Health Effectiveness vs. Distance Effect", exmp.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+				Assert.AreEqual(true, exmp.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "0", "100" }, exmp.DefaultValue);
+				Assert.AreEqual((short) -2, exmp.Count);
+				Assert.AreEqual("0", exmp.MinValue);
+				Assert.AreEqual("100", exmp.MaxValue);
+				Assert.AreEqual(null, exmp.MaxLength);
 			}
 
 			[TestMethod]
-			public void Text_072_XMLProperties_GetProperty() {
-				Assert.AreEqual((uint) 0x10, XMLProperties.LookupPropertyID("Exemplar Type"));
-				Assert.AreEqual((uint) 0x10, XMLProperties.LookupPropertyID("ExemplarType"));
-				Assert.AreEqual((uint) 0x10, XMLProperties.LookupPropertyID("exemplar type"));
-				Assert.AreEqual((uint) 0x10, XMLProperties.LookupPropertyID("EXEMPLARTYPE"));
-				Assert.AreEqual((uint) 0x879d12e7, XMLProperties.LookupPropertyID("MaxSlopeAlongNetwork"));
-				Assert.AreEqual((uint) 0, XMLProperties.LookupPropertyID("property not found"));
+			public void Text_072_XMLProperties_GetPropertyByName() {
+				//< PROPERTY Name = "Item Button ID" ID = "0x8a2602bb" Type = "Uint32" Default = "0x00000000" ShowAsHex = "Y" >
+				XMLExemplarProperty exmp = XMLProperties.GetXMLProperty("Item Button ID");
+				Assert.AreEqual(0x8a2602bb, exmp.ID);
+				Assert.AreEqual("Item Button ID", exmp.Name);
+				Assert.AreEqual(DBPFPropertyDataType.UINT32, exmp.Type);
+				Assert.AreEqual(true, exmp.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "0x00000000" }, exmp.DefaultValue);
+				Assert.AreEqual(null, exmp.MaxValue);
+
+				exmp = XMLProperties.GetXMLProperty("ItembuTTonID");
+				Assert.AreEqual(0x8a2602bb, exmp.ID);
+				Assert.AreEqual("Item Button ID", exmp.Name);
+
+				//<PROPERTY Name="Path Offset Range for Peds" ID="0x29dd40c1" Type="Float32" Count="2" Default="-1 3" ShowAsHex="Y">
+				exmp = XMLProperties.GetXMLProperty("Path Offset Range for Peds");
+				Assert.AreEqual((uint) 0x29dd40c1, exmp.ID);
+				Assert.AreEqual("Path Offset Range for Peds", exmp.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+				Assert.AreEqual(true, exmp.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "-1", "3" }, exmp.DefaultValue);
+				Assert.AreEqual((short) 2, exmp.Count);
+
+				//<PROPERTY Name="WaveMinTimeInState" ID="0x6932dc06" Type="Float32" Count="4" Default="12 0.230 0.5 2" ShowAsHex="Y">
+				exmp = XMLProperties.GetXMLProperty("WaveMinTimeInState");
+				Assert.AreEqual((uint) 0x6932dc06, exmp.ID);
+				Assert.AreEqual("WaveMinTimeInState", exmp.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+				Assert.AreEqual(true, exmp.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "12", "0.230", "0.5", "2" }, exmp.DefaultValue);
+				Assert.AreEqual((short) 4, exmp.Count);
+				Assert.AreEqual(null, exmp.Step);
+
+				//<PROPERTY Name="Health Effectiveness vs. Distance Effect" ID="0x891b3ae6" Type="Float32" Count="-2" Default="0 100" MinValue="0" MaxValue="100" ShowAsHex="Y">
+				exmp = XMLProperties.GetXMLProperty("Health Effectiveness vs. Distance Effect");
+				Assert.AreEqual(0x891b3ae6, exmp.ID);
+				Assert.AreEqual("Health Effectiveness vs. Distance Effect", exmp.Name);
+				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+				Assert.AreEqual(true, exmp.ShowAsHex);
+				CollectionAssert.AreEqual(new List<string> { "0", "100" }, exmp.DefaultValue);
+				Assert.AreEqual((short) -2, exmp.Count);
+				Assert.AreEqual("0", exmp.MinValue);
+				Assert.AreEqual("100", exmp.MaxValue);
+				Assert.AreEqual(null, exmp.MaxLength);
+			}
+
+			[TestMethod]
+			public void Text_073_XMLProperties_GetPropertyID() {
+				Assert.AreEqual((uint) 0x10, XMLProperties.GetPropertyID("Exemplar Type"));
+				Assert.AreEqual((uint) 0x10, XMLProperties.GetPropertyID("ExemplarType"));
+				Assert.AreEqual((uint) 0x10, XMLProperties.GetPropertyID("exemplar type"));
+				Assert.AreEqual((uint) 0x10, XMLProperties.GetPropertyID("EXEMPLARTYPE"));
+				Assert.AreEqual((uint) 0x879d12e7, XMLProperties.GetPropertyID("MaxSlopeAlongNetwork"));
+				Assert.AreEqual((uint) 0, XMLProperties.GetPropertyID("property not found"));
 			}
 		}
 
@@ -767,8 +802,36 @@ namespace csDBPF_Test {
 				CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, entryknown.ByteData);
 			}
 
+			[Ignore]
 			[TestMethod]
-			public void Test_082a_DIR_Parse() {
+			public void Test_082a_EXMP_Parse() {
+				
+			}
+
+
+			[TestMethod]
+			public void Test_082b_EXMP_Encode() {
+				//Binary Encoding
+				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+				DBPFEntry entry = dbpf.GetEntry(0);
+				entry.DecodeEntry();
+				entry.EncodeEntry();
+				Assert.AreEqual((uint) 446, entry.UncompressedSize);
+				CollectionAssert.AreEqual(TestArrays.decompressedentry_b, entry.ByteData);
+				Assert.IsTrue(entry.IsCompressed);
+
+				//Text Encoding
+				dbpf = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\FINAL\\nos.17\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
+				entry = dbpf.GetEntry(0);
+				entry.DecodeEntry();
+				entry.EncodeEntry();
+				Assert.AreEqual((uint) 0x5BA, entry.UncompressedSize);
+				CollectionAssert.AreEqual(TestArrays.notcompressedentry_t, entry.ByteData);
+				Assert.IsFalse(entry.IsCompressed);
+			}
+
+			[TestMethod]
+			public void Test_083a_DIR_Parse() {
 				//sample from: z_DataView - Parks Aura.dat
 				byte[] dirbytes = new byte[] { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x19, 0x68, 0x0B, 0x4A, 0xBE, 0x01, 0x00, 0x00 };
 
@@ -807,7 +870,7 @@ namespace csDBPF_Test {
 			}
 
 			[TestMethod]
-			public void Test_082b_DIR_Encode() {
+			public void Test_083b_DIR_Encode() {
 
 			}
 		}

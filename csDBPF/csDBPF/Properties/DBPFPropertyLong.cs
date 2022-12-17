@@ -163,7 +163,8 @@ namespace csDBPF.Properties {
 			//Text Encoding
 			if (_isTextEncoding) {
 				StringBuilder sb = new StringBuilder();
-				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{XMLProperties.GetXMLProperty(_id).Name}\"}}={_dataType.Name}:{_numberOfReps}:{{");
+				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(_id);
+				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}={_dataType.Name}:{_numberOfReps}:{{");
 				for (int idx = 0; idx < _dataValues.Count; idx++) {
 					sb.Append($"0x{DBPFUtil.ToHexString(_dataValues[idx],_dataType.Length)}");
 					if (idx != _dataValues.Count) {
@@ -171,7 +172,7 @@ namespace csDBPF.Properties {
 					}
 				}
 				sb.Append("}}\r\n");
-				return ByteArrayHelper.ToByteArray(sb.ToString(), true);
+				return ByteArrayHelper.ToBytes(sb.ToString(), true);
 			}
 
 			//Binary Encoding
@@ -182,14 +183,14 @@ namespace csDBPF.Properties {
 				if (_numberOfReps == 0) { //keyType = 0x00
 					bytes.AddRange(BitConverter.GetBytes((ushort) 0x00)); //keyType
 					bytes.Add(0); //Number of value repetitions. (Seems to be always 0.)
-					bytes.AddRange(BitConverter.GetBytes(_dataValues[0]));
+					bytes.AddRange(ByteArrayHelper.ToBytes(_dataValues[0],_dataType.Length));
 
 				} else { // keyType = 0x80
 					bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //keyType
 					bytes.Add(0); //unused flag
 					bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Count));
-					foreach (float value in _dataValues) {
-						bytes.AddRange(BitConverter.GetBytes(value));
+					foreach (long value in _dataValues) {
+						bytes.AddRange(ByteArrayHelper.ToBytes(value, _dataType.Length));
 					}
 				}
 				return bytes.ToArray();

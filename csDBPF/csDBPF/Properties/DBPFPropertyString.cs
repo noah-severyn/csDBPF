@@ -130,10 +130,11 @@ namespace csDBPF.Properties {
 			//Text Encoding
 			if (_isTextEncoding) {
 				StringBuilder sb = new StringBuilder();
-				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{XMLProperties.GetXMLProperty(_id).Name}\"}}=String:1:{{");
+				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(_id);
+				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}=String:1:{{");
 				sb.Append($"\"{_dataValue}\"");
 				sb.Append("}}\r\n");
-				return ByteArrayHelper.ToByteArray(sb.ToString(), true);
+				return ByteArrayHelper.ToBytes(sb.ToString(), true);
 			}
 
 			//Binary Encoding
@@ -144,7 +145,7 @@ namespace csDBPF.Properties {
 				bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //String is always keyType = 0x80
 				bytes.Add(0); //unused flag
 				bytes.AddRange(BitConverter.GetBytes((uint) _dataValue.Length));
-				bytes.AddRange(ByteArrayHelper.ToByteArray(_dataValue,true));
+				bytes.AddRange(ByteArrayHelper.ToBytes(_dataValue,true));
 				return bytes.ToArray();
 			}
 		}

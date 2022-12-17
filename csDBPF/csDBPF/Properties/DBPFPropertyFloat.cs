@@ -159,7 +159,8 @@ namespace csDBPF.Properties {
 			//Text Encoding
 			if (_isTextEncoding) {
 				StringBuilder sb = new StringBuilder();
-				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{XMLProperties.GetXMLProperty(_id).Name}\"}}=Float32:{_numberOfReps}:{{");
+				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(_id);
+				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}=Float32:{_numberOfReps}:{{");
 				for (int idx = 0; idx < _dataValues.Count; idx++) {
 					sb.Append(_dataValues[idx]);
 					if (idx != _dataValues.Count) {
@@ -167,7 +168,7 @@ namespace csDBPF.Properties {
 					}
 				}
 				sb.Append("}}\r\n");
-				return ByteArrayHelper.ToByteArray(sb.ToString(), true);
+				return ByteArrayHelper.ToBytes(sb.ToString(), true);
 			}
 
 			//Binary Encoding
