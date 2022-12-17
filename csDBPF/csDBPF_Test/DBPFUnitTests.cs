@@ -157,7 +157,6 @@ namespace csDBPF_Test {
 			readonly float[] float32 = { 0f, 3.78809652e+29f, 1.401298e-45f, 4.66270448e+29f, 1.681558e-44f, 4.66270448e+29f };
 			readonly uint[] uint32 = { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C };
 			readonly long[] sint64 = { 0x7099000000000000, 0x70BC533C00000001, 0x70BC533C0000000C };
-			//TODO - should add unit tests to test edge cases - min and max values
 
 			[TestMethod]
 			public void Test_030_ByteArrayHelper_ToTypeArray() {

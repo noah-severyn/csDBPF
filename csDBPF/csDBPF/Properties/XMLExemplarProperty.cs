@@ -96,6 +96,9 @@ namespace csDBPF.Properties {
 			get { return _maxValue; }
 		}
 		private readonly uint? _step;
+		/// <summary>
+		/// Each value must be a multiple of this number.
+		/// </summary>
 		public uint? Step {
 			get { return _step; }
 		}

@@ -99,8 +99,6 @@ namespace csDBPF.Entries {
 
 
 
-		//TODO - should have something in here to check if there is actually any data associated with the entry besides its header, and if not dont parse or mark for deletion or something else. example an exemplar entry with no properties - byte size = 24 = size of header
-		//although be careful with blank LTEXT - those should exist still
 		/// <summary>
 		/// Decompresses the data and sets the entry's data object.
 		/// </summary>
