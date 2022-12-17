@@ -124,15 +124,16 @@ namespace csDBPF {
 		/// <param name="value">Value to return</param>
 		/// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
 		/// <returns>Uppercase string representing the uint</returns>
-		public static string UIntToHexString(uint? value, int places = 8) {
-			if (places < 0 || places > 8) {
-				throw new ArgumentOutOfRangeException("places", "Number of places must be between 0 and 8.");
+		public static string ToHexString(long value, int places = 8) {
+			if (places < 0 || places > 16) {
+				throw new ArgumentOutOfRangeException(nameof(places), "Number of places must be between 0 and 8.");
 			}
-			if (value != null) {
-				return ((uint) value).ToString($"X{places}");
-			} else {
-				return value.ToString();
-			}
+			//if (value != null) {
+			//	return ((uint) value).ToString($"X{places}");
+			//} else {
+			//	return value.ToString();
+			//}
+			return (value).ToString($"X{places}");
 		}
 
 

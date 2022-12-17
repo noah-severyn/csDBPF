@@ -121,7 +121,7 @@ namespace csDBPF.Properties {
 		/// <returns>Returns a string that represents the current object.</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder();
-			sb.Append($"ID: 0x{DBPFUtil.UIntToHexString(_id)}, ");
+			sb.Append($"ID: 0x{DBPFUtil.ToHexString(_id)}, ");
 			sb.Append($"Type: { _dataType}, ");
 			sb.Append($"Reps: {_numberOfReps}, ");
 			sb.Append($"Values: {_dataValues.ToString()}");
@@ -160,7 +160,40 @@ namespace csDBPF.Properties {
 
 
 		public override byte[] ToRawBytes() {
-			throw new NotImplementedException();
+			//Text Encoding
+			if (_isTextEncoding) {
+				StringBuilder sb = new StringBuilder();
+				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{XMLProperties.GetXMLProperty(_id).Name}\"}}={_dataType.Name}:{_numberOfReps}:{{");
+				for (int idx = 0; idx < _dataValues.Count; idx++) {
+					sb.Append($"0x{DBPFUtil.ToHexString(_dataValues[idx],_dataType.Length)}");
+					if (idx != _dataValues.Count) {
+						sb.Append(',');
+					}
+				}
+				sb.Append("}}\r\n");
+				return ByteArrayHelper.ToByteArray(sb.ToString(), true);
+			}
+
+			//Binary Encoding
+			else {
+				List<byte> bytes = new List<byte>();
+				bytes.AddRange(BitConverter.GetBytes(_id));
+				bytes.AddRange(BitConverter.GetBytes(_dataType.IdentifyingNumber));
+				if (_numberOfReps == 0) { //keyType = 0x00
+					bytes.AddRange(BitConverter.GetBytes((ushort) 0x00)); //keyType
+					bytes.Add(0); //Number of value repetitions. (Seems to be always 0.)
+					bytes.AddRange(BitConverter.GetBytes(_dataValues[0]));
+
+				} else { // keyType = 0x80
+					bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //keyType
+					bytes.Add(0); //unused flag
+					bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Count));
+					foreach (float value in _dataValues) {
+						bytes.AddRange(BitConverter.GetBytes(value));
+					}
+				}
+				return bytes.ToArray();
+			}
 		}
 	}
 }

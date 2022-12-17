@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using csDBPF.Entries;
+using Newtonsoft.Json.Linq;
 
 namespace csDBPF.Properties {
 	/// <summary>
@@ -106,7 +107,7 @@ namespace csDBPF.Properties {
 		/// <returns>Returns a string that represents the current object.</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder();
-			sb.Append($"ID: 0x{DBPFUtil.UIntToHexString(_id)}, ");
+			sb.Append($"ID: 0x{DBPFUtil.ToHexString(_id)}, ");
 			sb.Append($"Type: {_dataType}, ");
 			sb.Append($"Reps: {_numberOfReps}, ");
 			sb.Append($"Values: {_dataValues.ToString()}");
@@ -149,8 +150,46 @@ namespace csDBPF.Properties {
 		}
 
 
+
+		/// <summary>
+		/// Process the features and DataValues of this property into a byte array.
+		/// </summary>
+		/// <returns>A byte array storing all information for this property</returns>
 		public override byte[] ToRawBytes() {
-			throw new NotImplementedException();
+			//Text Encoding
+			if (_isTextEncoding) {
+				StringBuilder sb = new StringBuilder();
+				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{XMLProperties.GetXMLProperty(_id).Name}\"}}=Float32:{_numberOfReps}:{{");
+				for (int idx = 0; idx < _dataValues.Count; idx++) {
+					sb.Append(_dataValues[idx]);
+					if (idx != _dataValues.Count) {
+						sb.Append(',');
+					}
+				}
+				sb.Append("}}\r\n");
+				return ByteArrayHelper.ToByteArray(sb.ToString(), true);
+			}
+
+			//Binary Encoding
+			else {
+				List<byte> bytes = new List<byte>();
+				bytes.AddRange(BitConverter.GetBytes(_id));
+				bytes.AddRange(BitConverter.GetBytes(_dataType.IdentifyingNumber));
+				if (_numberOfReps == 0) { //keyType = 0x00
+					bytes.AddRange(BitConverter.GetBytes((ushort) 0x00)); //keyType
+					bytes.Add(0); //Number of value repetitions. (Seems to be always 0.)
+					bytes.AddRange(BitConverter.GetBytes(_dataValues[0]));
+
+				} else { // keyType = 0x80
+					bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //keyType
+					bytes.Add(0); //unused flag
+					bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Count));
+					foreach (float value in _dataValues) {
+						bytes.AddRange(BitConverter.GetBytes(value));
+					}
+				}
+				return bytes.ToArray();
+			}
 		}
 	}
 }

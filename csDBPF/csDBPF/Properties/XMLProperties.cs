@@ -86,12 +86,12 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <param name="id">Property ID to lookup</param>
 		/// <returns>XElement of the specified property ID</returns>
-		private static XElement GetXMLProperty(uint id) {
+		public static XElement GetXMLProperty(uint id) {
 			XElement xml = XElement.Load(xmlPath);
 			//Within XML doc, there is a single element of PROPERTIES which contain many elements PROPERTY
-			string str = "0x" + DBPFUtil.UIntToHexString(id, 8).ToLower();
+			string str = "0x" + DBPFUtil.ToHexString(id, 8).ToLower();
 			IEnumerable<XElement> matchingExemplarProperty = from prop in xml.Elements("PROPERTIES").Elements("PROPERTY")
-															 where prop.Attribute("ID").Value == "0x" + DBPFUtil.UIntToHexString(id, 8).ToLower()
+															 where prop.Attribute("ID").Value == "0x" + DBPFUtil.ToHexString(id, 8).ToLower()
 															 select prop;
 			//LINQ query returns an IEnumerable object, but because of our filter there should always only be one result so we do not have to worry about iterating over the return
 			return matchingExemplarProperty.First();

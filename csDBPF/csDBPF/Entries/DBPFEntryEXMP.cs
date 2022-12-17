@@ -43,6 +43,16 @@ namespace csDBPF.Entries {
 			set { _parentCohort = value; }
 		}
 
+		private bool _isExemplar;
+		/// <summary>
+		/// Determine if the file is Exemplar or Cohort.
+		/// </summary>
+		public bool IsExemplar {
+			get { return _isExemplar; }
+			set { _isExemplar = value; }
+		}
+
+
 
 
 		/// <summary>
@@ -68,6 +78,10 @@ namespace csDBPF.Entries {
 		public DBPFEntryEXMP(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
 			_listOfProperties = new SortedList<uint, DBPFProperty>();
 			_parentCohort = new DBPFTGI(0,0,0);
+
+			if (bytes[0] == 0x45) { //"E"
+				_isExemplar = true;
+			}
 		}
 
 
@@ -531,5 +545,55 @@ namespace csDBPF.Entries {
 			_listOfProperties.Clear();
 		}
 
+
+
+
+		public override void EncodeEntry() {
+			List<byte> bytes = new List<byte>();
+
+			//Text Encoding
+			if (_isTextEncoding) {
+
+			}
+
+			//Binary Encoding
+			else {
+
+			}
+
+			//EXMP Header: File identifier, Parent Cohort, Property Count
+			string id;
+			if (_isExemplar) {
+				id = "E";
+			} else {
+				id = "C";
+			}
+			id += "QZZ";
+			if (_isTextEncoding) {
+				id += "T";
+			} else {
+				id += "B";
+			}
+			id += "1###";
+			bytes.AddRange(ByteArrayHelper.ToByteArray(id));
+			bytes.AddRange(BitConverter.GetBytes(_parentCohort.TypeID.Value));
+			bytes.AddRange(BitConverter.GetBytes(_parentCohort.GroupID.Value));
+			bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID.Value));
+			bytes.AddRange(BitConverter.GetBytes(_listOfProperties.Count));
+
+			foreach (DBPFProperty prop in _listOfProperties.Values) {
+				bytes.AddRange(BitConverter.GetBytes(prop.ID));
+				bytes.AddRange(BitConverter.GetBytes(prop.DataType.IdentifyingNumber));
+				ushort keyType;
+				if (prop.NumberOfReps == 0) {
+					keyType = 0x00;
+					bytes.Add(0x00);
+					
+
+				} else {
+					keyType = 0x80;
+				}
+			}
+		}
 	}
 }

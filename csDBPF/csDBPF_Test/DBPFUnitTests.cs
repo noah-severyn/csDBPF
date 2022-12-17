@@ -56,12 +56,12 @@ namespace csDBPF_Test {
 
 			[TestMethod]
 			public void Test_012_DBPFUtil_UintToHexString() {
-				Assert.AreEqual("6534284A", DBPFUtil.UIntToHexString(1697917002, 8));
-				Assert.AreEqual("4A283465", DBPFUtil.UIntToHexString(1244148837, 8));
-				Assert.AreEqual("6534284A", DBPFUtil.UIntToHexString(0x6534284A, 8));
-				Assert.AreEqual("4A283465", DBPFUtil.UIntToHexString(0x4A283465, 8));
-				Assert.AreEqual("4D2", DBPFUtil.UIntToHexString(1234, 3));
-				Assert.AreEqual("000004D2", DBPFUtil.UIntToHexString(1234, 8));
+				Assert.AreEqual("6534284A", DBPFUtil.ToHexString(1697917002, 8));
+				Assert.AreEqual("4A283465", DBPFUtil.ToHexString(1244148837, 8));
+				Assert.AreEqual("6534284A", DBPFUtil.ToHexString(0x6534284A, 8));
+				Assert.AreEqual("4A283465", DBPFUtil.ToHexString(0x4A283465, 8));
+				Assert.AreEqual("4D2", DBPFUtil.ToHexString(1234, 3));
+				Assert.AreEqual("000004D2", DBPFUtil.ToHexString(1234, 8));
 			}
 
 			//[Ignore]

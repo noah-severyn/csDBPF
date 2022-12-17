@@ -99,6 +99,7 @@ namespace csDBPF.Entries {
 			_compressedItems.Clear();
 			foreach (DBPFEntry entry in entries) {
 				if (entry.IsCompressed) {
+					entry.EncodeEntry();
 					_compressedItems.Add(new DBDFItem((uint) entry.TGI.TypeID, (uint) entry.TGI.GroupID, (uint) entry.TGI.InstanceID, entry.UncompressedSize));
 				}
 			}
