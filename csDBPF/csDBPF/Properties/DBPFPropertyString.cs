@@ -133,7 +133,7 @@ namespace csDBPF.Properties {
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(_id);
 				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}=String:1:{{");
 				sb.Append($"\"{_dataValue}\"");
-				sb.Append("}}\r\n");
+				sb.Append("}\r\n");
 				return ByteArrayHelper.ToBytes(sb.ToString(), true);
 			}
 

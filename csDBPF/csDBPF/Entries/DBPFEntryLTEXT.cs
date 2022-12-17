@@ -96,7 +96,7 @@ namespace csDBPF.Entries {
 			List<byte> bytes = new List<byte>();
 			bytes.AddRange(BitConverter.GetBytes((ushort) _text.Length)); //Number of characters
 			bytes.AddRange(new byte[] { 0x00, 0x10 }); //Text control character
-			bytes.AddRange(ByteArrayHelper.ToByteArray(_text, false));
+			bytes.AddRange(ByteArrayHelper.ToBytes(_text, false));
 			ByteData = bytes.ToArray();
 		}
 	}

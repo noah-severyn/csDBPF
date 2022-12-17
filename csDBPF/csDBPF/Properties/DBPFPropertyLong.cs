@@ -122,7 +122,7 @@ namespace csDBPF.Properties {
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder();
 			sb.Append($"ID: 0x{DBPFUtil.ToHexString(_id)}, ");
-			sb.Append($"Type: { _dataType}, ");
+			sb.Append($"Type: {_dataType}, ");
 			sb.Append($"Reps: {_numberOfReps}, ");
 			sb.Append($"Values: {_dataValues.ToString()}");
 			return sb.ToString();
@@ -149,7 +149,7 @@ namespace csDBPF.Properties {
 			if (value is not List<long>) {
 				throw new ArgumentException($"Argument to DBPFPropertyNumber.SetDataValues must be List<long>. {value.GetType()} was provided.");
 			}
-			_dataValues= (List<long>)value;
+			_dataValues = (List<long>) value;
 			if (_dataValues.Count <= 1) {
 				_numberOfReps = 0;
 			} else {
@@ -166,8 +166,8 @@ namespace csDBPF.Properties {
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(_id);
 				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}={_dataType.Name}:{_numberOfReps}:{{");
 				for (int idx = 0; idx < _dataValues.Count; idx++) {
-					sb.Append($"0x{DBPFUtil.ToHexString(_dataValues[idx],_dataType.Length)}");
-					if (idx != _dataValues.Count) {
+					sb.Append($"0x{DBPFUtil.ToHexString(_dataValues[idx], _dataType.Length * 2)}");
+					if (idx != _dataValues.Count - 1) {
 						sb.Append(',');
 					}
 				}
@@ -183,7 +183,7 @@ namespace csDBPF.Properties {
 				if (_numberOfReps == 0) { //keyType = 0x00
 					bytes.AddRange(BitConverter.GetBytes((ushort) 0x00)); //keyType
 					bytes.Add(0); //Number of value repetitions. (Seems to be always 0.)
-					bytes.AddRange(ByteArrayHelper.ToBytes(_dataValues[0],_dataType.Length));
+					bytes.AddRange(ByteArrayHelper.ToBytes(_dataValues[0], _dataType.Length));
 
 				} else { // keyType = 0x80
 					bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //keyType

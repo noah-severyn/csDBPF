@@ -384,7 +384,7 @@ namespace csDBPF
 
 			using FileStream fs = new(file.FullName, FileMode.Create);
 			//Write Header
-			fs.Write(ByteArrayHelper.ToByteArray(Header.Identifier));
+			fs.Write(ByteArrayHelper.ToBytes(Header.Identifier));
 			fs.Write(BitConverter.GetBytes(Header.MajorVersion));
 			fs.Write(BitConverter.GetBytes(Header.MinorVersion));
 			fs.Write(new byte[12]); //12 bytes are unused

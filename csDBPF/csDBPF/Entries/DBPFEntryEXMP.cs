@@ -43,13 +43,13 @@ namespace csDBPF.Entries {
 			set { _parentCohort = value; }
 		}
 
-		private bool _isExemplar;
+		private bool _isCohort;
 		/// <summary>
 		/// Determine if the file is Exemplar or Cohort.
 		/// </summary>
-		public bool IsExemplar {
-			get { return _isExemplar; }
-			set { _isExemplar = value; }
+		public bool IsCohort {
+			get { return _isCohort; }
+			set { _isCohort = value; }
 		}
 
 
@@ -79,8 +79,8 @@ namespace csDBPF.Entries {
 			_listOfProperties = new SortedList<uint, DBPFProperty>();
 			_parentCohort = new DBPFTGI(0,0,0);
 
-			if (bytes[0] == 0x45) { //"E"
-				_isExemplar = true;
+			if (bytes[0] == 0x43) { //"C"
+				_isCohort = true;
 			}
 		}
 
@@ -347,7 +347,8 @@ namespace csDBPF.Entries {
 							endRepPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
 						}
 
-						value = ByteArrayHelper.ReadTextToFloat(dData, offset, endPos - offset);
+						//Precision of floats is ~6-9 digits so this number may be rounded or truncated
+						value = ByteArrayHelper.ReadTextToFloat(dData, offset, endRepPos - offset);
 						((List<float>) dataValues).Add(value);
 						offset = endRepPos + 1;
 					}
@@ -407,21 +408,6 @@ namespace csDBPF.Entries {
 
 
 
-		///// <summary>
-		///// Decode all properties in the entry. Only valid for Exemplar/Cohort type entries.
-		///// </summary>
-		//public void DecodeAllProperties() {
-		//	if (!(TGI.MatchesKnownTGI(DBPFTGI.COHORT) || TGI.MatchesKnownTGI(DBPFTGI.EXEMPLAR))) {
-		//		throw new InvalidOperationException("This function can only be called on Exemplar and Cohort type entries!");
-		//	}
-
-		//	foreach (DBPFProperty property in _listOfProperties.Values) {
-		//		property.DecodeValues();
-		//	}
-		//}
-
-
-
 		/// <summary>
 		/// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="DBPFProperty.ExemplarTypes"/> for the full list.
 		/// </summary>
@@ -433,12 +419,7 @@ namespace csDBPF.Entries {
 				return -1;
 			}
 
-			//TODO - WTF IS THIS SYNTAX? GROSS.
-			//Array propertyType = Array.CreateInstance(property.DataType.PrimitiveDataType, property.NumberOfReps); //Create new array to hold the values
-			//property.DecodeValues();
-			//propertyType = property.DecodedValues; //Set the values from the decoded property
-			//return unchecked((int) propertyType.GetValue(0)); 
-			//TODO We know exemplar type can only hold one value, so grab the first one.... BUT HOW?????????
+			//We know exemplar type can only hold one value, so grab the first one
 			List<long> dataValues = (List<long>) property.GetDataValues();
 			return Convert.ToInt32(dataValues[0]);
 		}
@@ -471,7 +452,7 @@ namespace csDBPF.Entries {
 		/// Lookup name is case insensitive and ignores spaces (the XML properties can be inconsistently named).
 		/// </remarks>
 		public DBPFProperty GetProperty(string name) {
-			uint id = XMLProperties.LookupPropertyID(name);
+			uint id = XMLProperties.GetPropertyID(name);
 			return GetProperty(id);
 		}
 
@@ -549,50 +530,46 @@ namespace csDBPF.Entries {
 
 
 		public override void EncodeEntry() {
-			List<byte> bytes = new List<byte>();
+			
+			string id;
+			if (_isCohort) {
+				id = "C";
+			} else {
+				id = "E";
+			}
 
 			//Text Encoding
 			if (_isTextEncoding) {
+				id += "QZT1###";
 
+				StringBuilder sb = new StringBuilder();
+				sb.Append(id+"\r\n");
+				sb.Append($"ParentCohort=Key:{{0x{DBPFUtil.ToHexString(_parentCohort.TypeID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.GroupID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.InstanceID.Value)}}}\r\n");
+				sb.Append($"PropCount=0x{DBPFUtil.ToHexString(_listOfProperties.Count)}\r\n");
+				foreach (DBPFProperty prop in _listOfProperties.Values) {
+					sb.Append(prop.ToRawBytes());
+				}
+				ByteData = ByteArrayHelper.ToBytes(sb.ToString(), true);
+				UncompressedSize = (uint) ByteData.Length;
+				IsCompressed = false;
 			}
 
 			//Binary Encoding
 			else {
+				id += "QZB1###";
 
-			}
-
-			//EXMP Header: File identifier, Parent Cohort, Property Count
-			string id;
-			if (_isExemplar) {
-				id = "E";
-			} else {
-				id = "C";
-			}
-			id += "QZZ";
-			if (_isTextEncoding) {
-				id += "T";
-			} else {
-				id += "B";
-			}
-			id += "1###";
-			bytes.AddRange(ByteArrayHelper.ToByteArray(id));
-			bytes.AddRange(BitConverter.GetBytes(_parentCohort.TypeID.Value));
-			bytes.AddRange(BitConverter.GetBytes(_parentCohort.GroupID.Value));
-			bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID.Value));
-			bytes.AddRange(BitConverter.GetBytes(_listOfProperties.Count));
-
-			foreach (DBPFProperty prop in _listOfProperties.Values) {
-				bytes.AddRange(BitConverter.GetBytes(prop.ID));
-				bytes.AddRange(BitConverter.GetBytes(prop.DataType.IdentifyingNumber));
-				ushort keyType;
-				if (prop.NumberOfReps == 0) {
-					keyType = 0x00;
-					bytes.Add(0x00);
-					
-
-				} else {
-					keyType = 0x80;
+				List<byte> bytes = new List<byte>();
+				bytes.AddRange(ByteArrayHelper.ToBytes(id,true));
+				bytes.AddRange(BitConverter.GetBytes(_parentCohort.TypeID.Value));
+				bytes.AddRange(BitConverter.GetBytes(_parentCohort.GroupID.Value));
+				bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID.Value));
+				bytes.AddRange(BitConverter.GetBytes(_listOfProperties.Count));
+				foreach (DBPFProperty prop in _listOfProperties.Values) {
+					bytes.AddRange(prop.ToRawBytes());
 				}
+				ByteData = bytes.ToArray();
+				UncompressedSize = (uint) ByteData.Length;
+				IsCompressed= true;
 			}
 		}
 	}

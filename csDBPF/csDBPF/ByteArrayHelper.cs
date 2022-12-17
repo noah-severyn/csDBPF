@@ -303,7 +303,7 @@ namespace csDBPF {
 		/// <param name="data">Data to parse</param>
 		/// <param name="singleByte">Parse type. FALSE (Default) is two byte output per char: Unicode; TRUE is one byte per char: ANSI (Windows-1252) </param>
 		/// <returns>A byte array of parsed data</returns>
-		public static byte[] ToByteArray(string data, bool singleByte = false) {
+		public static byte[] ToBytes(string data, bool singleByte = false) {
 			List<byte> bytes = new List<byte>();
 			foreach (char c in data) {
 				if (singleByte) {
@@ -314,6 +314,16 @@ namespace csDBPF {
 				}
 			}
 			return bytes.ToArray();
+		}
+		/// <summary>
+		/// Converts a long to byte array with the given length.
+		/// </summary>
+		/// <param name="value">Value to convert</param>
+		/// <param name="numPlaces">Length of returned array</param>
+		/// <returns></returns>
+		public static byte[] ToBytes(long value, int numPlaces = 8) {
+			byte[] bytes = BitConverter.GetBytes(value);
+			return bytes[0..numPlaces];
 		}
 		/// <summary>
 		/// Pareses the boolean array and returns the corresponding byte array.

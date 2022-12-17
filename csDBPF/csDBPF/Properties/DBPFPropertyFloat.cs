@@ -163,7 +163,7 @@ namespace csDBPF.Properties {
 				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}=Float32:{_numberOfReps}:{{");
 				for (int idx = 0; idx < _dataValues.Count; idx++) {
 					sb.Append(_dataValues[idx]);
-					if (idx != _dataValues.Count) {
+					if (idx != _dataValues.Count-1) {
 						sb.Append(',');
 					}
 				}

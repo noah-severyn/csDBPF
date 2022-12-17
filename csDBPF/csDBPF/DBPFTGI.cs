@@ -276,7 +276,7 @@ namespace csDBPF {
 		/// </summary>
 		/// <returns>A string that represents the current object</returns>
 		public override string ToString() {
-			return $"0x{DBPFUtil.ToHexString(_typeID, 8)}, 0x{DBPFUtil.ToHexString(_groupID, 8)}, 0x{DBPFUtil.ToHexString(_instanceID, 8)}, {_category}, {_detail}";
+			return $"0x{DBPFUtil.ToHexString((long) _typeID, 8)}, 0x{DBPFUtil.ToHexString((long) _groupID, 8)}, 0x{DBPFUtil.ToHexString((long) _instanceID, 8)}, {_category}, {_detail}";
 		}
 
 
