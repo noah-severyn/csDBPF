@@ -345,33 +345,46 @@ namespace csDBPF
 			}
 		}
 
+
+
 		/// <summary>
 		/// Return the nth entry in the file by index.
 		/// </summary>
 		/// <param name="index">Index position in file.</param>
-		/// <returns></returns>
+		/// <returns>The nth DBPFEntry</returns>
 		public DBPFEntry GetEntry(int index) {
 			return _listOfEntries[index];
 		}
 		/// <summary>
-		/// Return the entry matching the specified Instance ID.
+		/// Return the first entry matching the specified Instance ID.
 		/// </summary>
 		/// <param name="instance">IID to search for</param>
-		/// <returns></returns>
+		/// <returns>A matching DBPFEntry</returns>
 		public DBPFEntry GetEntry(uint instance) {
 			return _listOfEntries.Find(i => i.TGI.InstanceID == instance);
 		}
 		/// <summary>
-		/// Return the entry matching the specified TGI set.
+		/// Return the first entry matching the specified TGI.
 		/// </summary>
 		/// <param name="TGI">TGI set to search for</param>
-		/// <returns></returns>
+		/// <returns>A matching DBPFEntry</returns>
 		public DBPFEntry GetEntry(DBPFTGI TGI) {
-			throw new NotImplementedException();
+			return _listOfEntries.Find(entry => entry.TGI.Equals(TGI));
 		}
 
+
+
 		/// <summary>
-		/// Saves the current instance to disk using the <see cref="File">File</see> property.
+		/// Saves the current instance to disk using the <see cref="File"/> property.
+		/// </summary>
+		public void Save() {
+			Save(File.FullName);
+		}
+
+
+
+		/// <summary>
+		/// Saves the current instance to disk at the specified path.
 		/// <param name="filePath">File to save as</param>
 		/// </summary>
 		public void Save(string filePath) {
@@ -424,6 +437,7 @@ namespace csDBPF
 		}
 
 
+
 		/// <summary>
 		/// Add an entry to this file.
 		/// </summary>
@@ -433,6 +447,7 @@ namespace csDBPF
 			_listOfTGIs.Add(entry.TGI);
 			_fileSize += entry.ByteData.LongLength;
 		}
+
 
 
 		/// <summary>
@@ -452,6 +467,8 @@ namespace csDBPF
 			RemoveEntry(index);
 		}
 
+
+
 		/// <summary>
 		/// Remove the entry at the specified position from this file.
 		/// </summary>
@@ -461,6 +478,8 @@ namespace csDBPF
 			_listOfTGIs.RemoveAt(position);
 			_fileSize -= _listOfEntries[position].ByteData.LongLength;
 		}
+
+
 
 		/// <summary>
 		/// Clears all entries from this file.
@@ -473,7 +492,6 @@ namespace csDBPF
 
 
 		
-
 		/// <summary>
 		/// Updates the directory subfile with all compressed items in this file.
 		/// </summary>

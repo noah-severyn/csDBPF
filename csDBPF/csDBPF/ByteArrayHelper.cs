@@ -304,6 +304,10 @@ namespace csDBPF {
 		/// <param name="singleByte">Parse type. FALSE (Default) is two byte output per char: Unicode; TRUE is one byte per char: ANSI (Windows-1252) </param>
 		/// <returns>A byte array of parsed data</returns>
 		public static byte[] ToBytes(string data, bool singleByte = false) {
+			if (data is null) {
+				return Array.Empty<byte>();
+			}
+
 			List<byte> bytes = new List<byte>();
 			foreach (char c in data) {
 				if (singleByte) {

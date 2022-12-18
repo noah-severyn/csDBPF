@@ -886,6 +886,62 @@ namespace csDBPF_Test {
 		// 1xx Test Methods for DBPFFile Class
 		[TestClass]
 		public class _1xx_DBPFFile {
+
+			[TestMethod]
+			public void Test_110_DBPFFile_GetEntry() {
+				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+				DBPFEntry entry, entry0, entry1;
+
+				//Get by index position
+				entry0 = dbpf.GetEntry(0);
+				Assert.IsTrue(entry0.TGI.Equals(DBPFTGI.EXEMPLAR));
+				CollectionAssert.AreEqual(dbpf.ListOfEntries[0].ByteData, entry0.ByteData);
+				entry1 = dbpf.GetEntry(3);
+
+				Assert.IsTrue(entry1.TGI.Equals(DBPFTGI.LTEXT));
+				CollectionAssert.AreEqual(dbpf.ListOfEntries[3].ByteData, entry1.ByteData);
+
+				//Get by Instance ID
+				entry = dbpf.GetEntry((uint) 0x4A0B6819);
+				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.EXEMPLAR));
+				Assert.AreEqual(entry.TGI, entry.TGI);
+				CollectionAssert.AreEqual(dbpf.ListOfEntries[0].ByteData, entry.ByteData);
+				CollectionAssert.AreEqual(entry.ByteData, entry.ByteData);
+
+				entry = dbpf.GetEntry(0xF65435A1);
+				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
+				CollectionAssert.AreEqual(dbpf.ListOfEntries[3].ByteData, entry.ByteData);
+				CollectionAssert.AreEqual(entry1.ByteData, entry.ByteData);
+
+				//Get by TGI
+				entry = dbpf.GetEntry(DBPFTGI.DIRECTORY);
+				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.DIRECTORY));
+				CollectionAssert.AreEqual(dbpf.ListOfEntries[12].ByteData, entry.ByteData);
+
+				entry = dbpf.GetEntry(DBPFTGI.LTEXT);
+				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
+				CollectionAssert.AreEqual(dbpf.ListOfEntries[1].ByteData, entry.ByteData);
+
+				entry = dbpf.GetEntry(new DBPFTGI(0x2026960B, 0x6A231EAA, 0xF65435A1));
+				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
+				CollectionAssert.AreEqual(entry1.ByteData, entry.ByteData);
+
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			[TestMethod]
 			public void Test_101a_DBPFFile_IsDBPF() {
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");

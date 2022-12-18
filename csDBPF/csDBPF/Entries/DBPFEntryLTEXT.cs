@@ -94,7 +94,11 @@ namespace csDBPF.Entries {
 		/// </summary>
 		public override void EncodeEntry() {
 			List<byte> bytes = new List<byte>();
-			bytes.AddRange(BitConverter.GetBytes((ushort) _text.Length)); //Number of characters
+			if (_text is null) {
+				bytes.AddRange(BitConverter.GetBytes((ushort) 0)); //Number of characters
+			} else {
+				bytes.AddRange(BitConverter.GetBytes((ushort) _text.Length)); //Number of characters
+			}
 			bytes.AddRange(new byte[] { 0x00, 0x10 }); //Text control character
 			bytes.AddRange(ByteArrayHelper.ToBytes(_text, false));
 			ByteData = bytes.ToArray();
