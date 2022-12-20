@@ -20,7 +20,7 @@ namespace csDBPF.Entries {
 
 		private List<DBDFItem> _compressedItems;
 		/// <summary>
-		/// Dictionary of TGIs to the size of the decompressed file each TGI represents, in bytes.
+		/// List of <see cref="DBDFItem"/> representing the TGI set and the decompressed byte size of each subfile in this file.
 		/// </summary>
 		public List<DBDFItem> CompressedItems {
 			get { return _compressedItems; }
@@ -29,7 +29,7 @@ namespace csDBPF.Entries {
 
 
 		/// <summary>
-		/// Represents one item in the DBDF directory list. Each item is a reference to a compressed item in the DBPF file.
+		/// Helper class to represent one item in the DBDF directory list. Each item is a reference to a compressed entry in the DBPF file.
 		/// </summary>
 		public class DBDFItem {
 			/// <summary>
@@ -63,7 +63,7 @@ namespace csDBPF.Entries {
 		/// Create a new instance. Use when creating a new Directory.
 		/// </summary>
 		public DBPFEntryDIR() : base(DBPFTGI.DIRECTORY) {
-
+			_compressedItems = new List<DBDFItem>();
 		}
 
 		/// <summary>
@@ -95,8 +95,14 @@ namespace csDBPF.Entries {
 		}
 
 
-		public void Update(List<DBPFEntry> entries) {
+
+		/// <summary>
+		/// Builds the <see cref="CompressedItems"/> list with all compressed entries.
+		/// </summary>
+		/// <param name="entries">List of entries</param>
+		public void Build(List<DBPFEntry> entries) {
 			_compressedItems.Clear();
+			
 			foreach (DBPFEntry entry in entries) {
 				if (entry.IsCompressed) {
 					entry.EncodeEntry();
@@ -105,8 +111,21 @@ namespace csDBPF.Entries {
 			}
 		}
 
+
+
+		/// <summary>
+		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
+		/// </summary>
 		public override void EncodeEntry() {
-			throw new NotImplementedException();
+			List<byte> bytes = new List<byte>();
+
+			foreach (DBDFItem item in _compressedItems) {
+				bytes.AddRange(BitConverter.GetBytes(item.TID));
+				bytes.AddRange(BitConverter.GetBytes(item.GID));
+				bytes.AddRange(BitConverter.GetBytes(item.IID));
+				bytes.AddRange(BitConverter.GetBytes(item.Size));
+			}
+			ByteData= bytes.ToArray();
 		}
 	}
 }

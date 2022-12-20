@@ -404,6 +404,7 @@ namespace csDBPF
 
 			//Update Header
 			Header.Update(this);
+			RebuildDirectory();
 
 			using FileStream fs = new(file.FullName, FileMode.Create);
 			//Write Header
@@ -457,13 +458,15 @@ namespace csDBPF
 			_listOfEntries.Add(entry);
 			_listOfTGIs.Add(entry.TGI);
 			_fileSize += entry.ByteData.LongLength;
+			List<DBPFEntry> entries = new List<DBPFEntry>();
+			AddEntries(entries);
 		}
 
 		/// <summary>
 		/// Add multiple entries to this file.
 		/// </summary>
 		/// <param name="entries">Entries to add</param>
-		public void AddEntries(List<DBPFEntry> entries) {
+		public void AddEntries(IEnumerable<DBPFEntry> entries) {
 			foreach (DBPFEntry entry in entries) {
 				AddEntry(entry);
 			}
@@ -485,7 +488,7 @@ namespace csDBPF
 		/// Add each entry to this file if a matching TGI is not found, otherwise update the corresponding entry.
 		/// </summary>
 		/// <param name="entries">Entries to add</param>
-		public void AddOrUpdateEntries(List<DBPFEntry> entries) {
+		public void AddOrUpdateEntries(IEnumerable<DBPFEntry> entries) {
 			foreach (DBPFEntry entry in entries) {
 				AddOrUpdateEntry(entry);
 			}
@@ -538,14 +541,14 @@ namespace csDBPF
 
 		
 		/// <summary>
-		/// Updates the directory subfile with all compressed items in this file.
+		/// Builds the Directory subfile if any entries in this file are compressed.
 		/// </summary>
-		public void UpdateDirectory() {
-			DBPFEntryDIR dir = (DBPFEntryDIR) GetEntry(DBPFTGI.DIRECTORY);
-			if (dir is null) {
-				dir = new DBPFEntryDIR();
+		public void RebuildDirectory() {
+			if (_listOfEntries.Any(entry => entry.IsCompressed == true)) {
+				DBPFEntryDIR dir =  new DBPFEntryDIR();
+				dir.Build(_listOfEntries);
+				AddOrUpdateEntry(dir);
 			}
-			dir.Update(_listOfEntries);
 		}
 
 
@@ -601,7 +604,7 @@ namespace csDBPF
 			return _listOfTGIs.Count;
 		}
 
-		public void UpdateAllEntries(List<DBPFEntry> entries) {
+		public void UpdateAllEntries(IEnumerable<DBPFEntry> entries) {
 			//TODO - implement Update for a list of entries
 			//any entries with matching tgis will be overwritten (first ocurrence only) and any new ones will be added - skip DIR files
 			throw new NotImplementedException();

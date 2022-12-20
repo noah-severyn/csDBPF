@@ -779,7 +779,7 @@ namespace csDBPF_Test {
 		[TestClass]
 		public class _08x_DBPFEntryParsing {
 			[TestMethod]
-			public void Test_081a_LTEXT_Parse() {
+			public void Test_081a_LTEXT_Decode() {
 				//Parse from bytes
 				DBPFEntryLTEXT entryb = new DBPFEntryLTEXT(DBPFTGI.LTEXT, 0, 0, 0, TestArrays.notcompressedentry_b);
 				entryb.DecodeEntry();
@@ -801,9 +801,14 @@ namespace csDBPF_Test {
 				CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, entryknown.ByteData);
 			}
 
+			[TestMethod]
+			public void Test_081c_LTEXT_ModifyText() {
+				DBPFEntryLTEXT ltext = new DBPFEntryLTEXT();
+			}
+
 			[Ignore]
 			[TestMethod]
-			public void Test_082a_EXMP_Parse() {
+			public void Test_082a_EXMP_Decode() {
 				
 			}
 
@@ -837,7 +842,7 @@ namespace csDBPF_Test {
 			}
 
 			[TestMethod]
-			public void Test_083a_DIR_Parse() {
+			public void Test_083a_DIR_Decode() {
 				//sample from: z_DataView - Parks Aura.dat
 				byte[] dirbytes = new byte[] { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x19, 0x68, 0x0B, 0x4A, 0xBE, 0x01, 0x00, 0x00 };
 
@@ -854,21 +859,7 @@ namespace csDBPF_Test {
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 				DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
 				dir.DecodeEntry();
-				Assert.AreEqual(1, entryd.CompressedItems.Count);
-				Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
-				Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
-				Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
-				Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
-
-				dir.Update(dbpf.ListOfEntries);
-				Assert.AreEqual(1, entryd.CompressedItems.Count);
-				Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
-				Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
-				Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
-				Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
-
-				dbpf.UpdateDirectory();
-				Assert.AreEqual(1, entryd.CompressedItems.Count);
+				Assert.AreEqual(1, dir.CompressedItems.Count);
 				Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
 				Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
 				Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
@@ -876,8 +867,29 @@ namespace csDBPF_Test {
 			}
 
 			[TestMethod]
-			public void Test_083b_DIR_Encode() {
+			public void Test_083b_DIR_Build() {
+				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+				DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
+				dir.DecodeEntry();
 
+				dir.Build(dbpf.GetEntries());
+				Assert.AreEqual(1, dir.CompressedItems.Count);
+				Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
+				Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
+				Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
+				Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
+
+				dbpf.RebuildDirectory();
+				Assert.AreEqual(1, dir.CompressedItems.Count);
+				Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
+				Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
+				Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
+				Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
+			}
+
+			[TestMethod]
+			public void Test_083c_DIR_Encode() {
+				throw new NotImplementedException();
 			}
 		}
 
@@ -895,32 +907,32 @@ namespace csDBPF_Test {
 				//Get by index position
 				entry0 = dbpf.GetEntry(0);
 				Assert.IsTrue(entry0.TGI.Equals(DBPFTGI.EXEMPLAR));
-				CollectionAssert.AreEqual(dbpf.ListOfEntries[0].ByteData, entry0.ByteData);
+				CollectionAssert.AreEqual(dbpf.GetEntry(0).ByteData, entry0.ByteData);
 				entry1 = dbpf.GetEntry(3);
 
 				Assert.IsTrue(entry1.TGI.Equals(DBPFTGI.LTEXT));
-				CollectionAssert.AreEqual(dbpf.ListOfEntries[3].ByteData, entry1.ByteData);
+				CollectionAssert.AreEqual(dbpf.GetEntry(3).ByteData, entry1.ByteData);
 
 				//Get by Instance ID
 				entry = dbpf.GetEntry((uint) 0x4A0B6819);
 				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.EXEMPLAR));
 				Assert.AreEqual(entry.TGI, entry.TGI);
-				CollectionAssert.AreEqual(dbpf.ListOfEntries[0].ByteData, entry.ByteData);
+				CollectionAssert.AreEqual(dbpf.GetEntry(0).ByteData, entry.ByteData);
 				CollectionAssert.AreEqual(entry.ByteData, entry.ByteData);
 
 				entry = dbpf.GetEntry(0xF65435A1);
 				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
-				CollectionAssert.AreEqual(dbpf.ListOfEntries[3].ByteData, entry.ByteData);
+				CollectionAssert.AreEqual(dbpf.GetEntry(3).ByteData, entry.ByteData);
 				CollectionAssert.AreEqual(entry1.ByteData, entry.ByteData);
 
 				//Get by TGI
 				entry = dbpf.GetEntry(DBPFTGI.DIRECTORY);
 				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.DIRECTORY));
-				CollectionAssert.AreEqual(dbpf.ListOfEntries[12].ByteData, entry.ByteData);
+				CollectionAssert.AreEqual(dbpf.GetEntry(12).ByteData, entry.ByteData);
 
 				entry = dbpf.GetEntry(DBPFTGI.LTEXT);
 				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
-				CollectionAssert.AreEqual(dbpf.ListOfEntries[1].ByteData, entry.ByteData);
+				CollectionAssert.AreEqual(dbpf.GetEntry(1).ByteData, entry.ByteData);
 
 				entry = dbpf.GetEntry(new DBPFTGI(0x2026960B, 0x6A231EAA, 0xF65435A1));
 				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
@@ -955,7 +967,7 @@ namespace csDBPF_Test {
 			public void Test_101b_DBPFFile_IsNotDBPF() {
 				DBPFFile notdbpf = new DBPFFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll");
 				Assert.AreEqual("CAS_AutoHistorical_v0.0.2.dll: 0 subfiles", notdbpf.ToString());
-				Assert.AreEqual(0, notdbpf.ListOfEntries.Count);
+				Assert.AreEqual(0, notdbpf.GetEntries().Count);
 			}
 
 			[TestMethod]
@@ -970,7 +982,7 @@ namespace csDBPF_Test {
 				DBPFEntryEXMP entryKnown = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.decompressedentry_b);
 
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
-				DBPFEntryEXMP entry0 = (DBPFEntryEXMP) dbpf.ListOfEntries[0];
+				DBPFEntryEXMP entry0 = (DBPFEntryEXMP) dbpf.GetEntry(0);
 				entry0.DecodeEntry();
 				for (int idx = 0; idx < entryKnown.ListOfProperties.Count; idx++) {
 					DBPFProperty outk = entryKnown.ListOfProperties.GetValueAtIndex(idx);
@@ -981,11 +993,11 @@ namespace csDBPF_Test {
 					CollectionAssert.AreEqual((System.Collections.ICollection) outk.GetDataValues(), (System.Collections.ICollection) outr.GetDataValues());
 				}
 
-				DBPFEntryLTEXT entry1 = (DBPFEntryLTEXT) dbpf.ListOfEntries[1];
+				DBPFEntryLTEXT entry1 = (DBPFEntryLTEXT) dbpf.GetEntry(1);
 				entry1.DecodeEntry();
 				Assert.AreEqual("Parks Aura (by Cori)", entry1.Text);
 
-				DBPFEntryLTEXT entry11 = (DBPFEntryLTEXT) dbpf.ListOfEntries[dbpf.ListOfEntries.Count - 2];
+				DBPFEntryLTEXT entry11 = (DBPFEntryLTEXT) dbpf.GetEntry(dbpf.CountEntries() - 2);
 				entry11.DecodeEntry();
 				Assert.AreEqual("+100  to +165", entry11.Text);
 			}
@@ -994,7 +1006,7 @@ namespace csDBPF_Test {
 			[TestMethod]
 			public void Test_112_ParseBuildingExemplar() {
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\SC4 MODPACC\\B62\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
-				List<DBPFEntry> entries = dbpf.ListOfEntries;
+				List<DBPFEntry> entries = dbpf.GetEntries();
 				DBPFEntry entry = entries[0];
 				entry.DecodeEntry();
 
