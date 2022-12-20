@@ -30,7 +30,20 @@ namespace csDBPF.Entries {
 
 
 		/// <summary>
-		/// Create a new instance. Use when creating new exemplars.
+		/// Create a new instance. Use when creating a new LTEXT entry from scratch.
+		/// </summary>
+		public DBPFEntryLTEXT() : base(DBPFTGI.LTEXT) { }
+
+		/// <summary>
+		/// Create a new instance with the specified text. Use when creating a new LTEXT entry from scratch.
+		/// </summary>
+		/// <param name="text">Text to set</param>
+		public DBPFEntryLTEXT(string text) : base(DBPFTGI.LTEXT) { 
+			_text= text;
+		}
+
+		/// <summary>
+		/// Create a new instance with the specified TGI. Use when creating a new LTEXT entry from scratch.
 		/// </summary>
 		/// <param name="tgi">TGI set to assign</param>
 		public DBPFEntryLTEXT(DBPFTGI tgi) : base(tgi) {
@@ -40,7 +53,19 @@ namespace csDBPF.Entries {
 		}
 
 		/// <summary>
-		/// Create a new instance. Use when reading an existing Directy from a file.
+		/// Create a new instance with the specified TGI and text. Use when creating a new LTEXT entry from scratch.
+		/// </summary>
+		/// <param name="tgi">TGI set to assign</param>
+		/// <param name="text">Text to set</param>
+		public DBPFEntryLTEXT(DBPFTGI tgi, string text) : base(tgi) {
+			if (tgi is null) {
+				TGI.SetTGI(DBPFTGI.LTEXT);
+			}
+			_text = text;
+		}
+
+		/// <summary>
+		/// Create a new instance. Use when reading an existing entry from a file.
 		/// </summary>
 		/// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
 		/// <param name="offset">Offset (location) of the entry within the DBPF file</param>
@@ -89,8 +114,10 @@ namespace csDBPF.Entries {
 			_isDecoded = true;
 		}
 
+
+
 		/// <summary>
-		/// Set this instance's byte array with the current state.
+		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
 		/// </summary>
 		public override void EncodeEntry() {
 			List<byte> bytes = new List<byte>();
