@@ -67,6 +67,8 @@ namespace csDBPF.Entries {
 			_parentCohort = new DBPFTGI(0, 0, 0);
 		}
 
+		//TODO add constructor for only listofprop, tgi+listofprop, tgi+parent, tgi+listofprop+parent
+
 		/// <summary>
 		/// Create a new instance. Use when reading existing exemplars from a file.
 		/// </summary>
@@ -528,7 +530,9 @@ namespace csDBPF.Entries {
 
 
 
-
+		/// <summary>
+		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
+		/// </summary>
 		public override void EncodeEntry() {
 			
 			string id;

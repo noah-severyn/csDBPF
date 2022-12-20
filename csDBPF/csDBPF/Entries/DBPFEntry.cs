@@ -105,7 +105,7 @@ namespace csDBPF.Entries {
 		public abstract void DecodeEntry();
 
 		/// <summary>
-		/// Set <see cref="ByteData"/> with the current state according to the implementing type's implementation.
+		/// Build <see cref="ByteData"/> with the current state according to the implementing type's implementation.
 		/// </summary>
 		public abstract void EncodeEntry();
 
