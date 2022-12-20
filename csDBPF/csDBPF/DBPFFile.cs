@@ -21,42 +21,40 @@ namespace csDBPF
     /// </remarks>
     public class DBPFFile {
 		/// <summary>
-		/// Stores key information about the DBPFFile. The Header is the first 96 bytes of the DBPFFile. 
+		/// Stores key information about the DBPFFile. Is the first 96 bytes of the file. 
 		/// </summary>
 		public DBPFHeader Header;
+
 		/// <summary>
-		/// Represents the file system file for this instance. 
+		/// Represents a file system object for this file. 
 		/// </summary>
 		public FileInfo File;
 
-		private List<DBPFEntry> _listOfEntries;
+		private long _fileSize;
+		/// <summary>
+		/// File size in bytes of all entries.
+		/// </summary>
+		/// <remarks>
+		/// This does not include the size allocated for the Header (96 bytes) and the Index (entry count * 20 bytes).
+		/// </remarks>
+		public long FileSize {
+			get { return _fileSize; }
+		}
+
+		//I generally prefer property get/set for access over Get/Set methods, but we specifically don't enable that here because when we adjust ListOfEntries, we also need to adjust other properties too, like listofTGIs, filesize
+		//TODO - add in documentation about a pro tip to use linq to filter these based on the output of GetEntries or GetTGIs
 		/// <summary>
 		/// List of all entries in this file.
 		/// </summary>
-		public List<DBPFEntry> ListOfEntries {
-			get { return _listOfEntries; }
-		}
+		private readonly List<DBPFEntry> _listOfEntries;
 
-		private List<DBPFTGI> _listOfTGIs;
 		/// <summary>
 		/// List of all TGIs in this file.
 		/// </summary>
 		/// <remarks>
 		/// Can be used for quick inspection because no entry data is processed.
 		/// </remarks>
-		public List<DBPFTGI> ListOfTGIs {
-			get { return _listOfTGIs; }
-		}
-
-		private long _fileSize;
-		/// <summary>
-		/// File size in bytes.
-		/// </summary>
-		public long FileSize {
-			get { return _fileSize; }
-			set { _fileSize = value; }
-		}
-
+		private readonly List<DBPFTGI> _listOfTGIs;
 
 		//------------- BEGIN DBPFFile.Header ------------- \\
 		/// <summary>
@@ -133,7 +131,8 @@ namespace csDBPF
 			/// <summary>
 			/// Number of subfiles within this file.
 			/// </summary>
-			/// <remarks>The index table is very similar to the directory file (DIR) within a DPBF package. The difference being that the Index Table lists every file in the package, whereas the directory file only lists the compressed files within the package. Reader presents a directory file that is a mashup of these two entities, listing every file in the package, as well as indicating whether or not that particular file is compressed. </remarks>
+			/// <remarks>The index table is very similar to the directory file (DIR) within a DPBF package. The difference being that the Index Table lists every file in the package, whereas the directory file only lists the compressed files within the package.
+			/// </remarks>
 			public uint IndexEntryCount { get; private set; }
 			/// <summary>
 			/// Byte location of the first index in the file.
@@ -199,6 +198,18 @@ namespace csDBPF
 				sb.Append($"Index Size: {IndexSize}; ");
 				return sb.ToString();
 			}
+
+
+			/// <summary>
+			/// Update header fields to the current state of the DBPF file.
+			/// </summary>
+			/// <param name="dbpf">DBPFFile to examine</param>
+			internal void Update(DBPFFile dbpf) {
+				DateModified = (uint) DateTimeOffset.Now.ToUnixTimeSeconds();
+				IndexEntryCount = (uint) dbpf.CountEntries();
+				IndexEntryOffset = (uint) dbpf.FileSize;
+				IndexSize = IndexEntryCount * 20; //each Index entry has 5x uint values: T, G, I, offset, size
+			}
 		}
 
 
@@ -219,7 +230,6 @@ namespace csDBPF
 			Header = new DBPFHeader();
 			_listOfEntries = new List<DBPFEntry>();
 			_listOfTGIs = new List<DBPFTGI>();
-			_fileSize = 96;
 
 			if (!file.Exists) {
 				Header.InitializeBlank();
@@ -380,9 +390,6 @@ namespace csDBPF
 		public void Save() {
 			Save(File.FullName);
 		}
-
-
-
 		/// <summary>
 		/// Saves the current instance to disk at the specified path.
 		/// <param name="filePath">File to save as</param>
@@ -394,6 +401,9 @@ namespace csDBPF
 			} else {
 				file = new FileInfo(filePath);
 			}
+
+			//Update Header
+			Header.Update(this);
 
 			using FileStream fs = new(file.FullName, FileMode.Create);
 			//Write Header
@@ -426,6 +436,7 @@ namespace csDBPF
 
 			//Write Index
 			//--should be done after all content has been written because we need to know the location of each file in the archive and its size.
+			long pos = fs.Position;
 			foreach (DBPFEntry entry in _listOfEntries) {
 				fs.Write(BitConverter.GetBytes(entry.TGI.TypeID.Value));
 				fs.Write(BitConverter.GetBytes(entry.TGI.GroupID.Value));
@@ -441,14 +452,44 @@ namespace csDBPF
 		/// <summary>
 		/// Add an entry to this file.
 		/// </summary>
-		/// <param name="entry"></param>
+		/// <param name="entry">Entry to add</param>
 		public void AddEntry(DBPFEntry entry) {
 			_listOfEntries.Add(entry);
 			_listOfTGIs.Add(entry.TGI);
 			_fileSize += entry.ByteData.LongLength;
 		}
 
+		/// <summary>
+		/// Add multiple entries to this file.
+		/// </summary>
+		/// <param name="entries">Entries to add</param>
+		public void AddEntries(List<DBPFEntry> entries) {
+			foreach (DBPFEntry entry in entries) {
+				AddEntry(entry);
+			}
+		}
 
+		/// <summary>
+		/// Add the entry to this file if a matching TGI is not found, otherwise update the corresponding entry.
+		/// </summary>
+		/// <param name="entry">Entry to add</param>
+		public void AddOrUpdateEntry(DBPFEntry entry) {
+			if (_listOfEntries.Any(e => e.TGI == entry.TGI)) {
+				UpdateEntry(entry);
+			} else {
+				AddEntry(entry);
+			}
+		}
+
+		/// <summary>
+		/// Add each entry to this file if a matching TGI is not found, otherwise update the corresponding entry.
+		/// </summary>
+		/// <param name="entries">Entries to add</param>
+		public void AddOrUpdateEntries(List<DBPFEntry> entries) {
+			foreach (DBPFEntry entry in entries) {
+				AddOrUpdateEntry(entry);
+			}
+		}
 
 		/// <summary>
 		/// Remove the entry matching the specified TGI from this file.
@@ -467,8 +508,6 @@ namespace csDBPF
 			RemoveEntry(index);
 		}
 
-
-
 		/// <summary>
 		/// Remove the entry at the specified position from this file.
 		/// </summary>
@@ -480,6 +519,12 @@ namespace csDBPF
 		}
 
 
+		public void RemoveEntries(DBPFTGI tgi) {
+			//TODO - implement RemoveEntries for all matching tgis
+			throw new NotImplementedException();
+		}
+
+
 
 		/// <summary>
 		/// Clears all entries from this file.
@@ -487,7 +532,7 @@ namespace csDBPF
 		public void RemoveAllEntries() {
 			_listOfEntries.Clear();
 			_listOfTGIs.Clear();
-			_fileSize = 96; //Header size
+			_fileSize = 0;
 		}
 
 
@@ -500,7 +545,75 @@ namespace csDBPF
 			if (dir is null) {
 				dir = new DBPFEntryDIR();
 			}
-			dir.Update(ListOfEntries);
+			dir.Update(_listOfEntries);
+		}
+
+
+		public List<DBPFEntry> GetEntries(int? filter) {
+			//TODO - implement GetEntries matching a certian filter type
+			//returns a subset of entries matching the given filter
+			throw new NotImplementedException();
+		}
+
+		public List<DBPFEntry> GetEntries() {
+			return _listOfEntries;
+		}
+
+		public int CountEntries(int? filter) {
+			//TODO - implement CountEntries matching a certian filter type
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Returns the count of entries in this file.
+		/// </summary>
+		/// <returns>The count of entries</returns>
+		public int CountEntries() {
+			return _listOfEntries.Count;
+		}
+
+		public List<DBPFEntry> GetTGIs(int filter) {
+			//TODO - implement GetTGIs matching a certian filter type
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Returns a list of all TGI sets in this file.
+		/// </summary>
+		/// <returns>A list of all TGI sets</returns>
+		public List<DBPFTGI> GetTGIs() {
+			return _listOfTGIs;
+		}
+
+		public int CountTGIs(int filter) {
+			//TODO - implement CountTGIs matching a certian filter type
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Returns the count of TGIs in this file.
+		/// </summary>
+		/// <returns>The count of TGI sets</returns>
+		/// <remarks>
+		/// This may be used in lieu of <see cref="CountEntries()"/> for more performant operation if no entry data is processed.
+		/// </remarks>
+		public int CountTGIs() {
+			return _listOfTGIs.Count;
+		}
+
+		public void UpdateAllEntries(List<DBPFEntry> entries) {
+			//TODO - implement Update for a list of entries
+			//any entries with matching tgis will be overwritten (first ocurrence only) and any new ones will be added - skip DIR files
+			throw new NotImplementedException();
+		}
+
+		public void UpdateEntry(DBPFEntry entry) {
+			//TODO - implement Update for a tgi
+			throw new NotImplementedException();
+		}
+		public void UpdateEntry(int index) {
+			//TODO - implement Update for a position
+			throw new NotImplementedException();
 		}
 	}
 }
