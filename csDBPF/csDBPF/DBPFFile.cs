@@ -295,6 +295,17 @@ namespace csDBPF
 					sizes.Add(size);
 				}
 
+				////Read Directory Info (we need to know which items are compressed when we create them)
+				////If a Directory TGI exists then we know there are compressed items and can read from it; skip if there is no Directory TGI (no compressed files)
+				//if (_listOfTGIs.Any(tgi => tgi.Equals(DBPFTGI.DIRECTORY))) {
+				//	var 
+				//}
+
+				
+
+
+
+
 				for (int idx = 0; idx < _listOfTGIs.Count; idx++) {
 					br.BaseStream.Seek(offsets[idx], SeekOrigin.Begin);
 					byteData = br.ReadBytes((int) sizes[idx]);

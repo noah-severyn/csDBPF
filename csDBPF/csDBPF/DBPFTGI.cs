@@ -279,6 +279,14 @@ namespace csDBPF {
 			return $"0x{DBPFUtil.ToHexString((long) _typeID, 8)}, 0x{DBPFUtil.ToHexString((long) _groupID, 8)}, 0x{DBPFUtil.ToHexString((long) _instanceID, 8)}, {_category}, {_detail}";
 		}
 
+		/// <summary>
+		/// Returns a string that represents only the Type, Group, Instance of this object.
+		/// </summary>
+		/// <returns>A string that represents the current object</returns>
+		public string ToStringShort() {
+			return $"0x{DBPFUtil.ToHexString((long) _typeID, 8)}, 0x{DBPFUtil.ToHexString((long) _groupID, 8)}, 0x{DBPFUtil.ToHexString((long) _instanceID, 8)}";
+		}
+
 
 
 		/// <summary>

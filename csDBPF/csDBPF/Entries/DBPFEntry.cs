@@ -52,6 +52,11 @@ namespace csDBPF.Entries {
 		/// </summary>
 		public bool IsCompressedNow { get; protected set; }
 
+		///// <summary>
+		///// Stores if this property has been decoded
+		///// </summary>
+		//public bool IsDecoded { get; protected set; }
+
 		/// <summary>
 		/// Byte array of raw data pertaining to this entry. Depending on <see cref="IsCompressed"/> and <see cref="IsCompressedNow"/>, this data may be compressed.
 		/// </summary>
@@ -91,10 +96,16 @@ namespace csDBPF.Entries {
 			CompressedSize = size;
 			ByteData = bytes;
 
-			//The following properties cannot be definitively determined until after the data is read and set, so assume for now
-			UncompressedSize = size;
-			IsCompressed = true;
-			IsCompressedNow = true;
+			//We can peek at the first 9 bytes of this data to determine its compression characteristics
+			if (bytes.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(bytes, 4) == 0x10FB) {
+				IsCompressed = true;
+				UncompressedSize = (uint) ((bytes[6] << 16) | (bytes[7] << 8) | bytes[8]);
+				IsCompressedNow = true;
+			} else {
+				IsCompressed = false;
+				UncompressedSize = 0; 
+				IsCompressedNow = false;
+			}
 		}
 
 
