@@ -30,15 +30,15 @@ namespace csDBPF
 		/// </summary>
 		public FileInfo File;
 
-		private long _fileSize;
+		private long _dataSize;
 		/// <summary>
-		/// File size in bytes of all entries.
+		/// Size of all entries in this file,  in bytes.
 		/// </summary>
 		/// <remarks>
-		/// This does not include the size allocated for the Header (96 bytes) and the Index (entry count * 20 bytes).
+		/// This does not include the size allocated for the Header (96 bytes) or the Index (entry count * 20 bytes).
 		/// </remarks>
-		public long FileSize {
-			get { return _fileSize; }
+		public long DataSize {
+			get { return _dataSize; }
 		}
 
 		//I generally prefer property get/set for access over Get/Set methods, but we specifically don't enable that here because when we adjust ListOfEntries, we also need to adjust other properties too, like listofTGIs, filesize
@@ -207,7 +207,7 @@ namespace csDBPF
 			internal void Update(DBPFFile dbpf) {
 				DateModified = (uint) DateTimeOffset.Now.ToUnixTimeSeconds();
 				IndexEntryCount = (uint) dbpf.CountEntries();
-				IndexEntryOffset = (uint) dbpf.FileSize;
+				IndexEntryOffset = (uint) dbpf.DataSize + 96;
 				IndexSize = IndexEntryCount * 20; //each Index entry has 5x uint values: T, G, I, offset, size
 			}
 		}
@@ -414,12 +414,16 @@ namespace csDBPF
 			}
 
 			//Update Header
+			if (Header.Identifier is null) {
+				Header.InitializeBlank();
+			}
 			Header.Update(this);
-			RebuildDirectory();
+
+				RebuildDirectory();
 
 			using FileStream fs = new(file.FullName, FileMode.Create);
 			//Write Header
-			fs.Write(ByteArrayHelper.ToBytes(Header.Identifier));
+			fs.Write(ByteArrayHelper.ToBytes(Header.Identifier,true));
 			fs.Write(BitConverter.GetBytes(Header.MajorVersion));
 			fs.Write(BitConverter.GetBytes(Header.MinorVersion));
 			fs.Write(new byte[12]); //12 bytes are unused
@@ -468,7 +472,7 @@ namespace csDBPF
 		public void AddEntry(DBPFEntry entry) {
 			_listOfEntries.Add(entry);
 			_listOfTGIs.Add(entry.TGI);
-			_fileSize += entry.ByteData.LongLength;
+			_dataSize += entry.ByteData.LongLength;
 			List<DBPFEntry> entries = new List<DBPFEntry>();
 			AddEntries(entries);
 		}
@@ -529,7 +533,7 @@ namespace csDBPF
 		public void RemoveEntry(int position) {
 			_listOfEntries.RemoveAt(position);
 			_listOfTGIs.RemoveAt(position);
-			_fileSize -= _listOfEntries[position].ByteData.LongLength;
+			_dataSize -= _listOfEntries[position].ByteData.LongLength;
 		}
 
 
@@ -546,7 +550,7 @@ namespace csDBPF
 		public void RemoveAllEntries() {
 			_listOfEntries.Clear();
 			_listOfTGIs.Clear();
-			_fileSize = 0;
+			_dataSize = 0;
 		}
 
 
