@@ -119,7 +119,7 @@ namespace csDBPF.Entries {
 		/// <summary>
 		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
 		/// </summary>
-		public override void EncodeEntry() {
+		public override void ToBytes() {
 			List<byte> bytes = new List<byte>();
 			if (_text is null) {
 				bytes.AddRange(BitConverter.GetBytes((ushort) 0)); //Number of characters

@@ -645,8 +645,6 @@ namespace csDBPF_Test {
 				DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.entrynullproperty);
 				entry.DecodeEntry();
 
-				DBPFProperty prop;
-
 				Assert.AreEqual(0, entry.ListOfProperties.Count);
 
 				entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.entrynullproperty_extradata);
@@ -797,7 +795,7 @@ namespace csDBPF_Test {
 				DBPFEntryLTEXT entryknown = new DBPFEntryLTEXT(DBPFTGI.LTEXT) {
 					Text = "Parks Aura (by Cori)"
 				};
-				entryknown.EncodeEntry();
+				entryknown.ToBytes();
 				CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, entryknown.ByteData);
 			}
 
@@ -819,7 +817,7 @@ namespace csDBPF_Test {
 				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
 				DBPFEntry entry = dbpf.GetEntry(0);
 				entry.DecodeEntry();
-				entry.EncodeEntry();
+				entry.ToBytes();
 				Assert.AreEqual((uint) 446, entry.UncompressedSize);
 				CollectionAssert.AreEqual(TestArrays.decompressedentry_b, entry.ByteData);
 				Assert.IsTrue(entry.IsCompressed);
@@ -828,7 +826,7 @@ namespace csDBPF_Test {
 				dbpf = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\FINAL\\nos.17\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
 				entry = dbpf.GetEntry(0);
 				entry.DecodeEntry();
-				entry.EncodeEntry();
+				entry.ToBytes();
 				string expected = "EQZT1###..ParentCohort=Key:{0x00000000,0x00000000,0x00000000}..PropCount=0x00000018..0x00000010:{\"Exemplar Type\"}=Uint32:0:{0x00000002}..0x00000020:{\"Exemplar Name\"}=String:1:{\"B62-CS$_Albertsons_60s_Grocery v 1.1\"}..0x099afacd:{\"Bulldoze Cost\"}=Sint64:0:{0x00000000000000a9}..0x27812810:{\"Occupant Size\"}=Float32:3:{81.5897,13.9472,39.4425}..0x27812811:{\"Unknown\"}=Float32:1:{0.5}..0x27812821:{\"ResourceKeyType1\"}=Uint32:3:{0x5ad0e817,0xb2d6debe,0x00030000}..0x27812832:{\"Wealth\"}=Uint8:0:{0x01}..0x27812833:{\"Purpose\"}=Uint8:0:{0x02}..0x27812834:{\"Capacity Satisfied\"}=Uint32:2:{0x00003110,0x000002ef}..0x27812851:{\"Pollution at centre\"}=Sint32:4:{0x00000007,0x00000003,0x00000016,0x00000000}..0x27812854:{\"Power Consumed\"}=Uint32:0:{0x00000010}..0x29244db5:{\"Flammability\"}=Uint8:0:{0x2d}..0x2a499f85:{\"Query exemplar GUID\"}=Uint32:0:{0xca56783a}..0x2c8f8746:{\"Exemplar Category\"}=Uint32:0:{0x8c8fbbcc}..0x499afa38:{\"Construction Time\"}=Uint8:0:{0x10}..0x49beda31:{\"MaxFireStage\"}=Uint8:0:{0x04}..0x68ee9764:{\"Pollution Radius\"}=Float32:4:{5,5,0,0}..0x8a1c3e72:{\"Worth\"}=Sint64:0:{0x00000000000000a9}..0x8cb3511f:{\"Occupant Types\"}=Uint32:1:{0x00003110}..0xaa1dd396:{\"OccupantGroups\"}=Uint32:4:{0x00001001,0x00002000,0x00002001,0x00013110}..0xaa1dd397:{\"SFX:Query Sound\"}=Uint32:0:{0x2a8916ab}..0xaa83558f:{\"Crane Hints\"}=Uint8:0:{0x00}..0xc8ed2d84:{\"Water Consumed\"}=Uint32:0:{0x00000098}..0xe91a0b5f:{\"Building value\"}=Sint64:0:{0x0000000000001678}..r";
 				string actual = ByteArrayHelper.ToAString(entry.ByteData);
 				Assert.AreEqual(expected.Substring(0, 85), actual.Substring(0, 85)); //Entry header

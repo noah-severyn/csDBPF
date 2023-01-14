@@ -116,9 +116,9 @@ namespace csDBPF.Entries {
 		public abstract void DecodeEntry();
 
 		/// <summary>
-		/// Build <see cref="ByteData"/> with the current state according to the implementing type's implementation.
+		/// Build <see cref="ByteData"/> with the current state according to the implementing type's implementation. Is either text or binary encoding depending on <see cref=""/>
 		/// </summary>
-		public abstract void EncodeEntry();
+		public abstract void ToBytes();
 
 
 

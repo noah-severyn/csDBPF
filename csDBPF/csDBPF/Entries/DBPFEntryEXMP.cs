@@ -533,7 +533,7 @@ namespace csDBPF.Entries {
 		/// <summary>
 		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
 		/// </summary>
-		public override void EncodeEntry() {
+		public override void ToBytes() {
 			
 			string id;
 			if (_isCohort) {

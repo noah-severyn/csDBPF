@@ -139,7 +139,7 @@ namespace csDBPF.Properties {
 		/// <param name="minLength">Minimum number of properties</param>
 		/// <param name="maxLength">Maximum number of properties</param>
 		/// <param name="minValue">Minimum allowed value</param>
-		/// <param name="maxValue">Maximum allowed value<</param>
+		/// <param name="maxValue">Maximum allowed value</param>
 		/// <param name="step"></param>
 		internal XMLExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex, short? count = null, string defaultValue = null, int? minLength = null, int? maxLength = null, string minValue = null, string maxValue = null, uint? step = null) {
 			_id = id;

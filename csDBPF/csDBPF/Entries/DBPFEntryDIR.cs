@@ -105,7 +105,10 @@ namespace csDBPF.Entries {
 			
 			foreach (DBPFEntry entry in entries) {
 				if (entry.IsCompressed) {
-					entry.EncodeEntry();
+					if (true) {
+
+					}
+					entry.ToBytes();
 					_compressedItems.Add(new DBDFItem((uint) entry.TGI.TypeID, (uint) entry.TGI.GroupID, (uint) entry.TGI.InstanceID, entry.UncompressedSize));
 				}
 			}
@@ -116,7 +119,7 @@ namespace csDBPF.Entries {
 		/// <summary>
 		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
 		/// </summary>
-		public override void EncodeEntry() {
+		public override void ToBytes() {
 			List<byte> bytes = new List<byte>();
 
 			foreach (DBDFItem item in _compressedItems) {
