@@ -413,16 +413,12 @@ namespace csDBPF
 				file = new FileInfo(filePath);
 			}
 
-			//Update Header
+			//Update and write Header
 			if (Header.Identifier is null) {
 				Header.InitializeBlank();
 			}
 			Header.Update(this);
-
-				RebuildDirectory();
-
 			using FileStream fs = new(file.FullName, FileMode.Create);
-			//Write Header
 			fs.Write(ByteArrayHelper.ToBytes(Header.Identifier,true));
 			fs.Write(BitConverter.GetBytes(Header.MajorVersion));
 			fs.Write(BitConverter.GetBytes(Header.MinorVersion));
@@ -435,23 +431,14 @@ namespace csDBPF
 			fs.Write(BitConverter.GetBytes(Header.IndexSize));
 			fs.Write(new byte[48]);
 
-			//Write Entries
+			//Write all entries
+			RebuildDirectory();
 			foreach (DBPFEntry entry in _listOfEntries) {
 				fs.Write(entry.ByteData);
 			}
 
-			//Write directory file
-			//foreach (DBPFEntry entry in ListOfEntries) {
-			//	if (entry.IsCompressed) {
-			//		fs.Write(BitConverter.GetBytes(entry.TGI.Type.Value));
-			//		fs.Write(BitConverter.GetBytes(entry.TGI.Group.Value));
-			//		fs.Write(BitConverter.GetBytes(entry.TGI.Instance.Value));
-			//		fs.Write(BitConverter.GetBytes(entry.CompressedSize));
-			//	}
-			//}
-
 			//Write Index
-			//--should be done after all content has been written because we need to know the location of each file in the archive and its size.
+			UpdateIndex();
 			long pos = fs.Position;
 			foreach (DBPFEntry entry in _listOfEntries) {
 				fs.Write(BitConverter.GetBytes(entry.TGI.TypeID.Value));
@@ -459,7 +446,25 @@ namespace csDBPF
 				fs.Write(BitConverter.GetBytes(entry.TGI.InstanceID.Value));
 				fs.Write(BitConverter.GetBytes(entry.Offset));
 				fs.Write(BitConverter.GetBytes(entry.CompressedSize));
+			}
+		}
 
+
+		/// <summary>
+		/// Updates the position number and offset of each entry based on the current size and position of each entry.
+		/// </summary>
+		private void UpdateIndex() {
+			uint offset = 0;
+			for (int idx = 0; idx < _listOfEntries.Count; idx++) {
+				if (idx == 0) {
+					_listOfEntries[0].Offset = 96;
+					offset = 96;
+				} else {
+					offset += _listOfEntries[idx - 1].CompressedSize;
+					_listOfEntries[idx].Offset = offset;
+				}
+
+				_listOfEntries[idx].IndexPos = (uint) idx;
 			}
 		}
 

@@ -16,12 +16,12 @@ namespace csDBPF.Entries {
 		/// <summary>
 		/// Byte position of this entry within the <see cref="DBPFFile"/>.
 		/// </summary>
-		public uint Offset { get; protected set; }
+		public uint Offset { get; internal set; }
 
 		/// <summary>
 		/// Position of this entry in relation to the other entries in the <see cref="DBPFFile"/>, 0-n.
 		/// </summary>
-		public uint IndexPos { get; protected set; }
+		public uint IndexPos { get; internal set; }
 
 		/// <summary>
 		/// Uncompressed size of the entry data, in bytes.
