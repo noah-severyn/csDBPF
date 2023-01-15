@@ -3,6 +3,8 @@ C# library for Simcity 4 DBPF files.
 
 WIP: Dec 2021 - ?
 
+The goal of csDBPF is to provide full functionality for reading, modifying, writing DBPF files with the aim of making batch modifications easy. It is currently being designed to be used as a base for a new generation of SC4 modding tools.
+
 # Explanation of this Library
 At a high level, a [DBPFFile](csDBPF/csDBPF/DBPFFile.cs) ("file") is the container for SC4 DBPF data. The main components of the file include the Header, ListOfTGIs, and ListOfEntries. Each file is broken into one or more [DBPFEntry](csDBPF/csDBPF/DBPFEntry.cs) ("entries" or "subfiles"). For further information on these, refer to the list of entries contained in that link or at SC4DWiki [Filetypes](https://www.wiki.sc4devotion.com/index.php?title=List_of_File_Formats).
 
