@@ -21,10 +21,11 @@ Refer to the [wiki](https://github.com/noah-severyn/csDBPF/wiki) for functional 
 
 ## Other DBPF Libraries:
 
-- Wiki: https://www.wiki.sc4devotion.com/index.php?title=DBPF
-- scala: https://github.com/memo33/scdbpf
-- java: https://github.com/memo33/jDBPFX (derived from: java https://sourceforge.net/projects/sc4dbpf4j/)
-- go: https://github.com/marcboudreau/godbpf
-- python: https://github.com/fbstj/dbpf (also stale C#, c, ... branches are here in varying states of completion, but most are far from complete)
-- php: https://www.wiki.sc4devotion.com/index.php?title=DBPF_Source_Code
-- js: https://github.com/sebamarynissen/sc4
+- [Wiki Explanation](https://www.wiki.sc4devotion.com/index.php?title=DBPF)
+- [scdbpf (Scala)](https://github.com/memo33/scdbpf)
+- [jDBPFX (Java)](https://github.com/memo33/jDBPFX). Is derived from: [sc4dbpf4j: java](https://sourceforge.net/projects/sc4dbpf4j/)
+- [godbpf (Go)](https://github.com/marcboudreau/godbpf)
+- [dbpf (Python)](https://github.com/fbstj/dbpf) (also stale C#, c, ... branches; most are far from complete)
+- [DBPF_Source_Code (PHP)](https://www.wiki.sc4devotion.com/index.php?title=DBPF_Source_Code)
+- [sc4 (Javascript)](https://github.com/sebamarynissen/sc4)
+- [DBPFSharp (C#)](https://github.com/0xC0000054/DBPFSharp)
