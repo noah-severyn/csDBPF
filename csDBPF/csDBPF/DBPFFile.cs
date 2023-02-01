@@ -475,11 +475,12 @@ namespace csDBPF
 		/// </summary>
 		/// <param name="entry">Entry to add</param>
 		public void AddEntry(DBPFEntry entry) {
+			entry.IndexPos = (uint) (_listOfEntries.Count + 1);
+			entry.Offset = (uint) _dataSize + 96;
+
 			_listOfEntries.Add(entry);
 			_listOfTGIs.Add(entry.TGI);
 			_dataSize += entry.ByteData.LongLength;
-			List<DBPFEntry> entries = new List<DBPFEntry>();
-			AddEntries(entries);
 		}
 
 		/// <summary>
@@ -578,6 +579,10 @@ namespace csDBPF
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Returns all entries in this file.
+		/// </summary>
+		/// <returns>All entries in this file</returns>
 		public List<DBPFEntry> GetEntries() {
 			return _listOfEntries;
 		}
