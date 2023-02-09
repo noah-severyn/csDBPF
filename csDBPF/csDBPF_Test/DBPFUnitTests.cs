@@ -43,7 +43,13 @@ namespace csDBPF_Test {
 				Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll"));
 				Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png"));
 				Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\!Deps 2\\PLOP_1x1_blank_602135f4.SC4Lot"));
-			}
+
+                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_GraphModd. V2.dat",true));
+                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dat", true));
+                Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll", true));
+                Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png", true));
+                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\!Deps 2\\PLOP_1x1_blank_602135f4.SC4Lot", true));
+            }
 
 			[TestMethod]
 			public void Test_011_DBPFUtil_ReverseBytes() {
@@ -406,7 +412,7 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x20, propb.ID);
 				Assert.AreEqual(20, propb.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.STRING, propb.DataType);
-				Assert.AreEqual(stringdataviewparksaura, propb.GetDataValues());
+				Assert.AreEqual(stringdataviewparksaura, propb.GetData());
 
 				//Compare to property with known values
 				DBPFPropertyString knownprop = new DBPFPropertyString(stringdataviewparksaura);
@@ -414,14 +420,14 @@ namespace csDBPF_Test {
 				Assert.AreEqual(knownprop.ID, propb.ID);
 				Assert.AreEqual(knownprop.NumberOfReps, propb.NumberOfReps);
 				Assert.AreEqual(knownprop.DataType, propb.DataType);
-				Assert.AreEqual(knownprop.GetDataValues(), propb.GetDataValues());
+				Assert.AreEqual(knownprop.GetData(), propb.GetData());
 
 				//Check for no differences between values and valuesDecoded when each is changed
-				propb.SetDataValues(stringparksaura);
-				Assert.AreEqual(stringparksaura, propb.GetDataValues());
+				propb.SetData(stringparksaura);
+				Assert.AreEqual(stringparksaura, propb.GetData());
 				Assert.AreEqual(stringparksaura.Length, propb.NumberOfReps);
-				propb.SetDataValues(stringparks);
-				Assert.AreEqual(stringparks, propb.GetDataValues());
+				propb.SetData(stringparks);
+				Assert.AreEqual(stringparks, propb.GetData());
 				Assert.AreEqual(stringparks.Length, propb.NumberOfReps);
 			}
 
@@ -441,10 +447,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x10, propb.ID);
 				Assert.AreEqual(0, propb.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, propb.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propb.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
 
 				//7 repetitions of 0 (for 8 total values of 8)
 				vals = new List<long> { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -453,10 +459,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x4A0B47E0, propb.ID);
 				Assert.AreEqual(8, propb.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, propb.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propb.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
 
 				//Single True boolean value
 				vals = new List<long> { 1 };
@@ -465,10 +471,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x4A0B47E1, propb.ID);
 				Assert.AreEqual(0, propb.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.BOOL, propb.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propb.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
 
 				//Single False boolean value
 				vals = new List<long> { 0 };
@@ -477,10 +483,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x4A0B47E2, propb.ID);
 				Assert.AreEqual(0, propb.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.BOOL, propb.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propb.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
 
 				//Single UInt32 value of 0
 				vals = new List<long> { 0 };
@@ -489,10 +495,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x4A0B47E3, propb.ID);
 				Assert.AreEqual(0, propb.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, propb.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propb.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
 
 				//28 UInt32s
 				vals = new List<long> { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C, 0x0000000D, 0x70D98C79, 0x00000046, 0x70D98C79, 0x0000007F, 0x70F0C5BA, 0x00000080, 0x70FFFFFF, 0x00000081, 0x70E2F1DD, 0x000000B8, 0x70C5E3BB, 0x000000B9, 0x70A8D49A, 0x000000F2, 0x708AC679, 0x000000F3, 0x706AB758, 0x000000FE, 0x7046A836, 0x000000FF, 0x70009900 };
@@ -501,10 +507,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x4A0B47E4, propb.ID);
 				Assert.AreEqual(28, propb.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, propb.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propb.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propb.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
 			}
 
 			[Ignore]
@@ -526,11 +532,11 @@ namespace csDBPF_Test {
 				propt = entry.ListOfProperties.GetValueAtIndex(1);
 				Assert.AreEqual(DBPFPropertyDataType.STRING, propt.DataType);
 				Assert.AreEqual(1, propt.NumberOfReps);
-				Assert.AreEqual(val, propt.GetDataValues());
+				Assert.AreEqual(val, propt.GetData());
 				propknown = new DBPFPropertyString(val, DBPFEntry.EncodingType.Text);
 				Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propt.DataType);
-				Assert.AreEqual(propknown.GetDataValues(), propt.GetDataValues());
+				Assert.AreEqual(propknown.GetData(), propt.GetData());
 			}
 
 			[TestMethod]
@@ -553,10 +559,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x00000010, propt.ID);
 				Assert.AreEqual(0, propt.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, propt.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propt.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propt.GetData());
 
 				//1x Sint64
 				vals = new List<long> { 0x00000000000000A9 };
@@ -565,10 +571,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x099AFACD, propt.ID);
 				Assert.AreEqual(0, propt.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.SINT64, propt.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propt.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propt.GetData());
 
 				//1x Uint8
 				vals = new List<long> { 0x01 };
@@ -577,10 +583,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x27812832, propt.ID);
 				Assert.AreEqual(0, propt.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT8, propt.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propt.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propt.GetData());
 
 				//4x Sint32
 				vals = new List<long> { 0x07, 0x03, 0x16, 0x00 };
@@ -589,10 +595,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual((uint) 0x27812851, propt.ID);
 				Assert.AreEqual(4, propt.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.SINT32, propt.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propt.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propt.GetData());
 
 				//4x Uint32
 				vals = new List<long> { 0x1001, 0x2000, 0x2001, 0x13110 };
@@ -601,10 +607,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual(0xAA1DD396, propt.ID);
 				Assert.AreEqual(4, propt.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.UINT32, propt.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propt.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propt.GetData());
 			}
 
 			public void Test_061f_DBPFPropertyFloat_Text() {
@@ -622,10 +628,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual(0x27812810, propt.ID);
 				Assert.AreEqual(3, propt.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propt.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propt.GetData());
 
 				//1x Float32
 				vals = new List<float> { 0.5f };
@@ -634,10 +640,10 @@ namespace csDBPF_Test {
 				Assert.AreEqual(0x27812810, propt.ID);
 				Assert.AreEqual(1, propt.NumberOfReps);
 				Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt.DataType);
-				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
 				Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
 				Assert.AreEqual(propknown.DataType, propt.DataType);
-				CollectionAssert.AreEqual(propknown.GetDataValues(), (System.Collections.ICollection) propt.GetDataValues());
+				CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propt.GetData());
 			}
 
 			[TestMethod]
@@ -989,7 +995,7 @@ namespace csDBPF_Test {
 					Assert.AreEqual(outk.ID, outr.ID);
 					Assert.AreEqual(outk.NumberOfReps, outr.NumberOfReps);
 					Assert.AreEqual(outk.DataType, outr.DataType);
-					CollectionAssert.AreEqual((System.Collections.ICollection) outk.GetDataValues(), (System.Collections.ICollection) outr.GetDataValues());
+					CollectionAssert.AreEqual((System.Collections.ICollection) outk.GetData(), (System.Collections.ICollection) outr.GetData());
 				}
 
 				DBPFEntryLTEXT entry1 = (DBPFEntryLTEXT) dbpf.GetEntry(1);

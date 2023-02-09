@@ -259,7 +259,7 @@ namespace csDBPF.Entries {
 			}
 			newProperty.ID = propertyID;
 			newProperty.IsTextEncoding = EncodingType.Binary;
-			newProperty.SetDataValues(dataValues);
+			newProperty.SetData(dataValues);
 			return newProperty;
 		}
 
@@ -387,7 +387,7 @@ namespace csDBPF.Entries {
 			}
 			newProperty.ID = propertyID;
 			newProperty.IsTextEncoding = EncodingType.Text;
-			newProperty.SetDataValues(dataValues);
+			newProperty.SetData(dataValues);
 			return newProperty;
 		}
 
@@ -422,7 +422,7 @@ namespace csDBPF.Entries {
 			}
 
 			//We know exemplar type can only hold one value, so grab the first one
-			List<long> dataValues = (List<long>) property.GetDataValues();
+			List<long> dataValues = (List<long>) property.GetData();
 			return Convert.ToInt32(dataValues[0]);
 		}
 

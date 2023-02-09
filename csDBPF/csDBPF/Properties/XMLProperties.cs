@@ -11,7 +11,7 @@ namespace csDBPF.Properties {
 	/// </summary>
 	public static class XMLProperties {
 		//TODO - make new_properties.xml path relative
-		private const string xmlPath = "C:\\Users\\Administrator\\OneDrive\\Documents\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml";
+		private const string xmlPath = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF\\Properties\\new_properties.xml";
 
 		private static readonly List<XMLExemplarProperty> _allProperties = new List<XMLExemplarProperty>();
 		/// <summary>

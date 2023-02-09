@@ -12,7 +12,7 @@ namespace csDBPF {
 	/// </summary>
 	public static class DBPFUtil {
 		private static readonly string[] sc4Extensions = { "dat", "sc4lot", "sc4desc", "sc4model" };
-
+		private static readonly byte[] DBPF = { 0x44, 0x42, 0x50, 0x46 };
 
 
 		/// <summary>
@@ -46,41 +46,61 @@ namespace csDBPF {
 			return (dbpfFiles, skippedFiles);
 		}
 
-		/// <summary>
-		/// Examines the file <see cref="DBPFFile.DBPFHeader"/> to determine if the file is valid DBPF or not.
-		/// </summary>
-		/// <param name="file">File to examine.</param>
-		/// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
-		public static bool IsValidDBPF(FileInfo file) {
+
+
+        /// <summary>
+        /// Examines the first bytes of the file to determine if the file is valid DBPF or not.
+        /// </summary>
+        /// <param name="filePath">Full File path of the file to examine</param>
+        /// <param name="validateDBPFVersion">Should the version information in the header be validated</param>
+        /// <returns>true if valid SC4 DBPF file, false otherwisee</returns>
+		/// /// <remarks>
+		/// In most circumstances, validateDBPFVersions should be omitted or set to false. If set to true, a temporary copy of <see cref="DBPFFile.DBPFHeader"/> is created to validate multiple fields to check for DBPF version 1.0 used with SC4. There is significantly more overhead with this call, especially when iterating over multiple files. 
+		/// </remarks>
+        public static bool IsValidDBPF(string filePath, bool validateDBPFVersion = false) {
+            return IsValidDBPF(new FileInfo(filePath), validateDBPFVersion);
+        }
+
+        /// <summary>
+        /// Examines the first bytes of the file to determine if the file is valid DBPF or not.
+        /// </summary>
+        /// <param name="file">File to examine</param>
+        /// <param name="validateDBPFVersion">Should the version information in the header be validated</param>
+        /// <returns>true if valid SC4 DBPF file, false otherwise</returns>
+		/// <remarks>
+		/// In most circumstances, validateDBPFVersions should be omitted or set to false. If set to true, a temporary copy of <see cref="DBPFFile.DBPFHeader"/> is created to validate multiple fields to check for DBPF version 1.0 used with SC4. There is significantly more overhead with this call, especially when iterating over multiple files. 
+		/// </remarks>
+        public static bool IsValidDBPF(FileInfo file, bool validateDBPFVersion = false) {
 			FileStream fs = new FileStream(file.FullName, FileMode.Open);
 			BinaryReader br = new BinaryReader(fs);
 
-			//To determine if the file is DBPF or not, can just look at the first few bytes which make up the header - no need to examine any of the rest of the file.
-			try {
-				DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader();
-				header.Initialize(br);
-			}
+			if (validateDBPFVersion) {
+				//To determine if the file is DBPF or not, can just look at the first few bytes which make up the header - no need to examine any of the rest of the file.
+				try {
+					DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader();
+					header.Initialize(br);
+				}
 
-			catch (InvalidDataException) {
-				return false;
-			}
+				catch (InvalidDataException) {
+					return false;
+				}
 
-			finally {
+				finally {
+					br.Close();
+					fs.Close();
+				}
+
+				return true;
+			} 
+			
+			else {
+                byte[] firstFour = br.ReadBytes(4); 
 				br.Close();
-				fs.Close();
-			}
-
-			return true;
+                fs.Close();
+                return firstFour.SequenceEqual(DBPF);
+            }
 		}
 
-		/// <summary>
-		/// Examines the file <see cref="DBPFFile.DBPFHeader"/> to determine if the file is valid DBPF or not.
-		/// </summary>
-		/// <param name="filePath">Full File path of the file to examine.</param>
-		/// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
-		public static bool IsValidDBPF(string filePath) {
-			return IsValidDBPF(new FileInfo(filePath));
-		}
 
 
 
