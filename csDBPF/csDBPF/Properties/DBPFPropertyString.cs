@@ -103,16 +103,30 @@ namespace csDBPF.Properties {
 		/// Returns the data value stored in this property.
 		/// </summary>
 		/// <returns>The data value stored in this property</returns>
-		public override string GetDataValues() {
+		public override string GetData() {
 			return _dataValue;
 		}
-
+		
+		
 		/// <summary>
-		/// Set the data value stored in this property.
+		/// Returns the value stored in this property at the given position.
 		/// </summary>
-		/// <param name="value">String to set</param>
-		/// <exception cref="ArgumentException">Argument to DBPFPropertyString.SetDataValues must be string.</exception>
-		public override void SetDataValues(object value) {
+		/// <param name="position">Position (or rep) to return</param>
+		/// <returns>The data value at the specified position</returns>
+		/// <remarks>
+		/// The position parameter is ignored because type DBPFPropertyString only stores one string as its data.
+		/// </remarks>
+        public override object GetData(int position) {
+            return _dataValue;
+        }
+
+
+        /// <summary>
+        /// Set the data value stored in this property.
+        /// </summary>
+        /// <param name="value">String to set</param>
+        /// <exception cref="ArgumentException">Argument to DBPFPropertyString.SetDataValues must be string.</exception>
+        public override void SetData(object value) {
 			if (value is not string) {
 				throw new ArgumentException($"Argument to DBPFPropertyString.SetDataValues must be string. {value.GetType()} was provided.");
 			}

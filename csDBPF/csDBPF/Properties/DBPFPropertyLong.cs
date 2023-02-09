@@ -134,8 +134,27 @@ namespace csDBPF.Properties {
 		/// Returns a list of data values which are stored in this property.
 		/// </summary>
 		/// <returns>List of data values which are stored in this property</returns>
-		public override List<long> GetDataValues() {
+		public override List<long> GetData() {
 			return _dataValues;
+		}
+
+
+        /// <summary>
+        /// Returns the value stored in this property at the given position.
+        /// </summary>
+        /// <param name="position">Position (or rep) to return</param>
+        /// <returns>The data value at the specified position</returns>
+        /// <remarks>
+        /// If the position parameter is greater than the number of values, the last value is returned instead.
+        /// </remarks>
+        public override object GetData(int position) {
+			if (position < 0) {
+				throw new ArgumentException("Value must be greater than or equal to 0.");
+			}
+			if (position >= _dataValues.Count) {
+				return _dataValues[_dataValues.Count- 1];
+			}
+			return _dataValues[position];
 		}
 
 
@@ -145,7 +164,7 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <param name="value">Values to set</param>
 		/// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetDataValues must be List&lt;long&gt;.</exception>
-		public override void SetDataValues(object value) {
+		public override void SetData(object value) {
 			if (value is not List<long>) {
 				throw new ArgumentException($"Argument to DBPFPropertyNumber.SetDataValues must be List<long>. {value.GetType()} was provided.");
 			}
@@ -159,7 +178,11 @@ namespace csDBPF.Properties {
 
 
 
-		public override byte[] ToRawBytes() {
+        /// <summary>
+        /// Process the features and DataValues of this property into a byte array.
+        /// </summary>
+        /// <returns>A byte array storing all information for this property</returns>
+        public override byte[] ToRawBytes() {
 			//Text Encoding
 			if (_isTextEncoding) {
 				StringBuilder sb = new StringBuilder();

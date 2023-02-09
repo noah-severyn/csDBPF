@@ -120,18 +120,37 @@ namespace csDBPF.Properties {
 		/// Returns a list of data values which are stored in this property.
 		/// </summary>
 		/// <returns>List of data values which are stored in this property</returns>
-		public override List<float> GetDataValues() {
+		public override List<float> GetData() {
 			return _dataValues;
-		}
+        }
+
+
+        /// <summary>
+        /// Returns the value stored in this property at the given position.
+        /// </summary>
+        /// <param name="position">Position (or rep) to return</param>
+        /// <returns>The data value at the specified position</returns>
+        /// <remarks>
+        /// If the position parameter is greater than the number of values, the last value is returned instead.
+        /// </remarks>
+        public override object GetData(int position) {
+            if (position < 0) {
+                throw new ArgumentException("Value must be greater than or equal to 0.");
+            }
+            if (position >= _dataValues.Count) {
+                return _dataValues[_dataValues.Count - 1];
+            }
+            return _dataValues[position];
+        }
 
 
 
-		/// <summary>
-		/// Set the data values stored in this property.
-		/// </summary>
-		/// <param name="value">Values to set</param>
-		/// <exception cref="ArgumentException">Argument to DBPFPropertyFloat.SetDataValues must be List&lt;float&gt;.</exception>
-		public override void SetDataValues(object value) {
+        /// <summary>
+        /// Set the data values stored in this property.
+        /// </summary>
+        /// <param name="value">Values to set</param>
+        /// <exception cref="ArgumentException">Argument to DBPFPropertyFloat.SetDataValues must be List&lt;float&gt;.</exception>
+        public override void SetData(object value) {
 			if (value is not List<float>) {
 				throw new ArgumentException($"Argument to DBPFPropertyFloat.SetDataValues must be List<float>. {value.GetType()} was provided.");
 			}

@@ -38,14 +38,19 @@ namespace csDBPF.Properties
 		public abstract bool IsTextEncoding { get; set; }
 
 		/// <summary>
-		/// Return the values(s) stored in this property.
+		/// Returns the values(s) stored in this property.
 		/// </summary>
-		public abstract object GetDataValues();
+		public abstract object GetData();
+
+        /// <summary>
+        /// Returns the value stored in this property at the given position.
+        /// </summary>
+        public abstract object GetData(int position);
 
 		/// <summary>
 		/// Set the values(s) stored in this property.
 		/// </summary>
-		public abstract void SetDataValues(object value);
+		public abstract void SetData(object value);
 
 		/// <summary>
 		/// 
