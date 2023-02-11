@@ -273,10 +273,10 @@ namespace csDBPF
 			BinaryReader br = new BinaryReader(fs); 
 
 			try {
-				// Read Header Info
+				// Read Header info
 				Header.Initialize(br);
 
-				//Read Index Info
+				//Read Index info
 				List<uint> offsets = new List<uint>();
 				List<uint> sizes = new List<uint>();
 				byte[] byteData;
@@ -295,17 +295,7 @@ namespace csDBPF
 					sizes.Add(size);
 				}
 
-				////Read Directory Info (we need to know which items are compressed when we create them)
-				////If a Directory TGI exists then we know there are compressed items and can read from it; skip if there is no Directory TGI (no compressed files)
-				//if (_listOfTGIs.Any(tgi => tgi.Equals(DBPFTGI.DIRECTORY))) {
-				//	var 
-				//}
-
-				
-
-
-
-
+				//Read Entry data
 				for (int idx = 0; idx < _listOfTGIs.Count; idx++) {
 					br.BaseStream.Seek(offsets[idx], SeekOrigin.Begin);
 					byteData = br.ReadBytes((int) sizes[idx]);
@@ -321,7 +311,8 @@ namespace csDBPF
 							_listOfEntries.Add(new DBPFEntryDIR(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
 						default:
-							break;
+                            _listOfEntries.Add(new DBPFEntryUnknown(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
+                            break;
 					}
 				}
 			}
