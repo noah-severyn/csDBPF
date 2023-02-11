@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using csDBPF.Properties;
-using static System.Net.WebRequestMethods;
 
 namespace csDBPF.Entries {
 	/// <summary>
@@ -136,7 +131,13 @@ namespace csDBPF.Entries {
 				if (property is null) {
 					return;
 				}
-				_listOfProperties.Add(property.ID, property);
+
+				//Can be an error if this property has duplicate entries which some files do have - skip any subsequent properties with same ID
+				try {
+                    _listOfProperties.Add(property.ID, property);
+                } catch {
+
+				}
 
 				//Determine which bytes to skip to get to the start of the next property
 				if (!_isTextEncoding) {
