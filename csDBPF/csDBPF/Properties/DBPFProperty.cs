@@ -59,32 +59,10 @@ namespace csDBPF.Properties
 		/// </remarks>
         internal abstract void SetData(object value, uint countOfReps);
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		public abstract byte[] ToRawBytes();
-
-
-
-
-		//------------- DBPFProperty Constructors ------------- \\
-		///// <summary>
-		///// Create a new DBPFProperty by attempting a lookup against <see cref="XMLProperties.AllProperties"/> and initializing fields as appropriate. If no match is found, fields are initialized to null or 0, respectively.
-		///// </summary>
-		///// <param name="id">Property identifier, used as the lookup</param>
-		//public DBPFProperty(uint id) {
-		//	_id = id;
-
-		//	//Try to find a matching property from the XML file to initialize the fields; otherwise set to 0
-		//	bool lookupFound = XMLProperties.AllProperties.TryGetValue(id, out XMLExemplarProperty xmlProperty);
-		//	if (lookupFound) {
-		//		_dataType = xmlProperty.Type;
-		//		_numberOfReps = 0;
-		//	} else {
-		//		_dataType = null;
-		//		_numberOfReps = 0;
-		//	}
-		//}
+        /// <summary>
+        /// Process the features and data values of this property into a byte array according to the set encoding type.
+        /// </summary>
+        /// <returns>A byte array encoding all information for this property</returns>
+        public abstract byte[] ToRawBytes();
 	}
 }

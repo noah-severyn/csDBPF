@@ -148,7 +148,10 @@ namespace csDBPF.Properties {
         }
 
 
-
+        /// <summary>
+        /// Process the features and data values of this property into a byte array according to the set encoding type.
+        /// </summary>
+        /// <returns>A byte array encoding all information for this property</returns>
         public override byte[] ToRawBytes() {
 			//Text Encoding
 			if (_isTextEncoding) {
