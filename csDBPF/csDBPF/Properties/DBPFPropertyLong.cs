@@ -168,13 +168,28 @@ namespace csDBPF.Properties {
 			if (value is not List<long>) {
 				throw new ArgumentException($"Argument to DBPFPropertyNumber.SetDataValues must be List<long>. {value.GetType()} was provided.");
 			}
+
 			_dataValues = (List<long>) value;
 			if (_dataValues.Count <= 1) {
 				_numberOfReps = 0;
 			} else {
 				_numberOfReps = _dataValues.Count;
 			}
-		}
+        }
+        /// <summary>
+        /// Set the values(s) stored in this property.
+        /// </summary>
+        /// <remarks>
+        /// This override is necessary when countOfReps = 1; otherwise, if passed a list of length 1 then the number of reps would be set to 0. Figuring the byte offset for the next property will then be off by 4 because the extra 4 bytes representing the number of reps will be ignored.
+        /// </remarks>
+        internal override void SetData(object value, uint countOfReps) {
+            if (value is not List<long>) {
+                throw new ArgumentException($"Argument to DBPFPropertyNumber.SetDataValues must be List<long>. {value.GetType()} was provided.");
+            }
+
+            _dataValues = (List<long>) value;
+			_numberOfReps = (int) countOfReps;
+        }
 
 
 

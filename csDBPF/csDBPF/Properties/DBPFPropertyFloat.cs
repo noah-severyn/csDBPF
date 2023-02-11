@@ -166,15 +166,26 @@ namespace csDBPF.Properties {
 					_numberOfReps = _dataValues.Count;
 				}
 			}
-		}
+        }
+        /// <summary>
+        /// Set the values(s) stored in this property.
+        /// </summary>
+        /// <remarks>
+        /// This implementation for float-type properties is identical to <see cref="SetData(object)"/> to avoid the macOS float bug.
+        /// </remarks>
+        internal override void SetData(object value, uint countOfReps) {
+			SetData(value);
+        }
 
 
 
-		/// <summary>
-		/// Process the features and DataValues of this property into a byte array.
-		/// </summary>
-		/// <returns>A byte array storing all information for this property</returns>
-		public override byte[] ToRawBytes() {
+
+
+        /// <summary>
+        /// Process the features and DataValues of this property into a byte array.
+        /// </summary>
+        /// <returns>A byte array storing all information for this property</returns>
+        public override byte[] ToRawBytes() {
 			//Text Encoding
 			if (_isTextEncoding) {
 				StringBuilder sb = new StringBuilder();
@@ -211,5 +222,5 @@ namespace csDBPF.Properties {
 				return bytes.ToArray();
 			}
 		}
-	}
+    }
 }

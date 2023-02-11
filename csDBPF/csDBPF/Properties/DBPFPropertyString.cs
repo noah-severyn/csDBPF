@@ -136,11 +136,20 @@ namespace csDBPF.Properties {
 			} else {
 				_numberOfReps = _dataValue.Length;
 			}
-		}
+        }
+        /// <summary>
+        /// Set the values(s) stored in this property.
+        /// </summary>
+        /// <remarks>
+        /// This implementation for string-type properties is identical to <see cref="SetData(object)"/>.
+        /// </remarks>
+        internal override void SetData(object value, uint countOfReps) {
+            SetData(value);
+        }
 
 
 
-		public override byte[] ToRawBytes() {
+        public override byte[] ToRawBytes() {
 			//Text Encoding
 			if (_isTextEncoding) {
 				StringBuilder sb = new StringBuilder();

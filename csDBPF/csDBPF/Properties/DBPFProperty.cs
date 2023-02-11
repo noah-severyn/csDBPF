@@ -51,6 +51,13 @@ namespace csDBPF.Properties
 		/// Set the values(s) stored in this property.
 		/// </summary>
 		public abstract void SetData(object value);
+        /// <summary>
+        /// Set the values(s) stored in this property.
+        /// </summary>
+        /// <remarks>
+		/// This override is necessary when countOfReps = 1; otherwise, if passed a list of length 1 then the number of reps would be set to 0. Figuring the byte offset for the next property will then be off by 4 because the extra 4 bytes representing the number of reps will be ignored. This is only necessary for long-type properties.
+		/// </remarks>
+        internal abstract void SetData(object value, uint countOfReps);
 
 		/// <summary>
 		/// 

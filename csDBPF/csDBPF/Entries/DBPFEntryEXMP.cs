@@ -206,20 +206,23 @@ namespace csDBPF.Entries {
 
 			//Examine the keyType to determine how to set the values for the new property
 			object dataValues;
+			uint countOfReps;
 			//keyType == 0x80 ... this is one or more repetitions of the data type (2+ values of the data type)
 			if (keyType == 0x80) {
 				offset += 1; //There is a 1 byte unused flag
-				uint countOfReps = BitConverter.ToUInt32(dData, offset);
+				countOfReps = BitConverter.ToUInt32(dData, offset);
 				offset += 4;
 				if (dataType == DBPFPropertyDataType.STRING) {
 					dataValues = ByteArrayHelper.ToAString(dData, offset, (int) countOfReps);
-				} else if (dataType == DBPFPropertyDataType.FLOAT32) {
+				}
+				else if (dataType == DBPFPropertyDataType.FLOAT32) {
 					dataValues = new List<float>();
 					for (int idx = 0; idx < countOfReps; idx++) {
 						((List<float>) dataValues).Add(BitConverter.ToSingle(dData,offset));
 						offset += 4;
 					}
-				} else {
+				} 
+				else {
 					dataValues = new List<long>();
 					byte[] oneVal = new byte[8];
 					for (int idx = 0; idx < countOfReps; idx++) {
@@ -232,6 +235,7 @@ namespace csDBPF.Entries {
 
 			//keyType == 0x00 ... this is 0 repetitions (just a single value of the data type)
 			else {
+				countOfReps = 0;
 				offset += 1; //This one byte is number of value repetitions; seems to always be 0
 				byte[] byteVals = new byte[8];
 				//for (int idx = 0; idx < dataType.Length; idx++) {
@@ -256,11 +260,11 @@ namespace csDBPF.Entries {
 				newProperty = new DBPFPropertyFloat();
 			} else {
 				newProperty = new DBPFPropertyLong(dataType);
-			}
+            }
 			newProperty.ID = propertyID;
 			newProperty.IsTextEncoding = EncodingType.Binary;
-			newProperty.SetData(dataValues);
-			return newProperty;
+            newProperty.SetData(dataValues, countOfReps);
+            return newProperty;
 		}
 
 
