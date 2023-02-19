@@ -15,7 +15,7 @@ namespace csDBPF.Entries {
 		/// </summary>
 		private bool _isDecoded;
 		/// <summary>
-		/// Stores if this entry is endoded as binary or text.
+		/// Stores if this entry is encoded as binary or text.
 		/// </summary>
 		private bool _isTextEncoding;
 
@@ -129,6 +129,7 @@ namespace csDBPF.Entries {
 			for (int idx = 0; idx < propertyCount; idx++) {
 				property = DecodeProperty(pos);
 				if (property is null) {
+					LogMessage($"Property #{idx} could not be decoded.");
 					return;
 				}
 
@@ -136,7 +137,7 @@ namespace csDBPF.Entries {
 				try {
                     _listOfProperties.Add(property.ID, property);
                 } catch {
-
+					LogMessage($"Property {property.ID} is duplicated.");
 				}
 
 				//Determine which bytes to skip to get to the start of the next property
@@ -190,18 +191,27 @@ namespace csDBPF.Entries {
 			}
 
 			//Get the property ID
-			if (offset + 4 > dData.Length) return null;
+			if (offset + 4 > dData.Length) {
+                LogMessage($"Offset of {offset} does not contain enough data to hold a property. Unable to decode property.");
+                return null; 
+			}
 			uint propertyID = BitConverter.ToUInt32(dData, offset);
 			offset += 4;
 
 			//Get the data value type
 			ushort valueType = BitConverter.ToUInt16(dData, offset);
 			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(valueType);
-			if (dataType is null) return null;
+			if (dataType is null) {
+				LogMessage($"Property {propertyID} has invalid data type. Unable to decode property.");
+                return null;
+            }
 			offset += 2;
 
 			//Get the property keyType
-			if (offset + 2 > dData.Length) return null;
+			if (offset + 2 > dData.Length) {
+                LogMessage($"Property {propertyID} has invalid key type. Unable to decode property.");
+                return null; 
+			}
 			ushort keyType = BitConverter.ToUInt16(dData, offset);
 			offset += 2;
 
@@ -239,9 +249,6 @@ namespace csDBPF.Entries {
 				countOfReps = 0;
 				offset += 1; //This one byte is number of value repetitions; seems to always be 0
 				byte[] byteVals = new byte[8];
-				//for (int idx = 0; idx < dataType.Length; idx++) {
-				//	byteVals[idx] = dData[offset + idx];
-				//}
 				Array.Copy(dData, offset, byteVals, 0, dataType.Length);
 				if (dataType == DBPFPropertyDataType.STRING) {
 					dataValues = ByteArrayHelper.ToAString(dData, offset, 1);
@@ -249,8 +256,8 @@ namespace csDBPF.Entries {
 					dataValues = new List<float> { BitConverter.ToSingle(byteVals) };
 				} else {
 					dataValues = new List<long> { BitConverter.ToInt64(byteVals) };
-				}
-
+                }
+				
 			}
 
 			//Create new decoded property then set ID and DataValues
@@ -258,8 +265,11 @@ namespace csDBPF.Entries {
 			if (dataType == DBPFPropertyDataType.STRING) {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
-				newProperty = new DBPFPropertyFloat();
-			} else {
+				if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
+					LogMessage($"Property {propertyID} is type Float32 with a single value but number of reps is set to 1.");
+                }
+                newProperty = new DBPFPropertyFloat();
+            } else {
 				newProperty = new DBPFPropertyLong(dataType);
             }
 			newProperty.ID = propertyID;
@@ -366,8 +376,6 @@ namespace csDBPF.Entries {
 				//strings are encoded with quotes, so we start one position after and end one position sooner to avoid incorporating them into the decoded string
 				endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset) - 2;
 				string result = ByteArrayHelper.ToAString(dData, offset+1, endPos - offset);
-				//byte[] newVals = new byte[endPos - offset];
-				//Array.Copy(dData, offset + 1, newVals, 0, endPos - offset);
 				dataValues = result;
 			} 
 			
@@ -386,7 +394,10 @@ namespace csDBPF.Entries {
 			if (dataType == DBPFPropertyDataType.STRING) {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
-				newProperty = new DBPFPropertyFloat();
+                if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
+                    LogMessage($"Property {propertyID} is type Float32 with a single value but number of reps is set to 1.");
+                }
+                newProperty = new DBPFPropertyFloat();
 			} else {
 				newProperty = new DBPFPropertyLong(dataType);
 			}
@@ -421,7 +432,6 @@ namespace csDBPF.Entries {
 		/// <returns>Exemplar Type if found; -1 if ExemplarType (0x00000010) property is not found</returns>
 		public int GetExemplarType() {
 			DBPFProperty property = GetProperty(0x00000010);
-
 			if (property is null) {
 				return -1;
 			}
@@ -539,7 +549,6 @@ namespace csDBPF.Entries {
 		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
 		/// </summary>
 		public override void ToBytes() {
-			
 			string id;
 			if (_isCohort) {
 				id = "C";

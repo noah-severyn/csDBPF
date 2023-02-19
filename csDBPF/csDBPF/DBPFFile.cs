@@ -26,7 +26,7 @@ namespace csDBPF
 		public DBPFHeader Header;
 
 		/// <summary>
-		/// Represents a file system object for this file. 
+		/// Represents a file system object for this DBPF file. 
 		/// </summary>
 		public FileInfo File;
 
@@ -41,20 +41,29 @@ namespace csDBPF
 			get { return _dataSize; }
 		}
 
-		//I generally prefer property get/set for access over Get/Set methods, but we specifically don't enable that here because when we adjust ListOfEntries, we also need to adjust other properties too, like listofTGIs, filesize
-		//TODO - add in documentation about a pro tip to use linq to filter these based on the output of GetEntries or GetTGIs
 		/// <summary>
 		/// List of all entries in this file.
 		/// </summary>
-		private readonly List<DBPFEntry> _listOfEntries;
-
-		/// <summary>
-		/// List of all TGIs in this file.
-		/// </summary>
 		/// <remarks>
-		/// Can be used for quick inspection because no entry data is processed.
+		/// This is private because when an entry is added or removed, other operations happen simultaneously to adjust <see cref="_listOfTGIs"/>, <see cref="_dataSize"/>, etc.
 		/// </remarks>
-		private readonly List<DBPFTGI> _listOfTGIs;
+		private readonly List<DBPFEntry> _listOfEntries; //TODO - add in documentation about a pro tip to use LINQ to filter these based on the output of GetEntries or GetTGIs
+
+        /// <summary>
+        /// List of all TGIs in this file.
+        /// </summary>
+        /// <remarks>
+        /// Can be used for quick inspection because no entry data is processed.
+        /// </remarks>
+        private readonly List<DBPFTGI> _listOfTGIs;
+
+        /// <summary>
+        /// Comma delineated list of issues encountered when loading this file.
+        /// </summary>
+        /// <remarks>
+        /// The format is consistent with <see cref="DBPFEntry.IssueLog"/>. It is a multi line string of <see cref="DBPFTGI.ToString"/> followed by the message. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message.
+        /// </remarks>
+        private readonly StringBuilder _issueLog;
 
 		//------------- BEGIN DBPFFile.Header ------------- \\
 		/// <summary>
@@ -116,7 +125,7 @@ namespace csDBPF
 			/// </summary>
 			public uint DateModified { get; private set; }
 			/// <summary>
-			/// Defines the Index verion. Always 7 for SC4.
+			/// Defines the Index version. Always 7 for SC4.
 			/// </summary>
 			public uint IndexMajorVersion {
 				get { return _indexMajorVersion; }
@@ -145,7 +154,7 @@ namespace csDBPF
 
 
 			/// <summary>
-			/// Instantiate a new DBPFHeader. All properties remain unset until one of the Intialize() functions are called.
+			/// Instantiate a new DBPFHeader. All properties remain unset until  <see cref="InitializeBlank"/> or <see cref="Initialize(BinaryReader)"/> is called.
 			/// </summary>
 			public DBPFHeader() { }
 
@@ -317,6 +326,10 @@ namespace csDBPF
 				}
 			}
 
+			catch {
+				LogMessage("Unable to read DBPF file.");
+			}
+
 			finally {
 				br.Close();
 				fs.Close();
@@ -343,15 +356,45 @@ namespace csDBPF
 			throw new NotImplementedException();
 		}
 
-		//TODO - implement readCached https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFFile.java#L721
+        //TODO - implement readCached https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFFile.java#L721
 
 
 
 
-		/// <summary>
-		/// Decodes all entries in the file. See <see cref="DBPFEntry.DecodeEntry()"/> for more information
-		/// </summary>
-		public void DecodeAllEntries() {
+
+
+        /// <summary>
+        /// Adds the specified message to the entry's <see cref="_issueLog"/>.
+        /// </summary>
+        /// <param name="message">Message to add</param>
+		/// <remarks>
+		/// Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message
+		/// </remarks>
+        private void LogMessage(string message) {
+            _issueLog.AppendLine(Path.GetFileNameWithoutExtension(File.FullName) + ",,,,,," + message);
+        }
+
+
+        /// <summary>
+        /// Return the messages/issues raised when reading this file and its entries. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message
+        /// </summary>
+        /// <returns>A comma separated string of issues encountered</returns>
+        public string GetLogMessages() {
+			foreach (DBPFEntry entry in _listOfEntries) {
+				_issueLog.AppendLine(entry.IssueLog.ToString());
+			}
+			return _issueLog.ToString();
+		}
+
+
+
+        /// <summary>
+        /// Decodes all entries in the file.
+        /// </summary>
+		/// <remarks>
+		/// For more information, see <see cref="DBPFEntry.DecodeEntry()"/> and the specific implementations for each entry type.
+		/// </remarks>
+        public void DecodeAllEntries() {
 			foreach (DBPFEntry entry in _listOfEntries) {
 				entry.DecodeEntry();
 			}
@@ -535,11 +578,9 @@ namespace csDBPF
 
 
 		public void RemoveEntries(DBPFTGI tgi) {
-			//TODO - implement RemoveEntries for all matching tgis
-			throw new NotImplementedException();
+            //TODO - implement RemoveEntries for all matching TGIs
+            throw new NotImplementedException();
 		}
-
-
 
 		/// <summary>
 		/// Clears all entries from this file.
@@ -550,8 +591,6 @@ namespace csDBPF
 			_dataSize = 0;
 		}
 
-
-		
 		/// <summary>
 		/// Builds the Directory subfile if any entries in this file are compressed.
 		/// </summary>
@@ -563,24 +602,12 @@ namespace csDBPF
 			}
 		}
 
-
-		public List<DBPFEntry> GetEntries(int? filter) {
-			//TODO - implement GetEntries matching a certian filter type
-			//returns a subset of entries matching the given filter
-			throw new NotImplementedException();
-		}
-
 		/// <summary>
 		/// Returns all entries in this file.
 		/// </summary>
 		/// <returns>All entries in this file</returns>
 		public List<DBPFEntry> GetEntries() {
 			return _listOfEntries;
-		}
-
-		public int CountEntries(int? filter) {
-			//TODO - implement CountEntries matching a certian filter type
-			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -591,22 +618,15 @@ namespace csDBPF
 			return _listOfEntries.Count;
 		}
 
-		public List<DBPFEntry> GetTGIs(int filter) {
-			//TODO - implement GetTGIs matching a certian filter type
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Returns a list of all TGI sets in this file.
-		/// </summary>
-		/// <returns>A list of all TGI sets</returns>
-		public List<DBPFTGI> GetTGIs() {
+        /// <summary>
+        /// Returns a list of all TGI sets in this file.
+        /// </summary>
+        /// <returns>A list of all TGI sets</returns>
+        /// <remarks>
+        /// Can be used for quick inspection of this file instead of <see cref="GetEntries()"/> because no entry data is processed.
+        /// </remarks>
+        public List<DBPFTGI> GetTGIs() {
 			return _listOfTGIs;
-		}
-
-		public int CountTGIs(int filter) {
-			//TODO - implement CountTGIs matching a certian filter type
-			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -614,7 +634,7 @@ namespace csDBPF
 		/// </summary>
 		/// <returns>The count of TGI sets</returns>
 		/// <remarks>
-		/// This may be used in lieu of <see cref="CountEntries()"/> for more performant operation if no entry data is processed.
+		/// This may be used in lieu of <see cref="CountEntries()"/> for more performant operation if no entry data is required.
 		/// </remarks>
 		public int CountTGIs() {
 			return _listOfTGIs.Count;
@@ -622,12 +642,12 @@ namespace csDBPF
 
 		public void UpdateAllEntries(IEnumerable<DBPFEntry> entries) {
 			//TODO - implement Update for a list of entries
-			//any entries with matching tgis will be overwritten (first ocurrence only) and any new ones will be added - skip DIR files
+			//any entries with matching TGIs will be overwritten (first occurrence only) and any new ones will be added - skip DIR files
 			throw new NotImplementedException();
 		}
 
 		public void UpdateEntry(DBPFEntry entry) {
-			//TODO - implement Update for a tgi
+			//TODO - implement Update for a TGI
 			throw new NotImplementedException();
 		}
 		public void UpdateEntry(int index) {

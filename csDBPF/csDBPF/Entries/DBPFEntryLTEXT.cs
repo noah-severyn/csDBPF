@@ -91,6 +91,7 @@ namespace csDBPF.Entries {
 			}
 			if (ByteData.Length < 4) {
 				_text = null;
+				LogMessage("Data length is less than 4 bytes so information can be read.");
 			}
 
 			int pos = 0;
@@ -99,13 +100,14 @@ namespace csDBPF.Entries {
 			ushort textControlChar = ByteArrayHelper.ReadBytesIntoUshort(ByteData, pos);
 			if (textControlChar != 0x0010) {
 				_text = null;
+				LogMessage("Invalid control character. Text not set.");
 				return;
 			}
 			pos += 2;
 
 			StringBuilder sb = new StringBuilder();
 			for (int idx = 0; idx < numberOfChars; idx++) {
-				//Important to read two bytes to account for non english unicode characters
+				//Important to read two bytes to account for non English Unicode characters
 				int twoBytes = BitConverter.ToInt16(ByteData, pos);
 				sb.Append(Convert.ToChar(twoBytes));
 				pos += 2;

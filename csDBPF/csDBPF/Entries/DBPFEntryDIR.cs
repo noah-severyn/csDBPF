@@ -67,7 +67,7 @@ namespace csDBPF.Entries {
 		}
 
 		/// <summary>
-		/// Create a new instance. Use when reading an existing Directy from a file.
+		/// Create a new instance. Use when reading an existing directory from a file.
 		/// </summary>
 		/// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
 		/// <param name="offset">Offset (location) of the entry within the DBPF file</param>
@@ -105,9 +105,6 @@ namespace csDBPF.Entries {
 			
 			foreach (DBPFEntry entry in entries) {
 				if (entry.IsCompressed) {
-					if (true) {
-
-					}
 					entry.ToBytes();
 					_compressedItems.Add(new DBDFItem((uint) entry.TGI.TypeID, (uint) entry.TGI.GroupID, (uint) entry.TGI.InstanceID, entry.UncompressedSize));
 				}

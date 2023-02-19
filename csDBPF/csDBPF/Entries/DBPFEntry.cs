@@ -40,7 +40,7 @@ namespace csDBPF.Entries {
 		public uint CompressedSize { get; protected set; }
 
 		/// <summary>
-		/// Marks if this entry stores compressed data or not. This is a readonly property and does not describe the current state of <see cref="ByteData"/> - see <see cref="IsCompressedNow"/>.
+		/// Marks if this entry stores compressed data or not. This is a read only property and does not describe the current state of <see cref="ByteData"/> - see <see cref="IsCompressedNow"/>.
 		/// </summary>
 		/// <remarks>
 		/// Assumed TRUE until the first bytes of data can be read to determine actual compression status. 
@@ -52,11 +52,6 @@ namespace csDBPF.Entries {
 		/// </summary>
 		public bool IsCompressedNow { get; protected set; }
 
-		///// <summary>
-		///// Stores if this property has been decoded
-		///// </summary>
-		//public bool IsDecoded { get; protected set; }
-
 		/// <summary>
 		/// Byte array of raw data pertaining to this entry. Depending on <see cref="IsCompressed"/> and <see cref="IsCompressedNow"/>, this data may be compressed.
 		/// </summary>
@@ -64,6 +59,14 @@ namespace csDBPF.Entries {
 		/// The interpretation of the entry data depends on the compression status and the entry type (known through its <see cref="TGI"/>). Always check if the data is compressed before processing.
 		/// </remarks>
 		public byte[] ByteData { get; protected set; }
+
+        /// <summary>
+        /// Comma delineated list of issues encountered when loading this entry.
+        /// </summary>
+		/// <remarks>
+		/// This is a multi line string of <see cref="DBPFTGI.ToString"/> followed by the message. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message. For items logged at the entry level, FileName is left blank as it is unknown (it's a property of this entry's <see cref="DBPFFile.File"/>).
+		/// </remarks>
+        internal StringBuilder IssueLog { get; private set; }
 
 
 
@@ -75,6 +78,7 @@ namespace csDBPF.Entries {
 			TGI = tgi;
 			IsCompressed = true;
 			IsCompressedNow = true;
+			IssueLog = new StringBuilder();
 		}
 
 		/// <summary>
@@ -95,9 +99,10 @@ namespace csDBPF.Entries {
 			IndexPos = index;
 			CompressedSize = size;
 			ByteData = bytes;
+            IssueLog = new StringBuilder();
 
-			//We can peek at the first 9 bytes of this data to determine its compression characteristics
-			if (bytes.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(bytes, 4) == 0x10FB) {
+            //We can peek at the first 9 bytes of this data to determine its compression characteristics
+            if (bytes.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(bytes, 4) == 0x10FB) {
 				IsCompressed = true;
 				UncompressedSize = (uint) ((bytes[6] << 16) | (bytes[7] << 8) | bytes[8]);
 				IsCompressedNow = true;
@@ -135,7 +140,7 @@ namespace csDBPF.Entries {
 
 
 		/// <summary>
-		/// Determine if the entry is the same entry type as the specifified one
+		/// Determine if the entry is the same entry type as the specified one.
 		/// </summary>
 		/// <param name="known"><see cref="DBPFTGI"/> to compare against</param>
 		/// <returns>TRUE if this Entry matches the specified; FALSE otherwise.</returns>
@@ -157,6 +162,14 @@ namespace csDBPF.Entries {
 			}
 			string fileIdentifier = ByteArrayHelper.ToAString(ByteData, 0, 4);
 			return fileIdentifier == "EQZB" || fileIdentifier == "EQZT" || fileIdentifier == "CQZB" || fileIdentifier == "CQZT";
+		}
+
+		/// <summary>
+		/// Adds the specified message to the entry's <see cref="IssueLog"/>.
+		/// </summary>
+		/// <param name="message">Message to add</param>
+		private protected void LogMessage(string message) {
+			IssueLog.AppendLine("," + TGI.ToString().Replace(" ", "") + "," + message);
 		}
 
 
