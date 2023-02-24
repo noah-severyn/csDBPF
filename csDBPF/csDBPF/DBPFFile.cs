@@ -239,6 +239,7 @@ namespace csDBPF
 			Header = new DBPFHeader();
 			_listOfEntries = new List<DBPFEntry>();
 			_listOfTGIs = new List<DBPFTGI>();
+			_issueLog = new StringBuilder();
 
 			if (!file.Exists) {
 				Header.InitializeBlank();
@@ -340,7 +341,11 @@ namespace csDBPF
 			foreach (DBPFEntry entry in _listOfEntries) {
 				//GetSubfileFormat(DBPFCompression.Decompress(entry.data));
 			}
-		}
+
+            foreach (DBPFEntry entry in _listOfEntries) {
+                _issueLog.AppendLine(entry.IssueLog.ToString());
+            }
+        }
 
 
 		/// <summary>
@@ -379,10 +384,7 @@ namespace csDBPF
         /// Return the messages/issues raised when reading this file and its entries. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message
         /// </summary>
         /// <returns>A comma separated string of issues encountered</returns>
-        public string GetLogMessages() {
-			foreach (DBPFEntry entry in _listOfEntries) {
-				_issueLog.AppendLine(entry.IssueLog.ToString());
-			}
+        public string GetIssueLog() {
 			return _issueLog.ToString();
 		}
 
