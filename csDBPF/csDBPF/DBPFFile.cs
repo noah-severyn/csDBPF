@@ -321,6 +321,7 @@ namespace csDBPF
 							_listOfEntries.Add(new DBPFEntryDIR(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
 						default:
+                            LogMessage("Unknown TGI identifier.", _listOfTGIs[idx]);
                             _listOfEntries.Add(new DBPFEntryUnknown(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
                             break;
 					}
@@ -328,7 +329,7 @@ namespace csDBPF
 			}
 
 			catch {
-				LogMessage("Unable to read DBPF file.");
+				LogMessage("Unable to read DBPF file. Format unknown.");
 			}
 
 			finally {
@@ -342,8 +343,11 @@ namespace csDBPF
 				//GetSubfileFormat(DBPFCompression.Decompress(entry.data));
 			}
 
+			//Initially populate issue log.
             foreach (DBPFEntry entry in _listOfEntries) {
-                _issueLog.AppendLine(entry.IssueLog.ToString());
+				if (entry.IssueLog.ToString().Length>1) {
+                    _issueLog.AppendLine(entry.IssueLog.ToString());
+                }
             }
         }
 
@@ -372,20 +376,32 @@ namespace csDBPF
         /// Adds the specified message to the entry's <see cref="_issueLog"/>.
         /// </summary>
         /// <param name="message">Message to add</param>
-		/// <remarks>
-		/// Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message
-		/// </remarks>
-        private void LogMessage(string message) {
-            _issueLog.AppendLine(Path.GetFileNameWithoutExtension(File.FullName) + ",,,,,," + message);
+        /// <param name="tgi">Optional TGI to specify</param>
+        /// <remarks>
+        /// Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message
+        /// </remarks>
+        private void LogMessage(string message, DBPFTGI tgi = null) {
+			if (tgi is null) {
+                _issueLog.AppendLine(File.Name + ",,,,,," + message);
+            } else {
+                _issueLog.AppendLine(File.Name + "," + tgi.ToString().Replace(" ", "") + "," + message);
+            }
         }
 
 
         /// <summary>
-        /// Return the messages/issues raised when reading this file and its entries. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message
+        /// Return the messages/issues raised when reading this file and its entries. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message. Designed to be written to a CSV file.
         /// </summary>
         /// <returns>A comma separated string of issues encountered</returns>
         public string GetIssueLog() {
-			return _issueLog.ToString();
+			StringBuilder issues = new StringBuilder(_issueLog.ToString());
+
+            foreach (DBPFEntry entry in _listOfEntries) {
+                if (entry.IssueLog.ToString().Length > 0) {
+                    issues.AppendLine(File.Name + entry.IssueLog.ToString());
+                }
+            }
+            return issues.ToString();
 		}
 
 
@@ -399,7 +415,7 @@ namespace csDBPF
         public void DecodeAllEntries() {
 			foreach (DBPFEntry entry in _listOfEntries) {
 				entry.DecodeEntry();
-			}
+            }
 		}
 
 

@@ -124,6 +124,11 @@ namespace csDBPF.Entries {
 				pos = 85;
 			}
 
+			if (propertyCount == 0) {
+				LogMessage("Entry contains 0 properties.");
+				return;
+			}
+
 			//Create the Property
 			DBPFProperty property;
 			for (int idx = 0; idx < propertyCount; idx++) {
@@ -137,7 +142,7 @@ namespace csDBPF.Entries {
 				try {
                     _listOfProperties.Add(property.ID, property);
                 } catch {
-					LogMessage($"Property {property.ID} is duplicated.");
+					LogMessage($"Property 0x{DBPFUtil.ToHexString(property.ID)} is duplicated.");
 				}
 
 				//Determine which bytes to skip to get to the start of the next property
@@ -155,7 +160,15 @@ namespace csDBPF.Entries {
 					pos = ByteArrayHelper.FindNextInstanceOf(dData, 0x0A, pos) + 1;
 				}
 			}
-		}
+
+			//Lastly check to make sure we have ExemplarType (0x10) and ExemplarName (0x20) properties
+			if (GetExemplarType() == -1) {
+				LogMessage("Missing property Exemplar Type.");
+			}
+            if (GetExemplarName() == null) {
+                LogMessage("Missing property Exemplar Name.");
+            }
+        }
 
 
 
@@ -171,9 +184,6 @@ namespace csDBPF.Entries {
 				return DecodeProperty_Text(offset);
 			}
 		}
-
-
-
 		/// <summary>
 		/// Decodes the property from raw binary data at the given offset.
 		/// </summary>
@@ -266,7 +276,7 @@ namespace csDBPF.Entries {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
 				if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-					LogMessage($"Property {propertyID} is type Float32 with a single value but number of reps is set to 1.");
+					LogMessage($"Property {propertyID} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
             } else {
@@ -277,9 +287,6 @@ namespace csDBPF.Entries {
             newProperty.SetData(dataValues, countOfReps);
             return newProperty;
 		}
-
-
-
 		/// <summary>
 		/// Enumeration for special delimiting characters when reading text encoded properties.
 		/// </summary>
@@ -291,7 +298,6 @@ namespace csDBPF.Entries {
 			ClosingBrace = 0x7D, // }
 			Quotation = 0x22 // "
 		}
-
 		/// <summary>
 		/// Decodes the property from raw text data at the given offset.
 		/// </summary>
@@ -443,22 +449,34 @@ namespace csDBPF.Entries {
 
 
 
-		/// <summary>
-		/// Lookup and return a property from a list of properties in the entry.
-		/// </summary>
-		/// <param name="idToGet">Property ID to find</param>
-		/// <returns>DBPFProperty of the match if found; null otherwise</returns>
-		public DBPFProperty GetProperty(uint idToGet) {
+        /// <summary>
+        /// Gets the Exemplar Name of the property.
+        /// </summary>
+        /// <returns>ExemplarName if found; null if ExemplarName (0x00000020) property is not found</returns>
+        public string? GetExemplarName() {
+            DBPFProperty property = GetProperty(0x00000020);
+            if (property is null) {
+                return null;
+            }
+
+            //We know exemplar type can only hold one value, so grab the first one
+            string dataValue = (string) property.GetData();
+            return dataValue;
+        }
+
+
+
+        /// <summary>
+        /// Lookup and return a property from a list of properties in the entry.
+        /// </summary>
+        /// <param name="idToGet">Property ID to find</param>
+        /// <returns>DBPFProperty of the match if found; null otherwise</returns>
+        public DBPFProperty GetProperty(uint idToGet) {
 			if (_listOfProperties is null) {
 				throw new InvalidOperationException("This entry must be decoded before it can be analyzed!");
 			}
-
-			foreach (uint ID in _listOfProperties.Keys) {
-				if (ID == idToGet) {
-					return _listOfProperties[ID];
-				}
-			}
-			return null;
+			_listOfProperties.TryGetValue(idToGet, out DBPFProperty property);
+			return property;
 		}
 		/// <summary>
 		/// Lookup and return a property from a list of properties in the entry.

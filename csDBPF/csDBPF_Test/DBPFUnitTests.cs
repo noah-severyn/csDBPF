@@ -5,6 +5,7 @@ using csDBPF.Properties;
 using System.Collections.Generic;
 using csDBPF.Entries;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace csDBPF_Test {
 	[TestClass]
@@ -28,7 +29,7 @@ namespace csDBPF_Test {
 		// 00x Misc Test Methods
 		[TestClass]
 		public class _00x_MiscTests {
-
+			
 		}
 
 
@@ -904,60 +905,20 @@ namespace csDBPF_Test {
 		[TestClass]
 		public class _1xx_DBPFFile {
 
-			[TestMethod]
-			public void Test_110_DBPFFile_GetEntry() {
-				DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
-				DBPFEntry entry, entry0, entry1;
+            [TestMethod]
+            public void Test_100_DBPFFile_IssueLog() {
+                DBPFFile testdbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Logging Test File.dat");
+				testdbpf.DecodeAllEntries();
+				string issue = testdbpf.GetIssueLog();
+				string[] issues = issue.Split("\r\n");
 
-				//Get by index position
-				entry0 = dbpf.GetEntry(0);
-				Assert.IsTrue(entry0.TGI.Equals(DBPFTGI.EXEMPLAR));
-				CollectionAssert.AreEqual(dbpf.GetEntry(0).ByteData, entry0.ByteData);
-				entry1 = dbpf.GetEntry(3);
-
-				Assert.IsTrue(entry1.TGI.Equals(DBPFTGI.LTEXT));
-				CollectionAssert.AreEqual(dbpf.GetEntry(3).ByteData, entry1.ByteData);
-
-				//Get by Instance ID
-				entry = dbpf.GetEntry((uint) 0x4A0B6819);
-				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.EXEMPLAR));
-				Assert.AreEqual(entry.TGI, entry.TGI);
-				CollectionAssert.AreEqual(dbpf.GetEntry(0).ByteData, entry.ByteData);
-				CollectionAssert.AreEqual(entry.ByteData, entry.ByteData);
-
-				entry = dbpf.GetEntry(0xF65435A1);
-				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
-				CollectionAssert.AreEqual(dbpf.GetEntry(3).ByteData, entry.ByteData);
-				CollectionAssert.AreEqual(entry1.ByteData, entry.ByteData);
-
-				//Get by TGI
-				entry = dbpf.GetEntry(DBPFTGI.DIRECTORY);
-				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.DIRECTORY));
-				CollectionAssert.AreEqual(dbpf.GetEntry(12).ByteData, entry.ByteData);
-
-				entry = dbpf.GetEntry(DBPFTGI.LTEXT);
-				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
-				CollectionAssert.AreEqual(dbpf.GetEntry(1).ByteData, entry.ByteData);
-
-				entry = dbpf.GetEntry(new DBPFTGI(0x2026960B, 0x6A231EAA, 0xF65435A1));
-				Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
-				CollectionAssert.AreEqual(entry1.ByteData, entry.ByteData);
-
-			}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+				Assert.AreEqual("Logging Test File.dat,0x6534284B,0xA8FBD372,0x7097CB41,NULL,NULLTGI,Unknown TGI identifier.", issues[0]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA4F,EXMP,EXEMPLAR,Property 0x8CB3511F is duplicated.", issues[1]);
+                Assert.AreEqual("Logging Test File,0x6534284A,0x7B647F18,0xD097CA50,EXMP,EXEMPLAR,Missing property Exemplar Name.", issues[2]);
+                Assert.AreEqual("Logging Test File,0x6534284A,0x7B647F18,0xD097CA51,EXMP,EXEMPLAR,Missing property Exemplar Type.", issues[3]);
+                Assert.AreEqual("Logging Test File,0x6534284A,0x7B647F18,0xD097CA52,EXMP,EXEMPLAR,Entry contains 0 properties.", issues[4]);
+                Assert.AreEqual("Logging Test File,0x6534284A,0x7B647F18,0xD097CA53,EXMP,EXEMPLAR,Property 0x27812811 contains a potential macOS TE bug.", issues[5]);
+            }
 
 			[TestMethod]
 			public void Test_101a_DBPFFile_IsDBPF() {
@@ -980,9 +941,47 @@ namespace csDBPF_Test {
 
 			}
 
+            [TestMethod]
+            public void Test_110_DBPFFile_GetEntry() {
+                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                DBPFEntry entry, entry0, entry1;
 
+                //Get by index position
+                entry0 = dbpf.GetEntry(0);
+                Assert.IsTrue(entry0.TGI.Equals(DBPFTGI.EXEMPLAR));
+                CollectionAssert.AreEqual(dbpf.GetEntry(0).ByteData, entry0.ByteData);
+                entry1 = dbpf.GetEntry(3);
 
-			[TestMethod]
+                Assert.IsTrue(entry1.TGI.Equals(DBPFTGI.LTEXT));
+                CollectionAssert.AreEqual(dbpf.GetEntry(3).ByteData, entry1.ByteData);
+
+                //Get by Instance ID
+                entry = dbpf.GetEntry((uint) 0x4A0B6819);
+                Assert.IsTrue(entry.TGI.Equals(DBPFTGI.EXEMPLAR));
+                Assert.AreEqual(entry.TGI, entry.TGI);
+                CollectionAssert.AreEqual(dbpf.GetEntry(0).ByteData, entry.ByteData);
+                CollectionAssert.AreEqual(entry.ByteData, entry.ByteData);
+
+                entry = dbpf.GetEntry(0xF65435A1);
+                Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
+                CollectionAssert.AreEqual(dbpf.GetEntry(3).ByteData, entry.ByteData);
+                CollectionAssert.AreEqual(entry1.ByteData, entry.ByteData);
+
+                //Get by TGI
+                entry = dbpf.GetEntry(DBPFTGI.DIRECTORY);
+                Assert.IsTrue(entry.TGI.Equals(DBPFTGI.DIRECTORY));
+                CollectionAssert.AreEqual(dbpf.GetEntry(12).ByteData, entry.ByteData);
+
+                entry = dbpf.GetEntry(DBPFTGI.LTEXT);
+                Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
+                CollectionAssert.AreEqual(dbpf.GetEntry(1).ByteData, entry.ByteData);
+
+                entry = dbpf.GetEntry(new DBPFTGI(0x2026960B, 0x6A231EAA, 0xF65435A1));
+                Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
+                CollectionAssert.AreEqual(entry1.ByteData, entry.ByteData);
+            }
+
+            [TestMethod]
 			public void Test_111_ParseAllEntries() {
 				DBPFEntryEXMP entryKnown = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.decompressedentry_b);
 
