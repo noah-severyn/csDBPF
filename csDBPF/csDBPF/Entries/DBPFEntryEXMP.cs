@@ -212,14 +212,14 @@ namespace csDBPF.Entries {
 			ushort valueType = BitConverter.ToUInt16(dData, offset);
 			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(valueType);
 			if (dataType is null) {
-				LogMessage($"Property {propertyID} has invalid data type. Unable to decode property.");
+				LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid data type. Unable to decode property.");
                 return null;
             }
 			offset += 2;
 
 			//Get the property keyType
 			if (offset + 2 > dData.Length) {
-                LogMessage($"Property {propertyID} has invalid key type. Unable to decode property.");
+                LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid key type. Unable to decode property.");
                 return null; 
 			}
 			ushort keyType = BitConverter.ToUInt16(dData, offset);
@@ -276,7 +276,7 @@ namespace csDBPF.Entries {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
 				if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-					LogMessage($"Property {propertyID} contains a potential macOS TE bug.");
+					LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
             } else {
@@ -401,7 +401,7 @@ namespace csDBPF.Entries {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
                 if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-                    LogMessage($"Property {propertyID} is type Float32 with a single value but number of reps is set to 1.");
+                    LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
 			} else {

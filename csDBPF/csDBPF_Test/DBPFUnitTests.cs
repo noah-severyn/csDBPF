@@ -914,10 +914,10 @@ namespace csDBPF_Test {
 
 				Assert.AreEqual("Logging Test File.dat,0x6534284B,0xA8FBD372,0x7097CB41,NULL,NULLTGI,Unknown TGI identifier.", issues[0]);
                 Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA4F,EXMP,EXEMPLAR,Property 0x8CB3511F is duplicated.", issues[1]);
-                Assert.AreEqual("Logging Test File,0x6534284A,0x7B647F18,0xD097CA50,EXMP,EXEMPLAR,Missing property Exemplar Name.", issues[2]);
-                Assert.AreEqual("Logging Test File,0x6534284A,0x7B647F18,0xD097CA51,EXMP,EXEMPLAR,Missing property Exemplar Type.", issues[3]);
-                Assert.AreEqual("Logging Test File,0x6534284A,0x7B647F18,0xD097CA52,EXMP,EXEMPLAR,Entry contains 0 properties.", issues[4]);
-                Assert.AreEqual("Logging Test File,0x6534284A,0x7B647F18,0xD097CA53,EXMP,EXEMPLAR,Property 0x27812811 contains a potential macOS TE bug.", issues[5]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA50,EXMP,EXEMPLAR,Missing property Exemplar Name.", issues[2]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA51,EXMP,EXEMPLAR,Missing property Exemplar Type.", issues[3]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA52,EXMP,EXEMPLAR,Entry contains 0 properties.", issues[4]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA53,EXMP,EXEMPLAR,Property 0x27812811 contains a potential macOS TE bug.", issues[5]);
             }
 
 			[TestMethod]

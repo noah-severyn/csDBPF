@@ -398,7 +398,7 @@ namespace csDBPF
 
             foreach (DBPFEntry entry in _listOfEntries) {
                 if (entry.IssueLog.ToString().Length > 0) {
-                    issues.AppendLine(File.Name + entry.IssueLog.ToString());
+                    issues.Append(File.Name + entry.IssueLog.ToString());
                 }
             }
             return issues.ToString();
