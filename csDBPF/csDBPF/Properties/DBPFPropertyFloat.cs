@@ -88,8 +88,9 @@ namespace csDBPF.Properties {
 			if (_isTextEncoding) {
 				_numberOfReps = _dataValues.Count;
 			} else {
-				//Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
-				if (_dataValues.Count <= 1) {
+                //Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
+                //See: https://community.simtropolis.com/forums/topic/759206-mysterious-glitch-for-simcity-4-mac/?tab=comments#comment-1731134
+                if (_dataValues.Count <= 1) {
 					_numberOfReps = 0;
 				} else {
 					_numberOfReps = _dataValues.Count;
