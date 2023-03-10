@@ -226,7 +226,7 @@ namespace csDBPF {
 
 
 		/// <summary>
-		/// Checks if this DBPFTGI matches any of the known DBPFTGI entry types and returns the DBPFTGI if a match is found.
+		/// Checks if this DBPFTGI matches any of the known DBPFTGI entry types and returns the matched DBPFTGI if a match is found.
 		/// </summary>
 		/// <returns>A DBPFTGI of the matched known type if found; null otherwise.</returns>
 		public DBPFTGI MatchesAnyKnownTGI() {
@@ -276,15 +276,14 @@ namespace csDBPF {
 		/// </summary>
 		/// <returns>A string that represents the current object</returns>
 		public override string ToString() {
-			return $"0x{DBPFUtil.ToHexString((long) _typeID, 8)}, 0x{DBPFUtil.ToHexString((long) _groupID, 8)}, 0x{DBPFUtil.ToHexString((long) _instanceID, 8)}, {_category}, {_detail}";
+			return $"0x{DBPFUtil.ToHexString(_typeID)}, 0x{DBPFUtil.ToHexString(_groupID)}, 0x{DBPFUtil.ToHexString(_instanceID)}, {_category}, {_detail}";
 		}
-
 		/// <summary>
 		/// Returns a string that represents only the Type, Group, Instance of this object.
 		/// </summary>
 		/// <returns>A string that represents the current object</returns>
 		public string ToStringShort() {
-			return $"0x{DBPFUtil.ToHexString((long) _typeID, 8)}, 0x{DBPFUtil.ToHexString((long) _groupID, 8)}, 0x{DBPFUtil.ToHexString((long) _instanceID, 8)}";
+			return $"0x{DBPFUtil.ToHexString(_typeID)}, 0x{DBPFUtil.ToHexString(_groupID)}, 0x{DBPFUtil.ToHexString(_instanceID)}";
 		}
 
 
@@ -380,7 +379,6 @@ namespace csDBPF {
 		/// This static constructor will be called as soon as the class is loaded into memory, and not necessarily when an object is created.
 		/// Known types need to be ordered "bottom-up", that is, specialized entries need to be inserted first, more general ones later.
 		/// </summary>
-
 		static DBPFTGI() {
 			BLANKTGI = new DBPFTGI(0, 0, 0, null, null);
 			DIRECTORY = new DBPFTGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03, "DIR", "DIR");

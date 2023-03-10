@@ -135,34 +135,48 @@ namespace csDBPF {
 			return (value & 0x00000000000000FFL) << 56 | (value & 0x000000000000FF00L) << 40 | (value & 0x0000000000FF0000L) << 24 | (value & 0x00000000FF000000L) << 8 |
 		 (value & 0x000000FF00000000L) >> 8 | (value & 0x0000FF0000000000L) >> 24 | (value & 0x00FF000000000000L) >> 40 | (value & 0x7F00000000000000L) >> 56;
 		}
-		#endregion
+        #endregion
 
 
-		/// <summary>
-		/// Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
-		/// </summary>
-		/// <param name="value">Value to return</param>
-		/// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
-		/// <returns>Uppercase string representing the uint</returns>
-		public static string ToHexString(long value, int places = 8) {
+        /// <summary>
+        /// Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
+        /// </summary>
+        /// <param name="value">Value to return</param>
+        /// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
+        /// <returns>Uppercase string representing the value</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Number of places must be between 0 and 8.</exception>
+        public static string ToHexString(long value, int places = 8) {
 			if (places < 0 || places > 16) {
 				throw new ArgumentOutOfRangeException(nameof(places), "Number of places must be between 0 and 8.");
 			}
-			//if (value != null) {
-			//	return ((uint) value).ToString($"X{places}");
-			//} else {
-			//	return value.ToString();
-			//}
 			return (value).ToString($"X{places}");
 		}
+        /// <summary>
+        /// Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
+        /// </summary>
+        /// <param name="value">Value to return</param>
+        /// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
+        /// <returns>Uppercase string representing the value</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Number of places must be between 0 and 8.</exception>
+        public static string ToHexString(uint? value, int places = 8) {
+            if (places < 0 || places > 16) {
+                throw new ArgumentOutOfRangeException(nameof(places), "Number of places must be between 0 and 8.");
+            }
+			if (value != null) {
+				return ((uint) value).ToString($"X{places}");
+			} else {
+				return value.ToString();
+			}
+        }
 
 
-		/// <summary>
-		/// Convert Unix datetime to a <see cref="DateTime"/> object.
-		/// </summary>
-		/// <param name="time">Unix time</param>
-		/// <returns><see cref="DateTime"/> object equal to the provided Unix time</returns>
-		public static DateTime UnixToDate(uint time) {
+
+        /// <summary>
+        /// Convert Unix datetime to a <see cref="DateTime"/> object.
+        /// </summary>
+        /// <param name="time">Unix time</param>
+        /// <returns><see cref="DateTime"/> object equal to the provided Unix time</returns>
+        public static DateTime UnixToDate(uint time) {
 			return DateTimeOffset.FromUnixTimeSeconds(time).UtcDateTime;
 		}
 
