@@ -651,7 +651,6 @@ namespace csDBPF_Test {
             public void Text_062_DBPFProperty_DecodeNoProperties() {
                 DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.entrynullproperty);
                 entry.DecodeEntry();
-
                 Assert.AreEqual(0, entry.ListOfProperties.Count);
 
                 entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.entrynullproperty_extradata);
@@ -659,12 +658,11 @@ namespace csDBPF_Test {
 
                 //Use an IRL example
                 DBPFFile jimspack = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\SC4 Deps\\Jim CarProp Pack 1.2.dat");
-                jimspack.DecodeAllEntries();
-
                 entry = (DBPFEntryEXMP) jimspack.GetEntry(0);
+                entry.DecodeEntry();
                 Assert.AreEqual(0, entry.ListOfProperties.Count);
-
                 entry = (DBPFEntryEXMP) jimspack.GetEntry(178);
+                entry.DecodeEntry();
                 Assert.AreEqual(0, entry.ListOfProperties.Count);
             }
         }

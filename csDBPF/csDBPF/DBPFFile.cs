@@ -320,8 +320,26 @@ namespace csDBPF
 						case "DIR":
 							_listOfEntries.Add(new DBPFEntryDIR(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
-						default:
-                            //LogMessage("Unknown TGI identifier.", _listOfTGIs[idx]);
+                        case "S3D":
+                            _listOfEntries.Add(new DBPFEntryS3D(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
+                            break;
+                        case "FSH":
+                            _listOfEntries.Add(new DBPFEntryFSH(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
+                            break;
+                        case "PNG":
+                            _listOfEntries.Add(new DBPFEntryPNG(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
+                            break;
+                        case "LUA":
+                            _listOfEntries.Add(new DBPFEntryLUA(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
+                            break;
+                        case "UI":
+                            _listOfEntries.Add(new DBPFEntryUI(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
+                            break;
+                        case "WAV":
+                            _listOfEntries.Add(new DBPFEntryWAV(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
+                            break;
+                        default:
+                            LogMessage("Unknown TGI identifier.", _listOfTGIs[idx]);
                             _listOfEntries.Add(new DBPFEntryUnknown(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
                             break;
 					}
