@@ -321,7 +321,7 @@ namespace csDBPF
 							_listOfEntries.Add(new DBPFEntryDIR(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
 						default:
-                            LogMessage("Unknown TGI identifier.", _listOfTGIs[idx]);
+                            //LogMessage("Unknown TGI identifier.", _listOfTGIs[idx]);
                             _listOfEntries.Add(new DBPFEntryUnknown(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
                             break;
 					}
@@ -532,7 +532,17 @@ namespace csDBPF
 
 			_listOfEntries.Add(entry);
 			_listOfTGIs.Add(entry.TGI);
-			_dataSize += entry.ByteData.LongLength;
+			try {
+                _dataSize += entry.ByteData.LongLength;
+            }
+			catch (NullReferenceException) { //Non decoded entries will not have byte data set, so test if they are compressed or uncompressed and use that size.
+				if (entry.IsCompressed) { //TODO - think this is wrong b/c if entry is not decoded then this not set?????
+					_dataSize += entry.CompressedSize;
+				} else {
+					_dataSize += entry.UncompressedSize;
+				}
+			}
+			
 		}
 
 		/// <summary>

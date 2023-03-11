@@ -567,6 +567,9 @@ namespace csDBPF.Entries {
 		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
 		/// </summary>
 		public override void ToBytes() {
+			//If not decoded then assumed no changes have been made to the entry → decompressed size and compressed size are unchanged
+			if (!_isDecoded) return;
+
 			string id;
 			if (_isCohort) {
 				id = "C";
