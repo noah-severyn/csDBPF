@@ -2,108 +2,178 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using csDBPF.Entries;
+using static csDBPF.Entries.DBPFEntry;
 
 namespace csDBPF.Properties {
 	/// <summary>
-	/// This class represents a string property. The difference form <see cref="DBPFPropertyNumber"/> is how the <see cref="ByteValues"/> field is interpreted.
+	/// Represents a property storing a string value.
 	/// </summary>
-	public class DBPFPropertyString : DBPFProperty {
-
-		//------------- DBPFPropertyString Fields ------------- \\		
+	public class DBPFPropertyString : DBPFProperty {	
 		private uint _id;
+		/// <summary>
+		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
+		/// </summary>
 		public override uint ID {
 			get { return _id; }
 			set { _id = value; }
 		}
 
-		private DBPFPropertyDataType _dataType;
+		private readonly DBPFPropertyDataType _dataType;
+		/// <summary>
+		/// The <see cref="DBPFPropertyDataType"/> for this property.
+		/// </summary>
 		public override DBPFPropertyDataType DataType {
 			get { return _dataType; }
-			set {
-				if (_dataType != DBPFPropertyDataType.STRING) {
-					throw new ArgumentException($"Data type of {_dataType.Name} provided where {DBPFPropertyDataType.STRING.Name} is required.");
-				}
-				_dataType = value;
-			}
-		}
-
-		private ushort _keyType;
-		public override ushort KeyType {
-			get { return _keyType; }
-			set { _keyType = value; }
 		}
 		
-		private uint _numberOfReps;
-		public override uint NumberOfReps {
+		private int _numberOfReps;
+		/// <summary>
+		/// The number of repetitions of <see cref="DBPFPropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
+		/// </summary>
+		/// <remarks>
+		/// Determining the count partially depends on the encoding type. For binary encoded string-type properties: length of string. For text encoded string-type properties: always 1.
+		/// </remarks>
+		public override int NumberOfReps {
 			get { return _numberOfReps; }
-			set { _numberOfReps = value; }
 		}
 
-		private byte[] _byteValues;
-		public override byte[] ByteValues {
-			get { return _byteValues; }
-			set { _byteValues = value; }
+		private bool _isTextEncoding;
+		/// <summary>
+		/// Specifies the encoding style (Binary or Text) of the property.
+		/// </summary>
+		/// <remarks>
+		/// This property affects <see cref="NumberOfReps"/>. This also determines how this property will be written to file. 
+		/// </remarks>
+		public override bool IsTextEncoding {
+			get { return _isTextEncoding; }
+			set { _isTextEncoding = value; }
 		}
 
-		private Array _decodedValues;
-		public override Array DecodedValues {
-			get {
-				if (_decodedValues is null) {
-					throw new InvalidOperationException("This property must be decoded before it can be analyzed!");
-				}
-				return _decodedValues; 
-			}
-			set { _decodedValues = value; }
-		}
+		/// <summary>
+		/// The data value stored in this property.
+		/// </summary>
+		private string _dataValue;
 
 
 
 
-		//------------- DBPFPropertyString Constructor ------------- \\		
 		/// <summary>
 		/// Construct a new DBPFProperty with a string data type.
 		/// </summary>
-		public DBPFPropertyString() {
+		/// <param name="encodingType">Encoding type: binary or text</param>
+		public DBPFPropertyString(bool encodingType = EncodingType.Binary) {
 			_dataType = DBPFPropertyDataType.STRING;
+			_isTextEncoding = encodingType;
 			_numberOfReps = 0;
 		}
-
-
-
-
-		//------------- DBPFPropertyString Methods ------------- \\		
 		/// <summary>
-		/// Parse the byte values for this property to return a string.
+		/// Construct a DBPFProperty with a string data type holding a specified string.
 		/// </summary>
-		/// <returns>An array of length 1, with the only element being the string value</returns>
-		public override void DecodeValues() {
-			string[] result = new string[1];
-			result[0] = ByteArrayHelper.ToAString(_byteValues);
-			_decodedValues = result;
+		/// <param name="value">String to set</param>
+		/// <param name="encodingType">Encoding type: binary or text</param>
+		public DBPFPropertyString(string value, bool encodingType = EncodingType.Binary) {
+			_dataType = DBPFPropertyDataType.STRING;
+			_dataValue = value;
+			_isTextEncoding = encodingType;
+			if (_isTextEncoding) {
+				_numberOfReps = 1;
+			} else {
+				_numberOfReps = _dataValue.Length;
+			}
+		}
+
+
+
+		/// <summary>
+		/// Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>Returns a string that represents the current object.</returns>
+		public override string ToString() {
+			StringBuilder sb = new StringBuilder();
+			sb.Append($"ID: 0x{DBPFUtil.ToHexString(_id)}, ");
+			sb.Append($"Type: { _dataType}, ");
+			sb.Append($"Reps: {_numberOfReps}, ");
+			sb.Append($"Value: {_dataValue}");
+			return sb.ToString();
 		}
 
 
 		/// <summary>
-		/// Sets the value field to the provided string. Also sets the numberOfReps to the length of the string.
+		/// Returns the data value stored in this property.
 		/// </summary>
-		/// <param name="newValue">String value</param>
-		//public override void SetValues(byte[] newValue) {
-		//	_byteValues = newValue;
-		//}
-
-
+		/// <returns>The data value stored in this property</returns>
+		public override string GetData() {
+			return _dataValue;
+		}
+		
+		
 		/// <summary>
-		/// Appends a string representation of the value onto the base toString. See <see cref="DBPFProperty.ToString"/>
+		/// Returns the value stored in this property at the given position.
 		/// </summary>
-		/// <returns>String value of the property</returns>
-		public override string ToString() {
-			StringBuilder sb = new StringBuilder();
-			sb.Append($"ID: 0x{DBPFUtil.UIntToHexString(_id)}, ");
-			sb.Append($"Type: { _dataType}, ");
-			sb.Append($"Key: {_keyType}, ");
-			sb.Append($"Reps: {_numberOfReps}, ");
-			sb.Append($"Values: {ByteArrayHelper.ToAString(_byteValues)}");
-			return sb.ToString();
+		/// <param name="position">Position (or rep) to return</param>
+		/// <returns>The data value at the specified position</returns>
+		/// <remarks>
+		/// The position parameter is ignored because type DBPFPropertyString only stores one string as its data.
+		/// </remarks>
+        public override object GetData(int position) {
+            return _dataValue;
+        }
+
+
+        /// <summary>
+        /// Set the data value stored in this property.
+        /// </summary>
+        /// <param name="value">String to set</param>
+        /// <exception cref="ArgumentException">Argument to DBPFPropertyString.SetDataValues must be string.</exception>
+        public override void SetData(object value) {
+			if (value is not string) {
+				throw new ArgumentException($"Argument to DBPFPropertyString.SetDataValues must be string. {value.GetType()} was provided.");
+			}
+			_dataValue = (string) value;
+			if (_isTextEncoding) {
+				_numberOfReps = 1;
+			} else {
+				_numberOfReps = _dataValue.Length;
+			}
+        }
+        /// <summary>
+        /// Set the values(s) stored in this property.
+        /// </summary>
+        /// <remarks>
+        /// This implementation for string-type properties is identical to <see cref="SetData(object)"/>.
+        /// </remarks>
+        internal override void SetData(object value, uint countOfReps) {
+            SetData(value);
+        }
+
+
+        /// <summary>
+        /// Process the features and data values of this property into a byte array according to the set encoding type.
+        /// </summary>
+        /// <returns>A byte array encoding all information for this property</returns>
+        public override byte[] ToRawBytes() {
+			//Text Encoding
+			if (_isTextEncoding) {
+				StringBuilder sb = new StringBuilder();
+				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(_id);
+				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}=String:1:{{");
+				sb.Append($"\"{_dataValue}\"");
+				sb.Append("}\r\n");
+				return ByteArrayHelper.ToBytes(sb.ToString(), true);
+			}
+
+			//Binary Encoding
+			else {
+				List<byte> bytes = new List<byte>();
+				bytes.AddRange(BitConverter.GetBytes(_id));
+				bytes.AddRange(BitConverter.GetBytes(_dataType.IdentifyingNumber));
+				bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //String is always keyType = 0x80
+				bytes.Add(0); //unused flag
+				bytes.AddRange(BitConverter.GetBytes((uint) _dataValue.Length));
+				bytes.AddRange(ByteArrayHelper.ToBytes(_dataValue,true));
+				return bytes.ToArray();
+			}
 		}
 	}
 }

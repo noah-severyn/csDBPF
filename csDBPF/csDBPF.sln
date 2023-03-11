@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32126.315
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "csDBPF", "csDBPF\csDBPF.csproj", "{DAD1D7CA-CC6A-480F-BECD-BCA0D6BBF8A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csDBPF_Test", "csDBPF_Test\csDBPF_Test.csproj", "{C3ADD9E6-D64B-422A-8296-8D2D0AE9C00E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "csDBPF_Test", "csDBPF_Test\csDBPF_Test.csproj", "{C3ADD9E6-D64B-422A-8296-8D2D0AE9C00E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ECD7A016-8BE9-4344-B947-A867FC2E34D1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

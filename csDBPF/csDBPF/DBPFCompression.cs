@@ -10,8 +10,8 @@ namespace csDBPF {
 	/// <summary>
 	/// Implementation of the QFS/RefPack/LZ77 compression and decompression format.
 	/// </summary>
-	/// <see cref="http://wiki.niotso.org/RefPack"/>
-	/// <seealso cref="https://www.wiki.sc4devotion.com/index.php?title=DBPF_Compression"/>
+	/// <see ref="http://wiki.niotso.org/RefPack"/>
+	/// <seealso ref="https://www.wiki.sc4devotion.com/index.php?title=DBPF_Compression"/>
 	public class DBPFCompression {
 		//Anything prefixed with "c" refers to compressed (e.g. cData = compressedData), and a "d" prefix refers to decompressed (e.g. dData = decompressedData) 
 		private const ushort QFS = 0xFB10;
@@ -68,7 +68,7 @@ namespace csDBPF {
 		/// <summary>
 		/// Decompress the provided data. If data is not compressed, the same data will be returned.
 		/// </summary>
-		/// <param name="data">Compressed</param>
+		/// <param name="cData">Compressed data</param>
 		/// <returns>Decompressed data</returns>
 		public static byte[] Decompress(byte[] cData) {
 			//If data is not compressed do not run it through the algorithm otherwise it will return junk data
@@ -171,7 +171,7 @@ namespace csDBPF {
 		/// </summary>
 		/// <param name="dData">Uncompressed data</param>
 		/// <returns>Compressed data</returns>
-		/// <see cref="https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/util/DBPFPackager.java#L170"/>
+		/// <see ref="https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/util/DBPFPackager.java#L170"/>
 		public static byte[] Compress(byte[] dData) {
 			//check if data is big enough to compress
 			if (dData.Length < 6) {

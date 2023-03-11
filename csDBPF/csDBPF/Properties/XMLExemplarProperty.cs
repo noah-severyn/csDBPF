@@ -3,28 +3,43 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace csDBPF.Properties {
+	/// <summary>
+	/// Represents a property stored in the new_properties.xml file.
+	/// </summary>
+	/// <remarks>
+	/// This class is always returned as a result of a query to new_properties.xml amd does not ever need to be user instantiated.
+	/// </remarks>
 	public class XMLExemplarProperty {
-
-		//------------- XMLExemplarProperty Fields ------------- \\
-
 		//These parameters are required
 		//<xs:attribute name = "ID" type="xs:string" use="required" />
 		//<xs:attribute name = "Name" type="xs:string" use="required" />
 		//<xs:attribute name = "Type" type="xs:string" use="required" />
 		//<xs:attribute name = "ShowAsHex" type="xs:string" use="required" />
 		private readonly uint _id;
+		/// <summary>
+		/// Property ID. Required.
+		/// </summary>
 		public uint ID {
 			get { return _id; }
 		}
 		private readonly string _name;
+		/// <summary>
+		/// Property name. Required.
+		/// </summary>
 		public string Name {
 			get { return _name; }
 		}
 		private readonly DBPFPropertyDataType _type;
+		/// <summary>
+		/// Property data type. Required.
+		/// </summary>
 		public DBPFPropertyDataType Type {
 			get { return _type; }
 		}
 		private readonly bool _showAsHex;
+		/// <summary>
+		/// Status if this property should be shown as a hexadecimal number. Required.
+		/// </summary>
 		public bool ShowAsHex {
 			get { return _showAsHex; }
 		}
@@ -38,39 +53,58 @@ namespace csDBPF.Properties {
 		//<xs:attribute name = "MaxValue" type="xs:string" use="optional" />
 		//<xs:attribute name = "Step" type="xs:string" use="optional" />
 		private readonly short? _count;
+		/// <summary>
+		/// Count of values required for this property. Optional.
+		/// </summary>
 		public short? Count {
 			get { return _count; }
 		}
 		private readonly List<string> _defaultValue;
+		/// <summary>
+		/// Defatule value(s) for this property. Optional.
+		/// </summary>
 		public List<string> DefaultValue {
 			get { return _defaultValue; }
 		}
 		private int? _minLength;
+		/// <summary>
+		/// Minimum number of values for this property. Optional.
+		/// </summary>
 		public int? MinLength {
 			get { return _minLength; }
 			set { _minLength = value; }
 		}
 		private readonly int? _maxLength;
+		/// <summary>
+		/// Maximum number of values for this property. Optional.
+		/// </summary>
 		public int? MaxLength {
 			get { return _maxLength; }
 		}
 		private readonly string _minValue;
+		/// <summary>
+		/// Minimum value for each value of this property. Optional
+		/// </summary>
 		public string MinValue {
 			get { return _minValue; }
 		}
 		private readonly string _maxValue;
+		/// <summary>
+		/// Maximum value for each value of this property. Optional
+		/// </summary>
 		public string MaxValue {
 			get { return _maxValue; }
 		}
 		private readonly uint? _step;
+		/// <summary>
+		/// Each value must be a multiple of this number.
+		/// </summary>
 		public uint? Step {
 			get { return _step; }
 		}
 
 
 
-
-		//------------- XMLExemplarProperty Constructors ------------- \\
 		/// <summary>
 		/// Create a DBPFExemplarProperty, setting all required parameters to null. All optional parameters are null.
 		/// </summary>
@@ -87,7 +121,7 @@ namespace csDBPF.Properties {
 		/// <param name="name"></param>
 		/// <param name="type"></param>
 		/// <param name="showAsHex"></param>
-		internal XMLExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex) {
+		private XMLExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex) {
 			_id = id;
 			_name = name;
 			_type = type;
@@ -96,18 +130,18 @@ namespace csDBPF.Properties {
 		/// <summary>
 		/// Create a DBPFExemplarProperty, setting all required and optional parameters to the specified values.
 		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="name"></param>
-		/// <param name="type"></param>
-		/// <param name="showAsHex"></param>
-		/// <param name="count"></param>
-		/// <param name="defaultValue"></param>
-		/// <param name="minLength"></param>
-		/// <param name="maxLength"></param>
-		/// <param name="minValue"></param>
-		/// <param name="maxValue"></param>
+		/// <param name="id">Property ID</param>
+		/// <param name="name">Property Name</param>
+		/// <param name="type">Property data type</param>
+		/// <param name="showAsHex">Is property represented as hexadecimal</param>
+		/// <param name="count">Count of reps</param>
+		/// <param name="defaultValue">Default Value</param>
+		/// <param name="minLength">Minimum number of properties</param>
+		/// <param name="maxLength">Maximum number of properties</param>
+		/// <param name="minValue">Minimum allowed value</param>
+		/// <param name="maxValue">Maximum allowed value</param>
 		/// <param name="step"></param>
-		public XMLExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex, short? count = null, string defaultValue = null, int? minLength = null, int? maxLength = null, string minValue = null, string maxValue = null, uint? step = null) {
+		internal XMLExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex, short? count = null, string defaultValue = null, int? minLength = null, int? maxLength = null, string minValue = null, string maxValue = null, uint? step = null) {
 			_id = id;
 			_name = name;
 			_type = type;
@@ -134,8 +168,10 @@ namespace csDBPF.Properties {
 
 
 
-
-		//------------- XMLExemplarProperty Methods ------------- \\
+		/// <summary>
+		/// Returns a string that represents the current instance.
+		/// </summary>
+		/// <returns>A string that represents the current instance</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder();
 			sb.Append($"ID: {_id}, ");

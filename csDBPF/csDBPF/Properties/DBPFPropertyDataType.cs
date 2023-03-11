@@ -1,27 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace csDBPF.Properties {
 	/// <summary>
 	/// This class stores information related to the possible data types for properties.
 	/// </summary>
-	/// <see cref="https://www.wiki.sc4devotion.com/index.php?title=EXMP#ValueType"/>
+	/// <see ref="https://www.wiki.sc4devotion.com/index.php?title=EXMP#ValueType"/>
 	public class DBPFPropertyDataType {
 		private static readonly Dictionary<string, DBPFPropertyDataType> dataTypes = new Dictionary<string, DBPFPropertyDataType>();
+		/// <summary>
+		/// Numeric value 0x700.
+		/// </summary>
 		public static readonly DBPFPropertyDataType SINT32;
+		/// <summary>
+		/// Numeric value 0x900.
+		/// </summary>
 		public static readonly DBPFPropertyDataType FLOAT32;
+		/// <summary>
+		/// Numeric value 0x300.
+		/// </summary>
 		public static readonly DBPFPropertyDataType UINT32;
+		/// <summary>
+		/// Numeric value 0xB00.
+		/// </summary>
 		public static readonly DBPFPropertyDataType BOOL;
+		/// <summary>
+		/// Numeric value 0x100.
+		/// </summary>
 		public static readonly DBPFPropertyDataType UINT8;
+		/// <summary>
+		/// Numeric value 0x800.
+		/// </summary>
 		public static readonly DBPFPropertyDataType SINT64;
+		/// <summary>
+		/// Numeric value 0x200.
+		/// </summary>
 		public static readonly DBPFPropertyDataType UINT16;
+		/// <summary>
+		/// Numeric value 0xC00.
+		/// </summary>
 		public static readonly DBPFPropertyDataType STRING;
 
 
 
-
-		//------------- DBPFPropertyDataType Fields ------------- \\
 		private string _name;
 		/// <summary>
 		/// Data type identifier.
@@ -64,6 +87,7 @@ namespace csDBPF.Properties {
 		/// <param name="name">Data type identifier</param>
 		/// <param name="value">Numeric value encoded in the exemplar data used to identify the property data type</param>
 		/// <param name="length">Length in bytes of the property</param>
+		/// <param name="baseType">Data type of this property</param>
 		private DBPFPropertyDataType(string name, ushort value, int length, Type baseType) {
 			_name = name;
 			_identifyingNumber = value;
@@ -107,35 +131,49 @@ namespace csDBPF.Properties {
 		}
 
 
+
+		/// <summary>
+		/// Tests for equality of DBPFTGI objects by comparing T, G, I components of each. This method is reflexive.
+		/// </summary>
+		/// <remarks>If any component of the passed DBPFTGI is null that component is ignored in the evaluation.</remarks>
+		/// <param name="obj">Any object to compare</param>
+		/// <returns>TRUE if check passes; FALSE otherwise</returns>
+		public override bool Equals(object obj) {
+			if (obj is DBPFPropertyDataType checkType) {
+				if (checkType.Name == Name) {
+					return true;
+				}
+			} 
+			return false;
+		}
+
+
+
 		/// <summary>
 		/// Returns the <see cref="DBPFPropertyDataType"/> from the specified value.
 		/// </summary>
 		/// <param name="value">Value from raw data</param>
-		/// <returns>Corresponding DBPFPropertyType to the specified value; exception thrown if no result is found.</returns>
+		/// <returns>Corresponding DBPFPropertyType to the specified value; null if no result is found.</returns>
 		public static DBPFPropertyDataType LookupDataType(ushort value) {
 			foreach (DBPFPropertyDataType type in dataTypes.Values) {
 				if (type.IdentifyingNumber == value) {
 					return type;
 				}
 			}
-			throw new KeyNotFoundException($"Value {DBPFUtil.UIntToHexString(value, 2)} does not match a known property data type!");
+			return null;
 		}
 		/// <summary>
 		/// Returns the <see cref="DBPFPropertyDataType"/> from the specified name.
 		/// </summary>
 		/// <param name="value">Name of data type</param>
-		/// <returns>Corresponding DBPFPropertyType to the specified value; exception thrown if no result is found.</returns>
+		/// <returns>Corresponding DBPFPropertyType to the specified value; null if no result is found.</returns>
 		public static DBPFPropertyDataType LookupDataType(string value) {
 			foreach (DBPFPropertyDataType type in dataTypes.Values) {
 				if (type.Name.ToUpper() == value.ToUpper()) {
 					return type;
 				}
 			}
-			throw new KeyNotFoundException($"Value {value} does not match a known property data type!");
+			return null;
 		}
-
-
-		
 	}
-
 }

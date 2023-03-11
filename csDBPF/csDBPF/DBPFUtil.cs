@@ -7,48 +7,100 @@ using System.Text;
 using System.Globalization;
 
 namespace csDBPF {
+	/// <summary>
+	/// Collection of miscellaneous utility methods to use with DBPFFiles.
+	/// </summary>
 	public static class DBPFUtil {
 		private static readonly string[] sc4Extensions = { "dat", "sc4lot", "sc4desc", "sc4model" };
-
+		private static readonly byte[] DBPF = { 0x44, 0x42, 0x50, 0x46 };
 
 
 		/// <summary>
 		/// Filters a list of file paths based on SC4 file extensions.
 		/// </summary>
 		/// <param name="filesToFilter">List of all files to filter through</param>
-		/// <returns>Tuple of List <string> (sc4Files,skippedFiles)</returns>
-		public static (List<string>, List<string>) SortFilesByExtension(List<string> filesToFilter) {
-			List<string> sc4Files = new List<string>();
-			List<string> skippedFiles = new List<string>();
+		/// <param name="examineFileContents">Optionally examine the Header (first 28 bytes) of each file to determine if valid DBPF format. If set to false only the file extension will be examined.</param>
+		/// <returns>Tuple of List&lt;FileInfo&gt;(dbpfFiles,skippedFiles)</returns>
+		public static (List<FileInfo>, List<FileInfo>) FilterDBPFFiles(List<string> filesToFilter, bool examineFileContents) {
+			List<FileInfo> dbpfFiles = new List<FileInfo>();
+			List<FileInfo> skippedFiles = new List<FileInfo>();
 
-			string extension;
-			foreach (string file in filesToFilter) {
-				extension = file.Substring(file.LastIndexOf(".") + 1);
-				if (sc4Extensions.Any(extension.Contains) && IsFileDBPF(file)) { //https://stackoverflow.com/a/2912483/10802255
-					sc4Files.Add(file);
+
+			foreach (string item in filesToFilter) {
+				FileInfo file = new FileInfo(item);
+				if (!examineFileContents) {
+					if (sc4Extensions.Any(file.Extension.Contains)) {
+						dbpfFiles.Add(file);
+					} else {
+						skippedFiles.Add(file);
+					}
 				} else {
-					skippedFiles.Add(file);
+					if (IsValidDBPF(file)) { //https://stackoverflow.com/a/2912483/10802255
+						dbpfFiles.Add(file);
+					} else {
+						skippedFiles.Add(file);
+					}
 				}
 			}
 
-			return (sc4Files, skippedFiles);
+			return (dbpfFiles, skippedFiles);
 		}
 
-		/// <summary>
-		/// Examines the file <see cref="DBPFFile.DBPFHeader"/> to determine if the file is valid DBPF or not.
-		/// </summary>
-		/// <param name="fileName">Full path of file</param>
-		/// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
-		public static bool IsFileDBPF(string fileName) {
-			try {
-				//In order to determine if the file is DBPF or not, all we need to look at is first few bytes which make up the header - no need to examine any of the rest of the file, so we just create a Header here instead of a DBPFFile.
-				DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader(fileName);
+
+
+        /// <summary>
+        /// Examines the first bytes of the file to determine if the file is valid DBPF or not.
+        /// </summary>
+        /// <param name="filePath">Full File path of the file to examine</param>
+        /// <param name="validateDBPFVersion">Should the version information in the header be validated</param>
+        /// <returns>true if valid SC4 DBPF file, false otherwisee</returns>
+		/// /// <remarks>
+		/// In most circumstances, validateDBPFVersions should be omitted or set to false. If set to true, a temporary copy of <see cref="DBPFFile.DBPFHeader"/> is created to validate multiple fields to check for DBPF version 1.0 used with SC4. There is significantly more overhead with this call, especially when iterating over multiple files. 
+		/// </remarks>
+        public static bool IsValidDBPF(string filePath, bool validateDBPFVersion = false) {
+            return IsValidDBPF(new FileInfo(filePath), validateDBPFVersion);
+        }
+
+        /// <summary>
+        /// Examines the first bytes of the file to determine if the file is valid DBPF or not.
+        /// </summary>
+        /// <param name="file">File to examine</param>
+        /// <param name="validateDBPFVersion">Should the version information in the header be validated</param>
+        /// <returns>true if valid SC4 DBPF file, false otherwise</returns>
+		/// <remarks>
+		/// In most circumstances, validateDBPFVersions should be omitted or set to false. If set to true, a temporary copy of <see cref="DBPFFile.DBPFHeader"/> is created to validate multiple fields to check for DBPF version 1.0 used with SC4. There is significantly more overhead with this call, especially when iterating over multiple files. 
+		/// </remarks>
+        public static bool IsValidDBPF(FileInfo file, bool validateDBPFVersion = false) {
+			FileStream fs = new FileStream(file.FullName, FileMode.Open);
+			BinaryReader br = new BinaryReader(fs);
+
+			if (validateDBPFVersion) {
+				//To determine if the file is DBPF or not, can just look at the first few bytes which make up the header - no need to examine any of the rest of the file.
+				try {
+					DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader();
+					header.Initialize(br);
+				}
+
+				catch (InvalidDataException) {
+					return false;
+				}
+
+				finally {
+					br.Close();
+					fs.Close();
+				}
+
 				return true;
-			}
-			catch (Exception) {
-				return false;
-			}
+			} 
+			
+			else {
+                byte[] firstFour = br.ReadBytes(4); 
+				br.Close();
+                fs.Close();
+                return firstFour.SequenceEqual(DBPF);
+            }
 		}
+
 
 
 
@@ -83,33 +135,48 @@ namespace csDBPF {
 			return (value & 0x00000000000000FFL) << 56 | (value & 0x000000000000FF00L) << 40 | (value & 0x0000000000FF0000L) << 24 | (value & 0x00000000FF000000L) << 8 |
 		 (value & 0x000000FF00000000L) >> 8 | (value & 0x0000FF0000000000L) >> 24 | (value & 0x00FF000000000000L) >> 40 | (value & 0x7F00000000000000L) >> 56;
 		}
-		#endregion
+        #endregion
 
 
-		/// <summary>
-		/// Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
-		/// </summary>
-		/// <param name="value">Value to return</param>
-		/// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
-		/// <returns>Uppercase string representing the uint</returns>
-		public static string UIntToHexString(uint? value, int places = 8) {
-			if (places < 0 || places > 8) {
-				throw new ArgumentOutOfRangeException("places", "Number of places must be between 0 and 8.");
+        /// <summary>
+        /// Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
+        /// </summary>
+        /// <param name="value">Value to return</param>
+        /// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
+        /// <returns>Uppercase string representing the value</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Number of places must be between 0 and 8.</exception>
+        public static string ToHexString(long value, int places = 8) {
+			if (places < 0 || places > 16) {
+				throw new ArgumentOutOfRangeException(nameof(places), "Number of places must be between 0 and 8.");
 			}
+			return (value).ToString($"X{places}");
+		}
+        /// <summary>
+        /// Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
+        /// </summary>
+        /// <param name="value">Value to return</param>
+        /// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
+        /// <returns>Uppercase string representing the value</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Number of places must be between 0 and 8.</exception>
+        public static string ToHexString(uint? value, int places = 8) {
+            if (places < 0 || places > 16) {
+                throw new ArgumentOutOfRangeException(nameof(places), "Number of places must be between 0 and 8.");
+            }
 			if (value != null) {
 				return ((uint) value).ToString($"X{places}");
 			} else {
 				return value.ToString();
 			}
-		}
+        }
 
 
-		/// <summary>
-		/// Convert Unix datetime to a <see cref="DateTime"/> object.
-		/// </summary>
-		/// <param name="time">Unix time</param>
-		/// <returns><see cref="DateTime"/> object equal to the provided Unix time</returns>
-		public static DateTime UnixToDate(uint time) {
+
+        /// <summary>
+        /// Convert Unix datetime to a <see cref="DateTime"/> object.
+        /// </summary>
+        /// <param name="time">Unix time</param>
+        /// <returns><see cref="DateTime"/> object equal to the provided Unix time</returns>
+        public static DateTime UnixToDate(uint time) {
 			return DateTimeOffset.FromUnixTimeSeconds(time).UtcDateTime;
 		}
 
