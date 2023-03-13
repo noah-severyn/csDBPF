@@ -81,7 +81,7 @@ namespace csDBPF
 			/// </summary>
 			public string Identifier {
 				get { return _identifier; }
-				set {
+                private set {
 					string identifierDbpf = "DBPF";
 					if (value.CompareTo(identifierDbpf) != 0) {
 						throw new InvalidDataException("File is not a DBPF file!");
@@ -95,7 +95,7 @@ namespace csDBPF
 			/// </summary>
 			public uint MajorVersion {
 				get { return _majorVersion; }
-				set {
+				private set {
 					if (value != 1) {
 						throw new InvalidDataException("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
 					} else {
@@ -108,7 +108,7 @@ namespace csDBPF
 			/// </summary>
 			public uint MinorVersion {
 				get { return _minorVersion; }
-				set {
+                private set {
 					if (value != 0) {
 						throw new InvalidDataException("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
 					} else {
@@ -129,7 +129,7 @@ namespace csDBPF
 			/// </summary>
 			public uint IndexMajorVersion {
 				get { return _indexMajorVersion; }
-				set {
+                private set {
 					if (value != 7) {
 						throw new InvalidDataException("Unsupported index version. Only 7 is supported for SC4 DBPF files.");
 					} else {

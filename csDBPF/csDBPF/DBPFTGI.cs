@@ -90,7 +90,7 @@ namespace csDBPF {
 		public static readonly DBPFTGI RUL;
 		/// <summary>WAV file (0x2026960b, 0xaa4d1933, #)</summary>
 		public static readonly DBPFTGI WAV;
-		/// <summary>LTEXT or WAV file (0x2026960b, #, #)</summary>
+		/// <summary>LTEXT file (0x2026960b, #, #)</summary>
 		public static readonly DBPFTGI LTEXT;
 		/// <summary>Effect Directory file (0xea5118b#, #, #)</summary>
 		public static readonly DBPFTGI EFFDIR;

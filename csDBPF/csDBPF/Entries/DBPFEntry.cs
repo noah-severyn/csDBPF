@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static System.Net.WebRequestMethods;
 
 namespace csDBPF.Entries {
-	/// <summary>
-	/// An abstract form of an entry item, representing an instance of a subfile that may be contained in a <see cref="DBPFFile"/>. The data for each entry is not parsed or decoded until <see cref="DecodeEntry"/> is called to decompress and set the actual entry data.
-	/// </summary>
-	public abstract class DBPFEntry {
+    /// <summary>
+    /// An abstract form of an entry item, representing an instance of a subfile that may be contained in a <see cref="DBPFFile"/>. The data for each entry is not parsed or decoded until <see cref="DecodeEntry"/> is called to decompress and set the actual entry data.
+    /// </summary>
+    /// <see ref="https://www.wiki.sc4devotion.com/index.php?title=List_of_File_Formats"/>
+    public abstract class DBPFEntry {
 		/// <summary>
 		/// The <see cref="DBPFTGI"/>object representing the file type of the entry.
 		/// </summary>

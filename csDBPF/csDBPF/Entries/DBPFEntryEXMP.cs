@@ -89,17 +89,14 @@ namespace csDBPF.Entries {
 		/// Use when reading from a file.
 		/// </remarks>
 		public override void DecodeEntry() {
-			if (_isDecoded) {
-				return;
-			}
+			if (_isDecoded) return;
 			_isTextEncoding = IsTextEncoding();
 
-			byte[] cData = ByteData;
 			byte[] dData;
-			if (DBPFCompression.IsCompressed(cData)) {
-				dData = DBPFCompression.Decompress(cData);
+			if (DBPFCompression.IsCompressed(ByteData)) {
+				dData = DBPFCompression.Decompress(ByteData);
 			} else {
-				dData = cData;
+				dData = ByteData;
 			}
 
 			//Read cohort TGI info and determine the number of properties in this entry
