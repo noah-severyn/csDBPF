@@ -51,7 +51,7 @@ namespace csDBPF.Entries {
 
 
 		/// <summary>
-		/// Create a new instance. Use when creating new exemplars.
+		/// Create a new instance. Use when creating a new exemplar.
 		/// </summary>
 		/// <param name="tgi">TGI set to assign</param>
 		public DBPFEntryEXMP(DBPFTGI tgi) : base(tgi) {
@@ -65,7 +65,7 @@ namespace csDBPF.Entries {
 		//TODO add constructor for only listofprop, tgi+listofprop, tgi+parent, tgi+listofprop+parent
 
 		/// <summary>
-		/// Create a new instance. Use when reading existing exemplars from a file.
+		/// Create a new instance. Use when reading an existing exemplar from a file.
 		/// </summary>
 		/// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
 		/// <param name="offset">Offset (location) of the entry within the DBPF file</param>
@@ -83,7 +83,7 @@ namespace csDBPF.Entries {
 
 
 		/// <summary>
-		/// Uncompresses the exemplar/cohort instance and sets <see cref="ListOfProperties"/> as one or more <see cref="DBPFProperty"/> from a byte sequence.
+		/// Decompresses the exemplar/cohort instance and sets <see cref="ListOfProperties"/> as one or more <see cref="DBPFProperty"/> from a byte sequence.
 		/// </summary>
 		/// <remarks>
 		/// Use when reading from a file.
@@ -450,7 +450,7 @@ namespace csDBPF.Entries {
         /// Gets the Exemplar Name of the property.
         /// </summary>
         /// <returns>ExemplarName if found; null if ExemplarName (0x00000020) property is not found</returns>
-        public string? GetExemplarName() {
+        public string GetExemplarName() {
             DBPFProperty property = GetProperty(0x00000020);
             if (property is null) {
                 return null;

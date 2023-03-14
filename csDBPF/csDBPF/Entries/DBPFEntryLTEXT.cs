@@ -30,7 +30,7 @@ namespace csDBPF.Entries {
 
 
 		/// <summary>
-		/// Create a new instance. Use when creating a new LTEXT entry from scratch.
+		/// Create a new instance. Use when creating a new LTEXT entry.
 		/// </summary>
 		public DBPFEntryLTEXT() : base(DBPFTGI.LTEXT) { }
 
