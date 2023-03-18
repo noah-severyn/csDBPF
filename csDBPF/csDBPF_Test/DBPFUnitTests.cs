@@ -303,7 +303,7 @@ namespace csDBPF_Test {
                 tgi2.SetTGI(DBPFTGI.EXEMPLAR_AVENUE);
                 Assert.AreEqual((uint) 0x6534284A, tgi2.TypeID);
                 Assert.AreEqual((uint) 0xCB730FAC, tgi2.GroupID);
-                Assert.AreNotEqual(0, tgi2.InstanceID);
+                Assert.AreNotEqual<uint?>(0, tgi2.InstanceID);
                 Assert.AreEqual("EXMP", tgi2.Category);
                 Assert.AreEqual("EXEMPLAR_AVENUE", tgi2.Detail);
                 tgi1.SetTGI(DBPFTGI.NULLTGI);
@@ -313,7 +313,7 @@ namespace csDBPF_Test {
                 tgi3.SetTGI(DBPFTGI.LUA);
                 Assert.AreEqual((uint) 0xCA63E2A3, tgi3.TypeID);
                 Assert.AreEqual((uint) 0x4A5E8EF6, tgi3.GroupID);
-                Assert.AreNotEqual(0, tgi3.InstanceID);
+                Assert.AreNotEqual<uint?>(0, tgi3.InstanceID);
                 Assert.AreEqual("LUA", tgi3.Category);
                 Assert.AreEqual("LUA", tgi3.Detail);
             }
@@ -354,13 +354,13 @@ namespace csDBPF_Test {
             [TestMethod]
             public void Test_058_DBPFTGI_SetRandomFromNewInstance() {
                 DBPFTGI tgi1 = new DBPFTGI(DBPFTGI.EXEMPLAR);
-                Assert.AreNotEqual(0, tgi1.GroupID);
-                Assert.AreNotEqual(0, tgi1.InstanceID);
+                Assert.AreNotEqual<uint?>(0, tgi1.GroupID);
+                Assert.AreNotEqual<uint?>(0, tgi1.InstanceID);
 
                 DBPFTGI tgi2 = new DBPFTGI(DBPFTGI.INI);
                 Assert.AreEqual((uint) 0, tgi2.TypeID);
                 Assert.AreEqual(0x8a5971c5, tgi2.GroupID);
-                Assert.AreNotEqual(0, tgi2.InstanceID);
+                Assert.AreNotEqual<uint?>(0, tgi2.InstanceID);
             }
         }
 
@@ -550,7 +550,7 @@ namespace csDBPF_Test {
                 List<long> vals;
 
                 //TODO - text property parsing: remaining single: Sint64, , , Bool, , , UInt16,
-                //TODO - text property parsing: remaining multis: , , , Bool, UInt8, SInt64, UInt16,
+                //TODO - text property parsing: remaining multi : , , , Bool, UInt8, SInt64, UInt16,
 
 
                 //1x Uint32
@@ -626,7 +626,7 @@ namespace csDBPF_Test {
                 vals = new List<float> { 81.589798f, 13.947300f, 39.442501f };
                 propt = entry.ListOfProperties.GetValueAtIndex(3);
                 propknown = new DBPFPropertyFloat(vals, DBPFEntry.EncodingType.Text);
-                Assert.AreEqual(0x27812810, propt.ID);
+                Assert.AreEqual<uint>(0x27812810, propt.ID);
                 Assert.AreEqual(3, propt.NumberOfReps);
                 Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
@@ -638,7 +638,7 @@ namespace csDBPF_Test {
                 vals = new List<float> { 0.5f };
                 propt = entry.ListOfProperties.GetValueAtIndex(4);
                 propknown = new DBPFPropertyFloat(0.5f, DBPFEntry.EncodingType.Text);
-                Assert.AreEqual(0x27812810, propt.ID);
+                Assert.AreEqual<uint>(0x27812810, propt.ID);
                 Assert.AreEqual(1, propt.NumberOfReps);
                 Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
@@ -835,31 +835,31 @@ namespace csDBPF_Test {
                 entry.ToBytes();
                 string expected = "EQZT1###..ParentCohort=Key:{0x00000000,0x00000000,0x00000000}..PropCount=0x00000018..0x00000010:{\"Exemplar Type\"}=Uint32:0:{0x00000002}..0x00000020:{\"Exemplar Name\"}=String:1:{\"B62-CS$_Albertsons_60s_Grocery v 1.1\"}..0x099afacd:{\"Bulldoze Cost\"}=Sint64:0:{0x00000000000000a9}..0x27812810:{\"Occupant Size\"}=Float32:3:{81.58979797,13.94729996,39.44250107}..0x27812811:{\"Unknown\"}=Float32:1:{0.5}..0x27812821:{\"ResourceKeyType1\"}=Uint32:3:{0x5ad0e817,0xb2d6debe,0x00030000}..0x27812832:{\"Wealth\"}=Uint8:0:{0x01}..0x27812833:{\"Purpose\"}=Uint8:0:{0x02}..0x27812834:{\"Capacity Satisfied\"}=Uint32:2:{0x00003110,0x000002ef}..0x27812851:{\"Pollution at centre\"}=Sint32:4:{0x00000007,0x00000003,0x00000016,0x00000000}..0x27812854:{\"Power Consumed\"}=Uint32:0:{0x00000010}..0x29244db5:{\"Flammability\"}=Uint8:0:{0x2d}..0x2a499f85:{\"Query exemplar GUID\"}=Uint32:0:{0xca56783a}..0x2c8f8746:{\"Exemplar Category\"}=Uint32:0:{0x8c8fbbcc}..0x499afa38:{\"Construction Time\"}=Uint8:0:{0x10}..0x49beda31:{\"MaxFireStage\"}=Uint8:0:{0x04}..0x68ee9764:{\"Pollution Radius\"}=Float32:4:{5,5,0,0}..0x8a1c3e72:{\"Worth\"}=Sint64:0:{0x00000000000000a9}..0x8cb3511f:{\"Occupant Types\"}=Uint32:1:{0x00003110}..0xaa1dd396:{\"OccupantGroups\"}=Uint32:4:{0x00001001,0x00002000,0x00002001,0x00013110}..0xaa1dd397:{\"SFX:Query Sound\"}=Uint32:0:{0x2a8916ab}..0xaa83558f:{\"Crane Hints\"}=Uint8:0:{0x00}..0xc8ed2d84:{\"Water Consumed\"}=Uint32:0:{0x00000098}..0xe91a0b5f:{\"Building value\"}=Sint64:0:{0x0000000000001678}..r";
                 string actual = ByteArrayHelper.ToAString(entry.ByteData);
-                Assert.AreEqual(expected.Substring(0, 85), actual.Substring(0, 85)); //Entry header
-                Assert.AreEqual(expected.Substring(85, 137 - 85), actual.Substring(85, 137 - 85)); //Property 1: Exemplar Type
-                Assert.AreEqual(expected.Substring(137, 217 - 137), actual.Substring(137, 217 - 137)); //Property 2: Exemplar Name
-                Assert.AreEqual(expected.Substring(217, 277 - 217), actual.Substring(217, 277 - 217)); //Property 3: Bulldoze Cost
-                Assert.AreEqual(expected.Substring(277, 355 - 277), actual.Substring(277, 355 - 277)); //Property 4: Occupant Size
-                Assert.AreEqual(expected.Substring(355, 395 - 355), actual.Substring(355, 395 - 355)); //Property 5: Unknown
-                Assert.AreEqual(expected.Substring(395, 472 - 395), actual.Substring(395, 472 - 395)); //Property 6: ResourceKeyType1
-                Assert.AreEqual(expected.Substring(472, 510 - 472), actual.Substring(472, 510 - 472)); //Property 7: Wealth
-                Assert.AreEqual(expected.Substring(510, 549 - 510), actual.Substring(510, 549 - 510)); //Property 8: Purpose
-                Assert.AreEqual(expected.Substring(549, 617 - 549), actual.Substring(549, 617 - 549)); //Property 9: Capacity Satisfied
-                Assert.AreEqual(expected.Substring(617, 708 - 617), actual.Substring(617, 708 - 617)); //Property 10: Pollution at center
-                Assert.AreEqual(expected.Substring(708, 761 - 708), actual.Substring(708, 761 - 708)); //Property 11: Power Consumed
-                Assert.AreEqual(expected.Substring(761, 805 - 761), actual.Substring(761, 805 - 761)); //Property 12: Flammability
-                Assert.AreEqual(expected.Substring(805, 863 - 805), actual.Substring(805, 863 - 805)); //Property 13: Query exemplar GUID
-                Assert.AreEqual(expected.Substring(863, 919 - 863), actual.Substring(863, 919 - 863)); //Property 14: Exemplar Category
-                Assert.AreEqual(expected.Substring(919, 968 - 919), actual.Substring(919, 968 - 919)); //Property 15: Construction Time
-                Assert.AreEqual(expected.Substring(968, 1012 - 968), actual.Substring(968, 1012 - 968)); //Property 16: MaxFireStage
-                Assert.AreEqual(expected.Substring(1012, 1065 - 1012), actual.Substring(1012, 1065 - 1012)); //Property 17: Pollution Radius
-                Assert.AreEqual(expected.Substring(1065, 1117 - 1065), actual.Substring(1065, 1117 - 1065)); //Property 18: Worth
-                Assert.AreEqual(expected.Substring(1117, 1170 - 1117), actual.Substring(1117, 1170 - 1117)); //Property 19: Occupant Types
-                Assert.AreEqual(expected.Substring(1170, 1256 - 1170), actual.Substring(1170, 1256 - 1170)); //Property 20: OccupantGroups
-                Assert.AreEqual(expected.Substring(1256, 1310 - 1256), actual.Substring(1256, 1310 - 1256)); //Property 21: SFX:Query Sound
-                Assert.AreEqual(expected.Substring(1310, 1353 - 1310), actual.Substring(1310, 1353 - 1310)); //Property 22: Crane Hints
-                Assert.AreEqual(expected.Substring(1353, 1406 - 1353), actual.Substring(1353, 1406 - 1353)); //Property 23: Water Consumed
-                Assert.AreEqual(expected.Substring(1406, 1467 - 1406), actual.Substring(1406, 1467 - 1406)); //Property 24: Building Value
+                Assert.AreEqual(expected[..85], actual[..85]); //Entry header
+                Assert.AreEqual(expected[85..137], actual[85..137]); //Property 1: Exemplar Type
+                Assert.AreEqual(expected[137..217], actual[137..217]); //Property 2: Exemplar Name
+                Assert.AreEqual(expected[217..277], actual[217..277]); //Property 3: Bulldoze Cost
+                Assert.AreEqual(expected[277..355], actual[277..355]); //Property 4: Occupant Size
+                Assert.AreEqual(expected[355..395], actual[355..395]); //Property 5: Unknown
+                Assert.AreEqual(expected[395..472], actual[395..472]); //Property 6: ResourceKeyType1
+                Assert.AreEqual(expected[472..510], actual[472..510]); //Property 7: Wealth
+                Assert.AreEqual(expected[510..549], actual[510..549]); //Property 8: Purpose
+                Assert.AreEqual(expected[549..617], actual[549..617]); //Property 9: Capacity Satisfied
+                Assert.AreEqual(expected[617..708], actual[617..708]); //Property 10: Pollution at center
+                Assert.AreEqual(expected[708..761], actual[708..761]); //Property 11: Power Consumed
+                Assert.AreEqual(expected[761..805], actual[761..805]); //Property 12: Flammability
+                Assert.AreEqual(expected[805..863], actual[805..863]); //Property 13: Query exemplar GUID
+                Assert.AreEqual(expected[863..919], actual[863..919]); //Property 14: Exemplar Category
+                Assert.AreEqual(expected[919..968], actual[919..968]); //Property 15: Construction Time
+                Assert.AreEqual(expected[968..1012], actual[968..1012]); //Property 16: MaxFireStage
+                Assert.AreEqual(expected[1012..1065], actual[1012..1065]); //Property 17: Pollution Radius
+                Assert.AreEqual(expected[1065..1117], actual[1065..1117]); //Property 18: Worth
+                Assert.AreEqual(expected[1117..1170], actual[1117..1170]); //Property 19: Occupant Types
+                Assert.AreEqual(expected[1170..1256], actual[1170..1256]); //Property 20: OccupantGroups
+                Assert.AreEqual(expected[1256..1310], actual[1256..1310]); //Property 21: SFX:Query Sound
+                Assert.AreEqual(expected[1310..1353], actual[1310..1353]); //Property 22: Crane Hints
+                Assert.AreEqual(expected[1353..1406], actual[1353..1406]); //Property 23: Water Consumed
+                Assert.AreEqual(expected[1406..1467], actual[1406..1467]); //Property 24: Building Value
 
                 Assert.AreEqual((uint) 0x5BB, entry.CompressedSize);
                 Assert.IsFalse(entry.IsCompressed);
@@ -950,7 +950,7 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_100_DBPFFile_IssueLog() {
-                DBPFFile testdbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Logging Test File.dat");
+                DBPFFile testdbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Logging Test File.dat");
                 testdbpf.DecodeAllEntries();
                 string issue = testdbpf.GetIssueLog();
                 string[] issues = issue.Split("\r\n");
