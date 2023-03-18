@@ -159,14 +159,14 @@ namespace csDBPF.Properties {
 
 
 
-		/// <summary>
-		/// Set the data values stored in this property.
-		/// </summary>
-		/// <param name="value">Values to set</param>
-		/// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetDataValues must be List&lt;long&gt;.</exception>
-		public override void SetData(object value) {
+        /// <summary>
+        /// Set the data values stored in this property. Value should be of type <![CDATA[List<long>]]>.
+        /// </summary>
+        /// <param name="value">Values to set</param>
+        /// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetData must be <![CDATA[List<long>]]>;.</exception>
+        public override void SetData(object value) {
 			if (value is not List<long>) {
-				throw new ArgumentException($"Argument to DBPFPropertyNumber.SetDataValues must be List<long>. {value.GetType()} was provided.");
+				throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be List<long>. {value.GetType()} was provided.");
 			}
 
 			_dataValues = (List<long>) value;
@@ -177,14 +177,15 @@ namespace csDBPF.Properties {
 			}
         }
         /// <summary>
-        /// Set the values(s) stored in this property.
+        /// Set the values(s) stored in this property. Value should be of type <![CDATA[List<long>]]>.
         /// </summary>
         /// <remarks>
         /// This override is necessary when countOfReps = 1; otherwise, if passed a list of length 1 then the number of reps would be set to 0. Figuring the byte offset for the next property will then be off by 4 because the extra 4 bytes representing the number of reps will be ignored.
         /// </remarks>
+		/// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetData must be <![CDATA[List<long>]]>;.</exception>
         internal override void SetData(object value, uint countOfReps) {
             if (value is not List<long>) {
-                throw new ArgumentException($"Argument to DBPFPropertyNumber.SetDataValues must be List<long>. {value.GetType()} was provided.");
+                throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be List<long>. {value.GetType()} was provided.");
             }
 
             _dataValues = (List<long>) value;
