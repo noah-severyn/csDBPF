@@ -439,7 +439,7 @@ namespace csDBPF
 
 
 		/// <summary>
-		/// Return the nth entry in the file by index.
+		/// Return the nth entry in the file by index. 0-based index.
 		/// </summary>
 		/// <param name="index">Index position in file.</param>
 		/// <returns>The nth DBPFEntry</returns>

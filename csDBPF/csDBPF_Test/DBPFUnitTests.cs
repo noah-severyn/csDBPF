@@ -4,8 +4,9 @@ using csDBPF;
 using csDBPF.Properties;
 using System.Collections.Generic;
 using csDBPF.Entries;
-using System.Security.Cryptography;
 using System.Diagnostics;
+using SixLabors.ImageSharp;
+using System.IO;
 
 namespace csDBPF_Test {
     [TestClass]
@@ -614,6 +615,7 @@ namespace csDBPF_Test {
                 CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propt.GetData());
             }
 
+            [TestMethod]
             public void Test_061f_DBPFPropertyFloat_Text() {
                 DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.notcompressedentry_t);
                 entry.DecodeEntry();
@@ -638,7 +640,7 @@ namespace csDBPF_Test {
                 vals = new List<float> { 0.5f };
                 propt = entry.ListOfProperties.GetValueAtIndex(4);
                 propknown = new DBPFPropertyFloat(0.5f, DBPFEntry.EncodingType.Text);
-                Assert.AreEqual<uint>(0x27812810, propt.ID);
+                Assert.AreEqual<uint>(0x27812811, propt.ID);
                 Assert.AreEqual(1, propt.NumberOfReps);
                 Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
@@ -648,7 +650,7 @@ namespace csDBPF_Test {
             }
 
             [TestMethod]
-            public void Text_062_DBPFProperty_DecodeNoProperties() {
+            public void Test_062_DBPFProperty_DecodeNoProperties() {
                 DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.entrynullproperty);
                 entry.DecodeEntry();
                 Assert.AreEqual(0, entry.ListOfProperties.Count);
@@ -671,14 +673,14 @@ namespace csDBPF_Test {
 
         // 07x Test Methods for Property XML Parsing
         [TestClass]
-        public class _07x_XMLPropertyParsing {
+        public class _07x_XMLProperty {
             [TestMethod]
             public void Test_070_XMLProperties_AllProperties() {
                 Assert.AreEqual(0x56f, XMLProperties.AllProperties.Count);
             }
 
             [TestMethod]
-            public void Text_071_XMLProperties_GetPropertyByID() {
+            public void Test_071_XMLProperties_GetPropertyByID() {
                 //< PROPERTY Name = "Item Button ID" ID = "0x8a2602bb" Type = "Uint32" Default = "0x00000000" ShowAsHex = "Y" >
                 XMLExemplarProperty exmp = XMLProperties.GetXMLProperty(0x8a2602bb);
                 Assert.AreEqual(0x8a2602bb, exmp.ID);
@@ -721,7 +723,7 @@ namespace csDBPF_Test {
             }
 
             [TestMethod]
-            public void Text_072_XMLProperties_GetPropertyByName() {
+            public void Test_072_XMLProperties_GetPropertyByName() {
                 //< PROPERTY Name = "Item Button ID" ID = "0x8a2602bb" Type = "Uint32" Default = "0x00000000" ShowAsHex = "Y" >
                 XMLExemplarProperty exmp = XMLProperties.GetXMLProperty("Item Button ID");
                 Assert.AreEqual(0x8a2602bb, exmp.ID);
@@ -768,7 +770,7 @@ namespace csDBPF_Test {
             }
 
             [TestMethod]
-            public void Text_073_XMLProperties_GetPropertyID() {
+            public void Test_073_XMLProperties_GetPropertyID() {
                 Assert.AreEqual((uint) 0x10, XMLProperties.GetPropertyID("Exemplar Type"));
                 Assert.AreEqual((uint) 0x10, XMLProperties.GetPropertyID("ExemplarType"));
                 Assert.AreEqual((uint) 0x10, XMLProperties.GetPropertyID("exemplar type"));
@@ -780,166 +782,255 @@ namespace csDBPF_Test {
 
 
         [TestClass]
-        public class _08x_DBPFEntryParsing {
-            [TestMethod]
-            public void Test_081a_LTEXT_Decode() {
-                //Parse from bytes
-                DBPFEntryLTEXT entryb = new DBPFEntryLTEXT(DBPFTGI.LTEXT, 0, 0, 0, TestArrays.notcompressedentry_b);
-                entryb.DecodeEntry();
-                Assert.AreEqual("Parks Aura (by Cori)", entryb.Text);
+        public class _08x_DBPFEntry {
+            /// <summary>
+            /// Test LTEXT entries.
+            /// </summary>
+            [TestClass]
+            public class _081_LTEXT {
+                [TestMethod]
+                public void Test_081a_LTest_DecodeEntry() {
+                    //Parse from bytes
+                    DBPFEntryLTEXT entryb = new DBPFEntryLTEXT(DBPFTGI.LTEXT, 0, 0, 0, TestArrays.notcompressedentry_b);
+                    entryb.DecodeEntry();
+                    Assert.AreEqual("Parks Aura (by Cori)", entryb.Text);
 
-                //Parse from file
-                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
-                DBPFEntryLTEXT ltext = (DBPFEntryLTEXT) dbpf.GetEntry(1);
-                ltext.DecodeEntry();
-                Assert.AreEqual("Parks Aura (by Cori)", ltext.Text);
+                    //Parse from file
+                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                    DBPFEntryLTEXT ltext = (DBPFEntryLTEXT) dbpf.GetEntry(1);
+                    ltext.DecodeEntry();
+                    Assert.AreEqual("Parks Aura (by Cori)", ltext.Text);
+                }
+
+                [TestMethod]
+                public void Test_081b_LTest_ToBytes() {
+                    DBPFEntryLTEXT entryknown = new DBPFEntryLTEXT(DBPFTGI.LTEXT) {
+                        Text = "Parks Aura (by Cori)"
+                    };
+                    entryknown.ToBytes();
+                    CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, entryknown.ByteData);
+                }
+
+                [Ignore]
+                [TestMethod]
+                public void Test_081c_LTest_ModifyText() {
+                    DBPFEntryLTEXT ltext = new DBPFEntryLTEXT();
+                }
             }
 
-            [TestMethod]
-            public void Test_081b_LTEXT_ToBytes() {
-                DBPFEntryLTEXT entryknown = new DBPFEntryLTEXT(DBPFTGI.LTEXT) {
-                    Text = "Parks Aura (by Cori)"
-                };
-                entryknown.ToBytes();
-                CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, entryknown.ByteData);
+            /// <summary>
+            /// Test Exemplar (EXMP) entries.
+            /// </summary>
+            [TestClass]
+            public class _082_EXMP {
+                [Ignore]
+                [TestMethod]
+                public void Test_082a_EXMP_DecodeEntry() {
+
+                }
+
+                [TestMethod]
+                public void Test_082b_EXMP_ToBytes() {
+                    //Binary Encoding
+                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                    DBPFEntry entry = dbpf.GetEntry(0);
+                    entry.DecodeEntry();
+                    entry.ToBytes();
+                    Assert.AreEqual((uint) 446, entry.UncompressedSize);
+                    CollectionAssert.AreEqual(TestArrays.decompressedentry_b, entry.ByteData);
+                    Assert.IsTrue(entry.IsCompressed);
+
+                    //Text Encoding
+                    dbpf = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\FINAL\\nos.17\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
+                    entry = dbpf.GetEntry(0);
+                    entry.DecodeEntry();
+                    entry.ToBytes();
+                    string expected = "EQZT1###..ParentCohort=Key:{0x00000000,0x00000000,0x00000000}..PropCount=0x00000018..0x00000010:{\"Exemplar Type\"}=Uint32:0:{0x00000002}..0x00000020:{\"Exemplar Name\"}=String:1:{\"B62-CS$_Albertsons_60s_Grocery v 1.1\"}..0x099afacd:{\"Bulldoze Cost\"}=Sint64:0:{0x00000000000000a9}..0x27812810:{\"Occupant Size\"}=Float32:3:{81.58979797,13.94729996,39.44250107}..0x27812811:{\"Unknown\"}=Float32:1:{0.5}..0x27812821:{\"ResourceKeyType1\"}=Uint32:3:{0x5ad0e817,0xb2d6debe,0x00030000}..0x27812832:{\"Wealth\"}=Uint8:0:{0x01}..0x27812833:{\"Purpose\"}=Uint8:0:{0x02}..0x27812834:{\"Capacity Satisfied\"}=Uint32:2:{0x00003110,0x000002ef}..0x27812851:{\"Pollution at centre\"}=Sint32:4:{0x00000007,0x00000003,0x00000016,0x00000000}..0x27812854:{\"Power Consumed\"}=Uint32:0:{0x00000010}..0x29244db5:{\"Flammability\"}=Uint8:0:{0x2d}..0x2a499f85:{\"Query exemplar GUID\"}=Uint32:0:{0xca56783a}..0x2c8f8746:{\"Exemplar Category\"}=Uint32:0:{0x8c8fbbcc}..0x499afa38:{\"Construction Time\"}=Uint8:0:{0x10}..0x49beda31:{\"MaxFireStage\"}=Uint8:0:{0x04}..0x68ee9764:{\"Pollution Radius\"}=Float32:4:{5,5,0,0}..0x8a1c3e72:{\"Worth\"}=Sint64:0:{0x00000000000000a9}..0x8cb3511f:{\"Occupant Types\"}=Uint32:1:{0x00003110}..0xaa1dd396:{\"OccupantGroups\"}=Uint32:4:{0x00001001,0x00002000,0x00002001,0x00013110}..0xaa1dd397:{\"SFX:Query Sound\"}=Uint32:0:{0x2a8916ab}..0xaa83558f:{\"Crane Hints\"}=Uint8:0:{0x00}..0xc8ed2d84:{\"Water Consumed\"}=Uint32:0:{0x00000098}..0xe91a0b5f:{\"Building value\"}=Sint64:0:{0x0000000000001678}..r";
+                    string actual = ByteArrayHelper.ToAString(entry.ByteData);
+                    Assert.AreEqual(expected[..85], actual[..85]); //Entry header
+                    Assert.AreEqual(expected[85..137], actual[85..137]); //Property 1: Exemplar Type
+                    Assert.AreEqual(expected[137..217], actual[137..217]); //Property 2: Exemplar Name
+                    Assert.AreEqual(expected[217..277], actual[217..277]); //Property 3: Bulldoze Cost
+                    Assert.AreEqual(expected[277..355], actual[277..355]); //Property 4: Occupant Size
+                    Assert.AreEqual(expected[355..395], actual[355..395]); //Property 5: Unknown
+                    Assert.AreEqual(expected[395..472], actual[395..472]); //Property 6: ResourceKeyType1
+                    Assert.AreEqual(expected[472..510], actual[472..510]); //Property 7: Wealth
+                    Assert.AreEqual(expected[510..549], actual[510..549]); //Property 8: Purpose
+                    Assert.AreEqual(expected[549..617], actual[549..617]); //Property 9: Capacity Satisfied
+                    Assert.AreEqual(expected[617..708], actual[617..708]); //Property 10: Pollution at center
+                    Assert.AreEqual(expected[708..761], actual[708..761]); //Property 11: Power Consumed
+                    Assert.AreEqual(expected[761..805], actual[761..805]); //Property 12: Flammability
+                    Assert.AreEqual(expected[805..863], actual[805..863]); //Property 13: Query exemplar GUID
+                    Assert.AreEqual(expected[863..919], actual[863..919]); //Property 14: Exemplar Category
+                    Assert.AreEqual(expected[919..968], actual[919..968]); //Property 15: Construction Time
+                    Assert.AreEqual(expected[968..1012], actual[968..1012]); //Property 16: MaxFireStage
+                    Assert.AreEqual(expected[1012..1065], actual[1012..1065]); //Property 17: Pollution Radius
+                    Assert.AreEqual(expected[1065..1117], actual[1065..1117]); //Property 18: Worth
+                    Assert.AreEqual(expected[1117..1170], actual[1117..1170]); //Property 19: Occupant Types
+                    Assert.AreEqual(expected[1170..1256], actual[1170..1256]); //Property 20: OccupantGroups
+                    Assert.AreEqual(expected[1256..1310], actual[1256..1310]); //Property 21: SFX:Query Sound
+                    Assert.AreEqual(expected[1310..1353], actual[1310..1353]); //Property 22: Crane Hints
+                    Assert.AreEqual(expected[1353..1406], actual[1353..1406]); //Property 23: Water Consumed
+                    Assert.AreEqual(expected[1406..1467], actual[1406..1467]); //Property 24: Building Value
+
+                    Assert.AreEqual((uint) 0x5BB, entry.CompressedSize);
+                    Assert.IsFalse(entry.IsCompressed);
+                }
             }
 
-            [Ignore]
-            [TestMethod]
-            public void Test_081c_LTEXT_ModifyText() {
-                DBPFEntryLTEXT ltext = new DBPFEntryLTEXT();
+            /// <summary>
+            /// Test Directory (DIR) entries.
+            /// </summary>
+            [TestClass]
+            public class _083_DIR {
+                [TestMethod]
+                public void Test_083a_DIR_DecodeEntry() {
+                    //sample from: z_DataView - Parks Aura.dat
+                    byte[] dirbytes = new byte[] { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x19, 0x68, 0x0B, 0x4A, 0xBE, 0x01, 0x00, 0x00 };
+
+                    //Parse from bytes
+                    DBPFEntryDIR entryd = new DBPFEntryDIR(DBPFTGI.DIRECTORY, 0, 0, 0, dirbytes);
+                    entryd.DecodeEntry();
+                    Assert.AreEqual(1, entryd.CompressedItems.Count);
+                    Assert.AreEqual((uint) 0x6534284A, entryd.CompressedItems[0].TID);
+                    Assert.AreEqual((uint) 0x690F693F, entryd.CompressedItems[0].GID);
+                    Assert.AreEqual((uint) 0x4A0B6819, entryd.CompressedItems[0].IID);
+                    Assert.AreEqual((uint) 446, entryd.CompressedItems[0].Size);
+
+                    //Parse from file
+                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                    DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
+                    dir.DecodeEntry();
+                    Assert.AreEqual(1, dir.CompressedItems.Count);
+                    Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
+                    Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
+                    Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
+                    Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
+                }
+
+                [TestMethod]
+                public void Test_083b_DIR_Build() {
+                    //File with single DIR entry
+                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                    DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
+                    dir.DecodeEntry();
+                    dbpf.RebuildDirectory();
+                    Assert.AreEqual(1, dir.CompressedItems.Count);
+                    Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
+                    Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
+                    Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
+                    Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
+
+                    //File with multiple DIR entries
+                    DBPFFile dbpf2 = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataviewModd_RH.dat");
+                    DBPFEntryDIR dir2 = (DBPFEntryDIR) dbpf2.GetEntry(13);
+                    dir2.DecodeEntry();
+                    dbpf2.RebuildDirectory();
+                    Assert.AreEqual(7, dir2.CompressedItems.Count);
+                    Assert.AreEqual((uint) 0x6534284A, dir2.CompressedItems[0].TID);
+                    Assert.AreEqual((uint) 0x690F693F, dir2.CompressedItems[0].GID);
+                    Assert.AreEqual((uint) 0x4A0B684C, dir2.CompressedItems[0].IID);
+                    Assert.AreEqual((uint) 396, dir2.CompressedItems[0].Size);
+                    Assert.AreEqual((uint) 0x6534284A, dir2.CompressedItems[6].TID);
+                    Assert.AreEqual((uint) 0x690F693F, dir2.CompressedItems[6].GID);
+                    Assert.AreEqual((uint) 0x4A0B68F2, dir2.CompressedItems[6].IID);
+                    Assert.AreEqual((uint) 464, dir2.CompressedItems[6].Size);
+
+                }
+
+                [TestMethod]
+                public void Test_083c_DIR_ToBytes() {
+                    //File with single DIR entry
+                    byte[] target = { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x19, 0x68, 0x0B, 0x4A, 0xBE, 0x01, 0x00, 0x00 };
+                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                    DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
+                    dir.DecodeEntry();
+                    CollectionAssert.AreEqual(target, dir.ByteData);
+                    dir.ToBytes();
+                    CollectionAssert.AreEqual(target, dir.ByteData);
+
+                    //File with multiple DIR entries
+                    byte[] target2 = { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x4C, 0x68, 0x0B, 0x4A, 0x8C, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x4E, 0x68, 0x0B, 0x4A, 0x83, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x4F, 0x68, 0x0B, 0x4A, 0x83, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x51, 0x68, 0x0B, 0x4A, 0x8F, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x53, 0x68, 0x0B, 0x4A, 0x8D, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x55, 0x68, 0x0B, 0x4A, 0x88, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0xF2, 0x68, 0x0B, 0x4A, 0xD0, 0x01, 0x00, 0x00 };
+                    DBPFFile dbpf2 = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataviewModd_RH.dat");
+                    DBPFEntryDIR dir2 = (DBPFEntryDIR) dbpf2.GetEntry(13);
+                    dir2.DecodeEntry();
+                    CollectionAssert.AreEqual(target2, dir2.ByteData);
+                    dir2.ToBytes();
+                    CollectionAssert.AreEqual(target2, dir2.ByteData);
+                }
             }
 
-            [Ignore]
-            [TestMethod]
-            public void Test_082a_EXMP_Decode() {
+            /// <summary>
+            /// Test PNG entries
+            /// </summary>
+            [TestClass]
+            public class _084_PNG {
+                [TestMethod]
+                public void Test_084a_PNG_DecodeEntry() {
+                    DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets.dat");
+                    Assert.AreEqual(8, dbpf.CountEntries());
 
+                    DBPFEntryPNG pngentry1 = (DBPFEntryPNG) dbpf.GetEntry(4);
+                    pngentry1.DecodeEntry();
+                    Image png1 = Image.Load("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets 1.png");
+                    Assert.AreEqual(png1.PixelType.BitsPerPixel, pngentry1.PNGImage.PixelType.BitsPerPixel);
+                    Assert.AreEqual(png1.Size.Height, pngentry1.PNGImage.Size.Height);
+                    Assert.AreEqual(png1.Size.Width, pngentry1.PNGImage.Size.Width);
+
+                    string expectedURI = png1.ToBase64String(png1.Metadata.DecodedImageFormat);
+                    string actualURI = pngentry1.PNGImage.ToBase64String(pngentry1.PNGImage.Metadata.DecodedImageFormat);
+                    Assert.AreEqual(expectedURI, actualURI);
+                }
+
+                [TestMethod]
+                public void Test_084b_PNG_SaveImage() {
+                    DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets.dat");
+                    DBPFEntryPNG pngentry = (DBPFEntryPNG) dbpf.GetEntry(4);
+                    pngentry.DecodeEntry();
+
+                    string path = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\testsave.png";
+                    pngentry.PNGImage.SaveAsPng(path);
+                    Assert.AreEqual(true,File.Exists(path));
+                    File.Delete(path);
+                }
+
+                [TestMethod]
+                public void Test_084c_PNG_SetImage() {
+                    DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets.dat");
+                    DBPFEntryPNG pngentry = (DBPFEntryPNG) dbpf.GetEntry(4);
+                    pngentry.DecodeEntry();
+
+                    string path2 = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets 2.png";
+                    string path3 = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets 3.png";
+                    
+                    Image target = Image.Load(path2);
+                    Assert.AreNotEqual(target.ToBase64String(target.Metadata.DecodedImageFormat), pngentry.PNGImage.ToBase64String(pngentry.PNGImage.Metadata.DecodedImageFormat));
+                    pngentry.SetImage(target);
+                    Assert.AreEqual(target.ToBase64String(target.Metadata.DecodedImageFormat), pngentry.PNGImage.ToBase64String(pngentry.PNGImage.Metadata.DecodedImageFormat));
+
+                    target = Image.Load(path3);
+                    Assert.AreNotEqual(target.ToBase64String(target.Metadata.DecodedImageFormat), pngentry.PNGImage.ToBase64String(pngentry.PNGImage.Metadata.DecodedImageFormat));
+                    pngentry.SetImage(path3);
+                    Assert.AreEqual(target.ToBase64String(target.Metadata.DecodedImageFormat), pngentry.PNGImage.ToBase64String(pngentry.PNGImage.Metadata.DecodedImageFormat));
+                }
+
+                [TestMethod]
+                public void Test_084d_PNG_ToBytes() {
+                    DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets.dat");
+                    DBPFEntryPNG pngentry = (DBPFEntryPNG) dbpf.GetEntry(4);
+                    pngentry.DecodeEntry();
+
+                    Image targetimg = Image.Load("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets 1.png");
+                    DBPFEntryPNG target = new DBPFEntryPNG(DBPFTGI.PNG);
+                    target.SetImage(targetimg);
+                    target.ToBytes();
+                    pngentry.ToBytes();
+                    CollectionAssert.AreEqual(target.ByteData, pngentry.ByteData);
+                }
             }
+            
 
-
-            [TestMethod]
-            public void Test_082b_EXMP_ToBytes() {
-                //Binary Encoding
-                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
-                DBPFEntry entry = dbpf.GetEntry(0);
-                entry.DecodeEntry();
-                entry.ToBytes();
-                Assert.AreEqual((uint) 446, entry.UncompressedSize);
-                CollectionAssert.AreEqual(TestArrays.decompressedentry_b, entry.ByteData);
-                Assert.IsTrue(entry.IsCompressed);
-
-                //Text Encoding
-                dbpf = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\FINAL\\nos.17\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
-                entry = dbpf.GetEntry(0);
-                entry.DecodeEntry();
-                entry.ToBytes();
-                string expected = "EQZT1###..ParentCohort=Key:{0x00000000,0x00000000,0x00000000}..PropCount=0x00000018..0x00000010:{\"Exemplar Type\"}=Uint32:0:{0x00000002}..0x00000020:{\"Exemplar Name\"}=String:1:{\"B62-CS$_Albertsons_60s_Grocery v 1.1\"}..0x099afacd:{\"Bulldoze Cost\"}=Sint64:0:{0x00000000000000a9}..0x27812810:{\"Occupant Size\"}=Float32:3:{81.58979797,13.94729996,39.44250107}..0x27812811:{\"Unknown\"}=Float32:1:{0.5}..0x27812821:{\"ResourceKeyType1\"}=Uint32:3:{0x5ad0e817,0xb2d6debe,0x00030000}..0x27812832:{\"Wealth\"}=Uint8:0:{0x01}..0x27812833:{\"Purpose\"}=Uint8:0:{0x02}..0x27812834:{\"Capacity Satisfied\"}=Uint32:2:{0x00003110,0x000002ef}..0x27812851:{\"Pollution at centre\"}=Sint32:4:{0x00000007,0x00000003,0x00000016,0x00000000}..0x27812854:{\"Power Consumed\"}=Uint32:0:{0x00000010}..0x29244db5:{\"Flammability\"}=Uint8:0:{0x2d}..0x2a499f85:{\"Query exemplar GUID\"}=Uint32:0:{0xca56783a}..0x2c8f8746:{\"Exemplar Category\"}=Uint32:0:{0x8c8fbbcc}..0x499afa38:{\"Construction Time\"}=Uint8:0:{0x10}..0x49beda31:{\"MaxFireStage\"}=Uint8:0:{0x04}..0x68ee9764:{\"Pollution Radius\"}=Float32:4:{5,5,0,0}..0x8a1c3e72:{\"Worth\"}=Sint64:0:{0x00000000000000a9}..0x8cb3511f:{\"Occupant Types\"}=Uint32:1:{0x00003110}..0xaa1dd396:{\"OccupantGroups\"}=Uint32:4:{0x00001001,0x00002000,0x00002001,0x00013110}..0xaa1dd397:{\"SFX:Query Sound\"}=Uint32:0:{0x2a8916ab}..0xaa83558f:{\"Crane Hints\"}=Uint8:0:{0x00}..0xc8ed2d84:{\"Water Consumed\"}=Uint32:0:{0x00000098}..0xe91a0b5f:{\"Building value\"}=Sint64:0:{0x0000000000001678}..r";
-                string actual = ByteArrayHelper.ToAString(entry.ByteData);
-                Assert.AreEqual(expected[..85], actual[..85]); //Entry header
-                Assert.AreEqual(expected[85..137], actual[85..137]); //Property 1: Exemplar Type
-                Assert.AreEqual(expected[137..217], actual[137..217]); //Property 2: Exemplar Name
-                Assert.AreEqual(expected[217..277], actual[217..277]); //Property 3: Bulldoze Cost
-                Assert.AreEqual(expected[277..355], actual[277..355]); //Property 4: Occupant Size
-                Assert.AreEqual(expected[355..395], actual[355..395]); //Property 5: Unknown
-                Assert.AreEqual(expected[395..472], actual[395..472]); //Property 6: ResourceKeyType1
-                Assert.AreEqual(expected[472..510], actual[472..510]); //Property 7: Wealth
-                Assert.AreEqual(expected[510..549], actual[510..549]); //Property 8: Purpose
-                Assert.AreEqual(expected[549..617], actual[549..617]); //Property 9: Capacity Satisfied
-                Assert.AreEqual(expected[617..708], actual[617..708]); //Property 10: Pollution at center
-                Assert.AreEqual(expected[708..761], actual[708..761]); //Property 11: Power Consumed
-                Assert.AreEqual(expected[761..805], actual[761..805]); //Property 12: Flammability
-                Assert.AreEqual(expected[805..863], actual[805..863]); //Property 13: Query exemplar GUID
-                Assert.AreEqual(expected[863..919], actual[863..919]); //Property 14: Exemplar Category
-                Assert.AreEqual(expected[919..968], actual[919..968]); //Property 15: Construction Time
-                Assert.AreEqual(expected[968..1012], actual[968..1012]); //Property 16: MaxFireStage
-                Assert.AreEqual(expected[1012..1065], actual[1012..1065]); //Property 17: Pollution Radius
-                Assert.AreEqual(expected[1065..1117], actual[1065..1117]); //Property 18: Worth
-                Assert.AreEqual(expected[1117..1170], actual[1117..1170]); //Property 19: Occupant Types
-                Assert.AreEqual(expected[1170..1256], actual[1170..1256]); //Property 20: OccupantGroups
-                Assert.AreEqual(expected[1256..1310], actual[1256..1310]); //Property 21: SFX:Query Sound
-                Assert.AreEqual(expected[1310..1353], actual[1310..1353]); //Property 22: Crane Hints
-                Assert.AreEqual(expected[1353..1406], actual[1353..1406]); //Property 23: Water Consumed
-                Assert.AreEqual(expected[1406..1467], actual[1406..1467]); //Property 24: Building Value
-
-                Assert.AreEqual((uint) 0x5BB, entry.CompressedSize);
-                Assert.IsFalse(entry.IsCompressed);
-            }
-
-            [TestMethod]
-            public void Test_083a_DIR_Decode() {
-                //sample from: z_DataView - Parks Aura.dat
-                byte[] dirbytes = new byte[] { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x19, 0x68, 0x0B, 0x4A, 0xBE, 0x01, 0x00, 0x00 };
-
-                //Parse from bytes
-                DBPFEntryDIR entryd = new DBPFEntryDIR(DBPFTGI.DIRECTORY, 0, 0, 0, dirbytes);
-                entryd.DecodeEntry();
-                Assert.AreEqual(1, entryd.CompressedItems.Count);
-                Assert.AreEqual((uint) 0x6534284A, entryd.CompressedItems[0].TID);
-                Assert.AreEqual((uint) 0x690F693F, entryd.CompressedItems[0].GID);
-                Assert.AreEqual((uint) 0x4A0B6819, entryd.CompressedItems[0].IID);
-                Assert.AreEqual((uint) 446, entryd.CompressedItems[0].Size);
-
-                //Parse from file
-                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
-                DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
-                dir.DecodeEntry();
-                Assert.AreEqual(1, dir.CompressedItems.Count);
-                Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
-                Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
-                Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
-                Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
-            }
-
-            [TestMethod]
-            public void Test_083b_DIR_Build() {
-                //File with single DIR entry
-                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
-                DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
-                dir.DecodeEntry();
-                dbpf.RebuildDirectory();
-                Assert.AreEqual(1, dir.CompressedItems.Count);
-                Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
-                Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
-                Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
-                Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
-
-                //File with multiple DIR entries
-                DBPFFile dbpf2 = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataviewModd_RH.dat");
-                DBPFEntryDIR dir2 = (DBPFEntryDIR) dbpf2.GetEntry(13);
-                dir2.DecodeEntry();
-                dbpf2.RebuildDirectory();
-                Assert.AreEqual(7, dir2.CompressedItems.Count);
-                Assert.AreEqual((uint) 0x6534284A, dir2.CompressedItems[0].TID);
-                Assert.AreEqual((uint) 0x690F693F, dir2.CompressedItems[0].GID);
-                Assert.AreEqual((uint) 0x4A0B684C, dir2.CompressedItems[0].IID);
-                Assert.AreEqual((uint) 396, dir2.CompressedItems[0].Size);
-                Assert.AreEqual((uint) 0x6534284A, dir2.CompressedItems[6].TID);
-                Assert.AreEqual((uint) 0x690F693F, dir2.CompressedItems[6].GID);
-                Assert.AreEqual((uint) 0x4A0B68F2, dir2.CompressedItems[6].IID);
-                Assert.AreEqual((uint) 464, dir2.CompressedItems[6].Size);
-
-            }
-
-            [TestMethod]
-            public void Test_083c_DIR_ToBytes() {
-                //File with single DIR entry
-                byte[] target = { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x19, 0x68, 0x0B, 0x4A, 0xBE, 0x01, 0x00, 0x00 };
-                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
-                DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
-                dir.DecodeEntry();
-                CollectionAssert.AreEqual(target, dir.ByteData);
-                dir.ToBytes();
-                CollectionAssert.AreEqual(target, dir.ByteData);
-
-                //File with multiple DIR entries
-                byte[] target2 = { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x4C, 0x68, 0x0B, 0x4A, 0x8C, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x4E, 0x68, 0x0B, 0x4A, 0x83, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x4F, 0x68, 0x0B, 0x4A, 0x83, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x51, 0x68, 0x0B, 0x4A, 0x8F, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x53, 0x68, 0x0B, 0x4A, 0x8D, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x55, 0x68, 0x0B, 0x4A, 0x88, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0xF2, 0x68, 0x0B, 0x4A, 0xD0, 0x01, 0x00, 0x00 };
-                DBPFFile dbpf2 = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataviewModd_RH.dat");
-                DBPFEntryDIR dir2 = (DBPFEntryDIR) dbpf2.GetEntry(13);
-                dir2.DecodeEntry();
-                CollectionAssert.AreEqual(target2, dir2.ByteData);
-                dir2.ToBytes();
-                CollectionAssert.AreEqual(target2, dir2.ByteData);
-            }
+            
         }
 
 
