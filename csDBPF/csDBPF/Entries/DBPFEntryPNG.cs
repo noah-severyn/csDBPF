@@ -60,7 +60,6 @@ namespace csDBPF.Entries {
             _image.Save(ms, new PngEncoder());
             _image.Dispose();
             ByteData = ms.ToArray();
-            ms.Dispose();
         }
 
 

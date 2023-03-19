@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Collections;
-using static System.Net.WebRequestMethods;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using Squish;
 
 namespace csDBPF.Entries {
     /// <summary>
@@ -40,6 +42,7 @@ namespace csDBPF.Entries {
         public class FSHHeader {
             private string _identifier;
             private List<FSHDirectoryItem> _fshdirectory;
+
             /// <summary>
             /// FSH File identifier. Should always be "SHPI".
             /// </summary>
@@ -98,6 +101,7 @@ namespace csDBPF.Entries {
                 TGI.SetTGI(DBPFTGI.FSH);
             }
             _header = new FSHHeader();
+            _bitmapHeaders = new List<FSHBitmapHeader>();
             _isCompressed = DBPFCompression.IsCompressed(ByteData);
         }
 
@@ -111,6 +115,7 @@ namespace csDBPF.Entries {
 		/// <param name="bytes">Byte data for this entry</param>
         public DBPFEntryFSH(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
             _header = new FSHHeader();
+            _bitmapHeaders = new List<FSHBitmapHeader>();
             _isCompressed = DBPFCompression.IsCompressed(ByteData);
         }
 
@@ -148,6 +153,8 @@ namespace csDBPF.Entries {
             }
 
             //After the directory is built, look at the header information each bitmap in the file
+            int endOffset;
+            int alphaOffset;
             for (int idx = 0; idx < _header.BitmapCount; idx++) {
                 offset = _header.FSHDirectory[idx].Offset;
                 int code = BitConverter.ToInt32(dData, offset);
@@ -156,6 +163,56 @@ namespace csDBPF.Entries {
                 short[] misc = new short[4];
                 Array.Copy(dData, offset + 8, misc, 0, 4);
                 _bitmapHeaders.Add(new FSHBitmapHeader(code, width, height, misc));
+
+                offset += 16; //16 byte header
+                if (idx == _header.BitmapCount-1) {
+                    endOffset = ByteData.Length;
+                } else {
+                    endOffset = _header.FSHDirectory[idx+1].Offset;
+                }
+                FSHBitmapType bmpType = (FSHBitmapType) code;
+                byte[] dest;
+                byte[] imgdata = new byte[endOffset - offset];
+                Array.Copy(dData,offset,imgdata,0,endOffset-offset);
+                switch (bmpType) {
+                    case FSHBitmapType.EightBit:
+                        dest = new byte[0];
+                        break;
+                    case FSHBitmapType.ThirtyTwoBit:
+                        dest = new byte[0];
+                        break;
+                    case FSHBitmapType.TwentyFourBit:
+                        dest = new byte[0];
+                        break;
+                    case FSHBitmapType.SixteenBitAlpha:
+                        dest = new byte[0];
+                        break;
+                    case FSHBitmapType.SixteenBit:
+                        dest = new byte[0];
+                        break;
+                    case FSHBitmapType.SixteenBit4x4:
+                        dest = new byte[0];
+                        break;
+                    case FSHBitmapType.DXT3:
+                        //dest = new byte[Squish.Squish.GetStorageRequirements(width, height, SquishFlags.kDxt3)];
+                        //Squish.Squish.DecompressImage(dData, width, height, dest, SquishFlags.kDxt3);
+                        dest = new byte[1000];
+                        DxtDecoder.DecompressDXT3(imgdata,width,height, dest);
+                        break;
+                    case FSHBitmapType.DXT1:
+                        //dest = new byte[Squish.Squish.GetStorageRequirements(width, height, SquishFlags.kDxt1)];
+                        //Squish.Squish.DecompressImage(imgdata, width, height, dest, SquishFlags.kDxt1);
+                        dest = new byte[1000];
+                        DxtDecoder.DecompressDXT1(imgdata, width, height, dest);
+                        break;
+                    default:
+                        dest = new byte[0];
+                        break;
+                }
+
+
+                Image<Rgba32> img = Image.Load<Rgba32>(dest);
+                img.SaveAsPng("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\test.png");
             }
             _isDecoded = true;
         }
@@ -361,6 +418,96 @@ namespace csDBPF.Entries {
             /// Defined Pixel region Hotspot data for image.
             /// </summary>
             PixelRegionHotspot = 0x7C
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public class BitmapItem {
+        public byte[] RawData { get; set; }
+        /// <summary>
+        /// Color (base) bitmap.
+        /// </summary>
+        public Image Bitmap { get; set; }
+        /// <summary>
+        /// Alpha (transparency) bitmap.
+        /// </summary>
+        public Image Alpha { get; set; }
+        /// <summary>
+        /// Defines the bitmap type of this item.
+        /// </summary>
+        public DBPFEntryFSH.FSHBitmapType BitmapType { get; set; }
+        public string[] Comments { get; set; } //TODO - what's this for???
+        public bool IsCompressed { get; set; } //TODO - is this QFS or DXT compression reference?
+        public Color[] Palette { get; set; }
+
+        public BitmamItem() { }
+
+        public BitmapItem(byte[] rawData) {
+
+            //Color = new Image();
+            //Alpha = new Image();
+            //BitmapType = ...;
+            //Palette = new Color[];
+
+            //READING: ++++++++++++++++++++========================++++++++++++++++++++++++++++++++++++++++++++++++=======================
+            //----------------- FSHBitmapType bitmapcode = (FSHBitmapType) (fshentryheader.BlockSize & 0x7F);
+            //bool isvalidcode = Enum.IsDefined<FSHBitmapType>(bitmapcode);
+            //if (!isvalidcode) return;
+
+            //AColor[] colorArray = new AColor[0];
+            //int[,] numArray1 = new int[fshentryheader.Height, fshentryheader.Width];
+            //int[,] numArray2 = new int[fshentryheader.Height, fshentryheader.Width];
+            //switch (bitmapcode) {
+            //    case FSHBitmapType.DXT1: //0x60 = 96
+            //        //var format = new SixLabors.ImageSharp.PixelFormats.Argb32;
+            //        for (int row = 0; row < numArray2.GetLength(0); row++) {
+            //            for (int col = 0; col < numArray2.GetLength(1); col++) {
+            //                numArray2[row, col] = -1;
+            //            }
+            //        }
+            //        byte[] target = new byte[12 * fshentryheader.Width / 4];
+            //        for (int row = fshentryheader.Height/4 -1; row >=0; row--) {
+            //            for (int col = 7; col >= 4; col--) {
+
+            //            }
+            //        }
+
+            //        break;
+            //    case FSHBitmapType.DXT3: //0x61 = 97
+            //        format = 0;
+            //        break;
+            //    case FSHBitmapType.SixteenBit4x4: //0x6D = 109
+            //        format = 0;
+            //        break;
+            //    case FSHBitmapType.SixteenBit: //0x78 = 120
+            //        format = 0;
+            //        break;
+            //    case FSHBitmapType.EightBit: //0x7B = 123
+            //        format = 0;
+            //        break;
+            //    case FSHBitmapType.ThirtyTwoBit: //0x7D = 125
+            //        format = 0;
+            //        break;
+            //    case FSHBitmapType.SixteenBitAlpha: //0x7E = 126
+            //        format = 0;
+            //        break;
+            //    case FSHBitmapType.TwentyFourBit: //0x7F = 127
+            //        format = 0;
+            //        break;
+            //    default:
+            //        isvalidcode = false;
+            //        break;
+            //}
         }
     }
 }

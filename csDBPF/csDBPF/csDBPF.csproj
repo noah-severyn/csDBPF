@@ -17,14 +17,11 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
 
 	<ItemGroup>
-	  <Compile Remove="Entries\DBPFEntryFSH_temp.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Include="..\.editorconfig" Link=".editorconfig" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="LibSquishNet" Version="2.0.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
 		<PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
@@ -33,6 +30,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.0.0" />
+		<PackageReference Include="System.Security.Permissions" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

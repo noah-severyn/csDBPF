@@ -787,9 +787,9 @@ namespace csDBPF_Test {
             /// Test LTEXT entries.
             /// </summary>
             [TestClass]
-            public class _081_LTEXT {
+            public class _080_LTEXT {
                 [TestMethod]
-                public void Test_081a_LTest_DecodeEntry() {
+                public void Test_081a_LTEXT_DecodeEntry() {
                     //Parse from bytes
                     DBPFEntryLTEXT entryb = new DBPFEntryLTEXT(DBPFTGI.LTEXT, 0, 0, 0, TestArrays.notcompressedentry_b);
                     entryb.DecodeEntry();
@@ -803,18 +803,20 @@ namespace csDBPF_Test {
                 }
 
                 [TestMethod]
-                public void Test_081b_LTest_ToBytes() {
+                public void Test_081b_LTEXT_ModifyText() {
+                    DBPFEntryLTEXT ltext = new DBPFEntryLTEXT();
+                    Assert.AreEqual(null, ltext.Text);
+                    ltext.Text = "Test String";
+                    Assert.AreEqual("Test String", ltext.Text);
+                }
+
+                [TestMethod]
+                public void Test_081c_LTEXT_ToBytes() {
                     DBPFEntryLTEXT entryknown = new DBPFEntryLTEXT(DBPFTGI.LTEXT) {
                         Text = "Parks Aura (by Cori)"
                     };
                     entryknown.ToBytes();
                     CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, entryknown.ByteData);
-                }
-
-                [Ignore]
-                [TestMethod]
-                public void Test_081c_LTest_ModifyText() {
-                    DBPFEntryLTEXT ltext = new DBPFEntryLTEXT();
                 }
             }
 
@@ -822,7 +824,7 @@ namespace csDBPF_Test {
             /// Test Exemplar (EXMP) entries.
             /// </summary>
             [TestClass]
-            public class _082_EXMP {
+            public class _081_EXMP {
                 [Ignore]
                 [TestMethod]
                 public void Test_082a_EXMP_DecodeEntry() {
@@ -882,7 +884,7 @@ namespace csDBPF_Test {
             /// Test Directory (DIR) entries.
             /// </summary>
             [TestClass]
-            public class _083_DIR {
+            public class _082_DIR {
                 [TestMethod]
                 public void Test_083a_DIR_DecodeEntry() {
                     //sample from: z_DataView - Parks Aura.dat
@@ -961,10 +963,10 @@ namespace csDBPF_Test {
             }
 
             /// <summary>
-            /// Test PNG entries
+            /// Test PNG entries.
             /// </summary>
             [TestClass]
-            public class _084_PNG {
+            public class _083_PNG {
                 [TestMethod]
                 public void Test_084a_PNG_DecodeEntry() {
                     DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets.dat");
@@ -1028,9 +1030,27 @@ namespace csDBPF_Test {
                     CollectionAssert.AreEqual(target.ByteData, pngentry.ByteData);
                 }
             }
-            
 
-            
+            /// <summary>
+            /// Test FSH entries.
+            /// </summary>
+            [TestClass]
+            public class _084_FSH {
+                [TestMethod]
+                public void Test_084a_FSH_DecodeEntry() {
+                    //DXT1
+                    DBPFFile file1 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\b62- blue cart corral v.1.0-0x5ad0e817_0xf00f7c4_0x2580000.SC4Model");
+                    DBPFEntryFSH fshentry1 = (DBPFEntryFSH) file1.GetEntry(1);
+                    fshentry1.DecodeEntry();
+
+                    //DXT3
+                    DBPFFile file2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\ALN_Dirt_Path_Textures.dat");
+                    DBPFEntryFSH fshentry2 = (DBPFEntryFSH) file2.GetEntry(4);
+                    fshentry2.DecodeEntry();
+                }
+
+
+            }
         }
 
 

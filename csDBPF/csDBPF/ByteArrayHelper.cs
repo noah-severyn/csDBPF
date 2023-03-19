@@ -9,6 +9,7 @@ namespace csDBPF {
 	/// </summary>
 	public static class ByteArrayHelper {
 		//TODO - replace all of these as MemoryMarshall.Case<To,From> https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.memorymarshal.cast?view=net-7.0
+		//TODO - replace some of these with Encoding.ASCII.GetString() ???
 
 		//Convert from a byte[] to the specific data type
 		#region FromByteArrayToArray
