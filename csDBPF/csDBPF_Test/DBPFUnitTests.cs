@@ -323,13 +323,13 @@ namespace csDBPF_Test {
             public void Test_056b_DBPFTGI_SetTGIusingUint() {
                 DBPFTGI tgi1 = new DBPFTGI(0x6534284a, 0, 1000001);
                 tgi1.SetTGI(null, null, 100);
-                Assert.AreEqual("0x6534284A, 0x00000000, 0x00000064, EXMP, EXEMPLAR", tgi1.ToString());
+                Assert.AreEqual("0x6534284a, 0x00000000, 0x00000064, EXMP, EXEMPLAR", tgi1.ToString());
                 tgi1.SetTGI(100, 100, 100);
                 Assert.AreEqual("0x00000064, 0x00000064, 0x00000064, NULL, NULLTGI", tgi1.ToString());
 
                 DBPFTGI tgi2 = new DBPFTGI(DBPFTGI.LUA);
                 tgi2.SetTGI(null, null, 100);
-                Assert.AreEqual("0xCA63E2A3, 0x4A5E8EF6, 0x00000064, LUA, LUA", tgi2.ToString());
+                Assert.AreEqual("0xca63e2a3, 0x4a5e8ef6, 0x00000064, LUA, LUA", tgi2.ToString());
             }
 
             [TestMethod]

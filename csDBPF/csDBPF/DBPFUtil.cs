@@ -162,14 +162,20 @@ namespace csDBPF {
         /// </summary>
         /// <param name="value">Value to return</param>
         /// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
+        /// <param name="uppercase">Specify output as uppercase. Default is lowercase.</param>
         /// <returns>Uppercase string representing the value</returns>
         /// <exception cref="ArgumentOutOfRangeException">Number of places must be between 0 and 8.</exception>
-        public static string ToHexString(uint? value, int places = 8) {
+        public static string ToHexString(uint? value, int places = 8, bool uppercase = false) {
             if (places < 0 || places > 16) {
                 throw new ArgumentOutOfRangeException(nameof(places), "Number of places must be between 0 and 8.");
             }
 			if (value != null) {
-				return ((uint) value).ToString($"X{places}");
+				if (uppercase) {
+                    return ((uint) value).ToString($"X{places}");
+                } else {
+                    return ((uint) value).ToString($"x{places}");
+                }
+				
 			} else {
 				return value.ToString();
 			}

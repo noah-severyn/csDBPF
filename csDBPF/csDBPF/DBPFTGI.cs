@@ -271,19 +271,20 @@ namespace csDBPF {
 
 
 
-		/// <summary>
-		/// Returns a string that represents the current object.
-		/// </summary>
-		/// <returns>A string that represents the current object</returns>
-		public override string ToString() {
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>A string that represents the current object</returns>
+        public override string ToString() {
 			return $"0x{DBPFUtil.ToHexString(_typeID)}, 0x{DBPFUtil.ToHexString(_groupID)}, 0x{DBPFUtil.ToHexString(_instanceID)}, {_category}, {_detail}";
 		}
-		/// <summary>
-		/// Returns a string that represents only the Type, Group, Instance of this object.
-		/// </summary>
-		/// <returns>A string that represents the current object</returns>
-		public string ToStringShort() {
-			return $"0x{DBPFUtil.ToHexString(_typeID)}, 0x{DBPFUtil.ToHexString(_groupID)}, 0x{DBPFUtil.ToHexString(_instanceID)}";
+        /// <summary>
+        /// Returns a string that represents only the Type, Group, Instance of this object.
+        /// </summary>
+        /// <param name="uppercase">Specify output as uppercase. Default is lowercase.</param>
+        /// <returns>A string that represents the current object</returns>
+        public string ToStringShort(bool uppercase = false) {
+			return $"0x{DBPFUtil.ToHexString(_typeID, 8 , uppercase)}, 0x{DBPFUtil.ToHexString(_groupID, 8, uppercase)}, 0x{DBPFUtil.ToHexString(_instanceID, 8, uppercase)}";
 		}
 
 
