@@ -1,17 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 //See: https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFTGI.java
 namespace csDBPF {
-	/// <summary>
-	/// A DBPFTGI encapsulates a Type, Group, Instance identifier.
-	/// </summary>
-	/// <remarks>
-	/// Common known entry types are listed in <see cref="KnownEntries"/>.
-	/// </remarks>
-	public class DBPFTGI {
+
+
+    /// <summary>
+    /// A struct representing three unsigned integers as a Type, Group, Instance pair.
+    /// </summary>
+	/// <remarks>Helpful when dealing with TGI values if the features of the full <see cref="DBPFTGI"/> class are not needed.</remarks>
+    public readonly struct TGI {
+        /// <summary>
+        /// Type
+        /// </summary>
+        public uint T { get; init; }
+        /// <summary>
+        /// Group
+        /// </summary>
+        public uint G { get; init; }
+        /// <summary>
+        /// Instance
+        /// </summary>
+        public uint I { get; init; }
+
+        /// <summary>
+        /// Create a struct representing three uints as a Type, Group, Instance pair.
+        /// </summary>
+        /// <param name="t">Type</param>
+        /// <param name="g">Group</param>
+        /// <param name="i">Instance</param>
+        public TGI(uint t, uint g, uint i) {
+            T = t;
+            G = g;
+            I = i;
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="otherTGI"></param>
+		/// <returns></returns>
+		public bool Equals(TGI otherTGI) {
+			return T == otherTGI.T && G == otherTGI.G && I == otherTGI.I;
+		}
+    }
+
+
+
+
+    /// <summary>
+    /// A DBPFTGI encapsulates a Type, Group, Instance identifier.
+    /// </summary>
+    /// <remarks>
+    /// Common known entry types are listed in <see cref="KnownEntries"/>.
+    /// </remarks>
+    public class DBPFTGI {
 		#region KnownTGIs
 		//In general Dictionary items are kept in the order they are added, and since we're not doing a lot of adding/deleting/otherwise sorting, its not as big of a deal and we don't need to use a special type like SortedDictionary
 		private static readonly List<DBPFTGI> KnownEntries = new List<DBPFTGI>();
@@ -158,22 +205,28 @@ namespace csDBPF {
 		/// <summary>
 		/// Create a new DBPFTGI from the specified Type Group and Instance.
 		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="group"></param>
-		/// <param name="instance"></param>
+		/// <param name="type">Type</param>
+		/// <param name="group">Group</param>
+		/// <param name="instance">Instance</param>
 		public DBPFTGI(uint type, uint group, uint instance) {
-			//Important: Never allow creation of null TID, GID, or IID because they interfere with the lookups of KnownType.
+			//IMPORTANT: Never allow creation of null TID, GID, or IID because they interfere with the lookups of KnownType.
 			SetTGI(type, group, instance);
-		}
+        }
 
-		/// <summary>
-		/// Create a new DBPFTGI based on a known entry type.
-		/// </summary>
-		/// <remarks>
-		/// If knownEntry TID is null, the new TID is 0, if knownEntry GID or IID is null a random ID is assigned.
-		/// </remarks>
-		/// <param name="knownEntry">Known entry type</param>
-		public DBPFTGI(DBPFTGI knownEntry) {
+        /// <summary>
+        /// Create a new DBPFTGI from the specified Type Group and Instance.
+        /// </summary>
+        /// <param name="tgi"></param>
+        public DBPFTGI(csDBPF.TGI tgi) : this(tgi.T, tgi.G, tgi.I) { }
+
+        /// <summary>
+        /// Create a new DBPFTGI based on a known entry type.
+        /// </summary>
+        /// <remarks>
+        /// If knownEntry TID is null, the new TID is 0, if knownEntry GID or IID is null a random ID is assigned.
+        /// </remarks>
+        /// <param name="knownEntry">Known entry type</param>
+        public DBPFTGI(DBPFTGI knownEntry) {
 			_typeID = knownEntry.TypeID != null ? knownEntry.TypeID : 0;
 			if (knownEntry.GroupID is null) {
 				SetRandomGroup();
@@ -348,6 +401,8 @@ namespace csDBPF {
 			UpdateCategoryAndDetail();
 		}
 
+
+
 		/// <summary>
 		/// Assign a random Instance identifier.
 		/// </summary>
@@ -375,12 +430,64 @@ namespace csDBPF {
 		}
 
 
+        /// <summary>
+        /// Returns a string of the TGI in the same format as <see cref="ToStringShort(bool)"/> for comparison.
+        /// </summary>
+        /// <param name="tgi">TGI string to parse</param>
+        /// <returns>The TGI properly formated delimited by comma space, in the format of <c>0x########, 0x########, 0x########</c>, with leading zeros added up to 8 characters each.</returns>
+		/// <remarks>The input string must contain three hexadecimal numbers, each prefixed with <c>0x</c>.</remarks>
+        public static string CleanTGIFormat(string tgi) {
+            if (Regex.Matches(tgi, "0x").Count != 3) {
+				throw new ArgumentException($"TGI of <{tgi}> is not in the proper format.");
+			}
+
+			int startPos = tgi.IndexOf("0x", 2); //Find non-alphanumeric delimiter based on locn of the second '0x'
+			int idx = startPos;
+            do {
+				idx--;
+			} while (!char.IsLetterOrDigit(tgi[idx]));
+			idx++;
+            string separator = tgi.Substring(idx, startPos - idx);
+
+			string cleaned = tgi.Replace(separator, ", ");
+			int firstDelim = cleaned.IndexOf(',');
+			int secondDelim = cleaned.IndexOf(',', firstDelim + 1);
+
+            string x1 = cleaned.Substring(2, firstDelim - 2).PadLeft(8, '0');
+            string x2 = cleaned.Substring(firstDelim + 4, secondDelim - firstDelim - 4).PadLeft(8, '0');
+            string x3 = cleaned.Substring(secondDelim + 4, cleaned.Length - secondDelim - 4).PadLeft(8, '0');
+
+
+            return $"0x{x1}, 0x{x2}, 0x{x3}";
+        }
+
 
 		/// <summary>
-		/// This static constructor will be called as soon as the class is loaded into memory, and not necessarily when an object is created.
-		/// Known types need to be ordered "bottom-up", that is, specialized entries need to be inserted first, more general ones later.
+		/// Parse a TGI string into it's component Type, Group, Index values.
 		/// </summary>
-		static DBPFTGI() {
+		/// <param name="tgi">String to parse</param>
+		/// <returns>A TGI struct</returns>
+		public static TGI ParseTGIString(string tgi) {
+			string cleaned = CleanTGIFormat(tgi);
+			return new TGI(uint.Parse(cleaned.Substring(2, 8), NumberStyles.HexNumber), uint.Parse(cleaned.Substring(14, 8), NumberStyles.HexNumber), uint.Parse(cleaned.Substring(26, 8), NumberStyles.HexNumber));
+		}
+
+
+		//public static DBPFTGI CreateTGIFromString(string tgi) {
+		//	var output = ParseTGIString(tgi);
+		//	output.
+		//	return new DBPFTGI(0, 0, 0);
+		//}
+
+
+
+
+        #region StaticConstructor
+        /// <summary>
+        /// This static constructor will be called as soon as the class is loaded into memory, and not necessarily when an object is created.
+        /// Known types need to be ordered "bottom-up", that is, specialized entries need to be inserted first, more general ones later.
+        /// </summary>
+        static DBPFTGI() {
 			BLANKTGI = new DBPFTGI(0, 0, 0, null, null);
 			DIRECTORY = new DBPFTGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03, "DIR", "DIR");
 			LD = new DBPFTGI(0x6be74c60, 0x6be74c60, null, "LD", "LD");
@@ -491,5 +598,6 @@ namespace csDBPF {
 			_category = label;
 			_detail = detailLabel;
 		}
-	}
+        #endregion StaticConstructor
+    }
 }

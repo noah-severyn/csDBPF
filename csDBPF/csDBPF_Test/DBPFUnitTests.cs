@@ -30,7 +30,7 @@ namespace csDBPF_Test {
         // 00x Misc Test Methods
         [TestClass]
         public class _00x_MiscTests {
-
+            
         }
 
 
@@ -44,13 +44,13 @@ namespace csDBPF_Test {
                 Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dat"));
                 Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll"));
                 Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png"));
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\!Deps 2\\PLOP_1x1_blank_602135f4.SC4Lot"));
+                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Network Addon Mod\\6 Miscellaneous\\Maxis Transit Lots\\Maxis Airports - Medium.dat"));
 
                 Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_GraphModd. V2.dat", true));
                 Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dat", true));
                 Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll", true));
                 Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png", true));
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\!Deps 2\\PLOP_1x1_blank_602135f4.SC4Lot", true));
+                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Network Addon Mod\\6 Miscellaneous\\Maxis Transit Lots\\Maxis Airports - Medium.dat", true));
             }
 
             [TestMethod]
@@ -65,12 +65,15 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_012_DBPFUtil_UintToHexString() {
-                Assert.AreEqual("6534284A", DBPFUtil.ToHexString(1697917002, 8));
-                Assert.AreEqual("4A283465", DBPFUtil.ToHexString(1244148837, 8));
-                Assert.AreEqual("6534284A", DBPFUtil.ToHexString(0x6534284A, 8));
-                Assert.AreEqual("4A283465", DBPFUtil.ToHexString(0x4A283465, 8));
-                Assert.AreEqual("4D2", DBPFUtil.ToHexString(1234, 3));
-                Assert.AreEqual("000004D2", DBPFUtil.ToHexString(1234, 8));
+                Assert.AreEqual("6534284A", DBPFUtil.ToHexString(1697917002, 8, true));
+                Assert.AreEqual("6534284a", DBPFUtil.ToHexString(1697917002, 8, false));
+                Assert.AreEqual("4A283465", DBPFUtil.ToHexString(1244148837, 8, true));
+                Assert.AreEqual("4a283465", DBPFUtil.ToHexString(1244148837, 8));
+                Assert.AreEqual("6534284A", DBPFUtil.ToHexString(0x6534284A, 8, true));
+                Assert.AreEqual("4A283465", DBPFUtil.ToHexString(0x4A283465, 8, true));
+                Assert.AreEqual("4D2", DBPFUtil.ToHexString(1234, 3, true));
+                Assert.AreEqual("4d2", DBPFUtil.ToHexString(1234, 3));
+                Assert.AreEqual("000004D2", DBPFUtil.ToHexString(1234, 8, true));
             }
 
             //[Ignore]
@@ -203,8 +206,44 @@ namespace csDBPF_Test {
         // 05x Test Methods for DBPFTGI Class
         [TestClass]
         public class _05x_DBPFTGI {
+
             [TestMethod]
-            public void Test_052_DBPFTGI_Equals() {
+            public void Test_050_DBPFTGI_CleanTGIFormat() {
+                string s1 = "0x5ad0e817 0x5283112c 0x00030000";
+                string s2 = "0x6534284a-0xbf3fbe81-0xe1278c85";
+                string s3 = "0x5ad0e817_____0x7c051bc2_____0x00030000";
+                string s4 = "0x6534284a, 0xbf3fbe81, 0x6208ab6f";
+                string s5 = "0x5ad0 0x5 0x003";
+                string s6 = "5ad0e817, 5283112c, 00030000";
+
+                Assert.AreEqual("0x5ad0e817, 0x5283112c, 0x00030000", DBPFTGI.CleanTGIFormat(s1));
+                Assert.AreEqual("0x6534284a, 0xbf3fbe81, 0xe1278c85", DBPFTGI.CleanTGIFormat(s2));
+                Assert.AreEqual("0x5ad0e817, 0x7c051bc2, 0x00030000", DBPFTGI.CleanTGIFormat(s3));
+                Assert.AreEqual("0x6534284a, 0xbf3fbe81, 0x6208ab6f", DBPFTGI.CleanTGIFormat(s4));
+                Assert.AreEqual("0x00005ad0, 0x00000005, 0x00000003", DBPFTGI.CleanTGIFormat(s5));
+                Assert.ThrowsException<ArgumentException>(() => DBPFTGI.CleanTGIFormat(s6));
+            }
+
+            [TestMethod]
+            public void Test_051_DBPFTGI_ParseTGIString() {
+                string s1 = "0x5ad0e817 0x5283112c 0x00030000";
+                string s2 = "0x6534284a-0xbf3fbe81-0xe1278c85";
+                string s3 = "0x5ad0e817_____0x7c051bc2_____0x00030000";
+                string s4 = "0x6534284a, 0xbf3fbe81, 0x6208ab6f";
+                string s5 = "0x5ad0 0x5 0x003";
+
+                Assert.IsTrue(new TGI(0x5ad0e817, 0x5283112c, 0x00030000).Equals(DBPFTGI.ParseTGIString(s1)));
+                Assert.IsTrue(new TGI(0x6534284a, 0xbf3fbe81, 0xe1278c85).Equals(DBPFTGI.ParseTGIString(s2)));
+                Assert.IsTrue(new TGI(0x5ad0e817, 0x7c051bc2, 0x00030000).Equals(DBPFTGI.ParseTGIString(s3)));
+                Assert.IsTrue(new TGI(0x6534284a, 0xbf3fbe81, 0x6208ab6f).Equals(DBPFTGI.ParseTGIString(s4)));
+                Assert.IsTrue(new TGI(0x5ad0, 0x5, 0x3).Equals(DBPFTGI.ParseTGIString(s5)));
+
+            }
+
+
+
+            [TestMethod]
+            public void Test_053_DBPFTGI_Equals() {
                 DBPFTGI tgi1 = new DBPFTGI(0, 0, 0);
                 DBPFTGI tgi2 = new DBPFTGI(0, 0, 0);
                 DBPFTGI tgi3 = new DBPFTGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
@@ -225,7 +264,7 @@ namespace csDBPF_Test {
             }
 
             [TestMethod]
-            public void Test_053_DBPFTGI_MatchesKnownTGI() {
+            public void Test_054_DBPFTGI_MatchesKnownTGI() {
                 //If called from a TGI object
                 DBPFTGI tgi_blank = new DBPFTGI(0, 0, 0);
                 DBPFTGI tgi_exemplar = new DBPFTGI(0x6534284a, 0, 0);
