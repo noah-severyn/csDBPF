@@ -11,6 +11,8 @@ namespace csDBPF.Entries {
 
         public DBPFEntryLUA(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
         }
+        public DBPFEntryLUA(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
+        }
 
         public override void DecodeEntry() {
             throw new NotImplementedException();

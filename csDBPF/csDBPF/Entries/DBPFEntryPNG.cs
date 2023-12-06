@@ -10,7 +10,7 @@ namespace csDBPF.Entries {
     /// <summary>
     /// An implementation of <see cref="DBPFEntry"/> for PNG entries. Object data is stored in <see cref="PNGImage"/>.
     /// </summary>
-    /// <see ref="https://www.wiki.sc4devotion.com/index.php?title=PNG"/>
+    /// <see href="https://www.wiki.sc4devotion.com/index.php?title=PNG"/>
     public class DBPFEntryPNG : DBPFEntry {
         private Image _image;
         /// <summary>
@@ -37,6 +37,9 @@ namespace csDBPF.Entries {
 		/// <param name="index">Entry position in the file, 0-n</param>
 		/// <param name="bytes">Byte data for this entry</param>
         public DBPFEntryPNG(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
+
+        }
+        public DBPFEntryPNG(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
 
         }
 

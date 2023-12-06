@@ -9,7 +9,7 @@ namespace csDBPF.Entries {
 	/// <summary>
 	/// An implementation of <see cref="DBPFEntry"/> for LTEXT entries. Object data is stored in <see cref="Text"/>.
 	/// </summary>
-	/// <see ref="https://wiki.sc4devotion.com/index.php?title=LTEXT"/>
+	/// <see href="https://wiki.sc4devotion.com/index.php?title=LTEXT"/>
 	public class DBPFEntryLTEXT : DBPFEntry {
 		/// <summary>
 		/// Stores if this entry has been decoded yet.
@@ -76,16 +76,28 @@ namespace csDBPF.Entries {
 			_text = null;
 			_isDecoded = false;
 		}
+        /// <summary>
+        /// Create a new instance. Use when reading an existing entry from a file.
+        /// </summary>
+        /// <param name="tgi"><see cref="TGI"/> object representing the entry</param>
+        /// <param name="offset">Offset (location) of the entry within the DBPF file</param>
+        /// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
+        /// <param name="index">Entry position in the file, 0-n</param>
+        /// <param name="bytes">Byte data for this entry</param>
+        public DBPFEntryLTEXT(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
+            _text = null;
+            _isDecoded = false;
+        }
 
 
 
-		/// <summary>
-		/// Decodes the LTEXT string from raw data and sets the <see cref="Text"/> property of this instance.
-		/// </summary>
-		/// <remarks>
-		/// Data must be uncompressed or garbage data is returned.
-		/// </remarks>
-		public override void DecodeEntry() {
+        /// <summary>
+        /// Decodes the LTEXT string from raw data and sets the <see cref="Text"/> property of this instance.
+        /// </summary>
+        /// <remarks>
+        /// Data must be uncompressed or garbage data is returned.
+        /// </remarks>
+        public override void DecodeEntry() {
 			if (_isDecoded) {
 				return;
 			}

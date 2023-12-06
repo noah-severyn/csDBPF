@@ -244,10 +244,10 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_053_DBPFTGI_Equals() {
-                DBPFTGI tgi1 = new DBPFTGI(0, 0, 0);
-                DBPFTGI tgi2 = new DBPFTGI(0, 0, 0);
-                DBPFTGI tgi3 = new DBPFTGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
-                DBPFTGI tgi4 = new DBPFTGI(3899334383, 3899334383, 678108931);
+                TGI tgi1 = new TGI(0, 0, 0);
+                TGI tgi2 = new TGI(0, 0, 0);
+                TGI tgi3 = new TGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
+                TGI tgi4 = new TGI(3899334383, 3899334383, 678108931);
                 Assert.AreEqual(tgi1, tgi2);
                 Assert.IsTrue(tgi1.Equals(tgi2));
                 Assert.IsTrue(tgi2.Equals(tgi1));
@@ -266,21 +266,21 @@ namespace csDBPF_Test {
             [TestMethod]
             public void Test_054_DBPFTGI_MatchesKnownTGI() {
                 //If called from a TGI object
-                DBPFTGI tgi_blank = new DBPFTGI(0, 0, 0);
-                DBPFTGI tgi_exemplar = new DBPFTGI(0x6534284a, 0, 0);
-                DBPFTGI tgi_exemplarRail = new DBPFTGI(0x6534284a, 0xe8347989, 0);
-                DBPFTGI tgi_exemplarRail2 = new DBPFTGI(0x6534284a, 0xe8347989, 0x1ab4e56a);
+                TGI tgi_blank = new TGI(0, 0, 0);
+                TGI tgi_exemplar = new TGI(0x6534284a, 0, 0);
+                TGI tgi_exemplarRail = new TGI(0x6534284a, 0xe8347989, 0);
+                TGI tgi_exemplarRail2 = new TGI(0x6534284a, 0xe8347989, 0x1ab4e56a);
 
-                Assert.IsTrue(tgi_blank.MatchesKnownTGI(DBPFTGI.BLANKTGI));
-                Assert.IsTrue(tgi_blank.MatchesKnownTGI(DBPFTGI.NULLTGI));
+                Assert.IsTrue(tgi_blank.Matches(DBPFTGI.BLANKTGI));
+                Assert.IsTrue(tgi_blank.Matches(DBPFTGI.NULLTGI));
 
-                Assert.IsTrue(tgi_exemplar.MatchesKnownTGI(DBPFTGI.EXEMPLAR));
-                Assert.IsTrue(tgi_exemplarRail.MatchesKnownTGI(DBPFTGI.EXEMPLAR_RAIL));
-                Assert.IsTrue(tgi_exemplarRail2.MatchesKnownTGI(DBPFTGI.EXEMPLAR_RAIL));
-                Assert.IsTrue(tgi_exemplarRail2.MatchesKnownTGI(DBPFTGI.EXEMPLAR));
-                Assert.IsFalse(tgi_exemplar.MatchesKnownTGI(DBPFTGI.COHORT));
-                Assert.IsTrue(tgi_exemplar.MatchesKnownTGI(DBPFTGI.NULLTGI));
-                Assert.IsFalse(tgi_exemplar.MatchesKnownTGI(DBPFTGI.PNG));
+                Assert.IsTrue(tgi_exemplar.Matches(DBPFTGI.EXEMPLAR));
+                Assert.IsTrue(tgi_exemplarRail.Matches(DBPFTGI.EXEMPLAR_RAIL));
+                Assert.IsTrue(tgi_exemplarRail2.Matches(DBPFTGI.EXEMPLAR_RAIL));
+                Assert.IsTrue(tgi_exemplarRail2.Matches(DBPFTGI.EXEMPLAR));
+                Assert.IsFalse(tgi_exemplar.Matches(DBPFTGI.COHORT));
+                Assert.IsTrue(tgi_exemplar.Matches(DBPFTGI.NULLTGI));
+                Assert.IsFalse(tgi_exemplar.Matches(DBPFTGI.PNG));
 
 
                 //If called from an Entry object
@@ -289,28 +289,28 @@ namespace csDBPF_Test {
                 DBPFEntry entry_exemplarRail = new DBPFEntryEXMP(tgi_exemplarRail);
                 DBPFEntry entry_exemplarRail2 = new DBPFEntryEXMP(tgi_exemplarRail2);
 
-                Assert.IsTrue(entry_blank.MatchesKnownEntryType(DBPFTGI.BLANKTGI));
-                Assert.IsTrue(entry_blank.MatchesKnownEntryType(DBPFTGI.NULLTGI));
+                Assert.IsTrue(entry_blank.MatchesEntryType(DBPFTGI.BLANKTGI));
+                Assert.IsTrue(entry_blank.MatchesEntryType(DBPFTGI.NULLTGI));
 
-                Assert.IsTrue(entry_exemplar.MatchesKnownEntryType(DBPFTGI.EXEMPLAR));
-                Assert.IsTrue(entry_exemplarRail.MatchesKnownEntryType(DBPFTGI.EXEMPLAR_RAIL));
-                Assert.IsTrue(entry_exemplarRail2.MatchesKnownEntryType(DBPFTGI.EXEMPLAR_RAIL));
-                Assert.IsTrue(entry_exemplarRail2.MatchesKnownEntryType(DBPFTGI.EXEMPLAR));
-                Assert.IsFalse(entry_exemplar.MatchesKnownEntryType(DBPFTGI.COHORT));
-                Assert.IsTrue(entry_exemplar.MatchesKnownEntryType(DBPFTGI.NULLTGI));
-                Assert.IsFalse(entry_exemplar.MatchesKnownEntryType(DBPFTGI.PNG));
+                Assert.IsTrue(entry_exemplar.MatchesEntryType(DBPFTGI.EXEMPLAR));
+                Assert.IsTrue(entry_exemplarRail.MatchesEntryType(DBPFTGI.EXEMPLAR_RAIL));
+                Assert.IsTrue(entry_exemplarRail2.MatchesEntryType(DBPFTGI.EXEMPLAR_RAIL));
+                Assert.IsTrue(entry_exemplarRail2.MatchesEntryType(DBPFTGI.EXEMPLAR));
+                Assert.IsFalse(entry_exemplar.MatchesEntryType(DBPFTGI.COHORT));
+                Assert.IsTrue(entry_exemplar.MatchesEntryType(DBPFTGI.NULLTGI));
+                Assert.IsFalse(entry_exemplar.MatchesEntryType(DBPFTGI.PNG));
             }
 
             [TestMethod]
             public void Test_055_DBPFTGI_MatchesAnyKnownTGI() {
-                DBPFTGI tgi_blank = new DBPFTGI(0, 0, 0);
-                DBPFTGI tgi_exemplar = new DBPFTGI(0x6534284a, 0, 0);
-                DBPFTGI tgi_exemplarRail = new DBPFTGI(0x6534284a, 0xe8347989, 0);
-                DBPFTGI tgi_exemplarRail2 = new DBPFTGI(0x6534284a, 0xe8347989, 0x1ab4e56a);
-                DBPFTGI tgi_PNG_Icon = new DBPFTGI(0x856ddbac, 0x6a386d26, 0x1ab4e56f);
-                DBPFTGI tgi_PNG = new DBPFTGI(0x856ddbac, 0x6a386d27, 0x1ab4e56f);
+                TGI tgi_blank = new TGI(0, 0, 0);
+                TGI tgi_exemplar = new TGI(0x6534284a, 0, 0);
+                TGI tgi_exemplarRail = new TGI(0x6534284a, 0xe8347989, 0);
+                TGI tgi_exemplarRail2 = new TGI(0x6534284a, 0xe8347989, 0x1ab4e56a);
+                TGI tgi_PNG_Icon = new TGI(0x856ddbac, 0x6a386d26, 0x1ab4e56f);
+                TGI tgi_PNG = new TGI(0x856ddbac, 0x6a386d27, 0x1ab4e56f);
 
-                DBPFTGI returned = tgi_blank.MatchesAnyKnownTGI();
+                TGI returned = tgi_blank.MatchesAnyKnownTGI();
                 Assert.AreEqual(DBPFTGI.BLANKTGI, returned);
                 Assert.AreEqual(null, returned.Category);
 
@@ -338,18 +338,18 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_056a_DBPFTGI_SetTGIusingDBPFTGI() {
-                DBPFTGI tgi1 = new DBPFTGI(0x6534284a, 0, 0);
-                DBPFTGI tgi2 = tgi1;
-                tgi2.SetTGI(DBPFTGI.EXEMPLAR_AVENUE);
+                TGI tgi1 = new TGI(0x6534284a, 0, 0);
+                TGI tgi2 = tgi1;
+                tgi2.SetTGI(TGI.EXEMPLAR_AVENUE);
                 Assert.AreEqual((uint) 0x6534284A, tgi2.TypeID);
                 Assert.AreEqual((uint) 0xCB730FAC, tgi2.GroupID);
                 Assert.AreNotEqual<uint?>(0, tgi2.InstanceID);
                 Assert.AreEqual("EXMP", tgi2.Category);
                 Assert.AreEqual("EXEMPLAR_AVENUE", tgi2.Detail);
-                tgi1.SetTGI(DBPFTGI.NULLTGI);
+                tgi1.SetTGI(TGI.NULLTGI);
                 Assert.AreEqual(tgi1.ToString(), tgi1.ToString());
 
-                DBPFTGI tgi3 = new DBPFTGI(0, 2, 3);
+                TGI tgi3 = new TGI(0, 2, 3);
                 tgi3.SetTGI(DBPFTGI.LUA);
                 Assert.AreEqual((uint) 0xCA63E2A3, tgi3.TypeID);
                 Assert.AreEqual((uint) 0x4A5E8EF6, tgi3.GroupID);
@@ -360,25 +360,25 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_056b_DBPFTGI_SetTGIusingUint() {
-                DBPFTGI tgi1 = new DBPFTGI(0x6534284a, 0, 1000001);
+                TGI tgi1 = new TGI(0x6534284a, 0, 1000001);
                 tgi1.SetTGI(null, null, 100);
                 Assert.AreEqual("0x6534284a, 0x00000000, 0x00000064, EXMP, EXEMPLAR", tgi1.ToString());
                 tgi1.SetTGI(100, 100, 100);
                 Assert.AreEqual("0x00000064, 0x00000064, 0x00000064, NULL, NULLTGI", tgi1.ToString());
 
-                DBPFTGI tgi2 = new DBPFTGI(DBPFTGI.LUA);
+                TGI tgi2 = new TGI(DBPFTGI.LUA);
                 tgi2.SetTGI(null, null, 100);
                 Assert.AreEqual("0xca63e2a3, 0x4a5e8ef6, 0x00000064, LUA, LUA", tgi2.ToString());
             }
 
             [TestMethod]
             public void Test_057_DBPFTGI_SetRandomIdentifier() {
-                DBPFTGI tgi1 = new DBPFTGI(DBPFTGI.EXEMPLAR);
+                TGI tgi1 = new TGI(DBPFTGI.EXEMPLAR);
                 tgi1.SetRandomInstance();
                 tgi1.SetRandomGroup();
                 Assert.AreEqual(DBPFTGI.EXEMPLAR.Category, tgi1.Category);
 
-                DBPFTGI tgi2 = new DBPFTGI(DBPFTGI.EXEMPLAR_ROAD);
+                TGI tgi2 = new TGI(DBPFTGI.EXEMPLAR_ROAD);
                 tgi2.SetRandomInstance();
                 Assert.AreEqual(DBPFTGI.EXEMPLAR_ROAD.Category, tgi2.Category);
                 tgi2.SetRandomGroup();
@@ -393,11 +393,11 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_058_DBPFTGI_SetRandomFromNewInstance() {
-                DBPFTGI tgi1 = new DBPFTGI(DBPFTGI.EXEMPLAR);
+                TGI tgi1 = new TGI(DBPFTGI.EXEMPLAR);
                 Assert.AreNotEqual<uint?>(0, tgi1.GroupID);
                 Assert.AreNotEqual<uint?>(0, tgi1.InstanceID);
 
-                DBPFTGI tgi2 = new DBPFTGI(DBPFTGI.INI);
+                TGI tgi2 = new TGI(DBPFTGI.INI);
                 Assert.AreEqual((uint) 0, tgi2.TypeID);
                 Assert.AreEqual(0x8a5971c5, tgi2.GroupID);
                 Assert.AreNotEqual<uint?>(0, tgi2.InstanceID);

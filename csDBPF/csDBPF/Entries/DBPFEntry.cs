@@ -8,14 +8,14 @@ namespace csDBPF.Entries {
     /// <summary>
     /// An abstract form of an entry item, representing an instance of a subfile that may be contained in a <see cref="DBPFFile"/>. The data for each entry is not parsed or decoded until <see cref="DecodeEntry"/> is called to decompress and set the actual entry data.
     /// </summary>
-    /// <see ref="https://www.wiki.sc4devotion.com/index.php?title=List_of_File_Formats"/>
+    /// <see href="https://www.wiki.sc4devotion.com/index.php?title=List_of_File_Formats"/>
     public abstract class DBPFEntry {
 		/// <summary>
 		/// The <see cref="DBPFTGI"/>object representing the file type of the entry.
 		/// </summary>
-		public DBPFTGI TGI { get; }
+		public TGI TGI { get; }
 
-		/// <summary>
+		/// <summary>H
 		/// Byte position of this entry within the <see cref="DBPFFile"/>.
 		/// </summary>
 		public uint Offset { get; internal set; }
@@ -66,61 +66,60 @@ namespace csDBPF.Entries {
         /// Comma delineated list of issues encountered when loading this entry.
         /// </summary>
 		/// <remarks>
-		/// This is a multi line string of <see cref="DBPFTGI.ToString"/> followed by the message. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message. For items logged at the entry level, FileName is left blank as it is unknown (it's a property of this entry's <see cref="DBPFFile.File"/>).
+		/// This is a multi line string in the format of  <see cref="TGI.ToString"/> followed by the message. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message. For items logged at the entry level, FileName is left blank as it is unknown (it's a property of this entry's <see cref="DBPFFile.File"/>).
 		/// </remarks>
         internal StringBuilder IssueLog { get; private set; }
 
 
 
+		
 		/// <summary>
-		/// Create a new DBPFEntry object.
+		/// Create a new DBPFEntry object with a given TGI struct.
 		/// </summary>
-		/// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
-		public DBPFEntry(DBPFTGI tgi) {
-			TGI = tgi;
-			IsCompressed = true;
-			IsCompressedNow = true;
-			IssueLog = new StringBuilder();
-		}
+		/// <param name="tgi"></param>
+		public DBPFEntry(TGI tgi) {
+            TGI = tgi;
+            IsCompressed = true;
+            IsCompressedNow = true;
+            IssueLog = new StringBuilder();
 
-		/// <summary>
-		/// Create a new DBPFEntry object.
-		/// </summary>
-		/// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
-		/// <param name="offset">Offset (location) of the entry within the DBPF file</param>
-		/// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
-		/// <param name="index">Entry position in the file, 0-n</param>
-		/// <param name="bytes">Byte data for this entry</param>
-		public DBPFEntry(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) {
-			if (tgi == null) {
-				TGI = DBPFTGI.NULLTGI;
-			} else {
-				TGI = tgi;
-			}
-			Offset = offset;
-			IndexPos = index;
-			CompressedSize = size;
-			ByteData = bytes;
+        }
+
+		
+        /// <summary>
+        /// Create a new DBPFEntry object.
+        /// </summary>
+        /// <param name="tgi"><see cref="TGI"/> object representing the entry</param>
+        /// <param name="offset">Offset (location) of the entry within the DBPF file</param>
+        /// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
+        /// <param name="index">Entry position in the file, 0-n</param>
+        /// <param name="bytes">Byte data for this entry</param>
+        public DBPFEntry(TGI tgi, uint offset, uint size, uint index, byte[] bytes) {
+			TGI = tgi;
+            Offset = offset;
+            IndexPos = index;
+            CompressedSize = size;
+            ByteData = bytes;
             IssueLog = new StringBuilder();
 
             //We can peek at the first 9 bytes of this data to determine its compression characteristics
             if (bytes.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(bytes, 4) == 0x10FB) {
-				IsCompressed = true;
-				UncompressedSize = (uint) ((bytes[6] << 16) | (bytes[7] << 8) | bytes[8]);
-				IsCompressedNow = true;
-			} else {
-				IsCompressed = false;
-				UncompressedSize = 0; 
-				IsCompressedNow = false;
-			}
-		}
+                IsCompressed = true;
+                UncompressedSize = (uint) ((bytes[6] << 16) | (bytes[7] << 8) | bytes[8]);
+                IsCompressedNow = true;
+            } else {
+                IsCompressed = false;
+                UncompressedSize = 0;
+                IsCompressedNow = false;
+            }
+        }
 
 
 
-		/// <summary>
-		/// Decompresses the data and sets the entry's data object.
-		/// </summary>
-		public abstract void DecodeEntry();
+        /// <summary>
+        /// Decompresses the data and sets the entry's data object.
+        /// </summary>
+        public abstract void DecodeEntry();
 
 		/// <summary>
 		/// Build <see cref="ByteData"/> with the current state according to the implementing type's implementation. Is either text or binary encoding depending on <see cref=""/>
@@ -135,7 +134,7 @@ namespace csDBPF.Entries {
 		/// <returns>Returns a string that represents the current object.</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder(TGI.ToString());
-			sb.AppendLine($", Type: {TGI.Category}, IndexPos: {IndexPos}, Offset: {Offset}, uSize: {UncompressedSize}, Compressed: {IsCompressed}, cSize: {CompressedSize} ");
+			sb.AppendLine($", Type: {TGI.GetEntryType}, IndexPos: {IndexPos}, Offset: {Offset}, uSize: {UncompressedSize}, Compressed: {IsCompressed}, cSize: {CompressedSize} ");
 			return sb.ToString();
 		}
 
@@ -146,9 +145,9 @@ namespace csDBPF.Entries {
 		/// </summary>
 		/// <param name="known"><see cref="DBPFTGI"/> to compare against</param>
 		/// <returns>TRUE if this Entry matches the specified; FALSE otherwise.</returns>
-		/// <remarks>This is a shortcut to accessing DBPFEntry.TGI.MatchesKnownEntryType instead.</remarks>
-		public bool MatchesKnownEntryType(DBPFTGI known) {
-			return TGI.MatchesKnownTGI(known);
+		/// <remarks>This is a shortcut; it is equivalent to <see cref="TGI.Matches(TGI)"/>.</remarks>
+		public bool MatchesEntryType(TGI known) {
+			return TGI.Matches(known);
 		}
 
 

@@ -49,13 +49,14 @@ namespace csDBPF
 		/// </remarks>
 		private readonly List<DBPFEntry> _listOfEntries; //TODO - add in documentation about a pro tip to use LINQ to filter these based on the output of GetEntries or GetTGIs
 
-        /// <summary>
-        /// List of all TGIs in this file.
-        /// </summary>
-        /// <remarks>
-        /// Can be used for quick inspection because no entry data is processed.
-        /// </remarks>
-        private readonly List<DBPFTGI> _listOfTGIs;
+		/// <summary>
+		/// List of all TGIs in this file.
+		/// </summary>
+		/// <remarks>
+		/// Can be used for quick inspection because no entry data is processed.
+		/// </remarks>
+		//private readonly List<DBPFTGI> _listOfTGIs;
+		private readonly List<TGI> _listOfTGIs;
 
         /// <summary>
         /// Comma delineated list of issues encountered when loading this file.
@@ -238,7 +239,8 @@ namespace csDBPF
 			File = file;
 			Header = new DBPFHeader();
 			_listOfEntries = new List<DBPFEntry>();
-			_listOfTGIs = new List<DBPFTGI>();
+			//_listOfTGIs = new List<DBPFTGI>();
+			_listOfTGIs = new List<TGI>();
 			_issueLog = new StringBuilder();
 
 			if (!file.Exists) {
@@ -268,17 +270,26 @@ namespace csDBPF
 		}
 
 
-
 		/// <summary>
-		/// Reads a DBPF file.
+		/// Reads the header and TGI list of a DBPF file.
 		/// </summary>
-		/// <remarks>
-		/// Use only for short-lived DBPF files for which the content does not change on disk, or does not matter if it does, or if the file is small. Example: only scanning the TGIs of a file.
-		/// </remarks>
-		/// <param name="file">File of the DBPF object to be used.</param>
-		/// <returns>A new DBPFFile object</returns>
-		/// <see ref="https://www.wiki.sc4devotion.com/index.php?title=DBPF#Pseudocode"/>
-		private void Read(FileInfo file) {
+		/// <param name="file"></param>
+		private void ReadQuick(FileInfo file) {
+
+		}
+
+
+
+        /// <summary>
+        /// Reads a DBPF file.
+        /// </summary>
+        /// <remarks>
+        /// Use only for short-lived DBPF files for which the content does not change on disk, or does not matter if it does, or if the file is small.
+        /// </remarks>
+        /// <param name="file">File of the DBPF object to be used</param>
+        /// <returns>A new DBPFFile object</returns>
+        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=DBPF#Pseudocode"/>
+        private void Read(FileInfo file) {
 			FileStream fs = new FileStream(file.FullName, FileMode.Open);
 			BinaryReader br = new BinaryReader(fs); 
 
@@ -300,17 +311,20 @@ namespace csDBPF
 					uint size = br.ReadUInt32();
 
 					DBPFTGI tgi = new DBPFTGI(typeID, groupID, instanceID);
-					_listOfTGIs.Add(tgi);
+					//_listOfTGIs.Add(tgi);
+					_listOfTGIs.Add(new TGI(typeID, groupID, instanceID));
 					offsets.Add(offset);
 					sizes.Add(size);
 				}
+				TGI t = new TGI();
+
 
 				//Read Entry data
 				for (int idx = 0; idx < _listOfTGIs.Count; idx++) {
 					br.BaseStream.Seek(offsets[idx], SeekOrigin.Begin);
 					byteData = br.ReadBytes((int) sizes[idx]);
 
-					switch (_listOfTGIs[idx].Category) {
+					switch (_listOfTGIs[idx].GetDBPFTGICategory) {
 						case "EXMP":
 							_listOfEntries.Add(new DBPFEntryEXMP(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
@@ -387,23 +401,17 @@ namespace csDBPF
 
 
 
-
-
-
-        /// <summary>
-        /// Adds the specified message to the entry's <see cref="_issueLog"/>.
-        /// </summary>
-        /// <param name="message">Message to add</param>
-        /// <param name="tgi">Optional TGI to specify</param>
-        /// <remarks>
-        /// Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message
-        /// </remarks>
+        
         private void LogMessage(string message, DBPFTGI tgi = null) {
 			if (tgi is null) {
                 _issueLog.AppendLine(File.Name + ",,,,,," + message);
             } else {
+                // Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message
                 _issueLog.AppendLine(File.Name + "," + tgi.ToString().Replace(" ", "") + "," + message);
             }
+        }
+        private void LogMessage(string message, TGI tgi) {
+			 _issueLog.AppendLine(File.Name + "," + tgi.ToString().Replace(" ", "") + "," + message);
         }
 
 

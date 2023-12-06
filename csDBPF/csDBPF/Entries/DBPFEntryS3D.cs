@@ -11,6 +11,8 @@ namespace csDBPF.Entries {
 
         public DBPFEntryS3D(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
         }
+        public DBPFEntryS3D(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
+        }
 
         public override void DecodeEntry() {
             throw new NotImplementedException();

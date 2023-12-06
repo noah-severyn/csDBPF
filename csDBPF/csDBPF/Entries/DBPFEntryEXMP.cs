@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using csDBPF.Properties;
+using static csDBPF.Entries.DBPFEntryDIR;
 
 namespace csDBPF.Entries {
 	/// <summary>
 	/// An implementation of <see cref="DBPFEntry"/> for Exemplar and Cohort entries. Object data is stored in <see cref="ListOfProperties"/>.
 	/// </summary>
-	/// <see ref="https://wiki.sc4devotion.com/index.php?title=EXMP"/>
+	/// <see href="https://wiki.sc4devotion.com/index.php?title=EXMP"/>
 	public class DBPFEntryEXMP : DBPFEntry {
 		/// <summary>
 		/// Stores if this entry has been decoded yet.
@@ -28,12 +29,12 @@ namespace csDBPF.Entries {
 			set { _listOfProperties = value; }
 		}
 
-		private DBPFTGI _parentCohort;
+		private TGI _parentCohort;
 		/// <summary>
 		/// TGI set representing the Parent Cohort for this exemplar.
 		/// </summary>
-		/// <see ref="https://www.wiki.sc4devotion.com/index.php?title=Cohort"/>
-		public DBPFTGI ParentCohort {
+		/// <see href="https://www.wiki.sc4devotion.com/index.php?title=Cohort"/>
+		public TGI ParentCohort {
 			get { return _parentCohort; }
 			set { _parentCohort = value; }
 		}
@@ -48,33 +49,28 @@ namespace csDBPF.Entries {
 		}
 
 
+        /// <summary>
+        /// Create a new instance. Use when creating a new exemplar.
+        /// </summary>
+        /// <param name="tgi"></param>
+        public DBPFEntryEXMP(TGI tgi) : base(tgi) {
+            _listOfProperties = new SortedList<uint, DBPFProperty>();
+            _parentCohort = new TGI(DBPFTGI.BLANKTGI);
+        }
 
+        //TODO add constructor for only listofprop, tgi+listofprop, tgi+parent, tgi+listofprop+parent
 
-		/// <summary>
-		/// Create a new instance. Use when creating a new exemplar.
-		/// </summary>
-		/// <param name="tgi">TGI set to assign</param>
-		public DBPFEntryEXMP(DBPFTGI tgi) : base(tgi) {
-			if (tgi is null) {
-				TGI.SetTGI(DBPFTGI.EXEMPLAR);
-			}
+        /// <summary>
+        /// Create a new instance. Use when reading an existing exemplar from a file.
+        /// </summary>
+        /// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
+        /// <param name="offset">Offset (location) of the entry within the DBPF file</param>
+        /// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
+        /// <param name="index">Entry position in the file, 0-n</param>
+        /// <param name="bytes">Byte data for this entry</param>
+        public DBPFEntryEXMP(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
 			_listOfProperties = new SortedList<uint, DBPFProperty>();
-			_parentCohort = new DBPFTGI(0, 0, 0);
-		}
-
-		//TODO add constructor for only listofprop, tgi+listofprop, tgi+parent, tgi+listofprop+parent
-
-		/// <summary>
-		/// Create a new instance. Use when reading an existing exemplar from a file.
-		/// </summary>
-		/// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
-		/// <param name="offset">Offset (location) of the entry within the DBPF file</param>
-		/// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
-		/// <param name="index">Entry position in the file, 0-n</param>
-		/// <param name="bytes">Byte data for this entry</param>
-		public DBPFEntryEXMP(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
-			_listOfProperties = new SortedList<uint, DBPFProperty>();
-			_parentCohort = new DBPFTGI(0,0,0);
+			_parentCohort = new TGI(DBPFTGI.BLANKTGI);
 
 			if (bytes[0] == 0x43) { //"C"
 				_isCohort = true;
@@ -82,13 +78,14 @@ namespace csDBPF.Entries {
 		}
 
 
-		/// <summary>
-		/// Decompresses the exemplar/cohort instance and sets <see cref="ListOfProperties"/> as one or more <see cref="DBPFProperty"/> from a byte sequence.
-		/// </summary>
-		/// <remarks>
-		/// Use when reading from a file.
-		/// </remarks>
-		public override void DecodeEntry() {
+
+        /// <summary>
+        /// Decompresses the exemplar/cohort instance and sets <see cref="ListOfProperties"/> as one or more <see cref="DBPFProperty"/> from a byte sequence.
+        /// </summary>
+        /// <remarks>
+        /// Use when reading from a file.
+        /// </remarks>
+        public override void DecodeEntry() {
 			if (_isDecoded) return;
 			_isTextEncoding = IsTextEncoding();
 
