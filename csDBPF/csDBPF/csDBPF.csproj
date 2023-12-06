@@ -17,7 +17,14 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
 
 	<ItemGroup>
+	  <Compile Remove="Entries\cFSHImage.cs" />
+	  <Compile Remove="Entries\DBPFEntryFSH_FSHLib.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Include="..\.editorconfig" Link=".editorconfig" />
+	  <None Include="Entries\cFSHImage.cs" />
+	  <None Include="Entries\DBPFEntryFSH_FSHLib.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -29,7 +36,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="SixLabors.ImageSharp" Version="3.0.0" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
 		<PackageReference Include="System.Security.Permissions" Version="7.0.0" />
 	</ItemGroup>
 
@@ -37,6 +44,16 @@
 		<None Update="Properties\new_properties.xml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Util\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Epsylon.TextureSquish">
+	    <HintPath>..\..\..\TextureSquish\Sources\Epsylon.TextureSquish\bin\Debug\net7.0\Epsylon.TextureSquish.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 </Project>
