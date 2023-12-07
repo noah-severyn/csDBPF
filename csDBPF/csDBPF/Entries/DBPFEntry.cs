@@ -11,7 +11,7 @@ namespace csDBPF.Entries {
     /// <see href="https://www.wiki.sc4devotion.com/index.php?title=List_of_File_Formats"/>
     public abstract class DBPFEntry {
 		/// <summary>
-		/// The <see cref="DBPFTGI"/>object representing the file type of the entry.
+		/// The TGI set representing the file type of the entry.
 		/// </summary>
 		public TGI TGI { get; }
 
@@ -122,7 +122,7 @@ namespace csDBPF.Entries {
         public abstract void DecodeEntry();
 
 		/// <summary>
-		/// Build <see cref="ByteData"/> with the current state according to the implementing type's implementation. Is either text or binary encoding depending on <see cref=""/>
+		/// Build <see cref="ByteData"/> with the current state according to the implementing type's implementation. Is either text or binary encoding depending on the encoding type.
 		/// </summary>
 		public abstract void ToBytes();
 
@@ -133,10 +133,8 @@ namespace csDBPF.Entries {
 		/// </summary>
 		/// <returns>Returns a string that represents the current object.</returns>
 		public override string ToString() {
-			StringBuilder sb = new StringBuilder(TGI.ToString());
-			sb.AppendLine($", Type: {TGI.GetEntryType}, IndexPos: {IndexPos}, Offset: {Offset}, uSize: {UncompressedSize}, Compressed: {IsCompressed}, cSize: {CompressedSize} ");
-			return sb.ToString();
-		}
+			return $"{TGI}, Type: {TGI.GetEntryType}, IndexPos: {IndexPos}, Offset: {Offset}, uSize: {UncompressedSize}, Compressed: {IsCompressed}, cSize: {CompressedSize}";
+        }
 
 
 

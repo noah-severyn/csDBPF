@@ -302,7 +302,7 @@ namespace csDBPF_Test {
             }
 
             [TestMethod]
-            public void Test_055_DBPFTGI_MatchesAnyKnownTGI() {
+            public void Test_055_DBPFTGI_MatchesAnyKnown() {
                 TGI tgi_blank = new TGI(0, 0, 0);
                 TGI tgi_exemplar = new TGI(0x6534284a, 0, 0);
                 TGI tgi_exemplarRail = new TGI(0x6534284a, 0xe8347989, 0);
@@ -310,84 +310,84 @@ namespace csDBPF_Test {
                 TGI tgi_PNG_Icon = new TGI(0x856ddbac, 0x6a386d26, 0x1ab4e56f);
                 TGI tgi_PNG = new TGI(0x856ddbac, 0x6a386d27, 0x1ab4e56f);
 
-                TGI returned = tgi_blank.MatchesAnyKnownTGI();
+                TGI returned = tgi_blank.MatchesAnyKnown();
                 Assert.AreEqual(DBPFTGI.BLANKTGI, returned);
-                Assert.AreEqual(null, returned.Category);
+                Assert.AreEqual(null, returned.GetEntryType());
 
-                returned = tgi_exemplar.MatchesAnyKnownTGI();
+                returned = tgi_exemplar.MatchesAnyKnown();
                 Assert.AreEqual(DBPFTGI.EXEMPLAR, returned);
-                Assert.AreEqual("EXMP", returned.Category);
-                Assert.AreEqual("EXEMPLAR", returned.Detail);
+                Assert.AreEqual("EXMP", returned.GetEntryType());
+                Assert.AreEqual("EXEMPLAR", returned.GetEntryDetail());
 
-                returned = tgi_exemplarRail.MatchesAnyKnownTGI();
-                Assert.AreEqual("EXMP", returned.Category);
-                Assert.AreEqual("EXEMPLAR_RAIL", returned.Detail);
+                returned = tgi_exemplarRail.MatchesAnyKnown();
+                Assert.AreEqual("EXMP", returned.GetEntryType());
+                Assert.AreEqual("EXEMPLAR_RAIL", returned.GetEntryDetail());
 
-                returned = tgi_exemplarRail2.MatchesAnyKnownTGI();
-                Assert.AreEqual("EXMP", returned.Category);
-                Assert.AreEqual("EXEMPLAR_RAIL", returned.Detail);
+                returned = tgi_exemplarRail2.MatchesAnyKnown();
+                Assert.AreEqual("EXMP", returned.GetEntryType());
+                Assert.AreEqual("EXEMPLAR_RAIL", returned.GetEntryDetail());
 
-                returned = tgi_PNG_Icon.MatchesAnyKnownTGI();
-                Assert.AreEqual("PNG", returned.Category);
-                Assert.AreEqual("PNG_ICON", returned.Detail);
+                returned = tgi_PNG_Icon.MatchesAnyKnown();
+                Assert.AreEqual("PNG", returned.GetEntryType());
+                Assert.AreEqual("PNG_ICON", returned.GetEntryDetail());
 
-                returned = tgi_PNG.MatchesAnyKnownTGI();
-                Assert.AreEqual("PNG", returned.Category);
-                Assert.AreEqual("PNG", returned.Detail);
+                returned = tgi_PNG.MatchesAnyKnown();
+                Assert.AreEqual("PNG", returned.GetEntryType());
+                Assert.AreEqual("PNG", returned.GetEntryDetail());
             }
 
+            //[TestMethod]
+            //public void Test_056a_DBPFTGI_SetTGIusingTGI() {
+            //    TGI tgi1 = new TGI(0x6534284a, 0, 0);
+            //    TGI tgi2 = tgi1;
+            //    tgi2 =.SetTGI(TGI.EXEMPLAR_AVENUE);
+            //    Assert.AreEqual((uint) 0x6534284A, tgi2.TypeID);
+            //    Assert.AreEqual((uint) 0xCB730FAC, tgi2.GroupID);
+            //    Assert.AreNotEqual<uint?>(0, tgi2.InstanceID);
+            //    Assert.AreEqual("EXMP", tgi2.Category);
+            //    Assert.AreEqual("EXEMPLAR_AVENUE", tgi2.Detail);
+            //    tgi1.SetTGI(TGI.NULLTGI);
+            //    Assert.AreEqual(tgi1.ToString(), tgi1.ToString());
+
+            //    TGI tgi3 = new TGI(0, 2, 3);
+            //    tgi3.SetTGI(DBPFTGI.LUA);
+            //    Assert.AreEqual((uint) 0xCA63E2A3, tgi3.TypeID);
+            //    Assert.AreEqual((uint) 0x4A5E8EF6, tgi3.GroupID);
+            //    Assert.AreNotEqual<uint?>(0, tgi3.InstanceID);
+            //    Assert.AreEqual("LUA", tgi3.Category);
+            //    Assert.AreEqual("LUA", tgi3.Detail);
+            //}
+
+            //[TestMethod]
+            //public void Test_056b_DBPFTGI_SetTGIusingUint() {
+            //    TGI tgi1 = new TGI(0x6534284a, 0, 1000001);
+            //    tgi1.SetTGI(null, null, 100);
+            //    Assert.AreEqual("0x6534284a, 0x00000000, 0x00000064, EXMP, EXEMPLAR", tgi1.ToString());
+            //    tgi1.SetTGI(100, 100, 100);
+            //    Assert.AreEqual("0x00000064, 0x00000064, 0x00000064, NULL, NULLTGI", tgi1.ToString());
+
+            //    TGI tgi2 = new TGI(DBPFTGI.LUA);
+            //    tgi2.SetTGI(null, null, 100);
+            //    Assert.AreEqual("0xca63e2a3, 0x4a5e8ef6, 0x00000064, LUA, LUA", tgi2.ToString());
+            //}
+
             [TestMethod]
-            public void Test_056a_DBPFTGI_SetTGIusingDBPFTGI() {
-                TGI tgi1 = new TGI(0x6534284a, 0, 0);
-                TGI tgi2 = tgi1;
-                tgi2.SetTGI(TGI.EXEMPLAR_AVENUE);
-                Assert.AreEqual((uint) 0x6534284A, tgi2.TypeID);
-                Assert.AreEqual((uint) 0xCB730FAC, tgi2.GroupID);
-                Assert.AreNotEqual<uint?>(0, tgi2.InstanceID);
-                Assert.AreEqual("EXMP", tgi2.Category);
-                Assert.AreEqual("EXEMPLAR_AVENUE", tgi2.Detail);
-                tgi1.SetTGI(TGI.NULLTGI);
-                Assert.AreEqual(tgi1.ToString(), tgi1.ToString());
-
-                TGI tgi3 = new TGI(0, 2, 3);
-                tgi3.SetTGI(DBPFTGI.LUA);
-                Assert.AreEqual((uint) 0xCA63E2A3, tgi3.TypeID);
-                Assert.AreEqual((uint) 0x4A5E8EF6, tgi3.GroupID);
-                Assert.AreNotEqual<uint?>(0, tgi3.InstanceID);
-                Assert.AreEqual("LUA", tgi3.Category);
-                Assert.AreEqual("LUA", tgi3.Detail);
-            }
-
-            [TestMethod]
-            public void Test_056b_DBPFTGI_SetTGIusingUint() {
-                TGI tgi1 = new TGI(0x6534284a, 0, 1000001);
-                tgi1.SetTGI(null, null, 100);
-                Assert.AreEqual("0x6534284a, 0x00000000, 0x00000064, EXMP, EXEMPLAR", tgi1.ToString());
-                tgi1.SetTGI(100, 100, 100);
-                Assert.AreEqual("0x00000064, 0x00000064, 0x00000064, NULL, NULLTGI", tgi1.ToString());
-
-                TGI tgi2 = new TGI(DBPFTGI.LUA);
-                tgi2.SetTGI(null, null, 100);
-                Assert.AreEqual("0xca63e2a3, 0x4a5e8ef6, 0x00000064, LUA, LUA", tgi2.ToString());
-            }
-
-            [TestMethod]
-            public void Test_057_DBPFTGI_SetRandomIdentifier() {
+            public void Test_057_DBPFTGI_RandomizeGroupOrInstance() {
                 TGI tgi1 = new TGI(DBPFTGI.EXEMPLAR);
-                tgi1.SetRandomInstance();
-                tgi1.SetRandomGroup();
-                Assert.AreEqual(DBPFTGI.EXEMPLAR.Category, tgi1.Category);
+                tgi1.RandomizeInstance();
+                tgi1.RandomizeGroup();
+                Assert.AreEqual(DBPFTGI.EXEMPLAR.GetEntryType(), tgi1.GetEntryType());
 
                 TGI tgi2 = new TGI(DBPFTGI.EXEMPLAR_ROAD);
-                tgi2.SetRandomInstance();
-                Assert.AreEqual(DBPFTGI.EXEMPLAR_ROAD.Category, tgi2.Category);
-                tgi2.SetRandomGroup();
-                Assert.AreEqual(DBPFTGI.EXEMPLAR_ROAD.Category, tgi2.Category);
-                Assert.AreNotEqual(DBPFTGI.EXEMPLAR_ROAD.Detail, tgi2.Detail);
-                Assert.AreEqual(DBPFTGI.EXEMPLAR.Category, tgi2.Category);
+                tgi2.RandomizeInstance();
+                Assert.AreEqual(DBPFTGI.EXEMPLAR_ROAD.GetEntryType(), tgi2.GetEntryType());
+                tgi2.RandomizeGroup();
+                Assert.AreEqual(DBPFTGI.EXEMPLAR_ROAD.GetEntryType(), tgi2.GetEntryType());
+                Assert.AreNotEqual(DBPFTGI.EXEMPLAR_ROAD.GetEntryDetail(), tgi2.GetEntryDetail());
+                Assert.AreEqual(DBPFTGI.EXEMPLAR.GetEntryType(), tgi2.GetEntryType());
 
                 uint group = (uint) tgi2.GroupID;
-                tgi2.SetRandomGroup();
+                tgi2.RandomizeGroup();
                 Assert.AreNotEqual(group, tgi2.GroupID);
             }
 
@@ -406,7 +406,9 @@ namespace csDBPF_Test {
 
 
 
-        // 06x Test Methods for DBPFProperty Class
+        /// <summary>
+        /// 06x Test Methods for DBPFProperty Class
+        /// </summary>
         [TestClass]
         public class _06x_DBPFProperty {
             [TestMethod]
@@ -710,7 +712,9 @@ namespace csDBPF_Test {
 
 
 
-        // 07x Test Methods for Property XML Parsing
+        /// <summary>
+        /// 07x Test Methods for Property XML Parsing
+        /// </summary>
         [TestClass]
         public class _07x_XMLProperty {
             [TestMethod]
@@ -930,7 +934,7 @@ namespace csDBPF_Test {
                     byte[] dirbytes = new byte[] { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x19, 0x68, 0x0B, 0x4A, 0xBE, 0x01, 0x00, 0x00 };
 
                     //Parse from bytes
-                    DBPFEntryDIR entryd = new DBPFEntryDIR(DBPFTGI.DIRECTORY, 0, 0, 0, dirbytes);
+                    DBPFEntryDIR entryd = new DBPFEntryDIR(0, 0, 0, dirbytes);
                     entryd.DecodeEntry();
                     Assert.AreEqual(1, entryd.CompressedItems.Count);
                     Assert.AreEqual((uint) 0x6534284A, entryd.CompressedItems[0].TID);
@@ -1094,7 +1098,9 @@ namespace csDBPF_Test {
 
 
 
-        // 1xx Test Methods for DBPFFile Class
+        /// <summary>
+        /// 1xx Test Methods for DBPFFile Class
+        /// </summary>
         [TestClass]
         public class _1xx_DBPFFile {
 
@@ -1169,7 +1175,7 @@ namespace csDBPF_Test {
                 Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
                 CollectionAssert.AreEqual(dbpf.GetEntry(1).ByteData, entry.ByteData);
 
-                entry = dbpf.GetEntry(new DBPFTGI(0x2026960B, 0x6A231EAA, 0xF65435A1));
+                entry = dbpf.GetEntry(new TGI(0x2026960B, 0x6A231EAA, 0xF65435A1));
                 Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
                 CollectionAssert.AreEqual(entry1.ByteData, entry.ByteData);
             }

@@ -62,7 +62,7 @@ namespace csDBPF
         /// Comma delineated list of issues encountered when loading this file.
         /// </summary>
         /// <remarks>
-        /// The format is consistent with <see cref="DBPFEntry.IssueLog"/>. It is a multi line string of <see cref="DBPFTGI.ToString"/> followed by the message. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message.
+        /// The format is consistent with <see cref="DBPFEntry.IssueLog"/>. It is a multi line string of <see cref="TGI.ToString"/> followed by the message. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message.
         /// </remarks>
         private readonly StringBuilder _issueLog;
 
@@ -310,13 +310,10 @@ namespace csDBPF
 					uint offset = br.ReadUInt32();
 					uint size = br.ReadUInt32();
 
-					DBPFTGI tgi = new DBPFTGI(typeID, groupID, instanceID);
-					//_listOfTGIs.Add(tgi);
 					_listOfTGIs.Add(new TGI(typeID, groupID, instanceID));
 					offsets.Add(offset);
 					sizes.Add(size);
 				}
-				TGI t = new TGI();
 
 
 				//Read Entry data
@@ -324,7 +321,7 @@ namespace csDBPF
 					br.BaseStream.Seek(offsets[idx], SeekOrigin.Begin);
 					byteData = br.ReadBytes((int) sizes[idx]);
 
-					switch (_listOfTGIs[idx].GetDBPFTGICategory) {
+					switch (_listOfTGIs[idx].GetEntryType()) {
 						case "EXMP":
 							_listOfEntries.Add(new DBPFEntryEXMP(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
@@ -332,7 +329,7 @@ namespace csDBPF
 							_listOfEntries.Add(new DBPFEntryLTEXT(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
 						case "DIR":
-							_listOfEntries.Add(new DBPFEntryDIR(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
+							_listOfEntries.Add(new DBPFEntryDIR(offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
                         case "S3D":
                             _listOfEntries.Add(new DBPFEntryS3D(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
@@ -402,15 +399,7 @@ namespace csDBPF
 
 
         
-        private void LogMessage(string message, DBPFTGI tgi = null) {
-			if (tgi is null) {
-                _issueLog.AppendLine(File.Name + ",,,,,," + message);
-            } else {
-                // Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message
-                _issueLog.AppendLine(File.Name + "," + tgi.ToString().Replace(" ", "") + "," + message);
-            }
-        }
-        private void LogMessage(string message, TGI tgi) {
+        private void LogMessage(string message, TGI tgi = new TGI()) {
 			 _issueLog.AppendLine(File.Name + "," + tgi.ToString().Replace(" ", "") + "," + message);
         }
 
@@ -467,7 +456,7 @@ namespace csDBPF
 		/// </summary>
 		/// <param name="TGI">TGI set to search for</param>
 		/// <returns>A matching DBPFEntry</returns>
-		public DBPFEntry GetEntry(DBPFTGI TGI) {
+		public DBPFEntry GetEntry(TGI TGI) {
 			return _listOfEntries.Find(entry => entry.TGI.Equals(TGI));
 		}
 
@@ -586,7 +575,7 @@ namespace csDBPF
 		/// </summary>
 		/// <param name="entry">Entry to add</param>
 		public void AddOrUpdateEntry(DBPFEntry entry) {
-			if (_listOfEntries.Any(e => e.TGI == entry.TGI)) {
+			if (_listOfEntries.Any(e => e.TGI.Equals(entry.TGI))) {
 				UpdateEntry(entry);
 			} else {
 				AddEntry(entry);
@@ -610,7 +599,7 @@ namespace csDBPF
 		/// <remarks>
 		/// If more than one entry matches the given TGI then no entries are removed.
 		/// </remarks>
-		public void RemoveEntry(DBPFTGI tgi) {
+		public void RemoveEntry(TGI tgi) {
 			int matches = _listOfTGIs.Count(x => x.Equals(tgi));
 			if (matches != 1) {
 				return;
@@ -631,7 +620,7 @@ namespace csDBPF
 		}
 
 
-		public void RemoveEntries(DBPFTGI tgi) {
+		public void RemoveEntries(TGI tgi) {
             //TODO - implement RemoveEntries for all matching TGIs
             throw new NotImplementedException();
 		}
@@ -679,7 +668,7 @@ namespace csDBPF
         /// <remarks>
         /// Can be used for quick inspection of this file instead of <see cref="GetEntries()"/> because no entry data is processed.
         /// </remarks>
-        public List<DBPFTGI> GetTGIs() {
+        public List<TGI> GetTGIs() {
 			return _listOfTGIs;
 		}
 

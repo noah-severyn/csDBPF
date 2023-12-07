@@ -25,20 +25,17 @@ namespace csDBPF.Entries {
 		/// Create a new instance. Use when creating a new exemplar.
 		/// </summary>
 		/// <param name="tgi">TGI set to assign</param>
-        public DBPFEntryPNG(DBPFTGI tgi) : base(tgi) {
+        public DBPFEntryPNG(TGI tgi) : base(tgi) {
         }
 
         /// <summary>
 		/// Create a new instance. Use when reading an existing image from a file.
 		/// </summary>
-		/// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
+		/// <param name="tgi">TGI object representing the entry</param>
 		/// <param name="offset">Offset (location) of the entry within the DBPF file</param>
 		/// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
 		/// <param name="index">Entry position in the file, 0-n</param>
 		/// <param name="bytes">Byte data for this entry</param>
-        public DBPFEntryPNG(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
-
-        }
         public DBPFEntryPNG(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
 
         }
@@ -79,7 +76,7 @@ namespace csDBPF.Entries {
         /// </summary>
         /// <param name="path">File path to load from</param>
         public void SetImage(string path) {
-            _image = Image.Load(new FileStream(path,FileMode.Open));
+            _image = Image.Load(new FileStream(path, FileMode.Open));
         }
         /// <summary>
         /// Set this entry's image to an existing Image.

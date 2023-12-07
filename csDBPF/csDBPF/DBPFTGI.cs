@@ -26,18 +26,11 @@ namespace csDBPF {
         public uint? InstanceID { get; private set; }
 
 
-
+        //IMPORTANT: Never allow public creation of null TID, GID, or IID because they interfere with the lookups of KnownType.
         internal TGI(uint? t, uint? g, uint? i) {
-            //IMPORTANT: Never allow creation of null TID, GID, or IID because they interfere with the lookups of KnownType.
-            if (t != null) {
-                TypeID = t;
-            }
-            if (g != null) {
-                GroupID = g;
-            }
-            if (i != null) {
-                InstanceID = i;
-            }
+            TypeID = t;
+            GroupID = g;
+            InstanceID = i;
         }
         /// <summary>
         /// Create a struct representing three uints as a Type, Group, Instance triplet. Providing a null parameter indicates that identifier will not be set.
@@ -53,7 +46,7 @@ namespace csDBPF {
         /// <summary>
         /// Create a new DBPFTGI based on a known entry type. Assigns a random Group or Instance as appropriate.
         /// </summary>
-        /// <param name="knownEntry">Known entry type. Should be one of the <see cref="KnownEntries"/></param>
+        /// <param name="knownEntry">Known entry type. Should be one of the static types in <see cref="DBPFTGI"/> class.</param>
         public TGI(TGI knownEntry) {
             if (knownEntry.TypeID is null) {
                 TypeID = 0;
@@ -131,6 +124,19 @@ namespace csDBPF {
             }
 
             return isTIDok && isGIDok && isIIDok;
+        }
+
+        /// <summary>
+        /// Check whether this TGI matches any of the known entry TGI sets.
+        /// </summary>
+        /// <returns>Returns the nearest known TGI match</returns>
+        public readonly TGI MatchesAnyKnown() {
+            foreach (TGI tgi in DBPFTGI.KnownEntries.Keys) {
+                if (Matches(tgi)) {
+                    return tgi;
+                }
+            }
+            return DBPFTGI.NULLTGI;
         }
 
 
@@ -296,36 +302,6 @@ namespace csDBPF {
         #endregion KnownTGIs
 
 
-        
-
-
-
-
-
-
-
-        ///// <summary>
-        ///// Set the Type, Group, and Instance of this TGI instance.
-        ///// </summary>
-        ///// <param name="tgi">TGI set to set this instace to</param>
-        ///// <remarks>If the TGI set matches a known combination then Category and Detail are set too. A random G or I if that parameter in the provided TGI is null.</remarks>
-        //public void SetTGI(DBPFTGI tgi) {
-        //	if (tgi.TypeID != null) {
-        //		_typeID = tgi.TypeID;
-        //	}
-        //	if (tgi.GroupID != null) {
-        //		_groupID = tgi.GroupID;
-        //	} else {
-        //		SetRandomGroup();
-        //	}
-        //	if (tgi.InstanceID != null) {
-        //		_instanceID = tgi.InstanceID;
-        //	} else {
-        //		SetRandomInstance();
-        //	}
-
-        //	UpdateCategoryAndDetail();
-        //}
 
 
         /// <summary>
@@ -419,9 +395,8 @@ namespace csDBPF {
 			EXEMPLAR = new TGI(0x6534284a, null, null);
 
 			FSH_MISC = new TGI(0x7ab50e44, 0x1abe787d, null); //FSH (Misc)
-			FSH_TRANSIT = new TGI(0x7ab50e44, 0x1abe787d, null); //FSH (Misc)
 			FSH_BASE_OVERLAY = new TGI(0x7ab50e44, 0x0986135e, null); //FSH (Base/Overlay Texture)
-			FSH_SHADOW = new TGI(0x7ab50e44, 0x2bC2759a, null); //FSH (Shadow Mask)
+			FSH_SHADOW = new TGI(0x7ab50e44, 0x2bc2759a, null); //FSH (Shadow Mask)
 			FSH_ANIM_PROPS = new TGI(0x7ab50e44, 0x2a2458f9, null); //FSH (Animation Sprites (Props))
 			FSH_ANIM_NONPROPS = new TGI(0x7ab50e44, 0x49a593e7, null); //FSH (Animation Sprites (Non Props))
 			FSH_TERRAIN_FOUNDATION = new TGI(0x7ab50e44, 0x891b0e1a, null); //FSH (Terrain/Foundation)

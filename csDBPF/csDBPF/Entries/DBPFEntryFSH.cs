@@ -6,14 +6,15 @@ using System.IO;
 using System.Collections;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using Squish;
+//using Squish;
+using Epsylon.TextureSquish;
 
 namespace csDBPF.Entries {
     /// <summary>
 	/// An implementation of <see cref="DBPFEntry"/> for FSH entries. Object data is stored in <see cref="DBPFEntry.ByteData"/> and is interpreted from the <see cref="FSHHeader.FSHDirectory"/> and <see cref="BitmapHeaders"/>.
 	/// </summary>
-	/// <see ref="https://www.wiki.sc4devotion.com/index.php?title=FSH"/>
-    /// <seealso ref="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format"/>
+	/// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH"/>
+    /// <seealso href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format"/>
     public class DBPFEntryFSH : DBPFEntry {
         private readonly FSHHeader _header;
         private readonly List<FSHBitmapHeader> _bitmapHeaders;
@@ -91,20 +92,15 @@ namespace csDBPF.Entries {
         }
 
 
-
         /// <summary>
         /// Create a new instance. Use when creating a new FSH entry.
         /// </summary>
         /// <param name="tgi"></param>
-        public DBPFEntryFSH(DBPFTGI tgi) : base(tgi) {
-            if (tgi is null) {
-                TGI.SetTGI(DBPFTGI.FSH);
-            }
+        public DBPFEntryFSH(TGI tgi) : base(tgi) {
             _header = new FSHHeader();
             _bitmapHeaders = new List<FSHBitmapHeader>();
             _isCompressed = DBPFCompression.IsCompressed(ByteData);
         }
-
         /// <summary>
 		/// Create a new instance. Use when reading an existing FSH entry from a file.
 		/// </summary>
@@ -113,7 +109,7 @@ namespace csDBPF.Entries {
 		/// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
 		/// <param name="index">Entry position in the file, 0-n</param>
 		/// <param name="bytes">Byte data for this entry</param>
-        public DBPFEntryFSH(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
+        public DBPFEntryFSH(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
             _header = new FSHHeader();
             _bitmapHeaders = new List<FSHBitmapHeader>();
             _isCompressed = DBPFCompression.IsCompressed(ByteData);
@@ -155,6 +151,7 @@ namespace csDBPF.Entries {
             //After the directory is built, look at the header information each bitmap in the file
             int endOffset;
             int alphaOffset;
+            Bitmap bmp;
             for (int idx = 0; idx < _header.BitmapCount; idx++) {
                 offset = _header.FSHDirectory[idx].Offset;
                 int code = BitConverter.ToInt32(dData, offset);
@@ -174,6 +171,7 @@ namespace csDBPF.Entries {
                 byte[] dest;
                 byte[] imgdata = new byte[endOffset - offset];
                 Array.Copy(dData,offset,imgdata,0,endOffset-offset);
+
                 switch (bmpType) {
                     case FSHBitmapType.EightBit:
                         dest = new byte[0];
@@ -196,20 +194,21 @@ namespace csDBPF.Entries {
                     case FSHBitmapType.DXT3:
                         //dest = new byte[Squish.Squish.GetStorageRequirements(width, height, SquishFlags.kDxt3)];
                         //Squish.Squish.DecompressImage(dData, width, height, dest, SquishFlags.kDxt3);
-                        dest = new byte[1000];
-                        DxtDecoder.DecompressDXT3(imgdata,width,height, dest);
+                        bmp = Bitmap.Decompress(width, height, imgdata, CompressionMode.Dxt3);
+                        dest = bmp.Data;
+                        //DxtDecoder.DecompressDXT3(imgdata,width,height, dest);
                         break;
                     case FSHBitmapType.DXT1:
                         //dest = new byte[Squish.Squish.GetStorageRequirements(width, height, SquishFlags.kDxt1)];
                         //Squish.Squish.DecompressImage(imgdata, width, height, dest, SquishFlags.kDxt1);
-                        dest = new byte[1000];
-                        DxtDecoder.DecompressDXT1(imgdata, width, height, dest);
+                        //DxtDecoder.DecompressDXT1(imgdata, width, height, dest);
+                        bmp = Bitmap.Decompress(width, height, imgdata, CompressionMode.Dxt1);
+                        dest = bmp.Data;
                         break;
                     default:
                         dest = new byte[0];
                         break;
                 }
-
 
                 Image<Rgba32> img = Image.Load<Rgba32>(dest);
                 img.SaveAsPng("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\test.png");
@@ -230,15 +229,15 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Stores the name and offset of each bitmap item in this subfile.
         /// </summary>
-        /// <see ref="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#FSH_Directory"/>
+        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#FSH_Directory"/>
         public readonly struct FSHDirectoryItem {
             private readonly byte[] _name;
-            private readonly int _offset;
-
             /// <summary>
             /// Item name.
             /// </summary>
             public byte[] Name { get { return _name; } }
+
+            private readonly int _offset;
             /// <summary>
             /// Byte offset of this item, from the start of this DBPFEntryFSH
             /// </summary>
@@ -261,7 +260,7 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Stores key information about each bitmap in this file.
         /// </summary>
-        /// <see ref="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#FSH_Entry_Header"/>
+        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#FSH_Entry_Header"/>
         public readonly struct FSHBitmapHeader {
             private readonly int _blocksize;
             private readonly short _width;
@@ -337,7 +336,7 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Defines the bitmap type stored in this file.
         /// </summary>
-        /// <see ref="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#Bitmap_or_Palette_Data"/>
+        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#Bitmap_or_Palette_Data"/>
         public enum FSHBitmapType {
             /// <summary>
             /// Type: 8-bit indexed<br/>Palette: directly follows bitmap or uses global palette<br/>Compression: none
@@ -376,7 +375,7 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Specifies the color palette for <see cref="FSHBitmapType.EightBit"/> type bitmaps.
         /// </summary>
-        /// <see ref="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#Palette_codes"/>
+        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#Palette_codes"/>
         public enum FSHPaletteCode {
             /// <summary>
             /// 24-bit DOS
@@ -431,29 +430,38 @@ namespace csDBPF.Entries {
 
 
 
-
+    //this implementation is based on the one decompiled from FSHLib.dll from FSH Converter Tool.
     public class BitmapItem {
-        public byte[] RawData { get; set; }
+        private byte[] _rawData;
         /// <summary>
-        /// Color (base) bitmap.
+        /// Raw byte data.
         /// </summary>
-        public Image Bitmap { get; set; }
+        public byte[] RawData { get; set; }
+        
+        private Image<Rgba32> _base;
+        /// <summary>
+        /// Base (color) bitmap.
+        /// </summary>
+        public Image<Rgba32> Base { get; set; }
+
+        private Image<Rgba32> _alpha;
         /// <summary>
         /// Alpha (transparency) bitmap.
         /// </summary>
-        public Image Alpha { get; set; }
+        public Image<Rgba32> Alpha { get; set; }
         /// <summary>
         /// Defines the bitmap type of this item.
         /// </summary>
+        /// 
         public DBPFEntryFSH.FSHBitmapType BitmapType { get; set; }
         public string[] Comments { get; set; } //TODO - what's this for???
         public bool IsCompressed { get; set; } //TODO - is this QFS or DXT compression reference?
         public Color[] Palette { get; set; }
 
-        public BitmamItem() { }
+        public BitmapItem() { }
 
         public BitmapItem(byte[] rawData) {
-
+            _rawData = rawData;
             //Color = new Image();
             //Alpha = new Image();
             //BitmapType = ...;

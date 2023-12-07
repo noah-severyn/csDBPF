@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace csDBPF.Entries {
     internal class DBPFEntryLUA : DBPFEntry {
-        public DBPFEntryLUA(DBPFTGI tgi) : base(tgi) {
+        public DBPFEntryLUA(TGI tgi) : base(tgi) {
         }
 
-        public DBPFEntryLUA(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
-        }
         public DBPFEntryLUA(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
         }
 

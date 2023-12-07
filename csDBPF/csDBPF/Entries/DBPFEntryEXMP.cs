@@ -106,14 +106,14 @@ namespace csDBPF.Entries {
 				parentCohortTID = BitConverter.ToUInt32(dData, 8);
 				parentCohortGID = BitConverter.ToUInt32(dData, 12);
 				parentCohortIID = BitConverter.ToUInt32(dData, 16);
-				_parentCohort.SetTGI(parentCohortTID, parentCohortGID, parentCohortIID);
+				_parentCohort = new TGI(parentCohortTID, parentCohortGID, parentCohortIID);
 				propertyCount = BitConverter.ToUInt32(dData, 20);
 				pos = 24;
 			} else {
 				parentCohortTID = ByteArrayHelper.ReadTextToUint(dData, 30);
 				parentCohortGID = ByteArrayHelper.ReadTextToUint(dData, 41);
 				parentCohortIID = ByteArrayHelper.ReadTextToUint(dData, 52);
-				_parentCohort.SetTGI(parentCohortTID, parentCohortGID, parentCohortIID);
+				_parentCohort = new TGI(parentCohortTID, parentCohortGID, parentCohortIID);
 				propertyCount = ByteArrayHelper.ReadTextToUint(dData, 75);
 				pos = 85;
 			}
