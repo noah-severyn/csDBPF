@@ -173,7 +173,10 @@ namespace csDBPF {
         /// </summary>
         /// <returns>A string that represents the current object</returns>
         public override readonly string ToString() {
-            return $"0x{DBPFUtil.ToHexString(TypeID)}, 0x{DBPFUtil.ToHexString(GroupID)}, 0x{DBPFUtil.ToHexString(InstanceID)}";
+            string t = TypeID is null ? "#" : DBPFUtil.ToHexString(TypeID, prefix: true);
+            string g = GroupID is null ? "#" : DBPFUtil.ToHexString(GroupID, prefix: true);
+            string i = InstanceID is null ? "#" : DBPFUtil.ToHexString(InstanceID, prefix: true);
+            return $"{t}, {g}, {i}";
         }
 
 
@@ -193,9 +196,6 @@ namespace csDBPF {
             Random rand = new Random();
             InstanceID = (uint) (rand.Next(1 << 30)) << 2 | (uint) (rand.Next(1 << 2));
         }
-
-
-
     }
 
 
@@ -207,11 +207,26 @@ namespace csDBPF {
     /// Common known entry types are listed in <see cref="KnownEntries"/>.
     /// </remarks>
     public static class DBPFTGI {
-		////In general Dictionary items are kept in the order they are added, and since we're not doing a lot of adding or any deleting/sorting, its not as big of a deal and we don't need to use a special type like SortedDictionary
+		//In general Dictionary items are kept in the order they are added, and since we're not doing a lot of adding or any deleting/sorting, its not as big of a deal and we don't need to use a special type like SortedDictionary
 		internal static readonly Dictionary<TGI, TGIDetails> KnownEntries = new Dictionary<TGI, TGIDetails>();
-		#region KnownTGIs
-		/// <summary>BLANKTGI (0, 0, 0)</summary>
-		public static readonly TGI BLANKTGI;
+        internal struct TGIDetails {
+            /// <summary>
+            /// The general file type this TGI represents.
+            /// </summary>
+            public string EntryType;
+            /// <summary>
+            /// The detailed description of the file type this TGI represents.
+            /// </summary>
+            public string EntryDetail;
+
+            public TGIDetails(string cat, string det) {
+                EntryType = cat;
+                EntryDetail = det;
+            }
+        }
+        #region KnownTGIs
+        /// <summary>BLANKTGI (0, 0, 0)</summary>
+        public static readonly TGI BLANKTGI;
 		/// <summary>Directory file (0xe86b1eef, 0xe86b1eef, 0x286b1f03)</summary>
 		public static readonly TGI DIRECTORY;
 		/// <summary>LD file (0x6be74c6#, 0x6be74c6#, #) </summary>
@@ -301,6 +316,103 @@ namespace csDBPF {
 		public static readonly TGI NULLTGI;
         #endregion KnownTGIs
 
+        /// <summary>
+        /// This static constructor will be called as soon as the class is loaded into memory, and not necessarily when an object is created.
+        /// Known types need to be ordered "bottom-up", that is, specialized entries need to be inserted first, more general ones later.
+        /// </summary>
+        static DBPFTGI() {
+            BLANKTGI = new TGI(0, 0, 0);
+            DIRECTORY = new TGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
+            LD = new TGI(0x6be74c60, 0x6be74c60, null);
+            S3D_MAXIS = new TGI(0x5ad0e817, 0xbadb57f1, null);
+            S3D = new TGI(0x5ad0e817, null, null);
+            COHORT = new TGI(0x05342861, null, null);
+
+            EXEMPLAR_ROAD = new TGI(0x6534284a, 0x2821ed93, null); //EXEMPLAR (Road)
+            EXEMPLAR_STREET = new TGI(0x6534284a, 0xa92a02ea, null); //EXEMPLAR (Street)
+            EXEMPLAR_ONEWAYROAD = new TGI(0x6534284a, 0xcbe084cb, null); //EXEMPLAR (One-Way Road)
+            EXEMPLAR_AVENUE = new TGI(0x6534284a, 0xcb730fac, null); //EXEMPLAR (Avenue)
+            EXEMPLAR_HIGHWAY = new TGI(0x6534284a, 0xa8434037, null); //EXEMPLAR (Highway)
+            EXEMPLAR_GROUNDHIGHWAY = new TGI(0x6534284a, 0xebe084d1, null); //EXEMPLAR (Ground Highway)
+            EXEMPLAR_DIRTROAD = new TGI(0x6534284a, 0x6be08658, null); //EXEMPLAR (Dirtroad)
+            EXEMPLAR_RAIL = new TGI(0x6534284a, 0xe8347989, null); //EXEMPLAR (Rail)
+            EXEMPLAR_LIGHTRAIL = new TGI(0x6534284a, 0x2b79dffb, null); //EXEMPLAR (Lightrail)
+            EXEMPLAR_MONORAIL = new TGI(0x6534284a, 0xebe084c2, null); //EXEMPLAR (Monorail)
+            EXEMPLAR_POWERPOLE = new TGI(0x6534284a, 0x088e1962, null); //EXEMPLAR (Power Pole)
+            EXEMPLAR_T21 = new TGI(0x6534284a, 0x89ac5643, null); //EXEMPLAR (T21)
+            EXEMPLAR = new TGI(0x6534284a, null, null);
+
+            FSH_MISC = new TGI(0x7ab50e44, 0x1abe787d, null); //FSH (Misc)
+            FSH_BASE_OVERLAY = new TGI(0x7ab50e44, 0x0986135e, null); //FSH (Base/Overlay Texture)
+            FSH_SHADOW = new TGI(0x7ab50e44, 0x2bc2759a, null); //FSH (Shadow Mask)
+            FSH_ANIM_PROPS = new TGI(0x7ab50e44, 0x2a2458f9, null); //FSH (Animation Sprites (Props))
+            FSH_ANIM_NONPROPS = new TGI(0x7ab50e44, 0x49a593e7, null); //FSH (Animation Sprites (Non Props))
+            FSH_TERRAIN_FOUNDATION = new TGI(0x7ab50e44, 0x891b0e1a, null); //FSH (Terrain/Foundation)
+            FSH_UI = new TGI(0x7ab50e44, 0x46a006b0, null); //FSH (UI Image)
+            FSH = new TGI(0x7ab50e44, null, null);
+
+            SC4PATH_2D = new TGI(0x296678f7, 0x69668828, null); //SC4PATH (2D)
+            SC4PATH_3D = new TGI(0x296678f7, 0xa966883f, null); //SC4PATH (3D)
+            SC4PATH = new TGI(0x296678f7, null, null);
+
+            PNG_ICON = new TGI(0x856ddbac, 0x6a386d26, null); //PNG (Icon)
+            PNG = new TGI(0x856ddbac, null, null);
+            LUA = new TGI(0xca63e2a3, 0x4a5e8ef6, null);
+            LUA_GEN = new TGI(0xca63e2a3, 0x4a5e8f3f, null); //LUA (Generators)
+            WAV = new TGI(0x2026960b, 0xaa4d1933, null);
+            LTEXT = new TGI(0x2026960b, null, null);
+            INI_FONT = new TGI(0, 0x4a87bfe8, 0x2a87bffc); //INI (Font Table)
+            INI_NETWORK = new TGI(0, 0x8a5971c5, 0x8a5993b9); //INI (Networks)
+            INI = new TGI(0, 0x8a5971c5, null);
+            RUL = new TGI(0x0a5bcf4b, 0xaa5bcf57, null);
+            XML = new TGI(0x88777602, null, null);
+            EFFDIR = new TGI(0xea5118b0, null, null);
+            NULLTGI = new TGI(null, null, null); // NULLTGI matches with everything
+
+            KnownEntries.Add(BLANKTGI, new TGIDetails("BLANK", "BLANKTGI"));
+            KnownEntries.Add(DIRECTORY, new TGIDetails("DIR", "DIR"));
+            KnownEntries.Add(LD, new TGIDetails("LD", "LD"));
+            KnownEntries.Add(S3D_MAXIS, new TGIDetails("S3D", "S3D"));
+            KnownEntries.Add(S3D, new TGIDetails("S3D", "S3D"));
+            KnownEntries.Add(COHORT, new TGIDetails("EXMP", "COHORT"));
+            KnownEntries.Add(EXEMPLAR_ROAD, new TGIDetails("EXMP", "EXEMPLAR_ROAD"));
+            KnownEntries.Add(EXEMPLAR_STREET, new TGIDetails("EXMP", "EXEMPLAR_STREET"));
+            KnownEntries.Add(EXEMPLAR_ONEWAYROAD, new TGIDetails("EXMP", "EXEMPLAR_ONEWAYROAD"));
+            KnownEntries.Add(EXEMPLAR_AVENUE, new TGIDetails("EXMP", "EXEMPLAR_AVENUE"));
+            KnownEntries.Add(EXEMPLAR_HIGHWAY, new TGIDetails("EXMP", "EXEMPLAR_HIGHWAY"));
+            KnownEntries.Add(EXEMPLAR_GROUNDHIGHWAY, new TGIDetails("EXMP", "EXEMPLAR_GROUNDHIGHWAY"));
+            KnownEntries.Add(EXEMPLAR_DIRTROAD, new TGIDetails("EXMP", "EXEMPLAR_DIRTROAD"));
+            KnownEntries.Add(EXEMPLAR_RAIL, new TGIDetails("EXMP", "EXEMPLAR_RAIL"));
+            KnownEntries.Add(EXEMPLAR_LIGHTRAIL, new TGIDetails("EXMP", "EXEMPLAR_LIGHTRAIL"));
+            KnownEntries.Add(EXEMPLAR_MONORAIL, new TGIDetails("EXMP", "EXEMPLAR_MONORAIL"));
+            KnownEntries.Add(EXEMPLAR_POWERPOLE, new TGIDetails("EXMP", "EXEMPLAR_POWERPOLE"));
+            KnownEntries.Add(EXEMPLAR_T21, new TGIDetails("EXMP", "EXEMPLAR_T21"));
+            KnownEntries.Add(EXEMPLAR, new TGIDetails("EXMP", "EXEMPLAR"));
+            KnownEntries.Add(FSH_MISC, new TGIDetails("FSH", "FSH_MISC"));
+            KnownEntries.Add(FSH_BASE_OVERLAY, new TGIDetails("FSH", "FSH_BASE_OVERLAY"));
+            KnownEntries.Add(FSH_SHADOW, new TGIDetails("FSH", "FSH_SHADOW"));
+            KnownEntries.Add(FSH_ANIM_PROPS, new TGIDetails("FSH", "FSH_ANIM_PROPS"));
+            KnownEntries.Add(FSH_ANIM_NONPROPS, new TGIDetails("FSH", "FSH_ANIM_NONPROPS"));
+            KnownEntries.Add(FSH_TERRAIN_FOUNDATION, new TGIDetails("FSH", "FSH_TERRAIN_FOUNDATION"));
+            KnownEntries.Add(FSH_UI, new TGIDetails("FSH", "FSH_UI"));
+            KnownEntries.Add(FSH, new TGIDetails("FSH", "FSH"));
+            KnownEntries.Add(SC4PATH_2D, new TGIDetails("PATH", "SC4PATH_2D"));
+            KnownEntries.Add(SC4PATH_3D, new TGIDetails("PATH", "SC4PATH_3D"));
+            KnownEntries.Add(SC4PATH, new TGIDetails("PATH", "SC4PATH"));
+            KnownEntries.Add(PNG_ICON, new TGIDetails("PNG", "PNG_ICON"));
+            KnownEntries.Add(PNG, new TGIDetails("PNG", "PNG"));
+            KnownEntries.Add(LUA, new TGIDetails("LUA", "LUA"));
+            KnownEntries.Add(LUA_GEN, new TGIDetails("LUA", "LUA_GEN"));
+            KnownEntries.Add(WAV, new TGIDetails("WAV", "WAV"));
+            KnownEntries.Add(LTEXT, new TGIDetails("LTEXT", "LTEXT"));
+            KnownEntries.Add(INI_FONT, new TGIDetails("INI", "INI_FONT"));
+            KnownEntries.Add(INI_NETWORK, new TGIDetails("INI", "INI_NETWORK"));
+            KnownEntries.Add(INI, new TGIDetails("INI", "INI"));
+            KnownEntries.Add(XML, new TGIDetails("RUL", "RUL"));
+            KnownEntries.Add(RUL, new TGIDetails("XML", "XML"));
+            KnownEntries.Add(EFFDIR, new TGIDetails("EFF", "EFFDIR"));
+            KnownEntries.Add(NULLTGI, new TGIDetails("NULL", "NULLTGI"));
+        }
 
 
 
@@ -336,6 +448,7 @@ namespace csDBPF {
         }
 
 
+
         /// <summary>
         /// Parse a TGI string into it's component Type, Group, Index values.
         /// </summary>
@@ -345,127 +458,5 @@ namespace csDBPF {
             string cleaned = CleanTGIFormat(tgi);
             return new TGI(uint.Parse(cleaned.Substring(2, 8), NumberStyles.HexNumber), uint.Parse(cleaned.Substring(14, 8), NumberStyles.HexNumber), uint.Parse(cleaned.Substring(26, 8), NumberStyles.HexNumber));
         }
-
-
-
-
-
-        internal struct TGIDetails {
-            /// <summary>
-            /// The general file type this TGI represents.
-            /// </summary>
-            public string EntryType;
-            /// <summary>
-            /// The detailed description of the file type this TGI represents.
-            /// </summary>
-            public string EntryDetail;
-
-			public TGIDetails(string cat, string det) {
-				EntryType = cat;
-				EntryDetail = det;
-			}
-		}
-
-
-        #region StaticConstructor
-        /// <summary>
-        /// This static constructor will be called as soon as the class is loaded into memory, and not necessarily when an object is created.
-        /// Known types need to be ordered "bottom-up", that is, specialized entries need to be inserted first, more general ones later.
-        /// </summary>
-        static DBPFTGI() {
-			BLANKTGI = new TGI(0, 0, 0);
-			DIRECTORY = new TGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
-			LD = new TGI(0x6be74c60, 0x6be74c60, null);
-			S3D_MAXIS = new TGI(0x5ad0e817, 0xbadb57f1, null);
-			S3D = new TGI(0x5ad0e817, null, null);
-			COHORT = new TGI(0x05342861, null, null);
-
-			EXEMPLAR_ROAD = new TGI(0x6534284a, 0x2821ed93, null); //EXEMPLAR (Road)
-			EXEMPLAR_STREET = new TGI(0x6534284a, 0xa92a02ea, null); //EXEMPLAR (Street)
-			EXEMPLAR_ONEWAYROAD = new TGI(0x6534284a, 0xcbe084cb, null); //EXEMPLAR (One-Way Road)
-			EXEMPLAR_AVENUE = new TGI(0x6534284a, 0xcb730fac, null); //EXEMPLAR (Avenue)
-			EXEMPLAR_HIGHWAY = new TGI(0x6534284a, 0xa8434037, null); //EXEMPLAR (Highway)
-			EXEMPLAR_GROUNDHIGHWAY = new TGI(0x6534284a, 0xebe084d1, null); //EXEMPLAR (Ground Highway)
-			EXEMPLAR_DIRTROAD = new TGI(0x6534284a, 0x6be08658, null); //EXEMPLAR (Dirtroad)
-			EXEMPLAR_RAIL = new TGI(0x6534284a, 0xe8347989, null); //EXEMPLAR (Rail)
-			EXEMPLAR_LIGHTRAIL = new TGI(0x6534284a, 0x2b79dffb, null); //EXEMPLAR (Lightrail)
-			EXEMPLAR_MONORAIL = new TGI(0x6534284a, 0xebe084c2, null); //EXEMPLAR (Monorail)
-			EXEMPLAR_POWERPOLE = new TGI(0x6534284a, 0x088e1962, null); //EXEMPLAR (Power Pole)
-			EXEMPLAR_T21 = new TGI(0x6534284a, 0x89ac5643, null); //EXEMPLAR (T21)
-			EXEMPLAR = new TGI(0x6534284a, null, null);
-
-			FSH_MISC = new TGI(0x7ab50e44, 0x1abe787d, null); //FSH (Misc)
-			FSH_BASE_OVERLAY = new TGI(0x7ab50e44, 0x0986135e, null); //FSH (Base/Overlay Texture)
-			FSH_SHADOW = new TGI(0x7ab50e44, 0x2bc2759a, null); //FSH (Shadow Mask)
-			FSH_ANIM_PROPS = new TGI(0x7ab50e44, 0x2a2458f9, null); //FSH (Animation Sprites (Props))
-			FSH_ANIM_NONPROPS = new TGI(0x7ab50e44, 0x49a593e7, null); //FSH (Animation Sprites (Non Props))
-			FSH_TERRAIN_FOUNDATION = new TGI(0x7ab50e44, 0x891b0e1a, null); //FSH (Terrain/Foundation)
-			FSH_UI = new TGI(0x7ab50e44, 0x46a006b0, null); //FSH (UI Image)
-			FSH = new TGI(0x7ab50e44, null, null);
-
-			SC4PATH_2D = new TGI(0x296678f7, 0x69668828, null); //SC4PATH (2D)
-			SC4PATH_3D = new TGI(0x296678f7, 0xa966883f, null); //SC4PATH (3D)
-			SC4PATH = new TGI(0x296678f7, null, null);
-
-			PNG_ICON = new TGI(0x856ddbac, 0x6a386d26, null); //PNG (Icon)
-			PNG = new TGI(0x856ddbac, null, null);
-			LUA = new TGI(0xca63e2a3, 0x4a5e8ef6, null);
-			LUA_GEN = new TGI(0xca63e2a3, 0x4a5e8f3f, null); //LUA (Generators)
-			WAV = new TGI(0x2026960b, 0xaa4d1933, null);
-			LTEXT = new TGI(0x2026960b, null, null);
-			INI_FONT = new TGI(0, 0x4a87bfe8, 0x2a87bffc); //INI (Font Table)
-			INI_NETWORK = new TGI(0, 0x8a5971c5, 0x8a5993b9); //INI (Networks)
-			INI = new TGI(0, 0x8a5971c5, null);
-			RUL = new TGI(0x0a5bcf4b, 0xaa5bcf57, null);
-			XML = new TGI(0x88777602, null, null);
-			EFFDIR = new TGI(0xea5118b0, null, null);
-			NULLTGI = new TGI(null, null, null); // NULLTGI matches with everything
-
-			KnownEntries.Add(BLANKTGI, new TGIDetails(string.Empty, string.Empty));
-			KnownEntries.Add(DIRECTORY, new TGIDetails("DIR", "DIR"));
-			KnownEntries.Add(LD, new TGIDetails("LD", "LD"));
-			KnownEntries.Add(S3D_MAXIS, new TGIDetails("S3D", "S3D"));
-			KnownEntries.Add(S3D, new TGIDetails("S3D", "S3D"));
-			KnownEntries.Add(COHORT, new TGIDetails("EXMP", "COHORT"));
-			KnownEntries.Add(EXEMPLAR_ROAD, new TGIDetails("EXMP", "EXEMPLAR_ROAD"));
-			KnownEntries.Add(EXEMPLAR_STREET, new TGIDetails("EXMP", "EXEMPLAR_STREET"));
-			KnownEntries.Add(EXEMPLAR_ONEWAYROAD, new TGIDetails("EXMP", "EXEMPLAR_ONEWAYROAD"));
-			KnownEntries.Add(EXEMPLAR_AVENUE, new TGIDetails("EXMP", "EXEMPLAR_AVENUE"));
-			KnownEntries.Add(EXEMPLAR_HIGHWAY, new TGIDetails("EXMP", "EXEMPLAR_HIGHWAY"));
-			KnownEntries.Add(EXEMPLAR_GROUNDHIGHWAY, new TGIDetails("EXMP", "EXEMPLAR_GROUNDHIGHWAY"));
-			KnownEntries.Add(EXEMPLAR_DIRTROAD, new TGIDetails("EXMP", "EXEMPLAR_DIRTROAD"));
-			KnownEntries.Add(EXEMPLAR_RAIL, new TGIDetails("EXMP", "EXEMPLAR_RAIL"));
-			KnownEntries.Add(EXEMPLAR_LIGHTRAIL, new TGIDetails("EXMP", "EXEMPLAR_LIGHTRAIL"));
-			KnownEntries.Add(EXEMPLAR_MONORAIL, new TGIDetails("EXMP", "EXEMPLAR_MONORAIL"));
-			KnownEntries.Add(EXEMPLAR_POWERPOLE, new TGIDetails("EXMP", "EXEMPLAR_POWERPOLE"));
-			KnownEntries.Add(EXEMPLAR_T21, new TGIDetails("EXMP", "EXEMPLAR_T21"));
-			KnownEntries.Add(EXEMPLAR, new TGIDetails("EXMP", "EXEMPLAR"));
-			KnownEntries.Add(FSH_MISC, new TGIDetails("FSH", "FSH_MISC"));
-			KnownEntries.Add(FSH_TRANSIT, new TGIDetails("FSH", "FSH_MISC"));
-			KnownEntries.Add(FSH_BASE_OVERLAY, new TGIDetails("FSH", "FSH_BASE_OVERLAY"));
-			KnownEntries.Add(FSH_SHADOW, new TGIDetails("FSH", "FSH_SHADOW"));
-			KnownEntries.Add(FSH_ANIM_PROPS, new TGIDetails("FSH", "FSH_ANIM_PROPS"));
-			KnownEntries.Add(FSH_ANIM_NONPROPS, new TGIDetails("FSH", "FSH_ANIM_NONPROPS"));
-			KnownEntries.Add(FSH_TERRAIN_FOUNDATION, new TGIDetails("FSH", "FSH_TERRAIN_FOUNDATION"));
-			KnownEntries.Add(FSH_UI, new TGIDetails("FSH", "FSH_UI"));
-			KnownEntries.Add(FSH, new TGIDetails("FSH", "FSH"));
-			KnownEntries.Add(SC4PATH_2D, new TGIDetails("PATH", "SC4PATH_2D"));
-			KnownEntries.Add(SC4PATH_3D, new TGIDetails("PATH", "SC4PATH_3D"));
-			KnownEntries.Add(SC4PATH, new TGIDetails("PATH", "SC4PATH"));
-			KnownEntries.Add(PNG_ICON, new TGIDetails("PNG", "PNG_ICON"));
-			KnownEntries.Add(PNG, new TGIDetails("PNG", "PNG"));
-			KnownEntries.Add(LUA, new TGIDetails("LUA", "LUA"));
-			KnownEntries.Add(LUA_GEN, new TGIDetails("LUA", "LUA_GEN"));
-			KnownEntries.Add(WAV, new TGIDetails("WAV", "WAV"));
-			KnownEntries.Add(LTEXT, new TGIDetails("LTEXT", "LTEXT"));
-			KnownEntries.Add(INI_FONT, new TGIDetails("INI", "INI_FONT"));
-			KnownEntries.Add(INI_NETWORK, new TGIDetails("INI", "INI_NETWORK"));
-			KnownEntries.Add(INI, new TGIDetails("INI", "INI"));
-			KnownEntries.Add(XML, new TGIDetails("RUL", "RUL"));
-			KnownEntries.Add(RUL, new TGIDetails("XML", "XML"));
-			KnownEntries.Add(EFFDIR, new TGIDetails("EFF", "EFFDIR"));
-			KnownEntries.Add(NULLTGI, new TGIDetails("NULL", "NULLTGI"));
-		}
-		#endregion StaticConstructor
 	}
 }

@@ -65,15 +65,17 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_012_DBPFUtil_UintToHexString() {
-                Assert.AreEqual("6534284A", DBPFUtil.ToHexString(1697917002, 8, true));
-                Assert.AreEqual("6534284a", DBPFUtil.ToHexString(1697917002, 8, false));
-                Assert.AreEqual("4A283465", DBPFUtil.ToHexString(1244148837, 8, true));
-                Assert.AreEqual("4a283465", DBPFUtil.ToHexString(1244148837, 8));
-                Assert.AreEqual("6534284A", DBPFUtil.ToHexString(0x6534284A, 8, true));
-                Assert.AreEqual("4A283465", DBPFUtil.ToHexString(0x4A283465, 8, true));
-                Assert.AreEqual("4D2", DBPFUtil.ToHexString(1234, 3, true));
-                Assert.AreEqual("4d2", DBPFUtil.ToHexString(1234, 3));
-                Assert.AreEqual("000004D2", DBPFUtil.ToHexString(1234, 8, true));
+                Assert.AreEqual("6534284A", DBPFUtil.ToHexString(1697917002, 8, true, false));
+                Assert.AreEqual("6534284a", DBPFUtil.ToHexString(1697917002, 8, false, false));
+                Assert.AreEqual("0x6534284A", DBPFUtil.ToHexString(1697917002, 8, true, true));
+                Assert.AreEqual("0x6534284a", DBPFUtil.ToHexString(1697917002, 8, false));
+                Assert.AreEqual("0x4A283465", DBPFUtil.ToHexString(1244148837, 8, true));
+                Assert.AreEqual("0x4a283465", DBPFUtil.ToHexString(1244148837, 8));
+                Assert.AreEqual("6534284A", DBPFUtil.ToHexString(0x6534284A, 8, true, false));
+                Assert.AreEqual("4A283465", DBPFUtil.ToHexString(0x4A283465, 8, true, false));
+                Assert.AreEqual("0x4D2", DBPFUtil.ToHexString(1234, 3, true));
+                Assert.AreEqual("0x4d2", DBPFUtil.ToHexString(1234, 3));
+                Assert.AreEqual("0x000004D2", DBPFUtil.ToHexString(1234, 8, true));
             }
 
             //[Ignore]
@@ -312,7 +314,7 @@ namespace csDBPF_Test {
 
                 TGI returned = tgi_blank.MatchesAnyKnown();
                 Assert.AreEqual(DBPFTGI.BLANKTGI, returned);
-                Assert.AreEqual(null, returned.GetEntryType());
+                Assert.AreEqual("BLANK", returned.GetEntryType());
 
                 returned = tgi_exemplar.MatchesAnyKnown();
                 Assert.AreEqual(DBPFTGI.EXEMPLAR, returned);
@@ -1147,36 +1149,36 @@ namespace csDBPF_Test {
 
                 //Get by index position
                 entry0 = dbpf.GetEntry(0);
-                Assert.IsTrue(entry0.TGI.Equals(DBPFTGI.EXEMPLAR));
+                Assert.IsTrue(entry0.TGI.Matches(DBPFTGI.EXEMPLAR));
                 CollectionAssert.AreEqual(dbpf.GetEntry(0).ByteData, entry0.ByteData);
                 entry1 = dbpf.GetEntry(3);
 
-                Assert.IsTrue(entry1.TGI.Equals(DBPFTGI.LTEXT));
+                Assert.IsTrue(entry1.TGI.Matches(DBPFTGI.LTEXT));
                 CollectionAssert.AreEqual(dbpf.GetEntry(3).ByteData, entry1.ByteData);
 
                 //Get by Instance ID
                 entry = dbpf.GetEntry((uint) 0x4A0B6819);
-                Assert.IsTrue(entry.TGI.Equals(DBPFTGI.EXEMPLAR));
+                Assert.IsTrue(entry.TGI.Matches(DBPFTGI.EXEMPLAR));
                 Assert.AreEqual(entry.TGI, entry.TGI);
                 CollectionAssert.AreEqual(dbpf.GetEntry(0).ByteData, entry.ByteData);
                 CollectionAssert.AreEqual(entry.ByteData, entry.ByteData);
 
                 entry = dbpf.GetEntry(0xF65435A1);
-                Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
+                Assert.IsTrue(entry.TGI.Matches(DBPFTGI.LTEXT));
                 CollectionAssert.AreEqual(dbpf.GetEntry(3).ByteData, entry.ByteData);
                 CollectionAssert.AreEqual(entry1.ByteData, entry.ByteData);
 
                 //Get by TGI
                 entry = dbpf.GetEntry(DBPFTGI.DIRECTORY);
-                Assert.IsTrue(entry.TGI.Equals(DBPFTGI.DIRECTORY));
+                Assert.IsTrue(entry.TGI.Matches(DBPFTGI.DIRECTORY));
                 CollectionAssert.AreEqual(dbpf.GetEntry(12).ByteData, entry.ByteData);
 
                 entry = dbpf.GetEntry(DBPFTGI.LTEXT);
-                Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
+                Assert.IsTrue(entry.TGI.Matches(DBPFTGI.LTEXT));
                 CollectionAssert.AreEqual(dbpf.GetEntry(1).ByteData, entry.ByteData);
 
                 entry = dbpf.GetEntry(new TGI(0x2026960B, 0x6A231EAA, 0xF65435A1));
-                Assert.IsTrue(entry.TGI.Equals(DBPFTGI.LTEXT));
+                Assert.IsTrue(entry.TGI.Matches(DBPFTGI.LTEXT));
                 CollectionAssert.AreEqual(entry1.ByteData, entry.ByteData);
             }
 

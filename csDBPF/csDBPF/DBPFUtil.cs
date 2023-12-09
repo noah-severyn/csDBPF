@@ -137,43 +137,45 @@ namespace csDBPF {
 		}
         #endregion
 
-
         /// <summary>
         /// Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
         /// </summary>
         /// <param name="value">Value to return</param>
         /// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
         /// <param name="uppercase">Specify output as uppercase. Default is lowercase.</param>
+        /// <param name="prefix">Specify to omit "0x" prefixed to the front of the string. Default is true to include.</param>
         /// <returns>Uppercase string representing the value</returns>
         /// <exception cref="ArgumentOutOfRangeException">Number of places must be between 0 and 8.</exception>
-        public static string ToHexString(long value, int places = 8, bool uppercase = false) {
-			if (places < 0 || places > 16) {
-				throw new ArgumentOutOfRangeException(nameof(places), "Number of places must be between 0 and 8.");
-			}
-			if (uppercase) {
-                return (value).ToString($"X{places}");
-            } else {
-				return (value).ToString($"x{places}");
+        public static string ToHexString(long value, int places = 8, bool uppercase = false, bool prefix = true) {
+            if (places < 0 || places > 16) {
+                throw new ArgumentOutOfRangeException(nameof(places), "Number of places must be between 0 and 8.");
             }
-			
-		}
+            string prepend = (prefix == true ? "0x" : string.Empty);
+            if (uppercase) {
+                return prepend + (value).ToString($"X{places}");
+            } else {
+                return prepend + (value).ToString($"x{places}");
+            }
+        }
         /// <summary>
         /// Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
         /// </summary>
         /// <param name="value">Value to return</param>
         /// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
         /// <param name="uppercase">Specify output as uppercase. Default is lowercase.</param>
+        /// <param name="prefix">Specify to omit "0x" prefixed to the front of the string. Default is true to include.</param>
         /// <returns>Uppercase string representing the value</returns>
         /// <exception cref="ArgumentOutOfRangeException">Number of places must be between 0 and 8.</exception>
-        public static string ToHexString(uint? value, int places = 8, bool uppercase = false) {
+        public static string ToHexString(uint? value, int places = 8, bool uppercase = false, bool prefix = true) {
             if (places < 0 || places > 16) {
                 throw new ArgumentOutOfRangeException(nameof(places), "Number of places must be between 0 and 8.");
             }
 			if (value != null) {
-				if (uppercase) {
-                    return ((uint) value).ToString($"X{places}");
+                string prepend = (prefix == true ? "0x" : string.Empty);
+                if (uppercase) {
+                    return prepend + ((uint) value).ToString($"X{places}");
                 } else {
-                    return ((uint) value).ToString($"x{places}");
+                    return prepend + ((uint) value).ToString($"x{places}");
                 }
 				
 			} else {

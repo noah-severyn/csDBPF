@@ -457,7 +457,7 @@ namespace csDBPF
 		/// <param name="TGI">TGI set to search for</param>
 		/// <returns>A matching DBPFEntry</returns>
 		public DBPFEntry GetEntry(TGI TGI) {
-			return _listOfEntries.Find(entry => entry.TGI.Equals(TGI));
+			return _listOfEntries.Find(entry => entry.TGI.Matches(TGI));
 		}
 
 
@@ -575,7 +575,7 @@ namespace csDBPF
 		/// </summary>
 		/// <param name="entry">Entry to add</param>
 		public void AddOrUpdateEntry(DBPFEntry entry) {
-			if (_listOfEntries.Any(e => e.TGI.Equals(entry.TGI))) {
+			if (_listOfEntries.Any(e => e.TGI.Matches(entry.TGI))) {
 				UpdateEntry(entry);
 			} else {
 				AddEntry(entry);
