@@ -11,7 +11,7 @@ namespace csDBPF {
     /// <summary>
     /// A struct representing three unsigned integers as a Type, Group, Instance pair.
     /// </summary>
-    public struct TGI {
+    public struct TGI : IComparable<TGI> {
         /// <summary>
         /// Type ID (TID). See <see href="https://www.wiki.sc4devotion.com/index.php?title=Type_ID"/>
         /// </summary>
@@ -65,6 +65,34 @@ namespace csDBPF {
             }
         }
 
+        public int CompareTo(TGI other) {
+            //Check if the T difers first, then if the G differs, then if the I differs
+            var typediff = TypeID - other.TypeID;
+            if (typediff != 0)
+                return (int) typediff;
+
+            var groupdiff = this.GroupID - other.GroupID;
+            if (groupdiff != 0) 
+                return (int) groupdiff;
+
+            return (int) (InstanceID - other.InstanceID);
+        }
+
+
+        /// <summary>
+        /// Evaluate whether two TGIs are identical.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>TRUE if the TGIs are identical; FALSE otherwise</returns>
+        public override readonly bool Equals(object obj) {
+            if (obj is not TGI _tgi) return false;
+            return TypeID == _tgi.TypeID && GroupID == _tgi.GroupID && InstanceID == _tgi.InstanceID;
+        }
+        public static bool operator ==(TGI left, TGI right) { return left.Equals(right); }
+        public static bool operator !=(TGI left, TGI right) { return !(left == right); }
+        public override int GetHashCode() {
+            return TypeID.GetHashCode() ^ GroupID.GetHashCode() ^ InstanceID.GetHashCode();
+        }
 
 
         /// <summary>
@@ -97,8 +125,8 @@ namespace csDBPF {
         /// Check if the type, group, and instance of two TGIs are equal.
         /// </summary>
         /// <remarks>
-        /// If any component of the provided DBPFTGI of knownType is null it will be skipped. This is opposed to Equals which explicitly checks every component.
-        /// Only the provided DBPFTGI of knownType is checked for null components.
+        /// If any component of the provided TGI is null that component will be skipped. This is opposed to <see cref="Matches(TGI)"/> which explicitly checks every component.
+        /// Only the provided TGI of knownType is checked for null components.
         /// </remarks>
         /// <param name="otherTGI">A DBPFTGI to check against</param>
         /// <returns>TRUE if check passes; FALSE otherwise</returns>
