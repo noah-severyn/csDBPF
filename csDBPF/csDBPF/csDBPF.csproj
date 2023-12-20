@@ -17,20 +17,43 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
 
 	<ItemGroup>
-	  <None Include="..\.editorconfig" Link=".editorconfig" />
+	  <Compile Remove="Entries\cFSHImage.cs" />
+	  <Compile Remove="Entries\DBPFEntryFSH_FSHLib.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
-		<PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
-		<PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
-		<PackageReference Include="coverlet.collector" Version="3.0.2" />
+	  <None Include="..\.editorconfig" Link=".editorconfig" />
+	  <None Include="Entries\cFSHImage.cs" />
+	  <None Include="Entries\DBPFEntryFSH_FSHLib.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="LibSquishNet" Version="2.0.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+		<PackageReference Include="coverlet.collector" Version="6.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.0" />
+		<PackageReference Include="System.Security.Permissions" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<None Update="Properties\new_properties.xml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Util\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Epsylon.TextureSquish">
+	    <HintPath>..\..\..\TextureSquish\Sources\Epsylon.TextureSquish\bin\Debug\net7.0\Epsylon.TextureSquish.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 </Project>

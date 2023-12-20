@@ -31,7 +31,7 @@ namespace csDBPF.Properties {
 		/// The number of repetitions of <see cref="DBPFPropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
 		/// </summary>
 		/// <remarks>
-		/// Determining the count partially depends on the encoding type. For binary encoded float-type properties: 0 reps = single value, 1 reps = multiple values but currently held to 1 value (problematic on macOS when the DataType is float), n reps = n number of values. For text encoded float-type properties: n reps = n number of values.
+		/// Determining the count partially depends on the encoding type. For binary encoded float-type properties: 0 reps = single value, 1 reps = multiple values but currently held to 1 value (problematic on macOS), n reps = n number of values. For text encoded float-type properties: n reps = n number of values.
 		/// </remarks>
 		public override int NumberOfReps {
 			get { return _numberOfReps; }
@@ -74,7 +74,11 @@ namespace csDBPF.Properties {
 			_dataType = DBPFPropertyDataType.FLOAT32;
 			_dataValues = new List<float> { value };
 			_isTextEncoding = encodingType;
-			_numberOfReps = 0;
+			if (_isTextEncoding) {
+                _numberOfReps = 1;
+            } else {
+                _numberOfReps = 0;
+            }
 		}
 		/// <summary>
 		/// Construct a DBPFProperty with a float data type holding multiple values.
@@ -130,7 +134,7 @@ namespace csDBPF.Properties {
         /// <param name="position">Position (or rep) to return</param>
         /// <returns>The data value at the specified position</returns>
         /// <remarks>
-        /// If the position parameter is greater than the number of values, the last value is returned instead.
+        /// If the position parameter is greater than the number of values, the last value is returned.
         /// </remarks>
         public override object GetData(int position) {
             if (position < 0) {
@@ -145,13 +149,13 @@ namespace csDBPF.Properties {
 
 
         /// <summary>
-        /// Set the data values stored in this property.
+        /// Set the data values stored in this property. Value should be of type <![CDATA[List<float>]]>.
         /// </summary>
         /// <param name="value">Values to set</param>
-        /// <exception cref="ArgumentException">Argument to DBPFPropertyFloat.SetDataValues must be List&lt;float&gt;.</exception>
+        /// <exception cref="ArgumentException">Argument to DBPFPropertyFloat.SetData must be <![CDATA[List<float>]]>.</exception>
         public override void SetData(object value) {
 			if (value is not List<float>) {
-				throw new ArgumentException($"Argument to DBPFPropertyFloat.SetDataValues must be List<float>. {value.GetType()} was provided.");
+				throw new ArgumentException($"Argument to DBPFPropertyFloat.SetData must be List<float>. {value.GetType()} was provided.");
 			}
 			_dataValues = (List<float>) value;
 
@@ -167,7 +171,7 @@ namespace csDBPF.Properties {
 			}
         }
         /// <summary>
-        /// Set the values(s) stored in this property.
+        /// Set the values(s) stored in this property. Value should be of type <![CDATA[List<float>]]>.
         /// </summary>
         /// <remarks>
         /// This implementation for float-type properties is identical to <see cref="SetData(object)"/> to avoid the macOS float bug.

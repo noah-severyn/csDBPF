@@ -9,10 +9,10 @@ namespace csDBPF.Entries {
     /// Generic entry to encapsulate as yet unimplemented entry types or unknown entry types.
     /// </summary>
     internal class DBPFEntryUnknown : DBPFEntry {
-        public DBPFEntryUnknown(DBPFTGI tgi) : base(tgi) {
+        public DBPFEntryUnknown(TGI tgi) : base(tgi) {
         }
 
-        public DBPFEntryUnknown(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
+        public DBPFEntryUnknown(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
         }
 
         public override void DecodeEntry() {}

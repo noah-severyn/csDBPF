@@ -49,19 +49,20 @@ namespace csDBPF
 		/// </remarks>
 		private readonly List<DBPFEntry> _listOfEntries; //TODO - add in documentation about a pro tip to use LINQ to filter these based on the output of GetEntries or GetTGIs
 
-        /// <summary>
-        /// List of all TGIs in this file.
-        /// </summary>
-        /// <remarks>
-        /// Can be used for quick inspection because no entry data is processed.
-        /// </remarks>
-        private readonly List<DBPFTGI> _listOfTGIs;
+		/// <summary>
+		/// List of all TGIs in this file.
+		/// </summary>
+		/// <remarks>
+		/// Can be used for quick inspection because no entry data is processed.
+		/// </remarks>
+		//private readonly List<DBPFTGI> _listOfTGIs;
+		private readonly List<TGI> _listOfTGIs;
 
         /// <summary>
         /// Comma delineated list of issues encountered when loading this file.
         /// </summary>
         /// <remarks>
-        /// The format is consistent with <see cref="DBPFEntry.IssueLog"/>. It is a multi line string of <see cref="DBPFTGI.ToString"/> followed by the message. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message.
+        /// The format is consistent with <see cref="DBPFEntry.IssueLog"/>. It is a multi line string of <see cref="TGI.ToString"/> followed by the message. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message.
         /// </remarks>
         private readonly StringBuilder _issueLog;
 
@@ -81,7 +82,7 @@ namespace csDBPF
 			/// </summary>
 			public string Identifier {
 				get { return _identifier; }
-				set {
+                private set {
 					string identifierDbpf = "DBPF";
 					if (value.CompareTo(identifierDbpf) != 0) {
 						throw new InvalidDataException("File is not a DBPF file!");
@@ -95,7 +96,7 @@ namespace csDBPF
 			/// </summary>
 			public uint MajorVersion {
 				get { return _majorVersion; }
-				set {
+				private set {
 					if (value != 1) {
 						throw new InvalidDataException("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
 					} else {
@@ -108,7 +109,7 @@ namespace csDBPF
 			/// </summary>
 			public uint MinorVersion {
 				get { return _minorVersion; }
-				set {
+                private set {
 					if (value != 0) {
 						throw new InvalidDataException("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
 					} else {
@@ -129,7 +130,7 @@ namespace csDBPF
 			/// </summary>
 			public uint IndexMajorVersion {
 				get { return _indexMajorVersion; }
-				set {
+                private set {
 					if (value != 7) {
 						throw new InvalidDataException("Unsupported index version. Only 7 is supported for SC4 DBPF files.");
 					} else {
@@ -238,7 +239,8 @@ namespace csDBPF
 			File = file;
 			Header = new DBPFHeader();
 			_listOfEntries = new List<DBPFEntry>();
-			_listOfTGIs = new List<DBPFTGI>();
+			//_listOfTGIs = new List<DBPFTGI>();
+			_listOfTGIs = new List<TGI>();
 			_issueLog = new StringBuilder();
 
 			if (!file.Exists) {
@@ -268,17 +270,26 @@ namespace csDBPF
 		}
 
 
-
 		/// <summary>
-		/// Reads a DBPF file.
+		/// Reads the header and TGI list of a DBPF file.
 		/// </summary>
-		/// <remarks>
-		/// Use only for short-lived DBPF files for which the content does not change on disk, or does not matter if it does, or if the file is small. Example: only scanning the TGIs of a file.
-		/// </remarks>
-		/// <param name="file">File of the DBPF object to be used.</param>
-		/// <returns>A new DBPFFile object</returns>
-		/// <see ref="https://www.wiki.sc4devotion.com/index.php?title=DBPF#Pseudocode"/>
-		private void Read(FileInfo file) {
+		/// <param name="file"></param>
+		private void ReadQuick(FileInfo file) {
+
+		}
+
+
+
+        /// <summary>
+        /// Reads a DBPF file.
+        /// </summary>
+        /// <remarks>
+        /// Use only for short-lived DBPF files for which the content does not change on disk, or does not matter if it does, or if the file is small.
+        /// </remarks>
+        /// <param name="file">File of the DBPF object to be used</param>
+        /// <returns>A new DBPFFile object</returns>
+        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=DBPF#Pseudocode"/>
+        private void Read(FileInfo file) {
 			FileStream fs = new FileStream(file.FullName, FileMode.Open);
 			BinaryReader br = new BinaryReader(fs); 
 
@@ -299,18 +310,18 @@ namespace csDBPF
 					uint offset = br.ReadUInt32();
 					uint size = br.ReadUInt32();
 
-					DBPFTGI tgi = new DBPFTGI(typeID, groupID, instanceID);
-					_listOfTGIs.Add(tgi);
+					_listOfTGIs.Add(new TGI(typeID, groupID, instanceID));
 					offsets.Add(offset);
 					sizes.Add(size);
 				}
+
 
 				//Read Entry data
 				for (int idx = 0; idx < _listOfTGIs.Count; idx++) {
 					br.BaseStream.Seek(offsets[idx], SeekOrigin.Begin);
 					byteData = br.ReadBytes((int) sizes[idx]);
 
-					switch (_listOfTGIs[idx].Category) {
+					switch (_listOfTGIs[idx].GetEntryType()) {
 						case "EXMP":
 							_listOfEntries.Add(new DBPFEntryEXMP(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
@@ -318,7 +329,7 @@ namespace csDBPF
 							_listOfEntries.Add(new DBPFEntryLTEXT(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
 						case "DIR":
-							_listOfEntries.Add(new DBPFEntryDIR(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
+							_listOfEntries.Add(new DBPFEntryDIR(offsets[idx], sizes[idx], (uint) idx, byteData));
 							break;
                         case "S3D":
                             _listOfEntries.Add(new DBPFEntryS3D(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
@@ -387,23 +398,9 @@ namespace csDBPF
 
 
 
-
-
-
-        /// <summary>
-        /// Adds the specified message to the entry's <see cref="_issueLog"/>.
-        /// </summary>
-        /// <param name="message">Message to add</param>
-        /// <param name="tgi">Optional TGI to specify</param>
-        /// <remarks>
-        /// Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message
-        /// </remarks>
-        private void LogMessage(string message, DBPFTGI tgi = null) {
-			if (tgi is null) {
-                _issueLog.AppendLine(File.Name + ",,,,,," + message);
-            } else {
-                _issueLog.AppendLine(File.Name + "," + tgi.ToString().Replace(" ", "") + "," + message);
-            }
+        
+        private void LogMessage(string message, TGI tgi = new TGI()) {
+			 _issueLog.AppendLine(File.Name + "," + tgi.ToString().Replace(" ", "") + "," + message);
         }
 
 
@@ -439,7 +436,7 @@ namespace csDBPF
 
 
 		/// <summary>
-		/// Return the nth entry in the file by index.
+		/// Return the nth entry in the file by index. 0-based index.
 		/// </summary>
 		/// <param name="index">Index position in file.</param>
 		/// <returns>The nth DBPFEntry</returns>
@@ -459,8 +456,8 @@ namespace csDBPF
 		/// </summary>
 		/// <param name="TGI">TGI set to search for</param>
 		/// <returns>A matching DBPFEntry</returns>
-		public DBPFEntry GetEntry(DBPFTGI TGI) {
-			return _listOfEntries.Find(entry => entry.TGI.Equals(TGI));
+		public DBPFEntry GetEntry(TGI TGI) {
+			return _listOfEntries.Find(entry => entry.TGI.Matches(TGI));
 		}
 
 
@@ -578,7 +575,7 @@ namespace csDBPF
 		/// </summary>
 		/// <param name="entry">Entry to add</param>
 		public void AddOrUpdateEntry(DBPFEntry entry) {
-			if (_listOfEntries.Any(e => e.TGI == entry.TGI)) {
+			if (_listOfEntries.Any(e => e.TGI.Matches(entry.TGI))) {
 				UpdateEntry(entry);
 			} else {
 				AddEntry(entry);
@@ -602,7 +599,7 @@ namespace csDBPF
 		/// <remarks>
 		/// If more than one entry matches the given TGI then no entries are removed.
 		/// </remarks>
-		public void RemoveEntry(DBPFTGI tgi) {
+		public void RemoveEntry(TGI tgi) {
 			int matches = _listOfTGIs.Count(x => x.Equals(tgi));
 			if (matches != 1) {
 				return;
@@ -623,7 +620,7 @@ namespace csDBPF
 		}
 
 
-		public void RemoveEntries(DBPFTGI tgi) {
+		public void RemoveEntries(TGI tgi) {
             //TODO - implement RemoveEntries for all matching TGIs
             throw new NotImplementedException();
 		}
@@ -671,7 +668,7 @@ namespace csDBPF
         /// <remarks>
         /// Can be used for quick inspection of this file instead of <see cref="GetEntries()"/> because no entry data is processed.
         /// </remarks>
-        public List<DBPFTGI> GetTGIs() {
+        public List<TGI> GetTGIs() {
 			return _listOfTGIs;
 		}
 

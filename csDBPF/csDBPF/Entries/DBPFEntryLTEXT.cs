@@ -9,7 +9,7 @@ namespace csDBPF.Entries {
 	/// <summary>
 	/// An implementation of <see cref="DBPFEntry"/> for LTEXT entries. Object data is stored in <see cref="Text"/>.
 	/// </summary>
-	/// <see ref="https://wiki.sc4devotion.com/index.php?title=LTEXT"/>
+	/// <see href="https://wiki.sc4devotion.com/index.php?title=LTEXT"/>
 	public class DBPFEntryLTEXT : DBPFEntry {
 		/// <summary>
 		/// Stores if this entry has been decoded yet.
@@ -30,7 +30,7 @@ namespace csDBPF.Entries {
 
 
 		/// <summary>
-		/// Create a new instance. Use when creating a new LTEXT entry from scratch.
+		/// Create a new instance. Use when creating a new LTEXT entry.
 		/// </summary>
 		public DBPFEntryLTEXT() : base(DBPFTGI.LTEXT) { }
 
@@ -46,10 +46,7 @@ namespace csDBPF.Entries {
 		/// Create a new instance with the specified TGI. Use when creating a new LTEXT entry from scratch.
 		/// </summary>
 		/// <param name="tgi">TGI set to assign</param>
-		public DBPFEntryLTEXT(DBPFTGI tgi) : base(tgi) {
-			if (tgi is null) {
-				TGI.SetTGI(DBPFTGI.LTEXT);
-			}
+		public DBPFEntryLTEXT(TGI tgi) : base(tgi) {
 		}
 
 		/// <summary>
@@ -57,10 +54,7 @@ namespace csDBPF.Entries {
 		/// </summary>
 		/// <param name="tgi">TGI set to assign</param>
 		/// <param name="text">Text to set</param>
-		public DBPFEntryLTEXT(DBPFTGI tgi, string text) : base(tgi) {
-			if (tgi is null) {
-				TGI.SetTGI(DBPFTGI.LTEXT);
-			}
+		public DBPFEntryLTEXT(TGI tgi, string text) : base(tgi) {
 			_text = text;
 		}
 
@@ -72,20 +66,20 @@ namespace csDBPF.Entries {
 		/// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
 		/// <param name="index">Entry position in the file, 0-n</param>
 		/// <param name="bytes">Byte data for this entry</param>
-		public DBPFEntryLTEXT(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
+		public DBPFEntryLTEXT(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
 			_text = null;
 			_isDecoded = false;
 		}
 
 
 
-		/// <summary>
-		/// Decodes the LTEXT string from raw data and sets the <see cref="Text"/> property of this instance.
-		/// </summary>
-		/// <remarks>
-		/// Data must be uncompressed or garbage data is returned.
-		/// </remarks>
-		public override void DecodeEntry() {
+        /// <summary>
+        /// Decodes the LTEXT string from raw data and sets the <see cref="Text"/> property of this instance.
+        /// </summary>
+        /// <remarks>
+        /// Data must be uncompressed or garbage data is returned.
+        /// </remarks>
+        public override void DecodeEntry() {
 			if (_isDecoded) {
 				return;
 			}

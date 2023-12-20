@@ -122,13 +122,13 @@ namespace csDBPF.Properties {
 
 
         /// <summary>
-        /// Set the data value stored in this property.
+        /// Set the data value stored in this property. Value should be of type string.
         /// </summary>
         /// <param name="value">String to set</param>
-        /// <exception cref="ArgumentException">Argument to DBPFPropertyString.SetDataValues must be string.</exception>
+        /// <exception cref="ArgumentException">Argument to DBPFPropertyString.SetData must be string.</exception>
         public override void SetData(object value) {
 			if (value is not string) {
-				throw new ArgumentException($"Argument to DBPFPropertyString.SetDataValues must be string. {value.GetType()} was provided.");
+				throw new ArgumentException($"Argument to DBPFPropertyString.SetData must be string. {value.GetType()} was provided.");
 			}
 			_dataValue = (string) value;
 			if (_isTextEncoding) {
@@ -138,7 +138,7 @@ namespace csDBPF.Properties {
 			}
         }
         /// <summary>
-        /// Set the values(s) stored in this property.
+        /// Set the values(s) stored in this property. Value should be of type string.
         /// </summary>
         /// <remarks>
         /// This implementation for string-type properties is identical to <see cref="SetData(object)"/>.

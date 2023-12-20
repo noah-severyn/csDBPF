@@ -11,7 +11,7 @@ namespace csDBPF.Entries {
     /// <summary>
     /// An implementation of <see cref="DBPFEntry"/> for Directory entries. Object data is stored in <see cref="CompressedItems"/>.
     /// </summary>
-    /// <see ref="https://wiki.sc4devotion.com/index.php?title=DBDF"/>
+    /// <see href="https://wiki.sc4devotion.com/index.php?title=DBDF"/>
     public class DBPFEntryDIR : DBPFEntry {
         /// <summary>
         /// Stores if this entry has been decoded yet.
@@ -69,12 +69,12 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Create a new instance. Use when reading an existing directory from a file.
         /// </summary>
-        /// <param name="tgi"><see cref="DBPFTGI"/> object representing the entry</param>
         /// <param name="offset">Offset (location) of the entry within the DBPF file</param>
         /// <param name="size">Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</param>
         /// <param name="index">Entry position in the file, 0-n</param>
         /// <param name="bytes">Byte data for this entry</param>
-        public DBPFEntryDIR(DBPFTGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
+        /// <remarks>Directory subfiles are special in that their TGI is *always* the same, so providing TGI as an argument is unnecessary.</remarks>
+        public DBPFEntryDIR(uint offset, uint size, uint index, byte[] bytes) : base(DBPFTGI.DIRECTORY, offset, size, index, bytes) {
             _compressedItems = new List<DBDFItem>();
         }
 
