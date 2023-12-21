@@ -369,7 +369,7 @@ namespace csDBPF
 
 			//Parse the properties of each entry
 			foreach (DBPFEntry entry in _listOfEntries) {
-				//GetSubfileFormat(DBPFCompression.Decompress(entry.data));
+				//GetSubfileFormat(QFS.Decompress(entry.data));
 			}
 
 			//Initially populate issue log.
@@ -422,14 +422,14 @@ namespace csDBPF
 
 
         /// <summary>
-        /// Decodes all entries in the file.
+        /// Decompresses (if necessary) and decodes all entries in the file.
         /// </summary>
 		/// <remarks>
-		/// For more information, see <see cref="DBPFEntry.DecodeEntry()"/> and the specific implementations for each entry type.
+		/// For more information, see <see cref="DBPFEntry.Decode()"/> and the specific implementations for each entry type.
 		/// </remarks>
         public void DecodeAllEntries() {
 			foreach (DBPFEntry entry in _listOfEntries) {
-				entry.DecodeEntry();
+				entry.Decode();
             }
 		}
 
@@ -501,6 +501,7 @@ namespace csDBPF
 			//Write all entries
 			RebuildDirectory();
 			foreach (DBPFEntry entry in _listOfEntries) {
+				entry.Encode();
 				fs.Write(entry.ByteData);
 			}
 
@@ -551,7 +552,7 @@ namespace csDBPF
                 _dataSize += entry.ByteData.LongLength;
             }
 			catch (NullReferenceException) { //Non decoded entries will not have byte data set, so test if they are compressed or uncompressed and use that size.
-				if (entry.IsCompressed) { //TODO - think this is wrong b/c if entry is not decoded then this not set?????
+				if (entry.IsCompressed) {
 					_dataSize += entry.CompressedSize;
 				} else {
 					_dataSize += entry.UncompressedSize;

@@ -29,9 +29,9 @@ namespace csDBPF.Entries {
 
 
         /// <summary>
-        /// Helper class to represent one item in the DBDF directory list. Each item is a reference to a compressed entry in the DBPF file.
+        /// Struct which represents one item in the DBDF directory list. Each item is a reference to a compressed entry in the DBPF file.
         /// </summary>
-        public class DBDFItem {
+        public readonly struct DBDFItem {
             /// <summary>
             /// Item Type ID.
             /// </summary>
@@ -83,7 +83,7 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Sets the directory entry from raw data and sets the <see cref="CompressedItems"/> property of this instance.
         /// </summary>
-        public override void DecodeEntry() {
+        public override void Decode() {
             if (_isDecoded) {
                 return;
             }
@@ -105,7 +105,6 @@ namespace csDBPF.Entries {
 
             foreach (DBPFEntry entry in entries) {
                 if (entry.IsCompressed) {
-                    entry.ToBytes();
                     _compressedItems.Add(new DBDFItem((uint) entry.TGI.TypeID, (uint) entry.TGI.GroupID, (uint) entry.TGI.InstanceID, entry.UncompressedSize));
                 }
             }
@@ -116,7 +115,7 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
         /// </summary>
-        public override void ToBytes() {
+        public override void Encode() {
             List<byte> bytes = new List<byte>();
 
             foreach (DBDFItem item in _compressedItems) {

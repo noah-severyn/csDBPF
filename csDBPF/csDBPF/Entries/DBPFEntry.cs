@@ -1,4 +1,5 @@
 ﻿using csDBPF.Properties;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +7,7 @@ using static System.Net.WebRequestMethods;
 
 namespace csDBPF.Entries {
     /// <summary>
-    /// An abstract form of an entry item, representing an instance of a subfile that may be contained in a <see cref="DBPFFile"/>. The data for each entry is not parsed or decoded until <see cref="DecodeEntry"/> is called to decompress and set the actual entry data.
+    /// An abstract form of an entry item, representing an instance of a subfile that may be contained in a <see cref="DBPFFile"/>. The data for each entry is not parsed or decoded until <see cref="Decode"/> is called to decompress and set the actual entry data.
     /// </summary>
     /// <see href="https://www.wiki.sc4devotion.com/index.php?title=List_of_File_Formats"/>
     public abstract class DBPFEntry {
@@ -42,24 +43,26 @@ namespace csDBPF.Entries {
 		public uint CompressedSize { get; protected set; }
 
 		/// <summary>
-		/// Marks if this entry stores compressed data or not. This is a read only property and does not describe the current state of <see cref="ByteData"/> - see <see cref="IsCompressedNow"/>.
+		/// Specifies whether this entry's <see cref="Encode"/> function outputs compressed data or not
 		/// </summary>
-		/// <remarks>
-		/// Assumed TRUE until the first bytes of data can be read to determine actual compression status. 
-		/// </remarks>
-		public bool IsCompressed { get; protected set; }
+		//public bool ShouldBeCompressed { get; protected set; }
 
-		/// <summary>
-		/// Stores the current compression state of <see cref="ByteData"/>. TRUE = compressed; FALSE = uncompressed
-		/// </summary>
-		public bool IsCompressedNow { get; protected set; }
+        /// <summary>
+        /// Get the current compression state of <see cref="ByteData"/>.
+        /// </summary>
+        public bool IsCompressed {
+            get {
+                //We can peek at bytes 4 and 5 to determine compression status
+                return (ByteData.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(ByteData, 4) == 0x10FB);
+            }
+        }
 
-		/// <summary>
-		/// Byte array of raw data pertaining to this entry. Depending on <see cref="IsCompressed"/> and <see cref="IsCompressedNow"/>, this data may be compressed.
-		/// </summary>
-		/// <remarks>
-		/// The interpretation of the entry data depends on the compression status and the entry type (known through its <see cref="TGI"/>). Always check if the data is compressed before processing.
-		/// </remarks>
+        /// <summary>
+        /// Byte array of raw data pertaining to this entry. This may or may not be compressed.
+        /// </summary>
+        /// <remarks>
+        /// The interpretation of the entry data depends on the compression status and the entry type (known through its <see cref="TGI"/>). Always check if the data is compressed before processing.
+        /// </remarks>
 		public byte[] ByteData { get; protected set; }
 
         /// <summary>
@@ -79,8 +82,7 @@ namespace csDBPF.Entries {
 		/// <param name="tgi"></param>
 		public DBPFEntry(TGI tgi) {
             TGI = tgi;
-            IsCompressed = true;
-            IsCompressedNow = true;
+            //ShouldBeCompressed = true;
             IssueLog = new StringBuilder();
 
         }
@@ -103,28 +105,24 @@ namespace csDBPF.Entries {
             IssueLog = new StringBuilder();
 
             //We can peek at the first 9 bytes of this data to determine its compression characteristics
-            if (bytes.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(bytes, 4) == 0x10FB) {
-                IsCompressed = true;
+            if (IsCompressed) {
                 UncompressedSize = (uint) ((bytes[6] << 16) | (bytes[7] << 8) | bytes[8]);
-                IsCompressedNow = true;
             } else {
-                IsCompressed = false;
                 UncompressedSize = 0;
-                IsCompressedNow = false;
             }
         }
 
 
 
         /// <summary>
-        /// Decompresses the data and sets the entry's data object.
+        /// Decompresses the data (if necessary) and sets the entry's data object from <see cref="ByteData"/> according to the specific entry's type.
         /// </summary>
-        public abstract void DecodeEntry();
+        public abstract void Decode();
 
 		/// <summary>
-		/// Build <see cref="ByteData"/> with the current state according to the implementing type's implementation. Is either text or binary encoding depending on the encoding type.
+		/// Builds <see cref="ByteData"/> with the current state of the entry's data object. The encoding can be either text or binary according to <see cref="EncodingType"/>.
 		/// </summary>
-		public abstract void ToBytes();
+		public abstract void Encode();
 
 
 
@@ -133,7 +131,7 @@ namespace csDBPF.Entries {
 		/// </summary>
 		/// <returns>Returns a string that represents the current object.</returns>
 		public override string ToString() {
-			return $"{TGI}, Type: {TGI.GetEntryType}, IndexPos: {IndexPos}, Offset: {Offset}, uSize: {UncompressedSize}, Compressed: {IsCompressed}, cSize: {CompressedSize}";
+			return $"{TGI}, Type: {TGI.GetEntryType()}, IndexPos: {IndexPos}, Offset: {Offset}, uSize: {UncompressedSize}, Compressed: {IsCompressed}, cSize: {CompressedSize}";
         }
 
 
@@ -143,7 +141,7 @@ namespace csDBPF.Entries {
 		/// </summary>
 		/// <param name="known"><see cref="DBPFTGI"/> to compare against</param>
 		/// <returns>TRUE if this Entry matches the specified; FALSE otherwise.</returns>
-		/// <remarks>This is a shortcut; it is equivalent to <see cref="TGI.Matches(TGI)"/>.</remarks>
+		/// <remarks>This is a shortcut equivalent to <see cref="TGI.Matches(TGI)"/>.</remarks>
 		public bool MatchesEntryType(TGI known) {
 			return TGI.Matches(known);
 		}
@@ -153,13 +151,14 @@ namespace csDBPF.Entries {
 		/// Returns whether this entry is an Exemplar or Cohort Entry
 		/// </summary>
 		/// <returns>TRUE if is an Exemplar or Cohort; FALSE otherwise</returns>
-		/// <remarks>This will decompress the data if it is not already uncompressed.</remarks>
 		public bool IsEXMP() {
-			if (IsCompressedNow) {
-				ByteData = DBPFCompression.Decompress(ByteData);
-				IsCompressedNow = false;
+			byte[] data;
+			if (IsCompressed) {
+				data = QFS.Decompress(ByteData[0..16]);
+			} else {
+				data = ByteData[0..16];
 			}
-			string fileIdentifier = ByteArrayHelper.ToAString(ByteData, 0, 4);
+			string fileIdentifier = ByteArrayHelper.ToAString(data, 0, 4);
 			return fileIdentifier == "EQZB" || fileIdentifier == "EQZT" || fileIdentifier == "CQZB" || fileIdentifier == "CQZT";
 		}
 

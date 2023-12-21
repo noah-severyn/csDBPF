@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using csDBPF.Properties;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static csDBPF.Entries.DBPFEntryDIR;
 
 namespace csDBPF.Entries {
@@ -31,7 +32,7 @@ namespace csDBPF.Entries {
 
 		private TGI _parentCohort;
 		/// <summary>
-		/// TGI set representing the Parent Cohort for this exemplar.
+		/// The Parent Cohort for this exemplar.
 		/// </summary>
 		/// <see href="https://www.wiki.sc4devotion.com/index.php?title=Cohort"/>
 		public TGI ParentCohort {
@@ -85,13 +86,13 @@ namespace csDBPF.Entries {
         /// <remarks>
         /// Use when reading from a file.
         /// </remarks>
-        public override void DecodeEntry() {
+        public override void Decode() {
 			if (_isDecoded) return;
 			_isTextEncoding = IsTextEncoding();
 
 			byte[] dData;
-			if (DBPFCompression.IsCompressed(ByteData)) {
-				dData = DBPFCompression.Decompress(ByteData);
+			if (QFS.IsCompressed(ByteData)) {
+				dData = QFS.Decompress(ByteData);
 			} else {
 				dData = ByteData;
 			}
@@ -172,10 +173,10 @@ namespace csDBPF.Entries {
 		/// <param name="offset">Offset (location) to start reading from</param>
 		/// <returns>A <see cref="DBPFProperty"/></returns>
 		private DBPFProperty DecodeProperty(int offset = 0) {
-			if (!_isTextEncoding) {
-				return DecodeProperty_Binary(offset);
-			} else {
+			if (_isTextEncoding) {
 				return DecodeProperty_Text(offset);
+			} else {
+				return DecodeProperty_Binary(offset);
 			}
 		}
 		/// <summary>
@@ -280,17 +281,6 @@ namespace csDBPF.Entries {
 			newProperty.IsTextEncoding = EncodingType.Binary;
             newProperty.SetData(dataValues, countOfReps);
             return newProperty;
-		}
-		/// <summary>
-		/// Enumeration for special delimiting characters when reading text encoded properties.
-		/// </summary>
-		private enum SpecialChars : byte {
-			Colon = 0x3A, // :
-			Comma = 0x2C, // ,
-			Equal = 0x3D, // =
-			OpeningBrace = 0x7B, // {
-			ClosingBrace = 0x7D, // }
-			Quotation = 0x22 // "
 		}
 		/// <summary>
 		/// Decodes the property from raw text data at the given offset.
@@ -405,23 +395,84 @@ namespace csDBPF.Entries {
 			newProperty.IsTextEncoding = EncodingType.Text;
 			newProperty.SetData(dataValues);
 			return newProperty;
-		}
+        }
+        /// <summary>
+        /// Enumeration for special delimiting characters when reading text encoded properties.
+        /// </summary>
+        private enum SpecialChars : byte {
+            Colon = 0x3A, // :
+            Comma = 0x2C, // ,
+            Equal = 0x3D, // =
+            OpeningBrace = 0x7B, // {
+            ClosingBrace = 0x7D, // }
+            Quotation = 0x22 // "
+        }
 
 
 
-		/// <summary>
-		/// Returns the encoding type of this entry.
-		/// </summary>
-		/// <returns>TRUE if text encoding; FALSE otherwise</returns>
-		/// <remarks>This will decompress the data if it is not already uncompressed.</remarks>
-		public bool IsTextEncoding() {
-			if (IsCompressedNow) {
-				ByteData = DBPFCompression.Decompress(ByteData);
-				IsCompressedNow = false;
-			}
+        /// <summary>
+        /// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
+        /// </summary>
+        public override void Encode() {
+            //If not decoded then assumed no changes have been made to the entry → decompressed size and compressed size are unchanged
+            if (!_isDecoded) return;
 
-			string fileIdentifier = ByteArrayHelper.ToAString(ByteData, 0, 4);
-			return fileIdentifier.Substring(fileIdentifier.Length - 1) == "T";
+            string id;
+            if (_isCohort) {
+                id = "C";
+            } else {
+                id = "E";
+            }
+
+            //Text Encoding
+            if (_isTextEncoding) {
+                id += "QZT1###";
+
+                StringBuilder sb = new StringBuilder();
+                sb.Append(id + "\r\n");
+                sb.Append($"ParentCohort=Key:{{0x{DBPFUtil.ToHexString(_parentCohort.TypeID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.GroupID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.InstanceID.Value)}}}\r\n");
+                sb.Append($"PropCount=0x{DBPFUtil.ToHexString(_listOfProperties.Count)}\r\n");
+                foreach (DBPFProperty prop in _listOfProperties.Values) {
+                    sb.Append(prop.ToRawBytes());
+                }
+                ByteData = ByteArrayHelper.ToBytes(sb.ToString(), true);
+                UncompressedSize = (uint) ByteData.Length;
+            }
+
+            //Binary Encoding
+            else {
+                id += "QZB1###";
+
+                List<byte> bytes = new List<byte>();
+                bytes.AddRange(ByteArrayHelper.ToBytes(id, true));
+                bytes.AddRange(BitConverter.GetBytes(_parentCohort.TypeID.Value));
+                bytes.AddRange(BitConverter.GetBytes(_parentCohort.GroupID.Value));
+                bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID.Value));
+                bytes.AddRange(BitConverter.GetBytes(_listOfProperties.Count));
+                foreach (DBPFProperty prop in _listOfProperties.Values) {
+                    bytes.AddRange(prop.ToRawBytes());
+                }
+                ByteData = bytes.ToArray();
+                UncompressedSize = (uint) ByteData.Length;
+            }
+
+            ByteData = QFS.Compress(ByteData);
+        }
+
+
+
+        /// <summary>
+        /// Returns the encoding type of this entry.
+        /// </summary>
+        /// <returns>TRUE if text encoding; FALSE otherwise</returns>
+        public bool IsTextEncoding() {
+			byte identifier;
+			if (IsCompressed) {
+				identifier = ByteData[13];
+			} else {
+                identifier = ByteData[3];
+            }
+			return identifier == 0x54; //0x54 = T (0x42 = B)
 		}
 
 
@@ -553,57 +604,6 @@ namespace csDBPF.Entries {
 		/// </summary>
 		public void RemoveAllProperties() {
 			_listOfProperties.Clear();
-		}
-
-
-
-		/// <summary>
-		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
-		/// </summary>
-		public override void ToBytes() {
-			//If not decoded then assumed no changes have been made to the entry → decompressed size and compressed size are unchanged
-			if (!_isDecoded) return;
-
-			string id;
-			if (_isCohort) {
-				id = "C";
-			} else {
-				id = "E";
-			}
-
-			//Text Encoding
-			if (_isTextEncoding) {
-				id += "QZT1###";
-
-				StringBuilder sb = new StringBuilder();
-				sb.Append(id+"\r\n");
-				sb.Append($"ParentCohort=Key:{{0x{DBPFUtil.ToHexString(_parentCohort.TypeID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.GroupID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.InstanceID.Value)}}}\r\n");
-				sb.Append($"PropCount=0x{DBPFUtil.ToHexString(_listOfProperties.Count)}\r\n");
-				foreach (DBPFProperty prop in _listOfProperties.Values) {
-					sb.Append(prop.ToRawBytes());
-				}
-				ByteData = ByteArrayHelper.ToBytes(sb.ToString(), true);
-				UncompressedSize = (uint) ByteData.Length;
-				IsCompressed = false;
-			}
-
-			//Binary Encoding
-			else {
-				id += "QZB1###";
-
-				List<byte> bytes = new List<byte>();
-				bytes.AddRange(ByteArrayHelper.ToBytes(id,true));
-				bytes.AddRange(BitConverter.GetBytes(_parentCohort.TypeID.Value));
-				bytes.AddRange(BitConverter.GetBytes(_parentCohort.GroupID.Value));
-				bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID.Value));
-				bytes.AddRange(BitConverter.GetBytes(_listOfProperties.Count));
-				foreach (DBPFProperty prop in _listOfProperties.Values) {
-					bytes.AddRange(prop.ToRawBytes());
-				}
-				ByteData = bytes.ToArray();
-				UncompressedSize = (uint) ByteData.Length;
-				IsCompressed= true;
-			}
 		}
 	}
 }

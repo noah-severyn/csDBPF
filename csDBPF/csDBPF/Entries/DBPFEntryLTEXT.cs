@@ -79,13 +79,13 @@ namespace csDBPF.Entries {
         /// <remarks>
         /// Data must be uncompressed or garbage data is returned.
         /// </remarks>
-        public override void DecodeEntry() {
+        public override void Decode() {
 			if (_isDecoded) {
 				return;
 			}
 			if (ByteData.Length < 4) {
 				_text = null;
-				LogMessage("Data length is less than 4 bytes so information can be read.");
+				LogMessage("Data length is less than 4 bytes so no information can be read.");
 			}
 
 			int pos = 0;
@@ -115,7 +115,7 @@ namespace csDBPF.Entries {
 		/// <summary>
 		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
 		/// </summary>
-		public override void ToBytes() {
+		public override void Encode() {
 			List<byte> bytes = new List<byte>();
 			if (_text is null) {
 				bytes.AddRange(BitConverter.GetBytes((ushort) 0)); //Number of characters
@@ -124,7 +124,7 @@ namespace csDBPF.Entries {
 			}
 			bytes.AddRange(new byte[] { 0x00, 0x10 }); //Text control character
 			bytes.AddRange(ByteArrayHelper.ToBytes(_text, false));
-			ByteData = bytes.ToArray();
+			ByteData = QFS.Compress(bytes.ToArray());
 		}
 	}
 }

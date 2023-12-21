@@ -47,6 +47,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="QFS\" />
 	  <Folder Include="Util\" />
 	</ItemGroup>
 

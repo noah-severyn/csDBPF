@@ -47,14 +47,14 @@ namespace csDBPF.Entries {
 		/// <remarks>
 		/// Use when reading from a file.
 		/// </remarks>
-        public override void DecodeEntry() {
+        public override void Decode() {
             _image = Image.Load(ByteData);
         }
 
         /// <summary>
         /// Build <see cref="DBPFEntry.ByteData"/> from the current state of <see cref="PNGImage"/>.
         /// </summary>
-        public override void ToBytes() {
+        public override void Encode() {
             using MemoryStream ms = new MemoryStream();
 
             _image.Save(ms, new PngEncoder());

@@ -99,7 +99,7 @@ namespace csDBPF.Entries {
         public DBPFEntryFSH(TGI tgi) : base(tgi) {
             _header = new FSHHeader();
             _bitmapHeaders = new List<FSHBitmapHeader>();
-            _isCompressed = DBPFCompression.IsCompressed(ByteData);
+            _isCompressed = QFS.IsCompressed(ByteData);
         }
         /// <summary>
 		/// Create a new instance. Use when reading an existing FSH entry from a file.
@@ -112,7 +112,7 @@ namespace csDBPF.Entries {
         public DBPFEntryFSH(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
             _header = new FSHHeader();
             _bitmapHeaders = new List<FSHBitmapHeader>();
-            _isCompressed = DBPFCompression.IsCompressed(ByteData);
+            _isCompressed = QFS.IsCompressed(ByteData);
         }
 
 
@@ -120,12 +120,12 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Decompresses this entry and sets <see cref="FSHHeader.FSHDirectory"/> and <see cref="BitmapHeaders"/> from byte data. These provide a template for how to process the <see cref="DBPFEntry.ByteData"/>
         /// </summary>
-        public override void DecodeEntry() {
+        public override void Decode() {
             if (_isDecoded) return;
 
             byte[] dData;
             if (_isCompressed) {
-                dData = DBPFCompression.Decompress(ByteData);
+                dData = QFS.Decompress(ByteData);
                 _isCompressed = false;
             } else {
                 dData = ByteData;
@@ -220,7 +220,7 @@ namespace csDBPF.Entries {
         /// <summary>
 		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
 		/// </summary>
-        public override void ToBytes() {
+        public override void Encode() {
             throw new NotImplementedException();
         }
 

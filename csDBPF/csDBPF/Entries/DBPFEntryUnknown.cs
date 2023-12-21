@@ -15,9 +15,9 @@ namespace csDBPF.Entries {
         public DBPFEntryUnknown(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
         }
 
-        public override void DecodeEntry() {}
+        public override void Decode() {}
 
-        public override void ToBytes() {
+        public override void Encode() {
             throw new NotImplementedException();
         }
     }
