@@ -288,7 +288,7 @@ namespace csDBPF {
 		/// <param name="length">Length to read</param>
 		/// <returns></returns>
 		public static float ReadTextToFloat(byte[] data, int offset, int length) {
-			float.TryParse(ToAString(data, offset, length), out float result);
+            float.TryParse(ToAString(data, offset, length), out float result);
 			return result;
 		}
 
@@ -414,30 +414,6 @@ namespace csDBPF {
 			}
 			return result;
 		}
-
-		public static byte[] ToByteArray(Array data) {
-			Type type = data.GetType().GetElementType();
-			switch (type.Name) {
-				case "Int32":
-					return ToByteArray((int[]) data);
-				case "Float32":
-					return ToByteArray((float[]) data);
-				case "UInt32":
-					return ToByteArray((uint[]) data);
-				case "Boolean":
-					return ToByteArray((bool[]) data);
-				case "Byte": //Uint8
-					return (byte[]) data;
-				case "Int64":
-					return ToByteArray((long[]) data);
-				case "UInt16":
-					return ToByteArray((ushort[]) data);
-				default:
-					return null;
-			}
-		}
-
-
 		#endregion ToByteArrayFrom
 
 
