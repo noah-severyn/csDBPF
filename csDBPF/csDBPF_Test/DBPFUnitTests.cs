@@ -154,6 +154,14 @@ namespace csDBPF_Test {
                 CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, QFS.Decompress(TestArrays.notcompressedentry_b));
                 CollectionAssert.AreEqual(TestArrays.decompressedentry_b, QFS.Decompress(TestArrays.compressedentry_b));
             }
+
+            [TestMethod]
+            public void Test_026_QFS_Compress() {
+                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High) - Copy.dat");
+                dbpf.DecodeAllEntries();
+                dbpf.EncodeAllEntries();
+                dbpf.SaveAs("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High) - Copy2.dat");
+            }
         }
 
 

@@ -88,6 +88,10 @@ namespace csDBPF.Entries {
 				LogMessage("Data length is less than 4 bytes so no information can be read.");
 			}
 
+			if (IsCompressed) {
+				ByteData = QFS.Decompress(ByteData);
+			}
+
 			int pos = 0;
 			ushort numberOfChars = BitConverter.ToUInt16(ByteData, pos);
 			pos += 2;
@@ -113,18 +117,21 @@ namespace csDBPF.Entries {
 
 
 		/// <summary>
-		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
+		/// Build and compress <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
 		/// </summary>
 		public override void Encode() {
 			List<byte> bytes = new List<byte>();
 			if (_text is null) {
-				bytes.AddRange(BitConverter.GetBytes((ushort) 0)); //Number of characters
-			} else {
-				bytes.AddRange(BitConverter.GetBytes((ushort) _text.Length)); //Number of characters
+				bytes.AddRange(BitConverter.GetBytes((ushort) 0)); //Number of 2-byte characters
+            } else {
+				bytes.AddRange(BitConverter.GetBytes((ushort) _text.Length)); //Number of 2-byte characters
 			}
 			bytes.AddRange(new byte[] { 0x00, 0x10 }); //Text control character
 			bytes.AddRange(ByteArrayHelper.ToBytes(_text, false));
+			UncompressedSize = (uint) _text.Length;
 			ByteData = QFS.Compress(bytes.ToArray());
+            
+			
 		}
 	}
 }

@@ -434,6 +434,13 @@ namespace csDBPF
 		}
 
 
+		public void EncodeAllEntries() {
+            foreach (DBPFEntry entry in _listOfEntries) {
+                entry.Encode();
+            }
+        }
+
+
 
 		/// <summary>
 		/// Return the nth entry in the file by index. 0-based index.
@@ -466,13 +473,13 @@ namespace csDBPF
 		/// Saves the current instance to disk using the <see cref="File"/> property.
 		/// </summary>
 		public void Save() {
-			Save(File.FullName);
+            SaveAs(File.FullName);
 		}
 		/// <summary>
 		/// Saves the current instance to disk at the specified path.
 		/// <param name="filePath">File to save as</param>
 		/// </summary>
-		public void Save(string filePath) {
+		public void SaveAs(string filePath) {
 			FileInfo file;
 			if (filePath is null) {
 				file = File;
@@ -500,10 +507,10 @@ namespace csDBPF
 
 			//Write all entries
 			RebuildDirectory();
-			foreach (DBPFEntry entry in _listOfEntries) {
-				entry.Encode();
-				fs.Write(entry.ByteData);
-			}
+			//foreach (DBPFEntry entry in _listOfEntries) {
+			//	entry.Encode();
+			//	fs.Write(entry.ByteData);
+			//}
 
 			//Write Index
 			UpdateIndex();
@@ -692,7 +699,7 @@ namespace csDBPF
 
 		public void UpdateEntry(DBPFEntry entry) {
 			//TODO - implement Update for a TGI
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 		public void UpdateEntry(int index) {
 			//TODO - implement Update for a position
