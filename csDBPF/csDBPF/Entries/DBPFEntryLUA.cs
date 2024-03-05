@@ -13,11 +13,11 @@ namespace csDBPF.Entries {
         }
 
         public override void Decode() {
-            throw new NotImplementedException();
+            
         }
 
         public override void Encode(bool compress = false) {
-            throw new NotImplementedException();
+            
         }
     }
 }

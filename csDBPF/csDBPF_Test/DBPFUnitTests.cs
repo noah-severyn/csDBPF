@@ -157,10 +157,10 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_026_QFS_Compress() {
-                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High) - Copy.dat");
+                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\RJ - Block Road Barriers 1.0 - Copy.dat");
                 dbpf.DecodeAllEntries();
                 dbpf.EncodeAllEntries();
-                dbpf.SaveAs("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High) - Copy2.dat");
+                dbpf.SaveAs("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\RJ - Block Road Barriers 1.0 - Copy2.dat");
             }
         }
 
@@ -868,6 +868,15 @@ namespace csDBPF_Test {
                     };
                     entryknown.Encode();
                     CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, entryknown.ByteData);
+
+
+                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High).dat");
+                    dbpf.DecodeAllEntries();
+
+                    DBPFFile dbpf2 = new DBPFFile();
+                    dbpf2.AddEntries(dbpf.GetEntries(DBPFTGI.LTEXT));
+                    dbpf2.EncodeAllEntries();
+                    dbpf2.SaveAs("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High)2.dat");
                 }
             }
 

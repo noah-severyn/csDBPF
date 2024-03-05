@@ -145,7 +145,8 @@ namespace csDBPF.Entries {
 			
 			else {
                 ByteData = bytes.ToArray();
-				IsCompressed = false;
+                CompressedSize = (uint) ByteData.Length;
+                IsCompressed = false;
             }
             UncompressedSize = (uint) _text.Length;
         }
