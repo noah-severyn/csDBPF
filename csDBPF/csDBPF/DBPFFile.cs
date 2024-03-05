@@ -30,22 +30,19 @@ namespace csDBPF
 		/// </summary>
 		public FileInfo File;
 
-		private long _dataSize;
 		/// <summary>
 		/// Size of all entries in this file,  in bytes.
 		/// </summary>
 		/// <remarks>
 		/// This does not include the size allocated for the Header (96 bytes) or the Index (entry count * 20 bytes).
 		/// </remarks>
-		public long DataSize {
-			get { return _dataSize; }
-		}
+		public long DataSize { get; private set; }
 
 		/// <summary>
 		/// List of all entries in this file.
 		/// </summary>
 		/// <remarks>
-		/// This is private because when an entry is added or removed, other operations happen simultaneously to adjust <see cref="_listOfTGIs"/>, <see cref="_dataSize"/>, etc.
+		/// This is private because when an entry is added or removed, other operations happen simultaneously to adjust <see cref="_listOfTGIs"/>, <see cref="DataSize"/>, etc.
 		/// </remarks>
 		private readonly List<DBPFEntry> _listOfEntries; //TODO - add in documentation about a pro tip to use LINQ to filter these based on the output of GetEntries or GetTGIs
 
@@ -55,7 +52,6 @@ namespace csDBPF
 		/// <remarks>
 		/// Can be used for quick inspection because no entry data is processed.
 		/// </remarks>
-		//private readonly List<DBPFTGI> _listOfTGIs;
 		private readonly List<TGI> _listOfTGIs;
 
         /// <summary>
@@ -235,14 +231,8 @@ namespace csDBPF
 		/// Instantiates a DBPFFile from a FileInfo object. If the file exists, its contents are read into the new DBPFFile; if the file does not exist then a new DBPFFile is created with default Header values.
 		/// </summary>
 		/// <param name="file">File to read</param>
-		public DBPFFile(FileInfo file) {
+		public DBPFFile(FileInfo file) : this() {
 			File = file;
-			Header = new DBPFHeader();
-			_listOfEntries = new List<DBPFEntry>();
-			//_listOfTGIs = new List<DBPFTGI>();
-			_listOfTGIs = new List<TGI>();
-			_issueLog = new StringBuilder();
-
 			if (!file.Exists) {
 				Header.InitializeBlank();
 				return;
@@ -260,6 +250,16 @@ namespace csDBPF
 				
 			}
 		}
+
+		/// <summary>
+		/// Instantiates a new DBPFFile from scratch. 
+		/// </summary>
+		public DBPFFile() {
+            Header = new DBPFHeader();
+            _listOfEntries = new List<DBPFEntry>();
+            _listOfTGIs = new List<TGI>();
+            _issueLog = new StringBuilder();
+        }
 
 		/// <summary>
 		/// Returns a string that represents the current object.
@@ -507,10 +507,9 @@ namespace csDBPF
 
 			//Write all entries
 			RebuildDirectory();
-			//foreach (DBPFEntry entry in _listOfEntries) {
-			//	entry.Encode();
-			//	fs.Write(entry.ByteData);
-			//}
+			foreach (DBPFEntry entry in _listOfEntries) {
+				fs.Write(entry.ByteData);
+			}
 
 			//Write Index
 			UpdateIndex();
@@ -551,18 +550,18 @@ namespace csDBPF
 		/// <param name="entry">Entry to add</param>
 		public void AddEntry(DBPFEntry entry) {
 			entry.IndexPos = (uint) (_listOfEntries.Count + 1);
-			entry.Offset = (uint) _dataSize + 96;
+			entry.Offset = (uint) DataSize + 96;
 
 			_listOfEntries.Add(entry);
 			_listOfTGIs.Add(entry.TGI);
 			try {
-                _dataSize += entry.ByteData.LongLength;
+                DataSize += entry.ByteData.LongLength;
             }
 			catch (NullReferenceException) { //Non decoded entries will not have byte data set, so test if they are compressed or uncompressed and use that size.
 				if (entry.IsCompressed) {
-					_dataSize += entry.CompressedSize;
+					DataSize += entry.CompressedSize;
 				} else {
-					_dataSize += entry.UncompressedSize;
+					DataSize += entry.UncompressedSize;
 				}
 			}
 			
@@ -624,7 +623,7 @@ namespace csDBPF
 		public void RemoveEntry(int position) {
 			_listOfEntries.RemoveAt(position);
 			_listOfTGIs.RemoveAt(position);
-			_dataSize -= _listOfEntries[position].ByteData.LongLength;
+			DataSize -= _listOfEntries[position].ByteData.LongLength;
 		}
 
 
@@ -639,7 +638,7 @@ namespace csDBPF
 		public void RemoveAllEntries() {
 			_listOfEntries.Clear();
 			_listOfTGIs.Clear();
-			_dataSize = 0;
+			DataSize = 0;
 		}
 
 		/// <summary>
@@ -649,23 +648,30 @@ namespace csDBPF
 			if (_listOfEntries.Any(entry => entry.IsCompressed == true)) {
 				DBPFEntryDIR dir =  new DBPFEntryDIR();
 				dir.Build(_listOfEntries);
-				AddOrUpdateEntry(dir);
 			}
 		}
 
 		/// <summary>
 		/// Returns all entries in this file.
 		/// </summary>
-		/// <returns>All entries in this file</returns>
+		/// <returns>A list of all entries in this file</returns>
 		public List<DBPFEntry> GetEntries() {
 			return _listOfEntries;
 		}
 
-		/// <summary>
-		/// Returns the count of entries in this file.
-		/// </summary>
-		/// <returns>The count of entries</returns>
-		public int CountEntries() {
+        /// <summary>
+        /// Returns all entries in this file of the specified type.
+        /// </summary>
+        /// <returns>A list of entries in this file of the specified type</returns>
+        public List<DBPFEntry> GetEntries(TGI entryType) {
+            return _listOfEntries.FindAll(e => e.TGI.Matches(entryType));
+        }
+
+        /// <summary>
+        /// Returns the count of entries in this file.
+        /// </summary>
+        /// <returns>The count of entries</returns>
+        public int CountEntries() {
 			return _listOfEntries.Count;
 		}
 
