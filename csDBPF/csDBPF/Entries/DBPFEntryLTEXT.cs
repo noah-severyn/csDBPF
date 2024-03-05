@@ -116,10 +116,11 @@ namespace csDBPF.Entries {
 
 
 
-		/// <summary>
-		/// Build and compress <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
-		/// </summary>
-		public override void Encode() {
+        /// <summary>
+        /// Build and compress <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
+        /// </summary>
+        /// <param name="compress">Whether to compress the entry</param>
+        public override void Encode(bool compress = false) {
 			List<byte> bytes = new List<byte>();
 			if (_text is null) {
 				bytes.AddRange(BitConverter.GetBytes((ushort) 0)); //Number of 2-byte characters
@@ -128,10 +129,25 @@ namespace csDBPF.Entries {
 			}
 			bytes.AddRange(new byte[] { 0x00, 0x10 }); //Text control character
 			bytes.AddRange(ByteArrayHelper.ToBytes(_text, false));
-			UncompressedSize = (uint) _text.Length;
-			ByteData = QFS.Compress(bytes.ToArray());
-            
 			
-		}
+			if (compress) {
+                ByteData = QFS.Compress(bytes.ToArray());
+
+                //If data could not be compressed for some reason
+                if (ByteData is null) {
+                    ByteData = bytes.ToArray();
+					IsCompressed = false;
+                } else {
+                    CompressedSize = (uint) ByteData.Length;
+					IsCompressed = true;
+                }
+            } 
+			
+			else {
+                ByteData = bytes.ToArray();
+				IsCompressed = false;
+            }
+            UncompressedSize = (uint) _text.Length;
+        }
 	}
 }

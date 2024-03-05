@@ -64,6 +64,7 @@ namespace csDBPF.Entries {
         /// </summary>
         public DBPFEntryDIR() : base(DBPFTGI.DIRECTORY) {
             _compressedItems = new List<DBDFItem>();
+            IsCompressed = false; //DIR files are never compressed
         }
 
         /// <summary>
@@ -115,7 +116,8 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
         /// </summary>
-        public override void Encode() {
+		/// <param name="compress">Note this has no effect as DIR entries always remain uncompressed</param>
+        public override void Encode(bool compress = false) {
             List<byte> bytes = new List<byte>();
 
             foreach (DBDFItem item in _compressedItems) {

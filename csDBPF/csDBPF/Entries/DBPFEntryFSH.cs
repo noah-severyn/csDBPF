@@ -220,7 +220,8 @@ namespace csDBPF.Entries {
         /// <summary>
 		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
 		/// </summary>
-        public override void Encode() {
+		/// <param name="compress">Whether to compress the ByteData. Default is FALSE</param>
+        public override void Encode(bool compress = false) {
             throw new NotImplementedException();
         }
 

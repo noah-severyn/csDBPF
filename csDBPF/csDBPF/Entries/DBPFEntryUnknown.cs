@@ -17,7 +17,7 @@ namespace csDBPF.Entries {
 
         public override void Decode() {}
 
-        public override void Encode() {
+        public override void Encode(bool compress = false) {
             throw new NotImplementedException();
         }
     }

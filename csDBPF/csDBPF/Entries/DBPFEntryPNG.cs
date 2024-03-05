@@ -54,7 +54,8 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Build <see cref="DBPFEntry.ByteData"/> from the current state of <see cref="PNGImage"/>.
         /// </summary>
-        public override void Encode() {
+		/// <param name="compress">This has no effect as PNG entries are always uncompressed</param>
+        public override void Encode(bool compress = false) {
             using MemoryStream ms = new MemoryStream();
 
             _image.Save(ms, new PngEncoder());

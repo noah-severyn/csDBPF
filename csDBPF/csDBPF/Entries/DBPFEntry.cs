@@ -42,11 +42,6 @@ namespace csDBPF.Entries {
 		/// </remarks>
 		public uint CompressedSize { get; protected set; }
 
-		/// <summary>
-		/// Specifies whether this entry's <see cref="Encode"/> function outputs compressed data or not
-		/// </summary>
-		//public bool ShouldBeCompressed { get; protected set; }
-
         /// <summary>
         /// Get the current compression state of <see cref="ByteData"/>.
         /// </summary>
@@ -54,6 +49,9 @@ namespace csDBPF.Entries {
             get {
                 //We can peek at bytes 4 and 5 to determine compression status
                 return (ByteData.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(ByteData, 4) == 0x10FB);
+            }
+			private protected set {
+
             }
         }
 
@@ -119,10 +117,11 @@ namespace csDBPF.Entries {
         /// </summary>
         public abstract void Decode();
 
-		/// <summary>
-		/// Builds <see cref="ByteData"/> with the current state of the entry's data object. The encoding can be either text or binary according to <see cref="EncodingType"/>.
-		/// </summary>
-		public abstract void Encode();
+        /// <summary>
+        /// Builds <see cref="ByteData"/> with the current state of the entry's data object. The encoding can be either text or binary according to <see cref="EncodingType"/>.
+        /// </summary>
+		/// <param name="compress">Whether to compress the ByteData. Default is FALSE</param>
+        public abstract void Encode(bool compress = false);
 
 
 
