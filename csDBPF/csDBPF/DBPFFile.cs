@@ -150,44 +150,36 @@ namespace csDBPF
 			public uint IndexSize { get; private set; }
 
 
-			/// <summary>
-			/// Instantiate a new DBPFHeader. All properties remain unset until  <see cref="InitializeBlank"/> or <see cref="Initialize(BinaryReader)"/> is called.
-			/// </summary>
-			public DBPFHeader() { }
-
-
-			/// <summary>
-			/// Initialize Header information from an existing stream.
-			/// </summary>
-			/// <param name="br">Stream to read from.</param>
-			/// <exception cref="InvalidDataException">If file is not valid DBPF format.</exception>
-			public void Initialize(BinaryReader br) {
-				Identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
-				MajorVersion = br.ReadUInt32();
-				MinorVersion = br.ReadUInt32();
-				br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
-				DateCreated = br.ReadUInt32();
-				DateModified = br.ReadUInt32();
-				IndexMajorVersion = br.ReadUInt32();
-				IndexEntryCount = br.ReadUInt32();
-				IndexEntryOffset = br.ReadUInt32();
-				IndexSize = br.ReadUInt32();
-			}
-
-			/// <summary>
-			/// Initialize Header information with default values.
-			/// </summary>
-			public void InitializeBlank() {
-				Identifier = "DBPF";
-				MajorVersion = 1;
-				MinorVersion = 0;
-				DateCreated = (uint) DateTimeOffset.Now.ToUnixTimeSeconds();
-				DateModified = 0;
-				IndexMajorVersion = 7;
-				IndexEntryCount = 0;
-				IndexEntryOffset = 0;
-				IndexSize = 0;
-			}
+            /// <summary>
+            /// Initialize a header with default values.
+            /// </summary>
+            public DBPFHeader() {
+                Identifier = "DBPF";
+                MajorVersion = 1;
+                MinorVersion = 0;
+                DateCreated = (uint) DateTimeOffset.Now.ToUnixTimeSeconds();
+                DateModified = 0;
+                IndexMajorVersion = 7;
+                IndexEntryCount = 0;
+                IndexEntryOffset = 0;
+                IndexSize = 0;
+            }
+            /// <summary>
+            /// Initialize Header information from an existing stream.
+            /// </summary>
+            /// <param name="br">Stream to read from</param>
+            public DBPFHeader(BinaryReader br) {
+                Identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
+                MajorVersion = br.ReadUInt32();
+                MinorVersion = br.ReadUInt32();
+                br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
+                DateCreated = br.ReadUInt32();
+                DateModified = br.ReadUInt32();
+                IndexMajorVersion = br.ReadUInt32();
+                IndexEntryCount = br.ReadUInt32();
+                IndexEntryOffset = br.ReadUInt32();
+                IndexSize = br.ReadUInt32();
+            }
 
 			/// <summary>
 			/// Returns a string that represents the current object.
@@ -216,6 +208,29 @@ namespace csDBPF
 				IndexEntryOffset = (uint) dbpf.DataSize + 96;
 				IndexSize = IndexEntryCount * 20; //each Index entry has 5x uint values: T, G, I, offset, size
 			}
+
+			//internal byte[] Encode() {
+			//	byte[] bytes = new byte[96];
+
+   //             //Update and write Header
+   //             //if (Identifier is null) {
+   //             //    InitializeBlank();
+   //             //}
+   //             //Update();
+   //             //using FileStream fs = new(file.FullName, FileMode.Create);
+
+   //             fs.Write(ByteArrayHelper.ToBytes(Header.Identifier, true));
+   //             fs.Write(BitConverter.GetBytes(Header.MajorVersion));
+   //             fs.Write(BitConverter.GetBytes(Header.MinorVersion));
+   //             fs.Write(new byte[12]); //12 bytes are unused
+   //             fs.Write(BitConverter.GetBytes(Header.DateCreated));
+   //             fs.Write(BitConverter.GetBytes(Header.DateModified));
+   //             fs.Write(BitConverter.GetBytes(Header.IndexMajorVersion));
+   //             fs.Write(BitConverter.GetBytes(Header.IndexEntryCount));
+   //             fs.Write(BitConverter.GetBytes(Header.IndexEntryOffset));
+   //             fs.Write(BitConverter.GetBytes(Header.IndexSize));
+   //             fs.Write(new byte[48]);
+   //         }
 		}
 
 
@@ -234,8 +249,7 @@ namespace csDBPF
 		public DBPFFile(FileInfo file) : this() {
 			File = file;
 			if (!file.Exists) {
-				Header.InitializeBlank();
-				return;
+                return;
 			}
 
 			bool map = false;
@@ -255,7 +269,7 @@ namespace csDBPF
 		/// Instantiates a new DBPFFile from scratch. 
 		/// </summary>
 		public DBPFFile() {
-            Header = new DBPFHeader();
+			Header = new DBPFHeader();
             _listOfEntries = new List<DBPFEntry>();
             _listOfTGIs = new List<TGI>();
             _issueLog = new StringBuilder();
@@ -266,7 +280,7 @@ namespace csDBPF
 		/// </summary>
 		/// <returns>Returns a string that represents the current object.</returns>
 		public override string ToString() {
-			return $"{File.Name}: {Header.IndexEntryCount} subfiles";
+			return $"{File.Name}: {_listOfEntries.Count} subfiles";
 		}
 
 
@@ -295,7 +309,7 @@ namespace csDBPF
 
 			try {
 				// Read Header info
-				Header.Initialize(br);
+				Header = new DBPFHeader(br);
 
 				//Read Index info
 				List<uint> offsets = new List<uint>();
@@ -489,7 +503,7 @@ namespace csDBPF
 
 			//Update and write Header
 			if (Header.Identifier is null) {
-				Header.InitializeBlank();
+				Header = new DBPFHeader();
 			}
 			Header.Update(this);
 			using FileStream fs = new(file.FullName, FileMode.Create);
@@ -519,7 +533,12 @@ namespace csDBPF
 				fs.Write(BitConverter.GetBytes(entry.TGI.GroupID.Value));
 				fs.Write(BitConverter.GetBytes(entry.TGI.InstanceID.Value));
 				fs.Write(BitConverter.GetBytes(entry.Offset));
-				fs.Write(BitConverter.GetBytes(entry.CompressedSize));
+				if (entry.IsCompressed) {
+                    fs.Write(BitConverter.GetBytes(entry.CompressedSize));
+                } else {
+                    fs.Write(BitConverter.GetBytes(entry.UncompressedSize));
+                }
+				
 			}
 		}
 
@@ -528,16 +547,15 @@ namespace csDBPF
 		/// Updates the position number and offset of each entry based on the current size and position of each entry.
 		/// </summary>
 		private void UpdateIndex() {
-			uint offset = 0;
-			for (int idx = 0; idx < _listOfEntries.Count; idx++) {
-				if (idx == 0) {
-					_listOfEntries[0].Offset = 96;
-					offset = 96;
-				} else {
-					offset += _listOfEntries[idx - 1].CompressedSize;
-					_listOfEntries[idx].Offset = offset;
-				}
+			uint offset = 96;
+            _listOfEntries[0].Offset = 96;
+			if (_listOfEntries.Count == 1) {
+				return;
+			}
 
+            for (int idx = 1; idx < _listOfEntries.Count; idx++) {
+				offset += _listOfEntries[idx - 1].GetSize();
+				_listOfEntries[idx].Offset = offset;
 				_listOfEntries[idx].IndexPos = (uint) idx;
 			}
 		}
@@ -554,16 +572,13 @@ namespace csDBPF
 
 			_listOfEntries.Add(entry);
 			_listOfTGIs.Add(entry.TGI);
-			try {
+
+            //Non decoded entries (or newly created entries that have not been encoded yet) will not have ByteData set
+            if (entry.ByteData is null) {
+				DataSize += entry.GetSize();
+            } else {
                 DataSize += entry.ByteData.LongLength;
             }
-			catch (NullReferenceException) { //Non decoded entries will not have byte data set, so test if they are compressed or uncompressed and use that size.
-				if (entry.IsCompressed) {
-					DataSize += entry.CompressedSize;
-				} else {
-					DataSize += entry.UncompressedSize;
-				}
-			}
 			
 		}
 

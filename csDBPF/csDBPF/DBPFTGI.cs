@@ -122,13 +122,13 @@ namespace csDBPF {
         }
 
         /// <summary>
-        /// Check if the type, group, and instance of two TGIs are equal.
+        /// Check if the type, group, and instance are the same as the specified TGI.
         /// </summary>
         /// <remarks>
         /// If any component of the provided TGI is null that component will be skipped. This is opposed to <see cref="Matches(TGI)"/> which explicitly checks every component.
         /// Only the provided TGI of knownType is checked for null components.
         /// </remarks>
-        /// <param name="otherTGI">A DBPFTGI to check against</param>
+        /// <param name="otherTGI">TGI to check against</param>
         /// <returns>TRUE if check passes; FALSE otherwise</returns>
         public readonly bool MatchesExactly(TGI otherTGI) {
             bool isTIDok, isGIDok, isIIDok;

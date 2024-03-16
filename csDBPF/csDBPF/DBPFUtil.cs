@@ -66,7 +66,7 @@ namespace csDBPF {
         /// </summary>
         /// <param name="file">File to examine</param>
         /// <param name="validateDBPFVersion">Should the version information in the header be validated</param>
-        /// <returns>true if valid SC4 DBPF file, false otherwise</returns>
+        /// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
 		/// <remarks>
 		/// In most circumstances, validateDBPFVersions should be omitted or set to false. If set to true, a temporary copy of <see cref="DBPFFile.DBPFHeader"/> is created to validate multiple fields to check for DBPF version 1.0 used with SC4. There is significantly more overhead with this call, especially when iterating over multiple files. 
 		/// </remarks>
@@ -77,8 +77,7 @@ namespace csDBPF {
 			if (validateDBPFVersion) {
 				//To determine if the file is DBPF or not, can just look at the first few bytes which make up the header - no need to examine any of the rest of the file.
 				try {
-					DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader();
-					header.Initialize(br);
+					DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader(br);
 				}
 
 				catch (InvalidDataException) {

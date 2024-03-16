@@ -26,42 +26,50 @@ namespace csDBPF.Entries {
 		/// </summary>
 		public uint IndexPos { get; internal set; }
 
-		/// <summary>
-		/// Uncompressed size of the entry data, in bytes.
-		/// </summary>
-		/// <remarks>
-		/// Initially all data is assumed to be compressed until the first bytes of data can be read to determine actual compression status.
-		/// </remarks>
-		public uint UncompressedSize { get; protected set; }
+        /// <summary>
+        /// Uncompressed size of the entry data, in bytes.
+        /// </summary>
+        /// <remarks>
+        /// This may be null if ByteData is null.
+        /// </remarks>
+        public uint UncompressedSize { get; protected set; }
 
 		/// <summary>
 		/// Compressed size of the entry data, in bytes.
 		/// </summary>
 		/// <remarks>
-		/// Initially all data is assumed to be compressed until the first bytes of data can be read to determine actual compression status.
+		/// This may be null if ByteData is null or if ByteData has been updated and not yet re-compressed.
 		/// </remarks>
 		public uint CompressedSize { get; protected set; }
 
         /// <summary>
-        /// Get the current compression state of <see cref="ByteData"/>.
+        /// Get the current compression state of <see cref="ByteData"/>. May be null if the compression state is unknown.
         /// </summary>
-        public bool IsCompressed {
-            get {
-                //We can peek at bytes 4 and 5 to determine compression status
-                return (ByteData.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(ByteData, 4) == 0x10FB);
-            }
-			private protected set {
+        public bool IsCompressed { get;	private protected set; }
 
-            }
-        }
-
+		private byte[] _byteData;
         /// <summary>
         /// Byte array of raw data pertaining to this entry. This may or may not be compressed.
         /// </summary>
         /// <remarks>
         /// The interpretation of the entry data depends on the compression status and the entry type (known through its <see cref="TGI"/>). Always check if the data is compressed before processing.
         /// </remarks>
-		public byte[] ByteData { get; protected set; }
+		public byte[] ByteData { get {
+				return _byteData;
+			}
+
+			protected set {
+                _byteData = value;
+                //Peek at bytes 4 and 5 to determine compression status
+                IsCompressed = _byteData.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(_byteData, 4) == 0x10FB;
+				if (IsCompressed) {
+					CompressedSize = (uint) _byteData.Length;
+					//UncompressedSize = (uint) ByteArrayHelper.to //TODO - fix Uncompressed size setting here
+				} else {
+                    UncompressedSize = (uint) _byteData.Length;
+                }
+			}
+		}
 
         /// <summary>
         /// Comma delineated list of issues encountered when loading this entry.
@@ -80,9 +88,7 @@ namespace csDBPF.Entries {
 		/// <param name="tgi"></param>
 		public DBPFEntry(TGI tgi) {
             TGI = tgi;
-            //ShouldBeCompressed = true;
             IssueLog = new StringBuilder();
-
         }
 
 		
@@ -99,10 +105,12 @@ namespace csDBPF.Entries {
             Offset = offset;
             IndexPos = index;
             CompressedSize = size;
-            ByteData = bytes;
+            _byteData = bytes;
             IssueLog = new StringBuilder();
 
-            //We can peek at the first 9 bytes of this data to determine its compression characteristics
+            //Peek at bytes 4 and 5 to determine compression status
+            IsCompressed = (_byteData.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(_byteData, 4) == 0x10FB);
+            //Peek at the first 9 bytes of this data to determine its compression characteristics
             if (IsCompressed) {
                 UncompressedSize = (uint) ((bytes[6] << 16) | (bytes[7] << 8) | bytes[8]);
             } else {
@@ -153,12 +161,24 @@ namespace csDBPF.Entries {
 		public bool IsEXMP() {
 			byte[] data;
 			if (IsCompressed) {
-				data = QFS.Decompress(ByteData[0..16]);
+				data = QFS.Decompress(_byteData[0..16]);
 			} else {
-				data = ByteData[0..16];
+				data = _byteData[0..16];
 			}
 			string fileIdentifier = ByteArrayHelper.ToAString(data, 0, 4);
 			return fileIdentifier == "EQZB" || fileIdentifier == "EQZT" || fileIdentifier == "CQZB" || fileIdentifier == "CQZT";
+		}
+
+		/// <summary>
+		/// Return either the Compressed or Uncompressed size depending on if this entry is compressed or not.
+		/// </summary>
+		/// <returns>The size in bytes</returns>
+		public uint GetSize() {
+			if (IsCompressed) {
+				return CompressedSize;
+			} else {
+				return UncompressedSize;
+			}
 		}
 
 		/// <summary>

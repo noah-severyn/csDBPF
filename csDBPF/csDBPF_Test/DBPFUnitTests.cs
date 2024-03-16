@@ -160,7 +160,7 @@ namespace csDBPF_Test {
                 DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\RJ - Block Road Barriers 1.0 - Copy.dat");
                 dbpf.DecodeAllEntries();
                 dbpf.EncodeAllEntries();
-                dbpf.SaveAs("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\RJ - Block Road Barriers 1.0 - Copy2.dat");
+                //dbpf.SaveAs("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\RJ - Block Road Barriers 1.0 - Copy2.dat");
             }
         }
 
@@ -839,6 +839,28 @@ namespace csDBPF_Test {
             /// </summary>
             [TestClass]
             public class _080_LTEXT {
+
+                [TestMethod]
+                public void Test_080_LTEXT_Create() {
+                    DBPFEntryLTEXT entry = new DBPFEntryLTEXT();
+                    entry.Text = "Local Medical Facility Pockets Picked";
+                    entry.Encode();
+
+                    DBPFEntryLTEXT entry2 = new DBPFEntryLTEXT("Local Medical Facility Pockets Picked");
+                    entry2.Encode();
+
+                    DBPFEntryLTEXT entry3 = new DBPFEntryLTEXT(new TGI(0x2026960B, 0x6A231EA7, 0xEA5655D2), "Local Medical Facility Pockets Picked");
+                    entry3.Encode();
+
+                    CollectionAssert.AreEqual(entry.ByteData, entry2.ByteData);
+                    CollectionAssert.AreEqual(entry.ByteData, entry3.ByteData);
+                    CollectionAssert.AreEqual(entry2.ByteData, entry3.ByteData);
+
+                }
+
+
+
+
                 [TestMethod]
                 public void Test_081a_LTEXT_Decode() {
                     //Parse from bytes
@@ -870,13 +892,15 @@ namespace csDBPF_Test {
                     CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, entryknown.ByteData);
 
 
-                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High).dat");
+                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High) - Copy.dat");
                     dbpf.DecodeAllEntries();
 
-                    DBPFFile dbpf2 = new DBPFFile();
+                    DBPFFile dbpf2 = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High) - Copy2.dat");
                     dbpf2.AddEntries(dbpf.GetEntries(DBPFTGI.LTEXT));
                     dbpf2.EncodeAllEntries();
-                    dbpf2.SaveAs("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High)2.dat");
+                    dbpf2.Save();
+
+
                 }
             }
 

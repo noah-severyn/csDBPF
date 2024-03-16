@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace csDBPF.Entries {
 	/// <summary>
@@ -22,9 +23,10 @@ namespace csDBPF.Entries {
 		/// </summary>
 		public string Text {
 			get { return _text; }
-			set {
+            set {
 				_text = value;
-			}
+                UncompressedSize = (uint) _text.Length * 2 + 4;
+            }
 		}
 
 
@@ -56,6 +58,8 @@ namespace csDBPF.Entries {
 		/// <param name="text">Text to set</param>
 		public DBPFEntryLTEXT(TGI tgi, string text) : base(tgi) {
 			_text = text;
+			IsCompressed = false;
+			UncompressedSize = (uint) text.Length * 2 + 4;
 		}
 
 		/// <summary>
@@ -121,7 +125,11 @@ namespace csDBPF.Entries {
         /// </summary>
         /// <param name="compress">Whether to compress the entry</param>
         public override void Encode(bool compress = false) {
-			List<byte> bytes = new List<byte>();
+			if (TGI.GroupID is null) { TGI.RandomizeGroup(); }
+            if (TGI.InstanceID is null) { TGI.RandomizeInstance(); }
+
+
+            List<byte> bytes = new List<byte>();
 			if (_text is null) {
 				bytes.AddRange(BitConverter.GetBytes((ushort) 0)); //Number of 2-byte characters
             } else {
@@ -145,10 +153,9 @@ namespace csDBPF.Entries {
 			
 			else {
                 ByteData = bytes.ToArray();
-                CompressedSize = (uint) ByteData.Length;
                 IsCompressed = false;
             }
-            UncompressedSize = (uint) _text.Length;
+            UncompressedSize = (uint) _text.Length * 2 + 4;
         }
 	}
 }
