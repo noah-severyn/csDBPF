@@ -136,7 +136,7 @@ namespace csDBPF.Entries {
 				bytes.AddRange(BitConverter.GetBytes((ushort) _text.Length)); //Number of 2-byte characters
 			}
 			bytes.AddRange(new byte[] { 0x00, 0x10 }); //Text control character
-			bytes.AddRange(ByteArrayHelper.ToBytes(_text, false));
+			bytes.AddRange(ByteArrayHelper.ToBytes(_text));
 			
 			if (compress) {
                 ByteData = QFS.Compress(bytes.ToArray());

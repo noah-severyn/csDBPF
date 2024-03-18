@@ -726,5 +726,10 @@ namespace csDBPF
 			//TODO - implement Update for a position
 			throw new NotImplementedException();
 		}
+
+		public void SortEntries() {
+            //_listOfEntries = _listOfEntries.OrderBy(e => e.TGI);
+			//_listOfTGIs.OrderBy(_);
+		}
 	}
 }

@@ -137,7 +137,7 @@ namespace csDBPF.Entries {
 				try {
                     _listOfProperties.Add(property.ID, property);
                 } catch {
-					LogMessage($"Property 0x{DBPFUtil.ToHexString(property.ID)} is duplicated.");
+					LogMessage($"Property {DBPFUtil.ToHexString(property.ID)} is duplicated.");
 				}
 
 				//Determine which bytes to skip to get to the start of the next property
@@ -152,7 +152,7 @@ namespace csDBPF.Entries {
 						pos += 4;
 					}
 				} else {
-					pos = ByteArrayHelper.FindNextInstanceOf(dData, 0x0A, pos) + 1;
+					pos = FindNextInstanceOf(dData, 0x0A, pos) + 1;
 				}
 			}
 
@@ -271,7 +271,7 @@ namespace csDBPF.Entries {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
 				if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-					LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
+					LogMessage($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
             } else {
@@ -316,14 +316,14 @@ namespace csDBPF.Entries {
 
 			//Capture the DataType
 			//Skip over the property name `:{"Exemplar Type"}=` or `:{"Bulldoze Cost"}=` are examples
-			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Equal, offset) + 1;
-			int endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset); //this represents the ending position (offset) of whatever we are looking for
+			offset = FindNextInstanceOf(dData, (byte) SpecialChars.Equal, offset) + 1;
+			int endPos = FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset); //this represents the ending position (offset) of whatever we are looking for
 			string type = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
 			offset = endPos + 1;
 			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(type);
 
 			//Determine number of reps; Problem if countOfReps = 0, then the loop below will not execute. If one value, the loop should run just once. Be careful with the difference between the "number of values" and "number of repetitions".
-			endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
+			endPos = FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
 			int countOfReps = ByteArrayHelper.ReadTextToInt(dData, offset, endPos - offset);
 			int countOfValues;
 			if (countOfReps == 0) {
@@ -333,7 +333,7 @@ namespace csDBPF.Entries {
 			}
 
 			//Parse the text values into a byte array and set the property values equal to the array. Algorithm differs depending on if the data type is float, string, or other number.
-			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
+			offset = FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
 			object dataValues;
 
 			if (dataType == DBPFPropertyDataType.FLOAT32) {
@@ -341,7 +341,7 @@ namespace csDBPF.Entries {
 				float value;
 
 				if (countOfReps == 1) {
-					endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
+					endPos = FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
 					value = ByteArrayHelper.ReadTextToFloat(dData, offset, endPos - offset);
 					((List<float>) dataValues).Add(value);
 				} 
@@ -349,9 +349,9 @@ namespace csDBPF.Entries {
 					for (int rep = 0; rep < countOfReps; rep++) {
 						int endRepPos;
 						if (rep != countOfReps - 1) {//get all except last rep (aka reps appended by a comma)
-							endRepPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Comma, offset);
+							endRepPos = FindNextInstanceOf(dData, (byte) SpecialChars.Comma, offset);
 						} else { //get the last rep in the list (rep appended by a closing bracket
-							endRepPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
+							endRepPos = FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
 						}
 
 						//Precision of floats is ~6-9 digits so this number may be rounded or truncated
@@ -364,7 +364,7 @@ namespace csDBPF.Entries {
 			
 			else if (dataType == DBPFPropertyDataType.STRING) {
 				//strings are encoded with quotes, so we start one position after and end one position sooner to avoid incorporating them into the decoded string
-				endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset) - 2;
+				endPos = FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset) - 2;
 				string result = ByteArrayHelper.ToAString(dData, offset+1, endPos - offset);
 				dataValues = result;
 			} 
@@ -385,7 +385,7 @@ namespace csDBPF.Entries {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
                 if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-                    LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
+                    LogMessage($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
 			} else {
@@ -605,6 +605,26 @@ namespace csDBPF.Entries {
 		/// </summary>
 		public void RemoveAllProperties() {
 			_listOfProperties.Clear();
-		}
-	}
+        }
+
+
+        /// <summary>
+        /// Finds the first instance of a given byte starting at the specified offset.
+        /// </summary>
+        /// <param name="data">Array to search in</param>
+        /// <param name="byteToFind">Byte value to find</param>
+        /// <param name="offset">Location in array to start at</param>
+        /// <returns>Index of next occurrence of the target byte; 0 if byte is not found</returns>
+        private static int FindNextInstanceOf(byte[] data, byte byteToFind, int offset = 0) {
+            //return FindNextInstanceOf(data, byteToFind, offset);
+			//TODO - replace this method with indexOf?
+
+            for (int idx = offset; idx < data.Length; idx++) {
+                if (data[idx] == byteToFind) {
+                    return idx;
+                }
+            }
+            return 0;
+        }
+    }
 }
