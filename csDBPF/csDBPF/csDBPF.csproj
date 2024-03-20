@@ -9,8 +9,6 @@
 
 		<OutputType>Library</OutputType>
 
-		<StartupObject>csDBPF.DBPF_Test</StartupObject>
-
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
