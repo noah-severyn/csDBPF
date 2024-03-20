@@ -29,11 +29,11 @@ namespace csDBPF.Properties {
 		public string Name {
 			get { return _name; }
 		}
-		private readonly DBPFPropertyDataType _type;
+		private readonly DBPFProperty.PropertyDataType _type;
 		/// <summary>
 		/// Property data type. Required.
 		/// </summary>
-		public DBPFPropertyDataType Type {
+		public DBPFProperty.PropertyDataType Type {
 			get { return _type; }
 		}
 		private readonly bool _showAsHex;
@@ -111,7 +111,7 @@ namespace csDBPF.Properties {
 		internal XMLExemplarProperty() {
 			_id = 0;
 			_name = null;
-			_type = null;
+			_type = DBPFProperty.PropertyDataType.UNKNOWN;
 			_showAsHex = true;
 		}
 		/// <summary>
@@ -121,7 +121,7 @@ namespace csDBPF.Properties {
 		/// <param name="name"></param>
 		/// <param name="type"></param>
 		/// <param name="showAsHex"></param>
-		private XMLExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex) {
+		private XMLExemplarProperty(uint id, string name, DBPFProperty.PropertyDataType type, bool showAsHex) {
 			_id = id;
 			_name = name;
 			_type = type;
@@ -141,7 +141,7 @@ namespace csDBPF.Properties {
 		/// <param name="minValue">Minimum allowed value</param>
 		/// <param name="maxValue">Maximum allowed value</param>
 		/// <param name="step"></param>
-		internal XMLExemplarProperty(uint id, string name, DBPFPropertyDataType type, bool showAsHex, short? count = null, string defaultValue = null, int? minLength = null, int? maxLength = null, string minValue = null, string maxValue = null, uint? step = null) {
+		internal XMLExemplarProperty(uint id, string name, DBPFProperty.PropertyDataType type, bool showAsHex, short? count = null, string defaultValue = null, int? minLength = null, int? maxLength = null, string minValue = null, string maxValue = null, uint? step = null) {
 			_id = id;
 			_name = name;
 			_type = type;

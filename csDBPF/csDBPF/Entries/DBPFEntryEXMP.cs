@@ -143,9 +143,9 @@ namespace csDBPF.Entries {
 				//Determine which bytes to skip to get to the start of the next property
 				if (!_isTextEncoding) {
 					if (property.NumberOfReps == 0) {
-						pos += (property.DataType.Length * (property.NumberOfReps+1)) + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
+						pos += (DBPFProperty.LookupDataTypeLength(property.DataType) * (property.NumberOfReps+1)) + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
 					} else {
-						pos += (property.DataType.Length * (property.NumberOfReps)) + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
+						pos += (DBPFProperty.LookupDataTypeLength(property.DataType) * (property.NumberOfReps)) + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
 					}
 					
 					if (property.NumberOfReps > 0) { //Skip 4 more for NumberOfValues
@@ -205,8 +205,8 @@ namespace csDBPF.Entries {
 
 			//Get the data value type
 			ushort valueType = BitConverter.ToUInt16(dData, offset);
-			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(valueType);
-			if (dataType is null) {
+            DBPFProperty.PropertyDataType dataType = (DBPFProperty.PropertyDataType) valueType;
+			if (dataType is DBPFProperty.PropertyDataType.UNKNOWN) {
 				LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid data type. Unable to decode property.");
                 return null;
             }
@@ -228,10 +228,10 @@ namespace csDBPF.Entries {
 				offset += 1; //There is a 1 byte unused flag
 				countOfReps = BitConverter.ToUInt32(dData, offset);
 				offset += 4;
-				if (dataType == DBPFPropertyDataType.STRING) {
+				if (dataType == DBPFProperty.PropertyDataType.STRING) {
 					dataValues = ByteArrayHelper.ToAString(dData, offset, (int) countOfReps);
 				}
-				else if (dataType == DBPFPropertyDataType.FLOAT32) {
+				else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 					dataValues = new List<float>();
 					for (int idx = 0; idx < countOfReps; idx++) {
 						((List<float>) dataValues).Add(BitConverter.ToSingle(dData,offset));
@@ -242,9 +242,9 @@ namespace csDBPF.Entries {
 					dataValues = new List<long>();
 					byte[] oneVal = new byte[8];
 					for (int idx = 0; idx < countOfReps; idx++) {
-						Array.Copy(dData, offset, oneVal, 0, dataType.Length);
+						Array.Copy(dData, offset, oneVal, 0, DBPFProperty.LookupDataTypeLength(dataType));
 						((List<long>) dataValues).Add(BitConverter.ToInt64(oneVal));
-						offset += dataType.Length;
+						offset += DBPFProperty.LookupDataTypeLength(dataType);
 					}
 				}
 			}
@@ -254,10 +254,10 @@ namespace csDBPF.Entries {
 				countOfReps = 0;
 				offset += 1; //This one byte is number of value repetitions; seems to always be 0
 				byte[] byteVals = new byte[8];
-				Array.Copy(dData, offset, byteVals, 0, dataType.Length);
-				if (dataType == DBPFPropertyDataType.STRING) {
+				Array.Copy(dData, offset, byteVals, 0, DBPFProperty.LookupDataTypeLength(dataType));
+				if (dataType == DBPFProperty.PropertyDataType.STRING) {
 					dataValues = ByteArrayHelper.ToAString(dData, offset, 1);
-				} else if (dataType == DBPFPropertyDataType.FLOAT32) {
+				} else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 					dataValues = new List<float> { BitConverter.ToSingle(byteVals) };
 				} else {
 					dataValues = new List<long> { BitConverter.ToInt64(byteVals) };
@@ -267,9 +267,9 @@ namespace csDBPF.Entries {
 
 			//Create new decoded property then set ID and DataValues
 			DBPFProperty newProperty;
-			if (dataType == DBPFPropertyDataType.STRING) {
+			if (dataType == DBPFProperty.PropertyDataType.STRING) {
 				newProperty = new DBPFPropertyString();
-			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
+			} else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 				if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
 					LogMessage($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
@@ -320,7 +320,7 @@ namespace csDBPF.Entries {
 			int endPos = FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset); //this represents the ending position (offset) of whatever we are looking for
 			string type = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
 			offset = endPos + 1;
-			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(type);
+            DBPFProperty.PropertyDataType dataType = DBPFProperty.LookupDataType(type);
 
 			//Determine number of reps; Problem if countOfReps = 0, then the loop below will not execute. If one value, the loop should run just once. Be careful with the difference between the "number of values" and "number of repetitions".
 			endPos = FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
@@ -336,7 +336,7 @@ namespace csDBPF.Entries {
 			offset = FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
 			object dataValues;
 
-			if (dataType == DBPFPropertyDataType.FLOAT32) {
+			if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 				dataValues = new List<float>();
 				float value;
 
@@ -362,7 +362,7 @@ namespace csDBPF.Entries {
 				}
 			} 
 			
-			else if (dataType == DBPFPropertyDataType.STRING) {
+			else if (dataType == DBPFProperty.PropertyDataType.STRING) {
 				//strings are encoded with quotes, so we start one position after and end one position sooner to avoid incorporating them into the decoded string
 				endPos = FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset) - 2;
 				string result = ByteArrayHelper.ToAString(dData, offset+1, endPos - offset);
@@ -373,17 +373,17 @@ namespace csDBPF.Entries {
 				dataValues = new List<long>();
 				for (int rep = 0; rep < countOfValues; rep++) {
 					offset += 2; //skip "0x"
-					long result = ByteArrayHelper.ReadTextToLong(dData, offset, dataType.Length * 2);
+					long result = ByteArrayHelper.ReadTextToLong(dData, offset, DBPFProperty.LookupDataTypeLength(dataType) * 2);
 					((List<long>) dataValues).Add(result);
-					offset += (dataType.Length * 2) + 1; //skip comma
+					offset += (DBPFProperty.LookupDataTypeLength(dataType) * 2) + 1; //skip comma
 				}
 			}
 
 			//Create new decoded property then set ID and DataValues
 			DBPFProperty newProperty;
-			if (dataType == DBPFPropertyDataType.STRING) {
+			if (dataType == DBPFProperty.PropertyDataType.STRING) {
 				newProperty = new DBPFPropertyString();
-			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
+			} else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
                 if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
                     LogMessage($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }

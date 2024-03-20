@@ -43,7 +43,7 @@ namespace csDBPF.Properties {
 				XMLExemplarProperty exmp = new XMLExemplarProperty(
 					id,
 					prop.Attribute("Name").Value,
-					DBPFPropertyDataType.LookupDataType(prop.Attribute("Type").Value),
+					DBPFProperty.LookupDataType(prop.Attribute("Type").Value),
 					prop.Attribute("ShowAsHex").Value == "Y",
 					short.TryParse((string) TryXAttributeExists(prop, "Count"), out short s) ? s : null,
 					(string) TryXAttributeExists(prop, "Default"),

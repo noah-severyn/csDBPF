@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 
 namespace csDBPF.Properties {
 
 	public abstract partial class DBPFProperty {
-		/// <summary>
-		/// Defines the type of exemplar and what game systems or components the exemplar contains info for.
-		/// </summary>
-		/// <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar#Exemplar_Types"/>
-		public enum ExemplarTypes {
+        /// <summary>
+        /// Defines the <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar#Exemplar_Types">type of exemplar</see> and what game systems or components the exemplar contains info for.
+        /// </summary>
+        public enum ExemplarTypes {
 			/// <summary>
 			/// The use of T00 exemplars is relatively unknown. 
 			/// </summary>
@@ -153,11 +150,11 @@ namespace csDBPF.Properties {
 			GraphControl
 		}
 
-		/// <summary>
-		/// The first rep (0) of a LotConfigPropertyLotObject describes its type.
-		/// </summary>
-		/// <see href="https://www.wiki.sc4devotion.com/index.php?title=LotConfigPropertyLotObject#Specification"/>.
-		public enum LotConfigPropertyLotObjectTypes {
+
+        /// <summary>
+        /// The first rep (0) of a LotConfigPropertyLotObject describes its <see href="https://www.wiki.sc4devotion.com/index.php?title=LotConfigPropertyLotObject#Specification">object type</see>.
+        /// </summary>
+        public enum LotConfigPropertyLotObjectTypes {
 			/// <summary>
 			/// Defines position and IID reference of building exemplar.
 			/// </summary>
@@ -194,11 +191,10 @@ namespace csDBPF.Properties {
 		}
 
 
-		/// <summary>
-		/// Defines the RCI type for a lot.
-		/// </summary>
-		/// <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>
-		public enum LotConfigPropertyPurposeTypes {
+        /// <summary>
+        /// Defines the <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">RCI type</see> for a lot.
+        /// </summary>
+        public enum LotConfigPropertyPurposeTypes {
 			/// <summary>
 			/// None.
 			/// </summary>
@@ -233,11 +229,11 @@ namespace csDBPF.Properties {
 			IndustryHighTech = 8
 		}
 
-		/// <summary>
-		/// Defines the wealth for a lot.
-		/// </summary>
-		/// <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>
-		public enum LotConfigPropertyWealthTypes {
+
+        /// <summary>
+        /// Defines the <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">wealth</see> for a lot.
+        /// </summary>
+        public enum LotConfigPropertyWealthTypes {
 			/// <summary>
 			/// No wealth (civic, landmark, etc.).
 			/// </summary>
@@ -256,11 +252,11 @@ namespace csDBPF.Properties {
 			High
 		}
 
-		/// <summary>
-		/// Defines the zone type for a lot - which type of zones the lot will grow on or was plopped as.
-		/// </summary>
-		/// <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>
-		public enum LotConfigPropertyZoneTypes {
+
+        /// <summary>
+        /// Defines the <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">zone type</see> for a lot - which type of zones the lot will grow on or was plopped as.
+        /// </summary>
+        public enum LotConfigPropertyZoneTypes {
 			/// <summary>
 			/// None
 			/// </summary>
@@ -327,11 +323,11 @@ namespace csDBPF.Properties {
 			CivicPlopped
 		}
 
-		/// <summary>
-		/// Defines the road orientation for a lot.
-		/// </summary>
-		/// <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration"/>
-		public enum LotConfigPropertyRoadRequirement {
+
+        /// <summary>
+        /// Defines the <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">road orientation</see> for a lot.
+        /// </summary>
+        public enum LotConfigPropertyRoadRequirement {
 			/// <summary>
 			/// Front road requirement.
 			/// </summary>

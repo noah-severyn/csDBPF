@@ -19,22 +19,22 @@ namespace csDBPF.Properties {
 			set { _id = value; }
 		}
 
-		private readonly DBPFPropertyDataType _dataType;
-		/// <summary>
-		/// The <see cref="DBPFPropertyDataType"/> for this property.
-		/// </summary>
-		public override DBPFPropertyDataType DataType {
+		private readonly PropertyDataType _dataType;
+        /// <summary>
+        /// The <see cref="PropertyDataType"/> for this property.
+        /// </summary>
+        public override PropertyDataType DataType {
 			get { return _dataType; }
 		}
 		
 		private int _numberOfReps;
-		/// <summary>
-		/// The number of repetitions of <see cref="DBPFPropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
-		/// </summary>
-		/// <remarks>
-		/// Determining the count partially depends on the encoding type. For binary encoded string-type properties: length of string. For text encoded string-type properties: always 1.
-		/// </remarks>
-		public override int NumberOfReps {
+        /// <summary>
+        /// The number of repetitions of <see cref="PropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
+        /// </summary>
+        /// <remarks>
+        /// Determining the count partially depends on the encoding type. For binary encoded string-type properties: length of string. For text encoded string-type properties: always 1.
+        /// </remarks>
+        public override int NumberOfReps {
 			get { return _numberOfReps; }
 		}
 
@@ -63,7 +63,7 @@ namespace csDBPF.Properties {
 		/// </summary>
 		/// <param name="encodingType">Encoding type: binary or text</param>
 		public DBPFPropertyString(bool encodingType = EncodingType.Binary) {
-			_dataType = DBPFPropertyDataType.STRING;
+			_dataType = PropertyDataType.STRING;
 			_isTextEncoding = encodingType;
 			_numberOfReps = 0;
 		}
@@ -73,7 +73,7 @@ namespace csDBPF.Properties {
 		/// <param name="value">String to set</param>
 		/// <param name="encodingType">Encoding type: binary or text</param>
 		public DBPFPropertyString(string value, bool encodingType = EncodingType.Binary) {
-			_dataType = DBPFPropertyDataType.STRING;
+			_dataType = PropertyDataType.STRING;
 			_dataValue = value;
 			_isTextEncoding = encodingType;
 			if (_isTextEncoding) {
@@ -167,7 +167,7 @@ namespace csDBPF.Properties {
 			else {
 				List<byte> bytes = new List<byte>();
 				bytes.AddRange(BitConverter.GetBytes(_id));
-				bytes.AddRange(BitConverter.GetBytes(_dataType.IdentifyingNumber));
+				bytes.AddRange(BitConverter.GetBytes((ushort) _dataType));
 				bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //String is always keyType = 0x80
 				bytes.Add(0); //unused flag
 				bytes.AddRange(BitConverter.GetBytes((uint) _dataValue.Length));

@@ -11,7 +11,7 @@ namespace csDBPF.Properties {
 	/// Represents a property storing integer-based value(s).
 	/// </summary>
 	/// <remarks>
-	/// All numbers are stored internally as long (equal to largest used DBPFPropertyDataType of SINT64). The actual underlying data type is defined by the <see cref="DBPFPropertyDataType"/>.
+	/// All numbers are stored internally as long (equal to largest used DBPFPropertyDataType of SINT64). The actual underlying data type is defined by the <see cref="DBPFPropertyDataType_dontuse"/>.
 	/// </remarks>
 	public class DBPFPropertyLong : DBPFProperty {
 		private uint _id;
@@ -23,22 +23,22 @@ namespace csDBPF.Properties {
 			set { _id = value; }
 		}
 
-		private DBPFPropertyDataType _dataType;
-		/// <summary>
-		/// The <see cref="DBPFPropertyDataType"/> for this property.
-		/// </summary>
-		public override DBPFPropertyDataType DataType {
+		private PropertyDataType _dataType;
+        /// <summary>
+        /// The <see cref="PropertyDataType"/> for this property.
+        /// </summary>
+        public override PropertyDataType DataType {
 			get { return _dataType; }
 		}
 
 		private int _numberOfReps;
-		/// <summary>
-		/// The number of repetitions of <see cref="DBPFPropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
-		/// </summary>
-		/// <remarks>
-		/// 0 reps = single value; n reps = n number of values.
-		/// </remarks>
-		public override int NumberOfReps {
+        /// <summary>
+        /// The number of repetitions of <see cref="PropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
+        /// </summary>
+        /// <remarks>
+        /// 0 reps = single value; n reps = n number of values.
+        /// </remarks>
+        public override int NumberOfReps {
 			get { return _numberOfReps; }
 		}
 
@@ -67,8 +67,8 @@ namespace csDBPF.Properties {
 		/// <param name="dataType">Data type of this property</param>
 		/// <param name="encodingType">Encoding type: binary or text</param>
 		/// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-		public DBPFPropertyLong(DBPFPropertyDataType dataType, bool encodingType = EncodingType.Binary) {
-			if (dataType == DBPFPropertyDataType.FLOAT32 || dataType == DBPFPropertyDataType.STRING) {
+		public DBPFPropertyLong(PropertyDataType dataType, bool encodingType = EncodingType.Binary) {
+			if (dataType == PropertyDataType.FLOAT32 || dataType == PropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			_dataType = dataType;
@@ -83,8 +83,8 @@ namespace csDBPF.Properties {
 		/// <param name="value">Value of this property</param>
 		/// <param name="encodingType">Encoding type: binary or text</param>
 		/// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-		public DBPFPropertyLong(DBPFPropertyDataType dataType, long value, bool encodingType = EncodingType.Binary) {
-			if (dataType == DBPFPropertyDataType.FLOAT32 || dataType == DBPFPropertyDataType.STRING) {
+		public DBPFPropertyLong(PropertyDataType dataType, long value, bool encodingType = EncodingType.Binary) {
+			if (dataType == PropertyDataType.FLOAT32 || dataType == PropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			_dataType = dataType;
@@ -99,8 +99,8 @@ namespace csDBPF.Properties {
 		/// <param name="values">Values this property holds</param>
 		/// <param name="encodingType">Encoding type: binary or text</param>
 		/// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-		public DBPFPropertyLong(DBPFPropertyDataType dataType, List<long> values, bool encodingType = EncodingType.Binary) {
-			if (dataType == DBPFPropertyDataType.FLOAT32 || dataType == DBPFPropertyDataType.STRING) {
+		public DBPFPropertyLong(PropertyDataType dataType, List<long> values, bool encodingType = EncodingType.Binary) {
+			if (dataType == PropertyDataType.FLOAT32 || dataType == PropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			_dataType = dataType;
@@ -203,9 +203,9 @@ namespace csDBPF.Properties {
 			if (_isTextEncoding) {
 				StringBuilder sb = new StringBuilder();
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(_id);
-				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}={_dataType.Name}:{_numberOfReps}:{{");
+				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}={LookupDataTypeName(_dataType)}:{_numberOfReps}:{{");
 				for (int idx = 0; idx < _dataValues.Count; idx++) {
-					sb.Append($"0x{DBPFUtil.ToHexString(_dataValues[idx], _dataType.Length * 2)}");
+					sb.Append($"0x{DBPFUtil.ToHexString(_dataValues[idx], LookupDataTypeLength(_dataType) * 2)}");
 					if (idx != _dataValues.Count - 1) {
 						sb.Append(',');
 					}
@@ -218,18 +218,18 @@ namespace csDBPF.Properties {
 			else {
 				List<byte> bytes = new List<byte>();
 				bytes.AddRange(BitConverter.GetBytes(_id));
-				bytes.AddRange(BitConverter.GetBytes(_dataType.IdentifyingNumber));
+				bytes.AddRange(BitConverter.GetBytes((ushort) _dataType));
 				if (_numberOfReps == 0) { //keyType = 0x00
 					bytes.AddRange(BitConverter.GetBytes((ushort) 0x00)); //keyType
 					bytes.Add(0); //Number of value repetitions. (Seems to be always 0.)
-					bytes.AddRange(ByteArrayHelper.ToBytes(_dataValues[0], _dataType.Length));
+					bytes.AddRange(ByteArrayHelper.ToBytes(_dataValues[0], LookupDataTypeLength(_dataType)));
 
 				} else { // keyType = 0x80
 					bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //keyType
 					bytes.Add(0); //unused flag
 					bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Count));
 					foreach (long value in _dataValues) {
-						bytes.AddRange(ByteArrayHelper.ToBytes(value, _dataType.Length));
+						bytes.AddRange(ByteArrayHelper.ToBytes(value, LookupDataTypeLength(_dataType)));
 					}
 				}
 				return bytes.ToArray();
