@@ -2,84 +2,70 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using csDBPF.Entries;
 using static csDBPF.Entries.DBPFEntry;
+using static csDBPF.Properties.DBPFProperty;
 
 namespace csDBPF.Properties {
 	/// <summary>
 	/// Represents a property storing a string value.
 	/// </summary>
 	public class DBPFPropertyString : DBPFProperty {	
-		private uint _id;
 		/// <summary>
 		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
-		public override uint ID {
-			get { return _id; }
-			set { _id = value; }
-		}
+		public override uint ID { get; set; }
 
-		private readonly PropertyDataType _dataType;
         /// <summary>
         /// The <see cref="PropertyDataType"/> for this property.
         /// </summary>
-        public override PropertyDataType DataType {
-			get { return _dataType; }
-		}
-		
-		private int _numberOfReps;
+        public override PropertyDataType DataType { get; }
+
         /// <summary>
         /// The number of repetitions of <see cref="PropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
         /// </summary>
         /// <remarks>
         /// Determining the count partially depends on the encoding type. For binary encoded string-type properties: length of string. For text encoded string-type properties: always 1.
         /// </remarks>
-        public override int NumberOfReps {
-			get { return _numberOfReps; }
-		}
+        public override int NumberOfReps { get; private protected set; }
 
-		private bool _isTextEncoding;
 		/// <summary>
 		/// Specifies the encoding style (Binary or Text) of the property.
 		/// </summary>
 		/// <remarks>
 		/// This property affects <see cref="NumberOfReps"/>. This also determines how this property will be written to file. 
 		/// </remarks>
-		public override bool IsTextEncoding {
-			get { return _isTextEncoding; }
-			set { _isTextEncoding = value; }
-		}
+		public override EncodingType Encoding { get; set; }
 
-		/// <summary>
-		/// The data value stored in this property.
-		/// </summary>
-		private string _dataValue;
+        /// <summary>
+        /// The data value stored in this property.
+        /// </summary>
+        private string _dataValue;
 
 
 
 
-		/// <summary>
-		/// Construct a new DBPFProperty with a string data type.
-		/// </summary>
-		/// <param name="encodingType">Encoding type: binary or text</param>
-		public DBPFPropertyString(bool encodingType = EncodingType.Binary) {
-			_dataType = PropertyDataType.STRING;
-			_isTextEncoding = encodingType;
-			_numberOfReps = 0;
+        /// <summary>
+        /// Construct a new DBPFProperty with a string data type.
+        /// </summary>
+        /// <param name="encodingType">Text or Binary encoding type</param>
+        public DBPFPropertyString(EncodingType encodingType = EncodingType.Binary) {
+			DataType = PropertyDataType.STRING;
+			Encoding = encodingType;
+			NumberOfReps = 0;
 		}
 		/// <summary>
 		/// Construct a DBPFProperty with a string data type holding a specified string.
 		/// </summary>
 		/// <param name="value">String to set</param>
-		/// <param name="encodingType">Encoding type: binary or text</param>
-		public DBPFPropertyString(string value, bool encodingType = EncodingType.Binary) {
-			_dataType = PropertyDataType.STRING;
+		/// <param name="encodingType">Text or Binary encoding type</param>
+		public DBPFPropertyString(string value, EncodingType encodingType = EncodingType.Binary) {
+			DataType = PropertyDataType.STRING;
 			_dataValue = value;
-			_isTextEncoding = encodingType;
-			if (_isTextEncoding) {
-				_numberOfReps = 1;
+			Encoding = encodingType;
+			if (Encoding == EncodingType.Text) {
+				NumberOfReps = 1;
 			} else {
-				_numberOfReps = _dataValue.Length;
+				NumberOfReps = _dataValue.Length;
 			}
 		}
 
@@ -91,9 +77,9 @@ namespace csDBPF.Properties {
 		/// <returns>Returns a string that represents the current object.</returns>
 		public override string ToString() {
 			StringBuilder sb = new StringBuilder();
-			sb.Append($"ID: 0x{DBPFUtil.ToHexString(_id)}, ");
-			sb.Append($"Type: { _dataType}, ");
-			sb.Append($"Reps: {_numberOfReps}, ");
+			sb.Append($"ID: 0x{DBPFUtil.ToHexString(ID)}, ");
+			sb.Append($"Type: {DataType}, ");
+			sb.Append($"Reps: {NumberOfReps}, ");
 			sb.Append($"Value: {_dataValue}");
 			return sb.ToString();
 		}
@@ -131,10 +117,10 @@ namespace csDBPF.Properties {
 				throw new ArgumentException($"Argument to DBPFPropertyString.SetData must be string. {value.GetType()} was provided.");
 			}
 			_dataValue = (string) value;
-			if (_isTextEncoding) {
-				_numberOfReps = 1;
+			if (Encoding == EncodingType.Text) {
+                NumberOfReps = 1;
 			} else {
-				_numberOfReps = _dataValue.Length;
+                NumberOfReps = _dataValue.Length;
 			}
         }
         /// <summary>
@@ -152,22 +138,18 @@ namespace csDBPF.Properties {
         /// Process the features and data values of this property into a byte array according to the set encoding type.
         /// </summary>
         /// <returns>A byte array encoding all information for this property</returns>
-        public override byte[] ToRawBytes() {
-			//Text Encoding
-			if (_isTextEncoding) {
+        public override byte[] ToBytes() {
+			if (Encoding == EncodingType.Text) {
 				StringBuilder sb = new StringBuilder();
-				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(_id);
-				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}=String:1:{{");
+				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(ID);
+				sb.Append($"0x{DBPFUtil.ToHexString(ID)}:{{\"{xmlprop.Name}\"}}=String:1:{{");
 				sb.Append($"\"{_dataValue}\"");
 				sb.Append("}\r\n");
 				return ByteArrayHelper.ToBytes(sb.ToString(), true);
-			}
-
-			//Binary Encoding
-			else {
+			} else {
 				List<byte> bytes = new List<byte>();
-				bytes.AddRange(BitConverter.GetBytes(_id));
-				bytes.AddRange(BitConverter.GetBytes((ushort) _dataType));
+				bytes.AddRange(BitConverter.GetBytes(ID));
+				bytes.AddRange(BitConverter.GetBytes((ushort) DataType));
 				bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //String is always keyType = 0x80
 				bytes.Add(0); //unused flag
 				bytes.AddRange(BitConverter.GetBytes((uint) _dataValue.Length));

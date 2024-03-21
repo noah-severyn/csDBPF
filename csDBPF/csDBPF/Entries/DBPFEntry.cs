@@ -193,15 +193,15 @@ namespace csDBPF.Entries {
 		/// <summary>
 		/// Specifies the encoding type for an entry or properties.
 		/// </summary>
-		public static class EncodingType {
+		public enum EncodingType {
 			/// <summary>
 			/// Entry/property is encoded in binary format.
 			/// </summary>
-			public const bool Binary = false;
+			Binary,
 			/// <summary>
 			/// Entry/property is encoded in text format.
 			/// </summary>
-			public const bool Text = true;
+			Text
 		}
 	}
 }

@@ -278,7 +278,7 @@ namespace csDBPF.Entries {
 				newProperty = new DBPFPropertyLong(dataType);
             }
 			newProperty.ID = propertyID;
-			newProperty.IsTextEncoding = EncodingType.Binary;
+			newProperty.Encoding = EncodingType.Binary;
             newProperty.SetData(dataValues, countOfReps);
             return newProperty;
 		}
@@ -392,7 +392,7 @@ namespace csDBPF.Entries {
 				newProperty = new DBPFPropertyLong(dataType);
 			}
 			newProperty.ID = propertyID;
-			newProperty.IsTextEncoding = EncodingType.Text;
+			newProperty.Encoding = EncodingType.Text;
 			newProperty.SetData(dataValues);
 			return newProperty;
         }
@@ -434,7 +434,7 @@ namespace csDBPF.Entries {
                 sb.Append($"ParentCohort=Key:{{0x{DBPFUtil.ToHexString(_parentCohort.TypeID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.GroupID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.InstanceID.Value)}}}\r\n");
                 sb.Append($"PropCount=0x{DBPFUtil.ToHexString(_listOfProperties.Count)}\r\n");
                 foreach (DBPFProperty prop in _listOfProperties.Values) {
-                    sb.Append(prop.ToRawBytes());
+                    sb.Append(prop.ToBytes());
                 }
                 ByteData = ByteArrayHelper.ToBytes(sb.ToString(), true);
                 UncompressedSize = (uint) ByteData.Length;
@@ -451,7 +451,7 @@ namespace csDBPF.Entries {
                 bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID.Value));
                 bytes.AddRange(BitConverter.GetBytes(_listOfProperties.Count));
                 foreach (DBPFProperty prop in _listOfProperties.Values) {
-                    bytes.AddRange(prop.ToRawBytes());
+                    bytes.AddRange(prop.ToBytes());
                 }
                 ByteData = bytes.ToArray();
                 UncompressedSize = (uint) ByteData.Length;

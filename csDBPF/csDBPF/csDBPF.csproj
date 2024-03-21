@@ -20,6 +20,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Properties\new_properties.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Include="..\.editorconfig" Link=".editorconfig" />
 	  <None Include="Entries\cFSHImage.cs" />
 	  <None Include="Entries\DBPFEntryFSH_FSHLib.cs" />
@@ -32,12 +36,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="Properties\new_properties.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Folder Include="QFS\" />
 	  <Folder Include="Util\" />
 	</ItemGroup>
@@ -46,6 +44,12 @@
 	  <Reference Include="Epsylon.TextureSquish">
 	    <HintPath>..\..\..\TextureSquish\Sources\Epsylon.TextureSquish\bin\Debug\net7.0\Epsylon.TextureSquish.dll</HintPath>
 	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Properties\new_properties.xml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 </Project>

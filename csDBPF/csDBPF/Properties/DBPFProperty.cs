@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Collections;
 using csDBPF.Entries;
+using static csDBPF.Entries.DBPFEntry;
 
 namespace csDBPF.Properties
 {
@@ -27,7 +28,7 @@ namespace csDBPF.Properties
         /// <remarks>
         /// Determining the count partially depends on the encoding type. For binary encoded string type: length of string. For text encoded string type: always 1. For binary encoded (all) and text encoded number types (except float): 0 reps = single value, 1 reps = multiple values but currently held to 1 value (problematic on macOS when the DataType is float), n reps = n number of values. For text encoded float type: n reps = n number of values. This property is necessary because of uneven implementation of the DataValues property in implementing types.
         /// </remarks>
-        public abstract int NumberOfReps { get; }
+        public abstract int NumberOfReps { get; private protected set; }
 
 		/// <summary>
 		/// Specifies the encoding style (Binary or Text) of the property.
@@ -35,7 +36,7 @@ namespace csDBPF.Properties
 		/// <remarks>
 		/// May affect implementation of other fields, namely <see cref="NumberOfReps"/>. Property is presented so the default value (false) will be binary encoding which we want to use most of the time.
 		/// </remarks>
-		public abstract bool IsTextEncoding { get; set; }
+		public abstract EncodingType Encoding { get; set; }
 
 		/// <summary>
 		/// Returns the values(s) stored in this property.
@@ -63,7 +64,7 @@ namespace csDBPF.Properties
         /// Process the features and data values of this property into a byte array according to the set encoding type.
         /// </summary>
         /// <returns>A byte array encoding all information for this property</returns>
-        public abstract byte[] ToRawBytes();
+        public abstract byte[] ToBytes();
 
 
 
@@ -112,7 +113,11 @@ namespace csDBPF.Properties
             STRING = 0xC00
         }
 
-
+        /// <summary>
+        /// Lookup the data type from a string representation.
+        /// </summary>
+        /// <param name="type">Property data type name</param>
+        /// <returns>The corresponding PropertyDataType</returns>
         public static PropertyDataType LookupDataType(string type) {
             switch (type.ToUpper()) {
                 case "UINT8":
@@ -135,6 +140,11 @@ namespace csDBPF.Properties
                     return PropertyDataType.UNKNOWN;
             }
         }
+        /// <summary>
+        /// Lookup the string representation of a PropertyDataType
+        /// </summary>
+        /// <param name="dt">Property data type</param>
+        /// <returns>A string representation</returns>
         public static string LookupDataTypeName(PropertyDataType dt) {
             switch (dt) {
                 case PropertyDataType.UNKNOWN:
@@ -159,6 +169,11 @@ namespace csDBPF.Properties
                     return string.Empty;
             }
         }
+        /// <summary>
+        /// Lookup the length in bytes of a PropertyDataType.
+        /// </summary>
+        /// <param name="dt">Property data type</param>
+        /// <returns>Length in bytes</returns>
         public static int LookupDataTypeLength(PropertyDataType dt) {
             switch (dt) {
                 case PropertyDataType.UINT8:
