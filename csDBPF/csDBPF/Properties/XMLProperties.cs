@@ -13,7 +13,7 @@ namespace csDBPF.Properties {
 
         private static readonly List<XMLExemplarProperty> _allProperties = new List<XMLExemplarProperty>();
         /// <summary>
-        /// List of all properties included in new_properties.xml.
+        /// List of all properties included in new_properties.xml. This file stores useful and human friendly information about the properties including name, min/max value, default values, etc.
         /// </summary>
         public static List<XMLExemplarProperty> AllProperties {
             get { return _allProperties; }
