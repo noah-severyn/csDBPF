@@ -7,7 +7,11 @@ namespace csDBPF.Properties {
         /// <summary>
         /// Defines the <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar#Exemplar_Types">type of exemplar</see> and what game systems or components the exemplar contains info for.
         /// </summary>
-        public enum ExemplarTypes {
+        public enum ExemplarType {
+			/// <summary>
+			/// Error reading type or type is not present.
+			/// </summary>
+			Error = -1,
 			/// <summary>
 			/// The use of T00 exemplars is relatively unknown. 
 			/// </summary>
@@ -45,9 +49,9 @@ namespace csDBPF.Properties {
 			/// </summary>
 			MiscNetwork,
 			/// <summary>
-			/// Unknown.
+			/// Unknown type.
 			/// </summary>
-			Unknown,
+			UnknownType,
 			/// <summary>
 			/// Rail Exemplars.
 			/// </summary>
@@ -154,7 +158,7 @@ namespace csDBPF.Properties {
         /// <summary>
         /// The first rep (0) of a LotConfigPropertyLotObject describes its <see href="https://www.wiki.sc4devotion.com/index.php?title=LotConfigPropertyLotObject#Specification">object type</see>.
         /// </summary>
-        public enum LotConfigPropertyLotObjectTypes {
+        public enum LotConfigPropertyLotObjectType {
 			/// <summary>
 			/// Defines position and IID reference of building exemplar.
 			/// </summary>
@@ -194,7 +198,7 @@ namespace csDBPF.Properties {
         /// <summary>
         /// Defines the <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">RCI type</see> for a lot.
         /// </summary>
-        public enum LotConfigPropertyPurposeTypes {
+        public enum LotConfigPropertyPurposeType {
 			/// <summary>
 			/// None.
 			/// </summary>
@@ -233,7 +237,7 @@ namespace csDBPF.Properties {
         /// <summary>
         /// Defines the <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">wealth</see> for a lot.
         /// </summary>
-        public enum LotConfigPropertyWealthTypes {
+        public enum LotConfigPropertyWealthType {
 			/// <summary>
 			/// No wealth (civic, landmark, etc.).
 			/// </summary>
@@ -256,7 +260,7 @@ namespace csDBPF.Properties {
         /// <summary>
         /// Defines the <see href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">zone type</see> for a lot - which type of zones the lot will grow on or was plopped as.
         /// </summary>
-        public enum LotConfigPropertyZoneTypes {
+        public enum LotConfigPropertyZoneType {
 			/// <summary>
 			/// None
 			/// </summary>

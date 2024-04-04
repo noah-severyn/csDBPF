@@ -5,6 +5,7 @@ using System.Text;
 using csDBPF.Properties;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static csDBPF.Entries.DBPFEntryDIR;
+using static csDBPF.Properties.DBPFProperty;
 
 namespace csDBPF.Entries {
 	/// <summary>
@@ -157,7 +158,7 @@ namespace csDBPF.Entries {
 			}
 
 			//Lastly check to make sure we have ExemplarType (0x10) and ExemplarName (0x20) properties
-			if (GetExemplarType() == -1) {
+			if (GetExemplarType() == ExemplarType.Error) {
 				LogMessage("Missing property Exemplar Type.");
 			}
             if (GetExemplarName() == null) {
@@ -478,19 +479,20 @@ namespace csDBPF.Entries {
 
 
 
-		/// <summary>
-		/// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="DBPFProperty.ExemplarTypes"/> for the full list.
-		/// </summary>
-		/// <returns>Exemplar Type if found; -1 if ExemplarType (0x00000010) property is not found</returns>
-		public int GetExemplarType() {
+        /// <summary>
+        /// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="ExemplarType"/> for the full list.
+        /// </summary>
+        /// <returns>Exemplar Type if found; <see cref="ExemplarType.Error"/> if property is not found</returns>
+		/// <remarks>Simply a shortcut for <c>Entry.GetProperty(0x10)</c></remarks>
+        public ExemplarType GetExemplarType() {
 			DBPFProperty property = GetProperty(0x00000010);
 			if (property is null) {
-				return -1;
+				return ExemplarType.Error;
 			}
 
 			//We know exemplar type can only hold one value, so grab the first one
 			List<long> dataValues = (List<long>) property.GetData();
-			return Convert.ToInt32(dataValues[0]);
+			return (ExemplarType) Convert.ToInt32(dataValues[0]);
 		}
 
 
@@ -498,7 +500,8 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Gets the Exemplar Name of the property.
         /// </summary>
-        /// <returns>ExemplarName if found; null if ExemplarName (0x00000020) property is not found</returns>
+        /// <returns>Exemplar Name if found; null property is not found</returns>
+		/// <remarks>Simply a shortcut for <c>Entry.GetProperty(0x20)</c></remarks>
         public string GetExemplarName() {
             DBPFProperty property = GetProperty(0x00000020);
             if (property is null) {
