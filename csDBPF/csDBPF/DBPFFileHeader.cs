@@ -125,10 +125,7 @@ namespace csDBPF {
                 IndexSize = br.ReadUInt32();
             }
 
-            /// <summary>
-            /// Returns a string that represents the current object.
-            /// </summary>
-            /// <returns>Returns a string that represents the current object.</returns>
+            /// <inheritdoc/>
             public override string ToString() {
                 StringBuilder sb = new StringBuilder();
                 sb.Append($"Version: {MajorVersion}.{MinorVersion}; ");

@@ -134,11 +134,8 @@ namespace csDBPF {
 
 
 
-		/// <summary>
-		/// Returns a string that represents the current instance.
-		/// </summary>
-		/// <returns>A string that represents the current instance</returns>
-		public override string ToString() {
+        /// <inheritdoc/>
+        public override string ToString() {
 			StringBuilder sb = new StringBuilder();
 			sb.Append($"ID: {ID}, ");
 			sb.Append($"Name: {Name}, ");

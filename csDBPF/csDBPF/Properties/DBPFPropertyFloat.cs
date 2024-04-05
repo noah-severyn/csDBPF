@@ -92,11 +92,8 @@ namespace csDBPF {
 
 
 
-		/// <summary>
-		/// Returns a string that represents the current object.
-		/// </summary>
-		/// <returns>Returns a string that represents the current object.</returns>
-		public override string ToString() {
+        /// <inheritdoc/>
+        public override string ToString() {
 			StringBuilder sb = new StringBuilder();
 			sb.Append($"ID: 0x{DBPFUtil.ToHexString(ID)}, ");
 			sb.Append($"Type: {DataType}, ");

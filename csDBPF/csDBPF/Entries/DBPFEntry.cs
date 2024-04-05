@@ -133,11 +133,8 @@ namespace csDBPF {
 
 
 
-		/// <summary>
-		/// Returns a string that represents the current object.
-		/// </summary>
-		/// <returns>Returns a string that represents the current object.</returns>
-		public override string ToString() {
+        /// <inheritdoc/>
+        public override string ToString() {
 			return $"{TGI}, Type: {TGI.GetEntryType()}, IndexPos: {IndexPos}, Offset: {Offset}, uSize: {UncompressedSize}, Compressed: {IsCompressed}, cSize: {CompressedSize}";
         }
 
