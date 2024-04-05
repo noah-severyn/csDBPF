@@ -432,7 +432,7 @@ namespace csDBPF {
 
                 StringBuilder sb = new StringBuilder();
                 sb.Append(id + "\r\n");
-                sb.Append($"ParentCohort=Key:{{0x{DBPFUtil.ToHexString(_parentCohort.TypeID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.GroupID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.InstanceID.Value)}}}\r\n");
+                sb.Append($"ParentCohort=Key:{{0x{DBPFUtil.ToHexString(_parentCohort.TypeID)},0x{DBPFUtil.ToHexString(_parentCohort.GroupID)},0x{DBPFUtil.ToHexString(_parentCohort.InstanceID)}}}\r\n");
                 sb.Append($"PropCount=0x{DBPFUtil.ToHexString(_listOfProperties.Count)}\r\n");
                 foreach (DBPFProperty prop in _listOfProperties.Values) {
                     sb.Append(prop.ToBytes());
@@ -447,9 +447,9 @@ namespace csDBPF {
 
                 List<byte> bytes = new List<byte>();
                 bytes.AddRange(ByteArrayHelper.ToBytes(id, true));
-                bytes.AddRange(BitConverter.GetBytes(_parentCohort.TypeID.Value));
-                bytes.AddRange(BitConverter.GetBytes(_parentCohort.GroupID.Value));
-                bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID.Value));
+                bytes.AddRange(BitConverter.GetBytes(_parentCohort.TypeID));
+                bytes.AddRange(BitConverter.GetBytes(_parentCohort.GroupID));
+                bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID));
                 bytes.AddRange(BitConverter.GetBytes(_listOfProperties.Count));
                 foreach (DBPFProperty prop in _listOfProperties.Values) {
                     bytes.AddRange(prop.ToBytes());

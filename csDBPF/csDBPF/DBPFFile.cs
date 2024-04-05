@@ -4,10 +4,6 @@ using System.Collections.Specialized;
 using System.Text;
 using System.Linq;
 using System.IO;
-using System.Diagnostics;
-using csDBPF;
-using System.Net;
-using csDBPF;
 
 namespace csDBPF {
     /// <summary>
@@ -103,11 +99,8 @@ namespace csDBPF {
             _issueLog = new StringBuilder();
         }
 
-		/// <summary>
-		/// Returns a string that represents the current object.
-		/// </summary>
-		/// <returns>Returns a string that represents the current object.</returns>
-		public override string ToString() {
+        /// <inheritdoc/>
+        public override string ToString() {
 			return $"{File.Name}: {_listOfEntries.Count} subfiles";
 		}
 
@@ -349,9 +342,9 @@ namespace csDBPF {
 			UpdateIndex();
 			long pos = fs.Position;
 			foreach (DBPFEntry entry in _listOfEntries) {
-				fs.Write(BitConverter.GetBytes(entry.TGI.TypeID.Value));
-				fs.Write(BitConverter.GetBytes(entry.TGI.GroupID.Value));
-				fs.Write(BitConverter.GetBytes(entry.TGI.InstanceID.Value));
+				fs.Write(BitConverter.GetBytes(entry.TGI.TypeID));
+				fs.Write(BitConverter.GetBytes(entry.TGI.GroupID));
+				fs.Write(BitConverter.GetBytes(entry.TGI.InstanceID));
 				fs.Write(BitConverter.GetBytes(entry.Offset));
 				if (entry.IsCompressed) {
                     fs.Write(BitConverter.GetBytes(entry.CompressedSize));

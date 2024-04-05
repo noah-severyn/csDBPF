@@ -233,38 +233,53 @@ namespace csDBPF_Test {
             [TestMethod]
             public void Test_040a_DBPFTGI_ctor_CreateFromUints() {
                 TGI tgi1 = new TGI(0x6534284a, 0, 0);
+                Assert.AreEqual<uint>(0x6534284a, tgi1.TypeID);
+                Assert.AreNotEqual<uint>(0, tgi1.GroupID);
+                Assert.AreNotEqual<uint>(0, tgi1.InstanceID);
+
                 TGI tgi2 = DBPFTGI.EXEMPLAR_AVENUE;
-                Assert.AreEqual((uint) 0x6534284A, tgi2.TypeID);
-                Assert.AreEqual((uint) 0xCB730FAC, tgi2.GroupID);
-                Assert.AreNotEqual<uint?>(0, tgi2.InstanceID);
+                Assert.AreEqual<uint>(0x6534284A, tgi2.TypeID);
+                Assert.AreEqual<uint>(0xCB730FAC, tgi2.GroupID);
+                Assert.AreEqual<uint>(0, tgi2.InstanceID);
                 Assert.AreEqual("EXMP", tgi2.GetEntryType());
                 Assert.AreEqual("EXEMPLAR_AVENUE", tgi2.GetEntryDetail());
 
+                Assert.AreEqual(tgi1.TypeID, tgi2.TypeID);
+                Assert.AreNotEqual(tgi1.GroupID, tgi2.GroupID);
+                Assert.AreNotEqual(tgi1.InstanceID, tgi2.InstanceID);
+
                 TGI tgi3 = DBPFTGI.LUA;
-                Assert.AreEqual((uint) 0xCA63E2A3, tgi3.TypeID);
-                Assert.AreEqual((uint) 0x4A5E8EF6, tgi3.GroupID);
-                Assert.AreNotEqual<uint?>(0, tgi3.InstanceID);
+                Assert.AreEqual<uint>(0xCA63E2A3, tgi3.TypeID);
+                Assert.AreEqual<uint>(0x4A5E8EF6, tgi3.GroupID);
+                Assert.AreEqual<uint>(0, tgi3.InstanceID);
                 Assert.AreEqual("LUA", tgi3.GetEntryType());
                 Assert.AreEqual("LUA", tgi3.GetEntryDetail());
             }
 
             [TestMethod]
             public void Test_040a_DBPFTGI_ctor_CreteFromTGI() {
-                TGI tgi4 = new TGI(DBPFTGI.EXEMPLAR);
-                Assert.AreNotEqual<uint?>(0, tgi4.GroupID);
-                Assert.AreNotEqual<uint?>(0, tgi4.InstanceID);
+                TGI tgi1 = new TGI(DBPFTGI.EXEMPLAR);
+                Assert.AreEqual<uint>(0x6534284a, tgi1.TypeID);
+                Assert.AreNotEqual<uint>(0, tgi1.GroupID);
+                Assert.AreNotEqual<uint>(0, tgi1.InstanceID);
 
-                TGI tgi5 = new TGI(DBPFTGI.INI);
-                Assert.AreEqual((uint) 0, tgi5.TypeID);
-                Assert.AreEqual(0x8a5971c5, tgi5.GroupID);
-                Assert.AreNotEqual<uint?>(0, tgi5.InstanceID);
+                TGI tgi2 = new TGI(DBPFTGI.INI);
+                Assert.AreEqual((uint) 0, tgi2.TypeID);
+                Assert.AreEqual(0x8a5971c5, tgi2.GroupID);
+                Assert.AreNotEqual<uint>(0, tgi2.InstanceID);
+
+
+                TGI tgi3 = new TGI(DBPFTGI.LUA);
+                Assert.AreEqual<uint>(0xCA63E2A3, tgi3.TypeID);
+                Assert.AreEqual<uint>(0x4A5E8EF6, tgi3.GroupID);
+                Assert.AreNotEqual<uint>(0, tgi3.InstanceID);
             }
 
 
             [TestMethod]
             public void Test_041_DBPFTGI_ToString() {
                 TGI tgi1 = new TGI(0x6534284a, 0, 1000001);
-                Assert.AreEqual("0x6534284a, 0x00000000, 0x000f4241", tgi1.ToString());
+                Assert.AreEqual($"0x6534284a, {DBPFUtil.ToHexString(tgi1.GroupID)}, 0x000f4241", tgi1.ToString());
                 tgi1 = new TGI(100, 100, 100);
                 Assert.AreEqual("0x00000064, 0x00000064, 0x00000064", tgi1.ToString());
             }
@@ -275,10 +290,13 @@ namespace csDBPF_Test {
                 TGI tgi1 = new TGI(0, 0, 0);
                 TGI tgi2 = new TGI(0, 0, 0);
                 TGI tgi3 = new TGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
-                TGI tgi4 = new TGI(3899334383, 3899334383, 678108931);
-                Assert.AreEqual(tgi1, tgi2);
-                Assert.IsTrue(tgi1.Equals(tgi2));
-                Assert.IsTrue(tgi2.Equals(tgi1));
+                TGI tgi4 = new TGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
+                TGI tgi5 = new TGI(3899334383, 3899334383, 678108931);
+
+                Assert.AreNotEqual(tgi1, tgi2);
+                Assert.IsFalse(tgi1.Equals(tgi2));
+                Assert.IsFalse(tgi2.Equals(tgi1));
+
                 Assert.AreEqual(tgi3, tgi4);
                 Assert.IsTrue(tgi3.Equals(tgi4));
                 Assert.IsTrue(tgi4.Equals(tgi3));
@@ -294,20 +312,22 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_043_DBPFTGI_Matches() {
-                TGI tgi_blank = new TGI(0, 0, 0);
+                Assert.IsTrue(DBPFTGI.BLANKTGI.Matches(DBPFTGI.BLANKTGI));
+                Assert.IsTrue(DBPFTGI.EXEMPLAR.Matches(DBPFTGI.EXEMPLAR));
+                Assert.IsTrue(DBPFTGI.EXEMPLAR_RAIL.Matches(DBPFTGI.EXEMPLAR_RAIL));
+                Assert.IsTrue(DBPFTGI.EXEMPLAR_RAIL.Matches(DBPFTGI.EXEMPLAR));
+                Assert.IsFalse(DBPFTGI.EXEMPLAR.Matches(DBPFTGI.EXEMPLAR_RAIL));
+
                 TGI tgi_exemplar = new TGI(0x6534284a, 0, 0);
                 TGI tgi_exemplarRail = new TGI(0x6534284a, 0xe8347989, 0);
                 TGI tgi_exemplarRail2 = new TGI(0x6534284a, 0xe8347989, 0x1ab4e56a);
-
-                Assert.IsTrue(tgi_blank.Matches(DBPFTGI.BLANKTGI));
-                Assert.IsTrue(tgi_blank.Matches(DBPFTGI.NULLTGI));
 
                 Assert.IsTrue(tgi_exemplar.Matches(DBPFTGI.EXEMPLAR));
                 Assert.IsTrue(tgi_exemplarRail.Matches(DBPFTGI.EXEMPLAR_RAIL));
                 Assert.IsTrue(tgi_exemplarRail2.Matches(DBPFTGI.EXEMPLAR_RAIL));
                 Assert.IsTrue(tgi_exemplarRail2.Matches(DBPFTGI.EXEMPLAR));
                 Assert.IsFalse(tgi_exemplar.Matches(DBPFTGI.COHORT));
-                Assert.IsTrue(tgi_exemplar.Matches(DBPFTGI.NULLTGI));
+                Assert.IsTrue(tgi_exemplar.Matches(DBPFTGI.BLANKTGI));
                 Assert.IsFalse(tgi_exemplar.Matches(DBPFTGI.PNG));
             }
 
@@ -853,14 +873,13 @@ namespace csDBPF_Test {
                     DBPFEntry entry_exemplarRail2 = new DBPFEntryEXMP(tgi_exemplarRail2);
 
                     Assert.IsTrue(entry_blank.MatchesEntryType(DBPFTGI.BLANKTGI));
-                    Assert.IsTrue(entry_blank.MatchesEntryType(DBPFTGI.NULLTGI));
 
                     Assert.IsTrue(entry_exemplar.MatchesEntryType(DBPFTGI.EXEMPLAR));
                     Assert.IsTrue(entry_exemplarRail.MatchesEntryType(DBPFTGI.EXEMPLAR_RAIL));
                     Assert.IsTrue(entry_exemplarRail2.MatchesEntryType(DBPFTGI.EXEMPLAR_RAIL));
                     Assert.IsTrue(entry_exemplarRail2.MatchesEntryType(DBPFTGI.EXEMPLAR));
                     Assert.IsFalse(entry_exemplar.MatchesEntryType(DBPFTGI.COHORT));
-                    Assert.IsTrue(entry_exemplar.MatchesEntryType(DBPFTGI.NULLTGI));
+                    Assert.IsTrue(entry_exemplar.MatchesEntryType(DBPFTGI.BLANKTGI));
                     Assert.IsFalse(entry_exemplar.MatchesEntryType(DBPFTGI.PNG));
                 }
             }
@@ -887,9 +906,6 @@ namespace csDBPF_Test {
                     CollectionAssert.AreEqual(entry2.ByteData, entry3.ByteData);
 
                 }
-
-
-
 
                 [TestMethod]
                 public void Test_081a_LTEXT_Decode() {
@@ -922,15 +938,24 @@ namespace csDBPF_Test {
                     CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, entryknown.ByteData);
 
 
-                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High) - Copy.dat");
+
+                    string baseFile = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\FUN - onlyltext_uncomp_base.dat";
+                    string outFile = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\FUN - onlyltext_uncomp_out.dat";
+                    string refFile = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\FUN - onlyltext_uncomp_ref.dat";
+                    
+                    DBPFFile dbpf = new DBPFFile(baseFile);
                     dbpf.DecodeAllEntries();
 
-                    DBPFFile dbpf2 = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Fixed Underfunded Notices (Med-High) - Copy2.dat");
+                    DBPFFile dbpf2 = new DBPFFile();
                     dbpf2.AddEntries(dbpf.GetEntries(DBPFTGI.LTEXT));
+                    dbpf2.AddEntry(new DBPFEntryLTEXT("Local Medical Facility Pockets Picked"));
                     dbpf2.EncodeAllEntries();
-                    dbpf2.Save();
+                    dbpf2.SaveAs(outFile);
 
-
+                    byte[] dbpfoutbytes = File.ReadAllBytes(outFile);
+                    byte[] dbpfrefbytes = File.ReadAllBytes(refFile);
+                    CollectionAssert.AreEqual(dbpfrefbytes, dbpfoutbytes);
+                    File.Delete(outFile);
                 }
             }
 

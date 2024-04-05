@@ -125,8 +125,8 @@ namespace csDBPF {
         /// </summary>
         /// <param name="compress">Whether to compress the entry</param>
         public override void Encode(bool compress = false) {
-			if (TGI.GroupID is null) { TGI.RandomizeGroup(); }
-            if (TGI.InstanceID is null) { TGI.RandomizeInstance(); }
+			if (TGI.GroupID == 0) { TGI.RandomizeGroup(); }
+            if (TGI.InstanceID == 0) { TGI.RandomizeInstance(); }
 
 
             List<byte> bytes = new List<byte>();
