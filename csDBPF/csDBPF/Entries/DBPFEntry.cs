@@ -1,11 +1,11 @@
-﻿using csDBPF.Properties;
+﻿using csDBPF;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using static System.Net.WebRequestMethods;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
     /// <summary>
     /// An abstract form of an entry item, representing an instance of a subfile that may be contained in a <see cref="DBPFFile"/>. The data for each entry is not parsed or decoded until <see cref="Decode"/> is called to decompress and set the actual entry data.
     /// </summary>

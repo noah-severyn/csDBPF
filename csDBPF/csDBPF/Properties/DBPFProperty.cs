@@ -3,10 +3,10 @@ using System.Text;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Collections;
-using csDBPF.Entries;
-using static csDBPF.Entries.DBPFEntry;
+using csDBPF;
+using static csDBPF.DBPFEntry;
 
-namespace csDBPF.Properties
+namespace csDBPF
 {
     /// <summary>
     /// An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries.

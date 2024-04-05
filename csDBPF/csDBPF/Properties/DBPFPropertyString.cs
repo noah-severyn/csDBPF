@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using static csDBPF.Entries.DBPFEntry;
-using static csDBPF.Properties.DBPFProperty;
+using static csDBPF.DBPFEntry;
+using static csDBPF.DBPFProperty;
 
-namespace csDBPF.Properties {
+namespace csDBPF {
 	/// <summary>
 	/// Represents a property storing a string value.
 	/// </summary>

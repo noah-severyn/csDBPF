@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
     internal class DBPFEntryS3D : DBPFEntry {
         public DBPFEntryS3D(TGI tgi) : base(tgi) {
         }

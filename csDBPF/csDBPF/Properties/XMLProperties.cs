@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace csDBPF.Properties {
+namespace csDBPF {
 	/// <summary>
 	/// Static class for interfacing with new_properties.xml file through <see cref="XMLExemplarProperty"/> objects.
 	/// </summary>

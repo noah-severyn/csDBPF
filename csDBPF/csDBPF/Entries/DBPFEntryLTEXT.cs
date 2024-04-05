@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
 	/// <summary>
 	/// An implementation of <see cref="DBPFEntry"/> for LTEXT entries. Object data is stored in <see cref="Text"/>.
 	/// </summary>

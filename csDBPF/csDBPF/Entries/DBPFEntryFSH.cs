@@ -9,7 +9,7 @@ using SixLabors.ImageSharp.PixelFormats;
 //using Squish;
 using Epsylon.TextureSquish;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
     /// <summary>
 	/// An implementation of <see cref="DBPFEntry"/> for FSH entries. Object data is stored in <see cref="DBPFEntry.ByteData"/> and is interpreted from the <see cref="FSHHeader.FSHDirectory"/> and <see cref="BitmapHeaders"/>.
 	/// </summary>

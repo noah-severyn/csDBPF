@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
     internal class DBPFEntryLUA : DBPFEntry {
         public DBPFEntryLUA(TGI tgi) : base(tgi) {
         }

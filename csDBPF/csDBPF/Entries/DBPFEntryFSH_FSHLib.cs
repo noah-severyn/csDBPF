@@ -12,10 +12,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using csDBPF.Entries;
-using static csDBPF.Entries.DBPFEntryFSH;
+using csDBPF;
+using static csDBPF.DBPFEntryFSH;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
     internal class DBPFEntryFSH_FSHLib {
         private ArrayList bitmapItems;
         private FSHDirEntry[] directory;

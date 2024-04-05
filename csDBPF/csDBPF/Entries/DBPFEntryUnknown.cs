@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
     /// <summary>
     /// Generic entry to encapsulate as yet unimplemented entry types or unknown entry types.
     /// </summary>

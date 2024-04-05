@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using csDBPF.Properties;
+using csDBPF;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-using static csDBPF.Entries.DBPFEntryDIR;
-using static csDBPF.Properties.DBPFProperty;
+using static csDBPF.DBPFEntryDIR;
+using static csDBPF.DBPFProperty;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
 	/// <summary>
 	/// An implementation of <see cref="DBPFEntry"/> for Exemplar and Cohort entries. Object data is stored in <see cref="ListOfProperties"/>.
 	/// </summary>

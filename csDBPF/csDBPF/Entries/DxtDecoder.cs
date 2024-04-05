@@ -1,7 +1,7 @@
 ﻿using System;
 
 //Source: https://github.com/mafaca/Dxt/blob/master/Dxt/DxtDecoder.cs
-namespace csDBPF.Entries {
+namespace csDBPF {
 
     public static class DxtDecoder {
 

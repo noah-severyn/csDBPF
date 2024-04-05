@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
     internal class DBPFEntryUI : DBPFEntry {
         public DBPFEntryUI(TGI tgi) : base(tgi) {
         }

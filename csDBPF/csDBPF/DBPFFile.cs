@@ -5,9 +5,9 @@ using System.Text;
 using System.Linq;
 using System.IO;
 using System.Diagnostics;
-using csDBPF.Properties;
+using csDBPF;
 using System.Net;
-using csDBPF.Entries;
+using csDBPF;
 
 namespace csDBPF {
     /// <summary>

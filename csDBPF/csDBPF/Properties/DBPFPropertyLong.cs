@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using csDBPF.Entries;
-using static csDBPF.Entries.DBPFEntry;
-using static csDBPF.Properties.DBPFProperty;
+using csDBPF;
+using static csDBPF.DBPFEntry;
+using static csDBPF.DBPFProperty;
 
-namespace csDBPF.Properties {
+namespace csDBPF {
 	/// <summary>
 	/// Represents a property storing integer-based value(s).
 	/// </summary>

@@ -6,7 +6,7 @@ using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
     /// <summary>
     /// An implementation of <see cref="DBPFEntry"/> for PNG entries. Object data is stored in <see cref="PNGImage"/>.
     /// </summary>

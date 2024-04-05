@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace csDBPF.Properties {
+namespace csDBPF {
 	/// <summary>
 	/// Represents a property stored in the new_properties.xml file.
 	/// </summary>

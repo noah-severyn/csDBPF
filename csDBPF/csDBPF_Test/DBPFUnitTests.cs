@@ -1,9 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using csDBPF;
-using csDBPF.Properties;
 using System.Collections.Generic;
-using csDBPF.Entries;
 using System.Diagnostics;
 using SixLabors.ImageSharp;
 using System.IO;

@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace csDBPF.Properties {
+namespace csDBPF {
 
 	public abstract partial class DBPFProperty {
         /// <summary>
