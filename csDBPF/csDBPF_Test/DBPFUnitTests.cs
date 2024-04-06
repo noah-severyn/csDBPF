@@ -954,6 +954,18 @@ namespace csDBPF_Test {
                     byte[] dbpfoutbytes = File.ReadAllBytes(outFile)[32..274]; //Skip the first 32 bytes to skip the date modified/created which will be different between the two
                     byte[] dbpfrefbytes = File.ReadAllBytes(refFile)[32..274]; //Also the last bytes will be different because a random G and I will be assigned each time
                     CollectionAssert.AreEqual(dbpfrefbytes, dbpfoutbytes);
+
+
+                    File.Delete(outFile);
+                    DBPFFile dbpf3 = new DBPFFile();
+                    dbpf3.AddEntries(dbpf.GetEntries(DBPFTGI.LTEXT));
+                    dbpf3.AddEntry(new DBPFEntryLTEXT(new TGI(0x2026960b, 0x6a231ea5, 0x2a5655d6), "Local Medical Facility Pockets Picked"));
+                    dbpf3.EncodeAllEntries();
+                    dbpf3.SaveAs(outFile);
+
+                    dbpfoutbytes = File.ReadAllBytes(outFile)[32..]; //Skip the first 32 bytes to skip the date modified/created which will be different between the two
+                    dbpfrefbytes = File.ReadAllBytes(refFile)[32..];
+                    CollectionAssert.AreEqual(dbpfrefbytes, dbpfoutbytes);
                 }
             }
 

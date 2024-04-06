@@ -45,8 +45,6 @@ namespace csDBPF {
                 InstanceID = 0;
             }
         }
-
-
         /// <summary>
         /// Create a struct representing three uints as a Type, Group, Instance triplet. A random value will be set for a Group or Instance if either is zero.
         /// </summary>
@@ -56,12 +54,12 @@ namespace csDBPF {
         public TGI(uint t, uint g, uint i) {
             TypeID = t;
             if (g == 0) {
-                RandomizeGroup();
+                GroupID = DBPFUtil.GenerateRandomUint();
             } else {
                 GroupID = g;
             }
             if (i == 0) {
-                RandomizeInstance();
+                InstanceID = DBPFUtil.GenerateRandomUint();
             } else {
                 InstanceID = i;
             }
@@ -73,12 +71,12 @@ namespace csDBPF {
         public TGI(TGI knownEntry) {
             TypeID = knownEntry.TypeID;
             if (knownEntry.GroupID == 0) {
-                RandomizeGroup();
+                GroupID = DBPFUtil.GenerateRandomUint();
             } else {
                 GroupID = knownEntry.GroupID;
             }
             if (knownEntry.InstanceID == 0) {
-                RandomizeInstance();
+                InstanceID = DBPFUtil.GenerateRandomUint();
             } else {
                 InstanceID = knownEntry.InstanceID;
             }
@@ -212,16 +210,14 @@ namespace csDBPF {
         /// Assign a random Group ID.
         /// </summary>
         public void RandomizeGroup() {
-            //https://stackoverflow.com/a/18332307/10802255
-            Random rand = new Random();
-            GroupID = (uint) (rand.Next(1 << 30)) << 2 | (uint) (rand.Next(1 << 2));
+            GroupID = DBPFUtil.GenerateRandomUint();
         }
         /// <summary>
         /// Assign a random Instance ID.
         /// </summary>
         public void RandomizeInstance() {
             Random rand = new Random();
-            InstanceID = (uint) (rand.Next(1 << 30)) << 2 | (uint) (rand.Next(1 << 2));
+            InstanceID = DBPFUtil.GenerateRandomUint();
         }
     }
 

@@ -36,20 +36,21 @@ namespace csDBPF {
 		/// </summary>
 		public DBPFEntryLTEXT() : base(DBPFTGI.LTEXT) { }
 
-		/// <summary>
-		/// Create a new instance with the specified text. Use when creating a new LTEXT entry from scratch.
-		/// </summary>
-		/// <param name="text">Text to set</param>
-		public DBPFEntryLTEXT(string text) : base(DBPFTGI.LTEXT) { 
-			_text= text;
-		}
+        /// <summary>
+        /// Create a new instance with the specified TGI. Use when creating a new LTEXT entry from scratch.
+        /// </summary>
+        /// <param name="tgi">TGI set to assign</param>
+        public DBPFEntryLTEXT(TGI tgi) : base(tgi) { }
 
-		/// <summary>
-		/// Create a new instance with the specified TGI. Use when creating a new LTEXT entry from scratch.
-		/// </summary>
-		/// <param name="tgi">TGI set to assign</param>
-		public DBPFEntryLTEXT(TGI tgi) : base(tgi) {
-		}
+        /// <summary>
+        /// Create a new instance with the specified text. Use when creating a new LTEXT entry from scratch.
+        /// </summary>
+        /// <param name="text">Text to set</param>
+        public DBPFEntryLTEXT(string text) : base(DBPFTGI.LTEXT) { 
+			_text= text;
+            IsCompressed = false;
+            UncompressedSize = (uint) text.Length * 2 + 4;
+        }
 
 		/// <summary>
 		/// Create a new instance with the specified TGI and text. Use when creating a new LTEXT entry from scratch.
