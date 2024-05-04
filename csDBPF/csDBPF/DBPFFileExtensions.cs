@@ -17,6 +17,14 @@ namespace csDBPF {
                 entry.Decode();
             }
         }
-
+        /// <summary>
+        /// Encode all entries in the given list
+        /// </summary>
+        /// <param name="entries">List of entries to encode</param>
+        public static void EncodeEntries(this IEnumerable<DBPFEntry> entries) {
+            foreach (DBPFEntry entry in entries) {
+                entry.Encode();
+            }
+        }
     }
 }
