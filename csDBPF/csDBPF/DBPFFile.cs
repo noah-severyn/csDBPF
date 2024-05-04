@@ -292,14 +292,28 @@ namespace csDBPF {
 		/// <returns>A matching DBPFEntry</returns>
 		public DBPFEntry GetEntry(TGI TGI) {
 			return _listOfEntries.Find(entry => entry.TGI.Matches(TGI));
-		}
+        }
+        /// <summary>
+        /// Returns all entries in this file.
+        /// </summary>
+        /// <returns>A list of all entries in this file</returns>
+        public List<DBPFEntry> GetEntries() {
+            return _listOfEntries;
+        }
+        /// <summary>
+        /// Returns all entries in this file of the specified type.
+        /// </summary>
+        /// <returns>A list of entries in this file of the specified type</returns>
+        public List<DBPFEntry> GetEntries(TGI entryType) {
+            return _listOfEntries.FindAll(e => e.TGI.Matches(entryType));
+        }
 
 
 
-		/// <summary>
-		/// Saves the current instance to disk using the <see cref="File"/> property.
-		/// </summary>
-		public void Save() {
+        /// <summary>
+        /// Saves the current instance to disk using the <see cref="File"/> property.
+        /// </summary>
+        public void Save() {
             SaveAs(File.FullName);
 		}
 		/// <summary>
@@ -478,22 +492,6 @@ namespace csDBPF {
 				dir.Build(_listOfEntries);
 			}
 		}
-
-		/// <summary>
-		/// Returns all entries in this file.
-		/// </summary>
-		/// <returns>A list of all entries in this file</returns>
-		public List<DBPFEntry> GetEntries() {
-			return _listOfEntries;
-		}
-
-        /// <summary>
-        /// Returns all entries in this file of the specified type.
-        /// </summary>
-        /// <returns>A list of entries in this file of the specified type</returns>
-        public List<DBPFEntry> GetEntries(TGI entryType) {
-            return _listOfEntries.FindAll(e => e.TGI.Matches(entryType));
-        }
 
         /// <summary>
         /// Returns the count of entries in this file.
