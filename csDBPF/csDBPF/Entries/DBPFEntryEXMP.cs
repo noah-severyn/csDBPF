@@ -128,7 +128,7 @@ namespace csDBPF {
 			//Create the Property
 			DBPFProperty property;
 			for (int idx = 0; idx < propertyCount; idx++) {
-				property = DecodeProperty(pos);
+				property = DecodeProperty(dData, pos);
 				if (property is null) {
 					LogMessage($"Property #{idx} could not be decoded.");
 					return;
@@ -168,25 +168,26 @@ namespace csDBPF {
 
 
 
-		/// <summary>
-		/// Decodes either Binary or Text encoded data, and returns the property.
-		/// </summary>
-		/// <param name="offset">Offset (location) to start reading from</param>
-		/// <returns>A <see cref="DBPFProperty"/></returns>
-		private DBPFProperty DecodeProperty(int offset = 0) {
+        /// <summary>
+        /// Decodes either Binary or Text encoded data, and returns the property.
+        /// </summary>
+        /// <param name="dData">Decompressed data array</param>
+        /// <param name="offset">Offset (location) to start reading from</param>
+        /// <returns>A <see cref="DBPFProperty"/></returns>
+        private DBPFProperty DecodeProperty(byte[] dData, int offset = 0) {
 			if (_isTextEncoding) {
-				return DecodeProperty_Text(offset);
+				return DecodeProperty_Text(dData, offset);
 			} else {
-				return DecodeProperty_Binary(offset);
+				return DecodeProperty_Binary(dData, offset);
 			}
 		}
-		/// <summary>
-		/// Decodes the property from raw binary data at the given offset.
-		/// </summary>
-		/// <param name="offset">Offset to start decoding from</param>
-		/// <returns>The DBPFProperty; null if it cannot be decoded</returns>
-		private DBPFProperty DecodeProperty_Binary(int offset = 24) {
-			byte[] dData = ByteData;
+        /// <summary>
+        /// Decodes the property from raw binary data at the given offset.
+        /// </summary>
+        /// <param name="dData">Decompressed data array</param>
+        /// <param name="offset">Offset to start decoding from</param>
+        /// <returns>The DBPFProperty; null if it cannot be decoded</returns>
+        private DBPFProperty DecodeProperty_Binary(byte[] dData, int offset = 24) {
 
 			//Check for exemplars with no properties. Later checks against dData.Length to account for extraneous bytes on the end of dData that do not correspond to valid properties of the property
 			if (dData.Length <= 24) return null;
@@ -286,9 +287,10 @@ namespace csDBPF {
 		/// <summary>
 		/// Decodes the property from raw text data at the given offset.
 		/// </summary>
+		/// <param name="dData">Decompressed data array</param>
 		/// <param name="offset">Offset to start decoding from</param>
 		/// <returns>The DBPFProperty; null if cannot be decoded</returns>
-		private DBPFProperty DecodeProperty_Text(int offset = 85) {
+		private DBPFProperty DecodeProperty_Text(byte[] dData, int offset = 85) {
 			//The sequence 0D0A (i.e. {0x0D, 0x0A}) separates each piece of entry header information and each property
 
 			//The first 8 bytes are the fileIdentifier, as usual (EQZT1### etc)
@@ -305,7 +307,6 @@ namespace csDBPF {
 			//If data type if Float32, byte values are interpreted literally, e.g., {0x38, 0x31, 0x2E, 0x35} = {"8", "1", ".", "5"} -> 81.5
 
 			//The first 85 bytes are features of the entry: ParentCohort TGI and property count. When examining a specific property in the entry we are not concerned about them.
-			byte[] dData = ByteData;
 			if (offset < 85) {
 				offset = 85;
 			}
