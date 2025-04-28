@@ -3,17 +3,12 @@
 
 namespace csDBPF {
     /// <summary>
-    /// Implementation of QFS/RefPack/LZ77 decompression. This compression is used on larger entries inside saves
+    /// An Implementation of the QFS/RefPack/LZ77 compression format used in SC4 DBPF Files.
     /// </summary>
     /// <remarks>
-    /// Note that this implementation contains control characters and other changes specific to SimCity 4.
-    /// You can read about other game specifics at this specification for QFS spec http://wiki.niotso.org/RefPack.
-    ///
-    /// Ported from <see href="https://github.com/wouanagaine/SC4Mapper-2013/blob/db29c9bf88678a144dd1f9438e63b7a4b5e7f635/Modules/qfs.c#L25"/> and <see href="https://github.com/0xC0000054/DBPFSharp/blob/main/src/DBPFSharp/QfsCompression.cs"/>
-    ///
-    /// <br></br><br></br>More information on file specification: <br></br>
+    /// This implementation contains control characters and other changes specific to SimCity 4. For More information on file specification refer to: <br></br>
     /// - <see href="https://www.wiki.sc4devotion.com/index.php?title=DBPF_Compression"/><br></br>
-    /// - <see href="http://wiki.niotso.org/RefPack#Naming_notes"/> 
+    /// - <see href="http://wiki.niotso.org/RefPack"/> 
     /// </remarks>
     public static partial class QFS {
 		/// <summary>
@@ -64,18 +59,6 @@ namespace csDBPF {
         /// </summary>
         /// <param name="sourceBytes">Compressed data array</param>
         /// <returns>Decompressed data array</returns>
-        /// <example>
-        /// <c>
-        /// // Load save game
-        /// SC4SaveFile savegame = new SC4SaveFile(@"C:\Path\To\Save\Game.sc4");
-        ///
-        /// // Read raw data for Region View Subfile from save
-        /// byte[] data = sc4Save.LoadIndexEntryRaw(REGION_VIEW_SUBFILE_TGI);
-        ///
-        /// // Decompress data (This file will normally be compressed, should ideally check before decompressing)
-        /// byte[] decompressedData = QFS.UncompressData(data);
-        /// </c>
-        /// </example>
         /// <exception cref="IndexOutOfRangeException">
         /// Thrown when the compression algorithm tries to access an element that is out of bounds in the array
         /// </exception>

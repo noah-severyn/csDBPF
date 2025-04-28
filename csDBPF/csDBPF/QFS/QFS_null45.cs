@@ -1,4 +1,6 @@
-﻿// Copyright (c) 2023 Nicholas Hayes
+﻿// Code in this module is imported from DBPFSharp: https://github.com/0xC0000054/DBPFSharp
+// ---------------------------------------------------------------------------------------
+// Copyright (c) 2023 Nicholas Hayes
 // SPDX-License-Identifier: MIT
 //
 // Portions of this file have been adapted from zlib version 1.2.3
@@ -27,21 +29,12 @@ freely, subject to the following restrictions:
 Jean-loup Gailly        Mark Adler
 jloup@gzip.org          madler@alumni.caltech.edu
 */
+// ---------------------------------------------------------------------------------------
 
 using System;
 using System.Numerics;
 
 namespace csDBPF {
-    /// <summary>
-    /// An implementation of the QFS/RefPack compression format used in SC4 DBPF files.
-    /// </summary>
-    /// <remarks>
-    /// QFS/RefPack is a byte oriented compression format similar to LZ77.<br/>
-    /// <br/>
-    /// References:<br/>
-    /// https://wiki.sc4devotion.com/index.php?title=DBPF_Compression<br/>
-    /// http://wiki.niotso.org/RefPack
-    /// </remarks>
     public static partial class QFS {
         /// <summary>
         /// The minimum size in bytes of an uncompressed buffer that can be compressed with QFS compression.
