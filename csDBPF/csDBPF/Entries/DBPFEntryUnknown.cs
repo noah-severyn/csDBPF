@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
     /// <summary>
     /// Generic entry to encapsulate as yet unimplemented entry types or unknown entry types.
     /// </summary>
@@ -15,9 +15,9 @@ namespace csDBPF.Entries {
         public DBPFEntryUnknown(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
         }
 
-        public override void DecodeEntry() {}
+        public override void Decode() {}
 
-        public override void ToBytes() {
+        public override void Encode(bool compress = false) {
             throw new NotImplementedException();
         }
     }

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
 	/// <summary>
 	/// An implementation of <see cref="DBPFEntry"/> for LTEXT entries. Object data is stored in <see cref="Text"/>.
 	/// </summary>
@@ -22,9 +23,10 @@ namespace csDBPF.Entries {
 		/// </summary>
 		public string Text {
 			get { return _text; }
-			set {
+            set {
 				_text = value;
-			}
+                UncompressedSize = (uint) _text.Length * 2 + 4;
+            }
 		}
 
 
@@ -34,20 +36,21 @@ namespace csDBPF.Entries {
 		/// </summary>
 		public DBPFEntryLTEXT() : base(DBPFTGI.LTEXT) { }
 
-		/// <summary>
-		/// Create a new instance with the specified text. Use when creating a new LTEXT entry from scratch.
-		/// </summary>
-		/// <param name="text">Text to set</param>
-		public DBPFEntryLTEXT(string text) : base(DBPFTGI.LTEXT) { 
-			_text= text;
-		}
+        /// <summary>
+        /// Create a new instance with the specified TGI. Use when creating a new LTEXT entry from scratch.
+        /// </summary>
+        /// <param name="tgi">TGI set to assign</param>
+        public DBPFEntryLTEXT(TGI tgi) : base(tgi) { }
 
-		/// <summary>
-		/// Create a new instance with the specified TGI. Use when creating a new LTEXT entry from scratch.
-		/// </summary>
-		/// <param name="tgi">TGI set to assign</param>
-		public DBPFEntryLTEXT(TGI tgi) : base(tgi) {
-		}
+        /// <summary>
+        /// Create a new instance with the specified text. Use when creating a new LTEXT entry from scratch.
+        /// </summary>
+        /// <param name="text">Text to set</param>
+        public DBPFEntryLTEXT(string text) : base(DBPFTGI.LTEXT) { 
+			_text= text;
+            IsCompressed = false;
+            UncompressedSize = (uint) text.Length * 2 + 4;
+        }
 
 		/// <summary>
 		/// Create a new instance with the specified TGI and text. Use when creating a new LTEXT entry from scratch.
@@ -56,6 +59,8 @@ namespace csDBPF.Entries {
 		/// <param name="text">Text to set</param>
 		public DBPFEntryLTEXT(TGI tgi, string text) : base(tgi) {
 			_text = text;
+			IsCompressed = false;
+			UncompressedSize = (uint) text.Length * 2 + 4;
 		}
 
 		/// <summary>
@@ -79,13 +84,17 @@ namespace csDBPF.Entries {
         /// <remarks>
         /// Data must be uncompressed or garbage data is returned.
         /// </remarks>
-        public override void DecodeEntry() {
+        public override void Decode() {
 			if (_isDecoded) {
 				return;
 			}
 			if (ByteData.Length < 4) {
 				_text = null;
-				LogMessage("Data length is less than 4 bytes so information can be read.");
+				LogMessage("Data length is less than 4 bytes so no information can be read.");
+			}
+
+			if (IsCompressed) {
+				ByteData = QFS.Decompress(ByteData);
 			}
 
 			int pos = 0;
@@ -112,19 +121,42 @@ namespace csDBPF.Entries {
 
 
 
-		/// <summary>
-		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
-		/// </summary>
-		public override void ToBytes() {
-			List<byte> bytes = new List<byte>();
+        /// <summary>
+        /// Build and compress <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
+        /// </summary>
+        /// <param name="compress">Whether to compress the entry</param>
+        public override void Encode(bool compress = false) {
+			if (TGI.GroupID == 0) { TGI.RandomizeGroup(); }
+            if (TGI.InstanceID == 0) { TGI.RandomizeInstance(); }
+
+
+            List<byte> bytes = new List<byte>();
 			if (_text is null) {
-				bytes.AddRange(BitConverter.GetBytes((ushort) 0)); //Number of characters
-			} else {
-				bytes.AddRange(BitConverter.GetBytes((ushort) _text.Length)); //Number of characters
+				bytes.AddRange(BitConverter.GetBytes((ushort) 0)); //Number of 2-byte characters
+            } else {
+				bytes.AddRange(BitConverter.GetBytes((ushort) _text.Length)); //Number of 2-byte characters
 			}
 			bytes.AddRange(new byte[] { 0x00, 0x10 }); //Text control character
-			bytes.AddRange(ByteArrayHelper.ToBytes(_text, false));
-			ByteData = bytes.ToArray();
-		}
+			bytes.AddRange(ByteArrayHelper.ToBytes(_text));
+			
+			if (compress) {
+                ByteData = QFS.Compress(bytes.ToArray());
+
+                //If data could not be compressed for some reason
+                if (ByteData is null) {
+                    ByteData = bytes.ToArray();
+					IsCompressed = false;
+                } else {
+                    CompressedSize = (uint) ByteData.Length;
+					IsCompressed = true;
+                }
+            } 
+			
+			else {
+                ByteData = bytes.ToArray();
+                IsCompressed = false;
+            }
+            UncompressedSize = (uint) _text.Length * 2 + 4;
+        }
 	}
 }

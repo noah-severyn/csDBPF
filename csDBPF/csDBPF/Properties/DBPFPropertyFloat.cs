@@ -2,117 +2,102 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using csDBPF.Entries;
+using csDBPF;
+using static csDBPF.DBPFEntry;
+using static csDBPF.DBPFProperty;
 
-namespace csDBPF.Properties {
+namespace csDBPF {
 	/// <summary>
 	/// Represents a property storing float value(s).
 	/// </summary>
 	public class DBPFPropertyFloat : DBPFProperty {
-		private uint _id;
 		/// <summary>
 		/// Hexadecimal identifier for this property. <see cref="XMLExemplarProperty"/> and <see cref="XMLProperties.AllProperties"/>. 
 		/// </summary>
-		public override uint ID {
-			get { return _id; }
-			set { _id = value; }
-		}
+		public override uint ID { get; set; }
 
-		private readonly DBPFPropertyDataType _dataType;
-		/// <summary>
-		/// The <see cref="DBPFPropertyDataType"/> for this property.
-		/// </summary>
-		public override DBPFPropertyDataType DataType {
-			get { return _dataType; }
-		}
+        /// <summary>
+        /// The <see cref="PropertyDataType"/> for this property.
+        /// </summary>
+        public override PropertyDataType DataType { get; }
 
-		private int _numberOfReps;
-		/// <summary>
-		/// The number of repetitions of <see cref="DBPFPropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
-		/// </summary>
-		/// <remarks>
-		/// Determining the count partially depends on the encoding type. For binary encoded float-type properties: 0 reps = single value, 1 reps = multiple values but currently held to 1 value (problematic on macOS), n reps = n number of values. For text encoded float-type properties: n reps = n number of values.
-		/// </remarks>
-		public override int NumberOfReps {
-			get { return _numberOfReps; }
-		}
+           /// <summary>
+        /// The number of repetitions of <see cref="PropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
+        /// </summary>
+        /// <remarks>
+        /// Determining the count partially depends on the encoding type. For binary encoded float-type properties: 0 reps = single value, 1 reps = multiple values but currently held to 1 value (problematic on macOS), n reps = n number of values. For text encoded float-type properties: n reps = n number of values.
+        /// </remarks>
+        public override int NumberOfReps { get; private protected set;  }
 
-		private bool _isTextEncoding;
 		/// <summary>
 		/// Specifies the encoding style (Binary or Text) of the property.
 		/// </summary>
 		/// <remarks>
 		/// This property affects <see cref="NumberOfReps"/>. This also determines how this property will be written to file. 
 		/// </remarks>
-		public override bool IsTextEncoding {
-			get { return _isTextEncoding; }
-			set { _isTextEncoding = value; }
+		public override EncodingType Encoding { get; set; }
+
+        /// <summary>
+        /// List of data values which are stored in this property.
+        /// </summary>
+        private List<float> _dataValues;
+
+
+
+        /// <summary>
+        /// Construct a new DBPFProperty with a float data type.
+        /// </summary>
+        /// <param name="encodingType">Text or Binary encoding type</param>
+        public DBPFPropertyFloat(EncodingType encodingType = EncodingType.Binary) {
+			DataType = PropertyDataType.FLOAT32;
+			Encoding = encodingType;
+			NumberOfReps = 0;
 		}
-
-		/// <summary>
-		/// List of data values which are stored in this property.
-		/// </summary>
-		private List<float> _dataValues;
-
-
-
-		/// <summary>
-		/// Construct a new DBPFProperty with a float data type.
-		/// </summary>
-		/// <param name="encodingType">Encoding type: binary or text</param>
-		public DBPFPropertyFloat(bool encodingType = DBPFEntry.EncodingType.Binary) {
-			_dataType = DBPFPropertyDataType.FLOAT32;
-			_isTextEncoding = encodingType;
-			_numberOfReps = 0;
-		}
-		/// <summary>
-		/// Construct a DBPFProperty with a float data type holding a single value.
-		/// </summary>
-		/// <param name="value">Value of this property</param>
-		/// <param name="encodingType">Encoding type: binary or text</param>
-		public DBPFPropertyFloat(float value, bool encodingType = DBPFEntry.EncodingType.Binary) {
-			_dataType = DBPFPropertyDataType.FLOAT32;
+        /// <summary>
+        /// Construct a DBPFProperty with a float data type holding a single value.
+        /// </summary>
+        /// <param name="value">Value of this property</param>
+        /// <param name="encodingType">Text or Binary encoding type</param>
+        public DBPFPropertyFloat(float value, EncodingType encodingType = EncodingType.Binary) {
+			DataType = PropertyDataType.FLOAT32;
 			_dataValues = new List<float> { value };
-			_isTextEncoding = encodingType;
-			if (_isTextEncoding) {
-                _numberOfReps = 1;
+			Encoding = encodingType;
+			if (Encoding == EncodingType.Text) {
+                NumberOfReps = 1;
             } else {
-                _numberOfReps = 0;
+                NumberOfReps = 0;
             }
 		}
-		/// <summary>
-		/// Construct a DBPFProperty with a float data type holding multiple values.
-		/// </summary>
-		/// <param name="values">Values this property holds</param>
-		/// <param name="encodingType">Encoding type: binary or text</param>
-		public DBPFPropertyFloat(List<float> values, bool encodingType = DBPFEntry.EncodingType.Binary) {
-			_dataType = DBPFPropertyDataType.FLOAT32;
+        /// <summary>
+        /// Construct a DBPFProperty with a float data type holding multiple values.
+        /// </summary>
+        /// <param name="values">Values this property holds</param>
+        /// <param name="encodingType">Text or Binary encoding type</param>
+        public DBPFPropertyFloat(List<float> values, EncodingType encodingType = EncodingType.Binary) {
+			DataType = PropertyDataType.FLOAT32;
 			_dataValues = values;
-			_isTextEncoding = encodingType;
-			if (_isTextEncoding) {
-				_numberOfReps = _dataValues.Count;
+			Encoding = encodingType;
+			if (Encoding == EncodingType.Text) {
+				NumberOfReps = _dataValues.Count;
 			} else {
                 //Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
                 //See: https://community.simtropolis.com/forums/topic/759206-mysterious-glitch-for-simcity-4-mac/?tab=comments#comment-1731134
                 if (_dataValues.Count <= 1) {
-					_numberOfReps = 0;
+					NumberOfReps = 0;
 				} else {
-					_numberOfReps = _dataValues.Count;
+					NumberOfReps = _dataValues.Count;
 				}
 			}
 		}
 
 
 
-		/// <summary>
-		/// Returns a string that represents the current object.
-		/// </summary>
-		/// <returns>Returns a string that represents the current object.</returns>
-		public override string ToString() {
+        /// <inheritdoc/>
+        public override string ToString() {
 			StringBuilder sb = new StringBuilder();
-			sb.Append($"ID: 0x{DBPFUtil.ToHexString(_id)}, ");
-			sb.Append($"Type: {_dataType}, ");
-			sb.Append($"Reps: {_numberOfReps}, ");
+			sb.Append($"ID: 0x{DBPFUtil.ToHexString(ID)}, ");
+			sb.Append($"Type: {DataType}, ");
+			sb.Append($"Reps: {NumberOfReps}, ");
 			sb.Append($"Values: {_dataValues.ToString()}");
 			return sb.ToString();
 		}
@@ -126,8 +111,6 @@ namespace csDBPF.Properties {
 		public override List<float> GetData() {
 			return _dataValues;
         }
-
-
         /// <summary>
         /// Returns the value stored in this property at the given position.
         /// </summary>
@@ -159,14 +142,14 @@ namespace csDBPF.Properties {
 			}
 			_dataValues = (List<float>) value;
 
-			if (_isTextEncoding) {
-				_numberOfReps = _dataValues.Count;
+			if (Encoding == EncodingType.Text) {
+				NumberOfReps = _dataValues.Count;
 			} else {
 				//Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
 				if (_dataValues.Count <= 1) {
-					_numberOfReps = 0;
+					NumberOfReps = 0;
 				} else {
-					_numberOfReps = _dataValues.Count;
+					NumberOfReps = _dataValues.Count;
 				}
 			}
         }
@@ -182,18 +165,15 @@ namespace csDBPF.Properties {
 
 
 
-
-
         /// <summary>
         /// Process the features and data values of this property into a byte array according to the set encoding type.
         /// </summary>
         /// <returns>A byte array encoding all information for this property</returns>
-        public override byte[] ToRawBytes() {
-			//Text Encoding
-			if (_isTextEncoding) {
+        public override byte[] ToBytes() {
+			if (Encoding == EncodingType.Text) {
 				StringBuilder sb = new StringBuilder();
-				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(_id);
-				sb.Append($"0x{DBPFUtil.ToHexString(_id)}:{{\"{xmlprop.Name}\"}}=Float32:{_numberOfReps}:{{");
+				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(ID);
+				sb.Append($"0x{DBPFUtil.ToHexString(ID)}:{{\"{xmlprop.Name}\"}}=Float32:{NumberOfReps}:{{");
 				for (int idx = 0; idx < _dataValues.Count; idx++) {
 					sb.Append(_dataValues[idx]);
 					if (idx != _dataValues.Count-1) {
@@ -202,14 +182,11 @@ namespace csDBPF.Properties {
 				}
 				sb.Append("}}\r\n");
 				return ByteArrayHelper.ToBytes(sb.ToString(), true);
-			}
-
-			//Binary Encoding
-			else {
+			} else {
 				List<byte> bytes = new List<byte>();
-				bytes.AddRange(BitConverter.GetBytes(_id));
-				bytes.AddRange(BitConverter.GetBytes(_dataType.IdentifyingNumber));
-				if (_numberOfReps == 0) { //keyType = 0x00
+				bytes.AddRange(BitConverter.GetBytes(ID));
+				bytes.AddRange(BitConverter.GetBytes((ushort) DataType));
+				if (NumberOfReps == 0) { //keyType = 0x00
 					bytes.AddRange(BitConverter.GetBytes((ushort) 0x00)); //keyType
 					bytes.Add(0); //Number of value repetitions. (Seems to be always 0.)
 					bytes.AddRange(BitConverter.GetBytes(_dataValues[0]));

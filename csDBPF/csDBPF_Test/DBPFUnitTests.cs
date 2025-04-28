@@ -1,9 +1,7 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using csDBPF;
-using csDBPF.Properties;
 using System.Collections.Generic;
-using csDBPF.Entries;
 using System.Diagnostics;
 using SixLabors.ImageSharp;
 using System.IO;
@@ -16,6 +14,8 @@ namespace csDBPF_Test {
             public static byte[] notcompressedentry_b = new byte[] { 0x14, 0x00, 0x00, 0x10, 0x50, 0x00, 0x61, 0x00, 0x72, 0x00, 0x6B, 0x00, 0x73, 0x00, 0x20, 0x00, 0x41, 0x00, 0x75, 0x00, 0x72, 0x00, 0x61, 0x00, 0x20, 0x00, 0x28, 0x00, 0x62, 0x00, 0x79, 0x00, 0x20, 0x00, 0x43, 0x00, 0x6F, 0x00, 0x72, 0x00, 0x69, 0x00, 0x29, 0x00 };
             public static byte[] compressedentry_b = new byte[] { 0x42, 0x01, 0x00, 0x00, 0x10, 0xFB, 0x00, 0x01, 0xBE, 0xE5, 0x45, 0x51, 0x5A, 0x42, 0x31, 0x23, 0x23, 0x23, 0x61, 0x28, 0x34, 0x05, 0x3F, 0x69, 0x0F, 0x69, 0x00, 0x67, 0x0B, 0x4A, 0x0F, 0x00, 0x00, 0x00, 0x01, 0x03, 0x10, 0x02, 0x03, 0x00, 0x03, 0x01, 0x03, 0x23, 0x05, 0x0C, 0x20, 0xE0, 0x0C, 0x80, 0x00, 0x00, 0x01, 0x07, 0x14, 0xE5, 0x44, 0x61, 0x74, 0x61, 0x56, 0x69, 0x65, 0x77, 0x3A, 0x20, 0x50, 0x61, 0x72, 0x6B, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61, 0xE0, 0x47, 0x0B, 0x4A, 0x02, 0x20, 0x00, 0x03, 0x05, 0x29, 0x08, 0x9B, 0x00, 0x00, 0x05, 0x2C, 0xE1, 0x01, 0x08, 0x0B, 0x16, 0x09, 0x01, 0xE2, 0x0A, 0x40, 0x00, 0xE3, 0x10, 0x20, 0x15, 0x4D, 0xE4, 0x19, 0x33, 0x1C, 0x03, 0x05, 0x99, 0x70, 0x01, 0xE0, 0x3C, 0x53, 0xBC, 0x70, 0x11, 0x07, 0x0C, 0x01, 0x07, 0x0D, 0xE0, 0x79, 0x8C, 0xD9, 0x70, 0x11, 0x07, 0x46, 0x01, 0x07, 0x7F, 0xE0, 0xBA, 0xC5, 0xF0, 0x70, 0x00, 0x36, 0xE0, 0x00, 0xFF, 0xFF, 0xFF, 0x02, 0x07, 0x70, 0x81, 0xE0, 0xDD, 0xF1, 0xE2, 0x70, 0x01, 0x07, 0xB8, 0xE0, 0xBB, 0xE3, 0xC5, 0x70, 0x01, 0x07, 0xB9, 0xE0, 0x9A, 0xD4, 0xA8, 0x70, 0x05, 0x2F, 0xF2, 0xE0, 0xC6, 0x8A, 0x70, 0xF3, 0x00, 0x07, 0xE0, 0x58, 0xB7, 0x6A, 0x70, 0x01, 0x07, 0xFE, 0xE0, 0x36, 0xA8, 0x46, 0x70, 0x09, 0x66, 0xFF, 0x17, 0x89, 0x00, 0x70, 0xE5, 0x04, 0x68, 0x19, 0xAA, 0xE7, 0x15, 0x16, 0xE9, 0x01, 0x03, 0x06, 0x15, 0x0C, 0xEC, 0x01, 0x03, 0x64, 0x19, 0xBA, 0xEF, 0x00, 0x76, 0x15, 0xBA, 0xF2, 0x0D, 0xB6, 0x09, 0xE2, 0x99, 0x3B, 0x55, 0xBA, 0x99, 0x64, 0x83, 0xC8, 0x99, 0x7C, 0xA3, 0xC6, 0x01, 0x1F, 0x99, 0xE2, 0x99, 0x81, 0xB6, 0xB4, 0x99, 0x72, 0xBA, 0x94, 0x99, 0x4E, 0xB1, 0x65, 0x01, 0x6E, 0x99, 0x88, 0x80, 0x30, 0x99, 0xF3, 0xE8, 0x33, 0x72, 0x3E, 0x1C, 0x98, 0x3C, 0xAB, 0xB5, 0x9F, 0xDE, 0xD7, 0xC2, 0x88, 0xB1, 0xD1, 0x84, 0xFA, 0x44, 0x28, 0x16, 0xF1, 0x9F, 0x73, 0xB1, 0x5D, 0x99, 0x4E, 0x4F, 0x43, 0xD1, 0x97, 0x14, 0xA1, 0x35, 0x54, 0xF6, 0x15, 0x6E, 0xF4, 0xE0, 0xB4, 0x75, 0xCA, 0x39, 0xFC };
             public static byte[] decompressedentry_b = new byte[] { 0x45, 0x51, 0x5A, 0x42, 0x31, 0x23, 0x23, 0x23, 0x61, 0x28, 0x34, 0x05, 0x3F, 0x69, 0x0F, 0x69, 0x00, 0x67, 0x0B, 0x4A, 0x0F, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x23, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x0C, 0x80, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x44, 0x61, 0x74, 0x61, 0x56, 0x69, 0x65, 0x77, 0x3A, 0x20, 0x50, 0x61, 0x72, 0x6B, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61, 0xE0, 0x47, 0x0B, 0x4A, 0x00, 0x03, 0x80, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xE1, 0x47, 0x0B, 0x4A, 0x00, 0x0B, 0x00, 0x00, 0x00, 0x01, 0xE2, 0x47, 0x0B, 0x4A, 0x00, 0x0B, 0x00, 0x00, 0x00, 0x00, 0xE3, 0x47, 0x0B, 0x4A, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xE4, 0x47, 0x0B, 0x4A, 0x00, 0x03, 0x80, 0x00, 0x00, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x99, 0x70, 0x01, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70, 0x0C, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70, 0x0D, 0x00, 0x00, 0x00, 0x79, 0x8C, 0xD9, 0x70, 0x46, 0x00, 0x00, 0x00, 0x79, 0x8C, 0xD9, 0x70, 0x7F, 0x00, 0x00, 0x00, 0xBA, 0xC5, 0xF0, 0x70, 0x80, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0x70, 0x81, 0x00, 0x00, 0x00, 0xDD, 0xF1, 0xE2, 0x70, 0xB8, 0x00, 0x00, 0x00, 0xBB, 0xE3, 0xC5, 0x70, 0xB9, 0x00, 0x00, 0x00, 0x9A, 0xD4, 0xA8, 0x70, 0xF2, 0x00, 0x00, 0x00, 0x79, 0xC6, 0x8A, 0x70, 0xF3, 0x00, 0x00, 0x00, 0x58, 0xB7, 0x6A, 0x70, 0xFE, 0x00, 0x00, 0x00, 0x36, 0xA8, 0x46, 0x70, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x99, 0x00, 0x70, 0xE5, 0x47, 0x0B, 0x4A, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00, 0xE7, 0x47, 0x0B, 0x4A, 0x00, 0x0B, 0x00, 0x00, 0x00, 0x01, 0xE9, 0x47, 0x0B, 0x4A, 0x00, 0x03, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0xEC, 0x47, 0x0B, 0x4A, 0x00, 0x03, 0x00, 0x00, 0x00, 0x64, 0x00, 0x00, 0x00, 0xEF, 0x47, 0x0B, 0x4A, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xF2, 0x47, 0x0B, 0x4A, 0x00, 0x03, 0x80, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x99, 0x99, 0x3B, 0x55, 0xBA, 0x99, 0x64, 0x83, 0xC8, 0x99, 0x7C, 0xA3, 0xC6, 0x99, 0xFF, 0xFF, 0xFF, 0x99, 0x81, 0xB6, 0xB4, 0x99, 0x72, 0xBA, 0x94, 0x99, 0x4E, 0xB1, 0x65, 0x99, 0x00, 0x99, 0x00, 0x99, 0xF3, 0x47, 0x0B, 0x4A, 0x00, 0x03, 0x80, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x33, 0x72, 0x3E, 0x1C, 0x98, 0x3C, 0xAB, 0xB5, 0x9F, 0xDE, 0xD7, 0xC2, 0x88, 0xB1, 0xD1, 0x84, 0xFA, 0x44, 0x28, 0x16, 0xF1, 0x9F, 0x73, 0xB1, 0x5D, 0x99, 0x4E, 0x4F, 0x43, 0xD1, 0x97, 0x14, 0xA1, 0x35, 0x54, 0xF6, 0xF4, 0x47, 0x0B, 0x4A, 0x00, 0x03, 0x00, 0x00, 0x00, 0xB4, 0x75, 0xCA, 0x39 };
+            //Sample data from z_WMD_StandaloneFloraBrushMod.dat --- in BINARY encoding ---
+            public static byte[] decompressedentry2_b = new byte[] { 0x45, 0x51, 0x5A, 0x42, 0x31, 0x23, 0x23, 0x23, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x27, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x0C, 0x80, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x46, 0x6C, 0x6F, 0x72, 0x61, 0x42, 0x72, 0x75, 0x73, 0x68, 0x00, 0x02, 0x02, 0x8A, 0x00, 0x03, 0x00, 0x00, 0x00, 0xA6, 0x5D, 0xF6, 0x08, 0x01, 0x02, 0x02, 0x8A, 0x00, 0x0B, 0x00, 0x00, 0x00, 0x01, 0x02, 0x02, 0x02, 0x8A, 0x00, 0x09, 0x80, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x80, 0xBB, 0x45, 0x00, 0x00, 0x80, 0x44, 0x00, 0x00, 0x90, 0x43, 0x00, 0x00, 0x40, 0x42, 0x00, 0x00, 0x80, 0x41, 0x03, 0x02, 0x02, 0x8A, 0x00, 0x09, 0x80, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x04, 0x02, 0x02, 0x8A, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x05, 0x02, 0x02, 0x8A, 0x00, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x99, 0x6A, 0x41, 0x8A, 0x00, 0x03, 0x80, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0B, 0x96, 0x26, 0x20, 0x3C, 0x09, 0x5E, 0x4A, 0x96, 0xA6, 0x5E, 0xCA, 0x00, 0xD8, 0x2E, 0xAA, 0x00, 0x03, 0x80, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0xE6, 0x69, 0x31, 0xEA, 0x0E, 0x00, 0x00, 0x00, 0x01, 0xD8, 0x2E, 0xAA, 0x00, 0x03, 0x80, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0xE6, 0x69, 0x31, 0xEA, 0x0D, 0x00, 0x00, 0x00, 0x02, 0xD8, 0x2E, 0xAA, 0x00, 0x03, 0x80, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0xE6, 0x69, 0x31, 0xEA, 0x10, 0x00, 0x00, 0x00, 0x03, 0xD8, 0x2E, 0xAA, 0x00, 0x03, 0x80, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0xE6, 0x69, 0x31, 0xEA, 0x0F, 0x00, 0x00, 0x00, 0x04, 0xD8, 0x2E, 0xAA, 0x00, 0x03, 0x00, 0x00, 0x00, 0x1A, 0x2C, 0x13, 0x4A, 0x05, 0xD8, 0x2E, 0xAA, 0x00, 0x03, 0x00, 0x00, 0x00, 0x1A, 0x2C, 0x13, 0x4A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
             //Sample data from b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc --- in TEXT encoding ---
             public static byte[] notcompressedentry_t = { 45, 0x51, 0x5A, 0x54, 0x31, 0x23, 0x23, 0x23, 0x0D, 0x0A, 0x50, 0x61, 0x72, 0x65, 0x6E, 0x74, 0x43, 0x6F, 0x68, 0x6F, 0x72, 0x74, 0x3D, 0x4B, 0x65, 0x79, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x2C, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x2C, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x7D, 0x0D, 0x0A, 0x50, 0x72, 0x6F, 0x70, 0x43, 0x6F, 0x75, 0x6E, 0x74, 0x3D, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x31, 0x38, 0x0D, 0x0A, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x31, 0x30, 0x3A, 0x7B, 0x22, 0x45, 0x78, 0x65, 0x6D, 0x70, 0x6C, 0x61, 0x72, 0x20, 0x54, 0x79, 0x70, 0x65, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x32, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x32, 0x30, 0x3A, 0x7B, 0x22, 0x45, 0x78, 0x65, 0x6D, 0x70, 0x6C, 0x61, 0x72, 0x20, 0x4E, 0x61, 0x6D, 0x65, 0x22, 0x7D, 0x3D, 0x53, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x3A, 0x31, 0x3A, 0x7B, 0x22, 0x42, 0x36, 0x32, 0x2D, 0x43, 0x53, 0x24, 0x5F, 0x41, 0x6C, 0x62, 0x65, 0x72, 0x74, 0x73, 0x6F, 0x6E, 0x73, 0x5F, 0x36, 0x30, 0x73, 0x5F, 0x47, 0x72, 0x6F, 0x63, 0x65, 0x72, 0x79, 0x20, 0x76, 0x20, 0x31, 0x2E, 0x31, 0x22, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x30, 0x39, 0x39, 0x61, 0x66, 0x61, 0x63, 0x64, 0x3A, 0x7B, 0x22, 0x42, 0x75, 0x6C, 0x6C, 0x64, 0x6F, 0x7A, 0x65, 0x20, 0x43, 0x6F, 0x73, 0x74, 0x22, 0x7D, 0x3D, 0x53, 0x69, 0x6E, 0x74, 0x36, 0x34, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x61, 0x39, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x37, 0x38, 0x31, 0x32, 0x38, 0x31, 0x30, 0x3A, 0x7B, 0x22, 0x4F, 0x63, 0x63, 0x75, 0x70, 0x61, 0x6E, 0x74, 0x20, 0x53, 0x69, 0x7A, 0x65, 0x22, 0x7D, 0x3D, 0x46, 0x6C, 0x6F, 0x61, 0x74, 0x33, 0x32, 0x3A, 0x33, 0x3A, 0x7B, 0x38, 0x31, 0x2E, 0x35, 0x38, 0x39, 0x37, 0x39, 0x37, 0x39, 0x37, 0x2C, 0x31, 0x33, 0x2E, 0x39, 0x34, 0x37, 0x32, 0x39, 0x39, 0x39, 0x36, 0x2C, 0x33, 0x39, 0x2E, 0x34, 0x34, 0x32, 0x35, 0x30, 0x31, 0x30, 0x37, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x37, 0x38, 0x31, 0x32, 0x38, 0x31, 0x31, 0x3A, 0x7B, 0x22, 0x55, 0x6E, 0x6B, 0x6E, 0x6F, 0x77, 0x6E, 0x22, 0x7D, 0x3D, 0x46, 0x6C, 0x6F, 0x61, 0x74, 0x33, 0x32, 0x3A, 0x31, 0x3A, 0x7B, 0x30, 0x2E, 0x35, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x37, 0x38, 0x31, 0x32, 0x38, 0x32, 0x31, 0x3A, 0x7B, 0x22, 0x52, 0x65, 0x73, 0x6F, 0x75, 0x72, 0x63, 0x65, 0x4B, 0x65, 0x79, 0x54, 0x79, 0x70, 0x65, 0x31, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x33, 0x3A, 0x7B, 0x30, 0x78, 0x35, 0x61, 0x64, 0x30, 0x65, 0x38, 0x31, 0x37, 0x2C, 0x30, 0x78, 0x62, 0x32, 0x64, 0x36, 0x64, 0x65, 0x62, 0x65, 0x2C, 0x30, 0x78, 0x30, 0x30, 0x30, 0x33, 0x30, 0x30, 0x30, 0x30, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x37, 0x38, 0x31, 0x32, 0x38, 0x33, 0x32, 0x3A, 0x7B, 0x22, 0x57, 0x65, 0x61, 0x6C, 0x74, 0x68, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x38, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x31, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x37, 0x38, 0x31, 0x32, 0x38, 0x33, 0x33, 0x3A, 0x7B, 0x22, 0x50, 0x75, 0x72, 0x70, 0x6F, 0x73, 0x65, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x38, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x32, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x37, 0x38, 0x31, 0x32, 0x38, 0x33, 0x34, 0x3A, 0x7B, 0x22, 0x43, 0x61, 0x70, 0x61, 0x63, 0x69, 0x74, 0x79, 0x20, 0x53, 0x61, 0x74, 0x69, 0x73, 0x66, 0x69, 0x65, 0x64, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x32, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x33, 0x31, 0x31, 0x30, 0x2C, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x32, 0x65, 0x66, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x37, 0x38, 0x31, 0x32, 0x38, 0x35, 0x31, 0x3A, 0x7B, 0x22, 0x50, 0x6F, 0x6C, 0x6C, 0x75, 0x74, 0x69, 0x6F, 0x6E, 0x20, 0x61, 0x74, 0x20, 0x63, 0x65, 0x6E, 0x74, 0x72, 0x65, 0x22, 0x7D, 0x3D, 0x53, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x34, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x37, 0x2C, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x33, 0x2C, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x31, 0x36, 0x2C, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x37, 0x38, 0x31, 0x32, 0x38, 0x35, 0x34, 0x3A, 0x7B, 0x22, 0x50, 0x6F, 0x77, 0x65, 0x72, 0x20, 0x43, 0x6F, 0x6E, 0x73, 0x75, 0x6D, 0x65, 0x64, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x31, 0x30, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x39, 0x32, 0x34, 0x34, 0x64, 0x62, 0x35, 0x3A, 0x7B, 0x22, 0x46, 0x6C, 0x61, 0x6D, 0x6D, 0x61, 0x62, 0x69, 0x6C, 0x69, 0x74, 0x79, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x38, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x32, 0x64, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x61, 0x34, 0x39, 0x39, 0x66, 0x38, 0x35, 0x3A, 0x7B, 0x22, 0x51, 0x75, 0x65, 0x72, 0x79, 0x20, 0x65, 0x78, 0x65, 0x6D, 0x70, 0x6C, 0x61, 0x72, 0x20, 0x47, 0x55, 0x49, 0x44, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x63, 0x61, 0x35, 0x36, 0x37, 0x38, 0x33, 0x61, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x32, 0x63, 0x38, 0x66, 0x38, 0x37, 0x34, 0x36, 0x3A, 0x7B, 0x22, 0x45, 0x78, 0x65, 0x6D, 0x70, 0x6C, 0x61, 0x72, 0x20, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6F, 0x72, 0x79, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x38, 0x63, 0x38, 0x66, 0x62, 0x62, 0x63, 0x63, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x34, 0x39, 0x39, 0x61, 0x66, 0x61, 0x33, 0x38, 0x3A, 0x7B, 0x22, 0x43, 0x6F, 0x6E, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x69, 0x6F, 0x6E, 0x20, 0x54, 0x69, 0x6D, 0x65, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x38, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x31, 0x30, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x34, 0x39, 0x62, 0x65, 0x64, 0x61, 0x33, 0x31, 0x3A, 0x7B, 0x22, 0x4D, 0x61, 0x78, 0x46, 0x69, 0x72, 0x65, 0x53, 0x74, 0x61, 0x67, 0x65, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x38, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x34, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x36, 0x38, 0x65, 0x65, 0x39, 0x37, 0x36, 0x34, 0x3A, 0x7B, 0x22, 0x50, 0x6F, 0x6C, 0x6C, 0x75, 0x74, 0x69, 0x6F, 0x6E, 0x20, 0x52, 0x61, 0x64, 0x69, 0x75, 0x73, 0x22, 0x7D, 0x3D, 0x46, 0x6C, 0x6F, 0x61, 0x74, 0x33, 0x32, 0x3A, 0x34, 0x3A, 0x7B, 0x35, 0x2C, 0x35, 0x2C, 0x30, 0x2C, 0x30, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x38, 0x61, 0x31, 0x63, 0x33, 0x65, 0x37, 0x32, 0x3A, 0x7B, 0x22, 0x57, 0x6F, 0x72, 0x74, 0x68, 0x22, 0x7D, 0x3D, 0x53, 0x69, 0x6E, 0x74, 0x36, 0x34, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x61, 0x39, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x38, 0x63, 0x62, 0x33, 0x35, 0x31, 0x31, 0x66, 0x3A, 0x7B, 0x22, 0x4F, 0x63, 0x63, 0x75, 0x70, 0x61, 0x6E, 0x74, 0x20, 0x54, 0x79, 0x70, 0x65, 0x73, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x31, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x33, 0x31, 0x31, 0x30, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x61, 0x61, 0x31, 0x64, 0x64, 0x33, 0x39, 0x36, 0x3A, 0x7B, 0x22, 0x4F, 0x63, 0x63, 0x75, 0x70, 0x61, 0x6E, 0x74, 0x47, 0x72, 0x6F, 0x75, 0x70, 0x73, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x34, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x31, 0x30, 0x30, 0x31, 0x2C, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x32, 0x30, 0x30, 0x30, 0x2C, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x32, 0x30, 0x30, 0x31, 0x2C, 0x30, 0x78, 0x30, 0x30, 0x30, 0x31, 0x33, 0x31, 0x31, 0x30, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x61, 0x61, 0x31, 0x64, 0x64, 0x33, 0x39, 0x37, 0x3A, 0x7B, 0x22, 0x53, 0x46, 0x58, 0x3A, 0x51, 0x75, 0x65, 0x72, 0x79, 0x20, 0x53, 0x6F, 0x75, 0x6E, 0x64, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x32, 0x61, 0x38, 0x39, 0x31, 0x36, 0x61, 0x62, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x61, 0x61, 0x38, 0x33, 0x35, 0x35, 0x38, 0x66, 0x3A, 0x7B, 0x22, 0x43, 0x72, 0x61, 0x6E, 0x65, 0x20, 0x48, 0x69, 0x6E, 0x74, 0x73, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x38, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x63, 0x38, 0x65, 0x64, 0x32, 0x64, 0x38, 0x34, 0x3A, 0x7B, 0x22, 0x57, 0x61, 0x74, 0x65, 0x72, 0x20, 0x43, 0x6F, 0x6E, 0x73, 0x75, 0x6D, 0x65, 0x64, 0x22, 0x7D, 0x3D, 0x55, 0x69, 0x6E, 0x74, 0x33, 0x32, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x39, 0x38, 0x7D, 0x0D, 0x0A, 0x30, 0x78, 0x65, 0x39, 0x31, 0x61, 0x30, 0x62, 0x35, 0x66, 0x3A, 0x7B, 0x22, 0x42, 0x75, 0x69, 0x6C, 0x64, 0x69, 0x6E, 0x67, 0x20, 0x76, 0x61, 0x6C, 0x75, 0x65, 0x22, 0x7D, 0x3D, 0x53, 0x69, 0x6E, 0x74, 0x36, 0x34, 0x3A, 0x30, 0x3A, 0x7B, 0x30, 0x78, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x31, 0x36, 0x37, 0x38, 0x7D, 0x0D, 0x0A };
@@ -27,7 +27,7 @@ namespace csDBPF_Test {
 
 
 
-        // 00x Misc Test Methods
+        // 00x Misc Test methods
         [TestClass]
         public class _00x_MiscTests {
             
@@ -35,20 +35,20 @@ namespace csDBPF_Test {
 
 
 
-        // 01x Test Methods for DBPFUtil class
+        // 01x Test methods for DBPFUtil class
         [TestClass]
         public class _01x_DBPFUtil {
             [TestMethod]
             public void Test_010_DBPFUtil_IsFileDBPF() {
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_GraphModd. V2.dat"));
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dat"));
-                Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll"));
+                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_GraphModd. V2.dat"));
+                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dat"));
+                Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll"));
                 Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png"));
                 Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Network Addon Mod\\6 Miscellaneous\\Maxis Transit Lots\\Maxis Airports - Medium.dat"));
 
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_GraphModd. V2.dat", true));
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dat", true));
-                Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll", true));
+                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_GraphModd. V2.dat", true));
+                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dat", true));
+                Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll", true));
                 Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png", true));
                 Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Network Addon Mod\\6 Miscellaneous\\Maxis Transit Lots\\Maxis Airports - Medium.dat", true));
             }
@@ -64,7 +64,7 @@ namespace csDBPF_Test {
             }
 
             [TestMethod]
-            public void Test_012_DBPFUtil_UintToHexString() {
+            public void Test_012_DBPFUtil_ToHexString() {
                 Assert.AreEqual("6534284A", DBPFUtil.ToHexString(1697917002, 8, true, false));
                 Assert.AreEqual("6534284a", DBPFUtil.ToHexString(1697917002, 8, false, false));
                 Assert.AreEqual("0x6534284A", DBPFUtil.ToHexString(1697917002, 8, true, true));
@@ -78,9 +78,126 @@ namespace csDBPF_Test {
                 Assert.AreEqual("0x000004D2", DBPFUtil.ToHexString(1234, 8, true));
             }
 
-            //[Ignore]
             [TestMethod]
-            public void Test_013_DBPFUtil_StringFromByteArray() {
+            public void Test_015_DBPFUtil_DateFromUnix() {
+                uint u1 = 0x5e115977; // 1/5/2020 3:35:19 AM 
+                DateTime d1 = new DateTime(2020, 1, 5, 3, 35, 19);
+                uint u2 = 0x60557b29; // 3/20/2021 4:33:45 AM
+                DateTime d2 = new DateTime(2021, 3, 20, 4, 33, 45);
+
+                Assert.AreEqual(d1, DBPFUtil.UnixToDate(u1));
+                Assert.AreEqual(d2, DBPFUtil.UnixToDate(u2));
+            }
+        }
+
+
+
+        // 02x Test methods for DBPFCompression class
+        [TestClass]
+        public class _02x_DBPFCompression {
+
+            [TestMethod]
+            public void Test_020_DBPFCompression_IsCompressed() {
+                Assert.IsTrue(QFS.IsCompressed(TestArrays.compressedentry_b));
+                Assert.IsFalse(QFS.IsCompressed(TestArrays.notcompressedentry_b));
+                Assert.IsFalse(QFS.IsCompressed(TestArrays.decompressedentry_b));
+            }
+
+            [TestMethod]
+            public void Test_021_DBPFCompression_GetDecompressedSize() {
+                Assert.AreEqual((uint) 44, QFS.GetDecompressedSize(TestArrays.notcompressedentry_b));
+                Assert.AreEqual((uint) 446, QFS.GetDecompressedSize(TestArrays.compressedentry_b));
+                Assert.AreEqual((uint) 446, QFS.GetDecompressedSize(TestArrays.decompressedentry_b)); //BUG - figure out why this returns 318 when read from the index below
+            }
+
+            [TestMethod]
+            public void Test_025_DBPFCompression_Decompress() {
+                CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, QFS.Decompress(TestArrays.notcompressedentry_b));
+                CollectionAssert.AreEqual(TestArrays.decompressedentry_b, QFS.Decompress(TestArrays.compressedentry_b));
+            }
+
+            [Ignore]
+            [TestMethod]
+            public void Test_026_QFS_Compress() {
+                DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\RJ - Block Road Barriers 1.0 - Copy.dat");
+                dbpf.DecodeAllEntries();
+                dbpf.EncodeAllEntries();
+                //dbpf.SaveAs("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\RJ - Block Road Barriers 1.0 - Copy2.dat");
+            }
+        }
+
+
+
+        // 03x Test methods for ByteArrayHelper class
+        [TestClass]
+        public class _03x_ByteArrayHelper {
+            //Remember here that we are not "reading" the bytes straight from the file in order; rather we are "getting" numbers from them so we are worried about endianness.
+            readonly byte[] bytes = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x99, 0x70, 0x01, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70, 0x0C, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70 };
+            readonly byte[] bytesAsBools = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01 };
+            readonly bool[] bools = { false, false, false, false, false, false, true, true, true, false, false, false, true, true, true, true, true, false, false, false, true, true, true, true };
+            readonly ushort[] uint16 = { 0x0000, 0x0000, 0000, 0x7099, 0x0001, 0x0000, 0x533C, 0x70BC, 0x000C, 0x0000, 0x533C, 0x70BC };
+            readonly int[] sint32 = { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C };
+            readonly float[] float32 = { 0f, 3.78809652e+29f, 1.401298e-45f, 4.66270448e+29f, 1.681558e-44f, 4.66270448e+29f };
+            readonly uint[] uint32 = { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C };
+            readonly long[] sint64 = { 0x7099000000000000, 0x70BC533C00000001, 0x70BC533C0000000C };
+
+            [TestMethod]
+            public void Test_030_ByteArrayHelper_ToAType() {
+                CollectionAssert.AreEqual(bools, ByteArrayHelper.ToBoolArray(bytesAsBools));
+                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToUint8Array(bytes));
+                CollectionAssert.AreEqual(uint16, ByteArrayHelper.ToUInt16Array(bytes));
+                CollectionAssert.AreEqual(sint32, ByteArrayHelper.ToSInt32Array(bytes));
+                CollectionAssert.AreEqual(float32, ByteArrayHelper.ToFloat32Array(bytes));
+                CollectionAssert.AreEqual(uint32, ByteArrayHelper.ToUInt32Array(bytes));
+                CollectionAssert.AreEqual(sint64, ByteArrayHelper.ToSInt64Array(bytes));
+            }
+
+
+            [TestMethod]
+            public void Test_031a_ByteArrayHelper_ToBytes_Numeric() {
+                CollectionAssert.AreEqual(bytesAsBools, ByteArrayHelper.ToBytes(bools));
+                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToBytes(uint16));
+                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToBytes(sint32));
+                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToBytes(float32));
+                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToBytes(uint32));
+                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToBytes(sint64));
+            }
+
+
+            [TestMethod]
+            public void Test_031b_ByteArrayHelper_ToBytes_String() {
+                string s1 = "Test";
+                byte[] b1 = { 0x54, 0x65, 0x73, 0x74 };
+                string s2 = "Parks Aura";
+                byte[] b2 = { 0x50, 0x61, 0x72, 0x6b, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61 };
+                CollectionAssert.AreEqual(b1, ByteArrayHelper.ToBytes(s1, true));
+                CollectionAssert.AreEqual(b2, ByteArrayHelper.ToBytes(s2, true));
+
+                string s3 = "Local Medical Facility Pockets Picked";
+                byte[] b3 = { 0x4c, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x61, 0x00, 0x6c, 0x00, 0x20, 0x00, 0x4d, 0x00, 0x65, 0x00, 0x64, 0x00, 0x69, 0x00, 0x63, 0x00, 0x61, 0x00, 0x6c, 0x00, 0x20, 0x00, 0x46, 0x00, 0x61, 0x00, 0x63, 0x00, 0x69, 0x00, 0x6c, 0x00, 0x69, 0x00, 0x74, 0x00, 0x79, 0x00, 0x20, 0x00, 0x50, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x6b, 0x00, 0x65, 0x00, 0x74, 0x00, 0x73, 0x00, 0x20, 0x00, 0x50, 0x00, 0x69, 0x00, 0x63, 0x00, 0x6b, 0x00, 0x65, 0x00, 0x64, 0x00 };
+                byte[] b3_single = { 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x20, 0x4d, 0x65, 0x64, 0x69, 0x63, 0x61, 0x6c, 0x20, 0x46, 0x61, 0x63, 0x69, 0x6c, 0x69, 0x74, 0x79, 0x20, 0x50, 0x6f, 0x63, 0x6b, 0x65, 0x74, 0x73, 0x20, 0x50, 0x69, 0x63, 0x6b, 0x65, 0x64 };
+                CollectionAssert.AreEqual(b3, ByteArrayHelper.ToBytes(s3));
+                CollectionAssert.AreEqual(b3_single, ByteArrayHelper.ToBytes(s3, true));
+
+                string s4 = "지역 의료 시설 포켓 피킹"; //"Local Medical Facility Pockets Picked"
+                byte[] b4 = { 0xc0, 0xc9, 0xed, 0xc5, 0x58, 0xc7, 0xcc, 0xb8, 0xdc, 0xc2, 0x24, 0xc1, 0xec, 0xd3, 0x13, 0xcf, 0x3c, 0xd5, 0xb9, 0xd0 };
+                byte[] r1 = ByteArrayHelper.ToBytes(s4);
+            }
+
+
+            [TestMethod]
+            public void Test_033_ByteArrayHelper_ReadAUint() {
+                byte[] dbpf = { 0x44, 0x42, 0x50, 0x46 };
+                Assert.AreEqual((uint) 0x44425046, ByteArrayHelper.ReadBytesIntoUint(dbpf));
+                byte[] arr1 = { 0x00, 0x00, 0x10, 0x00 };
+                Assert.AreEqual((uint) 0x00001000, ByteArrayHelper.ReadBytesIntoUint(arr1));
+                byte[] arr2 = { 0x07, 0x00, 0x00, 0x30 };
+                Assert.AreEqual((uint) 0x07000030, ByteArrayHelper.ReadBytesIntoUint(arr2));
+            }
+
+
+            [TestMethod]
+            public void Test_034_ByteArrayHelper_ToAString() {
                 byte[] dbpfB = new byte[] { 0x44, 0x42, 0x50, 0x46 };
                 byte[] dbpfB1 = new byte[] { 68, 66, 80, 70 };
                 Assert.AreEqual("DBPF", ByteArrayHelper.ToAString(dbpfB));
@@ -106,153 +223,79 @@ namespace csDBPF_Test {
 
                 Assert.AreEqual(null, ByteArrayHelper.ToAString(null));
             }
-
-            [TestMethod]
-            public void Test_014_DBPFUtil_StringToByteArray() {
-                string s1 = "Test";
-                byte[] b1 = { 0x54, 0x65, 0x73, 0x74 };
-                string s2 = "Parks Aura";
-                byte[] b2 = { 0x50, 0x61, 0x72, 0x6b, 0x73, 0x20, 0x41, 0x75, 0x72, 0x61 };
-                CollectionAssert.AreEqual(b1, ByteArrayHelper.ToBytes(s1, true));
-                CollectionAssert.AreEqual(b2, ByteArrayHelper.ToBytes(s2, true));
-            }
-
-            [TestMethod]
-            public void Test_015_DBPFUtil_DateFromUnix() {
-                uint u1 = 0x5e115977; // 1/5/2020 3:35:19 AM 
-                DateTime d1 = new DateTime(2020, 1, 5, 3, 35, 19);
-                uint u2 = 0x60557b29; // 3/20/2021 4:33:45 AM
-                DateTime d2 = new DateTime(2021, 3, 20, 4, 33, 45);
-
-                Assert.AreEqual(d1, DBPFUtil.UnixToDate(u1));
-                Assert.AreEqual(d2, DBPFUtil.UnixToDate(u2));
-            }
         }
 
 
 
-        // 02x Test methods for DBPFCompression class
+        // 05x Test methods for DBPFTGI Class
         [TestClass]
-        public class _02x_DBPFCompression {
-
+        public class _04x_DBPFTGI {
             [TestMethod]
-            public void Test_020_DBPFCompression_IsCompressed() {
-                Assert.IsTrue(DBPFCompression.IsCompressed(TestArrays.compressedentry_b));
-                Assert.IsFalse(DBPFCompression.IsCompressed(TestArrays.notcompressedentry_b));
-                Assert.IsFalse(DBPFCompression.IsCompressed(TestArrays.decompressedentry_b));
+            public void Test_040a_DBPFTGI_ctor_CreateFromUints() {
+                TGI tgi1 = new TGI(0x6534284a, 0, 0);
+                Assert.AreEqual<uint>(0x6534284a, tgi1.TypeID);
+                Assert.AreNotEqual<uint>(0, tgi1.GroupID);
+                Assert.AreNotEqual<uint>(0, tgi1.InstanceID);
+
+                TGI tgi2 = DBPFTGI.EXEMPLAR_AVENUE;
+                Assert.AreEqual<uint>(0x6534284A, tgi2.TypeID);
+                Assert.AreEqual<uint>(0xCB730FAC, tgi2.GroupID);
+                Assert.AreEqual<uint>(0, tgi2.InstanceID);
+                Assert.AreEqual("EXMP", tgi2.GetEntryType());
+                Assert.AreEqual("EXEMPLAR_AVENUE", tgi2.GetEntryDetail());
+
+                Assert.AreEqual(tgi1.TypeID, tgi2.TypeID);
+                Assert.AreNotEqual(tgi1.GroupID, tgi2.GroupID);
+                Assert.AreNotEqual(tgi1.InstanceID, tgi2.InstanceID);
+
+                TGI tgi3 = DBPFTGI.LUA;
+                Assert.AreEqual<uint>(0xCA63E2A3, tgi3.TypeID);
+                Assert.AreEqual<uint>(0x4A5E8EF6, tgi3.GroupID);
+                Assert.AreEqual<uint>(0, tgi3.InstanceID);
+                Assert.AreEqual("LUA", tgi3.GetEntryType());
+                Assert.AreEqual("LUA", tgi3.GetEntryDetail());
             }
 
             [TestMethod]
-            public void Test_021_DBPFCompression_GetDecompressedSize() {
-                Assert.AreEqual((uint) 44, DBPFCompression.GetDecompressedSize(TestArrays.notcompressedentry_b));
-                Assert.AreEqual((uint) 446, DBPFCompression.GetDecompressedSize(TestArrays.compressedentry_b));
-                Assert.AreEqual((uint) 446, DBPFCompression.GetDecompressedSize(TestArrays.decompressedentry_b)); //BUG - figure out why this returns 318 when read from the index below
-            }
+            public void Test_040a_DBPFTGI_ctor_CreteFromTGI() {
+                TGI tgi1 = new TGI(DBPFTGI.EXEMPLAR);
+                Assert.AreEqual<uint>(0x6534284a, tgi1.TypeID);
+                Assert.AreNotEqual<uint>(0, tgi1.GroupID);
+                Assert.AreNotEqual<uint>(0, tgi1.InstanceID);
 
-            [TestMethod]
-            public void Test_025_DBPFCompression_Decompress() {
-                CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, DBPFCompression.Decompress(TestArrays.notcompressedentry_b));
-                CollectionAssert.AreEqual(TestArrays.decompressedentry_b, DBPFCompression.Decompress(TestArrays.compressedentry_b));
-            }
-        }
+                TGI tgi2 = new TGI(DBPFTGI.INI);
+                Assert.AreEqual((uint) 0, tgi2.TypeID);
+                Assert.AreEqual(0x8a5971c5, tgi2.GroupID);
+                Assert.AreNotEqual<uint>(0, tgi2.InstanceID);
 
-
-
-        // 03x Test Methods for ByteArrayHelper class
-        [TestClass]
-        public class _03x_ByteArrayHelper {
-            //Remember here that we are not "reading" the bytes straight from the file in order; rather we are "getting" numbers from them so we are worried about endianness.
-            readonly byte[] bytes = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x99, 0x70, 0x01, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70, 0x0C, 0x00, 0x00, 0x00, 0x3C, 0x53, 0xBC, 0x70 };
-            readonly byte[] bytesAsBools = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01 };
-            readonly bool[] bools = { false, false, false, false, false, false, true, true, true, false, false, false, true, true, true, true, true, false, false, false, true, true, true, true };
-            readonly ushort[] uint16 = { 0x0000, 0x0000, 0000, 0x7099, 0x0001, 0x0000, 0x533C, 0x70BC, 0x000C, 0x0000, 0x533C, 0x70BC };
-            readonly int[] sint32 = { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C };
-            readonly float[] float32 = { 0f, 3.78809652e+29f, 1.401298e-45f, 4.66270448e+29f, 1.681558e-44f, 4.66270448e+29f };
-            readonly uint[] uint32 = { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C };
-            readonly long[] sint64 = { 0x7099000000000000, 0x70BC533C00000001, 0x70BC533C0000000C };
-
-            [TestMethod]
-            public void Test_030_ByteArrayHelper_ToTypeArray() {
-                CollectionAssert.AreEqual(bools, ByteArrayHelper.ToBoolArray(bytesAsBools));
-                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToUint8Array(bytes));
-                CollectionAssert.AreEqual(uint16, ByteArrayHelper.ToUInt16Array(bytes));
-                CollectionAssert.AreEqual(sint32, ByteArrayHelper.ToSInt32Array(bytes));
-                CollectionAssert.AreEqual(float32, ByteArrayHelper.ToFloat32Array(bytes));
-                CollectionAssert.AreEqual(uint32, ByteArrayHelper.ToUInt32Array(bytes));
-                CollectionAssert.AreEqual(sint64, ByteArrayHelper.ToSInt64Array(bytes));
-            }
-
-            [TestMethod]
-            public void Test_031_ByteArrayHelper_ToByteArray() {
-                CollectionAssert.AreEqual(bytesAsBools, ByteArrayHelper.ToByteArray(bools));
-                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(uint16));
-                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(sint32));
-                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(float32));
-                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(uint32));
-                CollectionAssert.AreEqual(bytes, ByteArrayHelper.ToByteArray(sint64));
-            }
-
-            [TestMethod]
-            public void Test_032_ByteArrayHelper_ReadAUint() {
-                byte[] dbpf = { 0x44, 0x42, 0x50, 0x46 };
-                Assert.AreEqual((uint) 0x44425046, ByteArrayHelper.ReadBytesIntoUint(dbpf));
-                byte[] arr1 = { 0x00, 0x00, 0x10, 0x00 };
-                Assert.AreEqual((uint) 0x00001000, ByteArrayHelper.ReadBytesIntoUint(arr1));
-                byte[] arr2 = { 0x07, 0x00, 0x00, 0x30 };
-                Assert.AreEqual((uint) 0x07000030, ByteArrayHelper.ReadBytesIntoUint(arr2));
-            }
-        }
-
-
-
-        // 05x Test Methods for DBPFTGI Class
-        [TestClass]
-        public class _05x_DBPFTGI {
-
-            [TestMethod]
-            public void Test_050_DBPFTGI_CleanTGIFormat() {
-                string s1 = "0x5ad0e817 0x5283112c 0x00030000";
-                string s2 = "0x6534284a-0xbf3fbe81-0xe1278c85";
-                string s3 = "0x5ad0e817_____0x7c051bc2_____0x00030000";
-                string s4 = "0x6534284a, 0xbf3fbe81, 0x6208ab6f";
-                string s5 = "0x5ad0 0x5 0x003";
-                string s6 = "5ad0e817, 5283112c, 00030000";
-
-                Assert.AreEqual("0x5ad0e817, 0x5283112c, 0x00030000", DBPFTGI.CleanTGIFormat(s1));
-                Assert.AreEqual("0x6534284a, 0xbf3fbe81, 0xe1278c85", DBPFTGI.CleanTGIFormat(s2));
-                Assert.AreEqual("0x5ad0e817, 0x7c051bc2, 0x00030000", DBPFTGI.CleanTGIFormat(s3));
-                Assert.AreEqual("0x6534284a, 0xbf3fbe81, 0x6208ab6f", DBPFTGI.CleanTGIFormat(s4));
-                Assert.AreEqual("0x00005ad0, 0x00000005, 0x00000003", DBPFTGI.CleanTGIFormat(s5));
-                Assert.ThrowsException<ArgumentException>(() => DBPFTGI.CleanTGIFormat(s6));
-            }
-
-            [TestMethod]
-            public void Test_051_DBPFTGI_ParseTGIString() {
-                string s1 = "0x5ad0e817 0x5283112c 0x00030000";
-                string s2 = "0x6534284a-0xbf3fbe81-0xe1278c85";
-                string s3 = "0x5ad0e817_____0x7c051bc2_____0x00030000";
-                string s4 = "0x6534284a, 0xbf3fbe81, 0x6208ab6f";
-                string s5 = "0x5ad0 0x5 0x003";
-
-                Assert.IsTrue(new TGI(0x5ad0e817, 0x5283112c, 0x00030000).Equals(DBPFTGI.ParseTGIString(s1)));
-                Assert.IsTrue(new TGI(0x6534284a, 0xbf3fbe81, 0xe1278c85).Equals(DBPFTGI.ParseTGIString(s2)));
-                Assert.IsTrue(new TGI(0x5ad0e817, 0x7c051bc2, 0x00030000).Equals(DBPFTGI.ParseTGIString(s3)));
-                Assert.IsTrue(new TGI(0x6534284a, 0xbf3fbe81, 0x6208ab6f).Equals(DBPFTGI.ParseTGIString(s4)));
-                Assert.IsTrue(new TGI(0x5ad0, 0x5, 0x3).Equals(DBPFTGI.ParseTGIString(s5)));
-
+                TGI tgi3 = new TGI(DBPFTGI.LUA);
+                Assert.AreEqual<uint>(0xCA63E2A3, tgi3.TypeID);
+                Assert.AreEqual<uint>(0x4A5E8EF6, tgi3.GroupID);
+                Assert.AreNotEqual<uint>(0, tgi3.InstanceID);
             }
 
 
+            [TestMethod]
+            public void Test_041_DBPFTGI_ToString() {
+                TGI tgi1 = new TGI(0x6534284a, 0, 1000001);
+                Assert.AreEqual($"0x6534284a, {DBPFUtil.ToHexString(tgi1.GroupID)}, 0x000f4241", tgi1.ToString());
+                tgi1 = new TGI(100, 100, 100);
+                Assert.AreEqual("0x00000064, 0x00000064, 0x00000064", tgi1.ToString());
+            }
+
 
             [TestMethod]
-            public void Test_053_DBPFTGI_Equals() {
+            public void Test_042_DBPFTGI_Equals() {
                 TGI tgi1 = new TGI(0, 0, 0);
                 TGI tgi2 = new TGI(0, 0, 0);
                 TGI tgi3 = new TGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
-                TGI tgi4 = new TGI(3899334383, 3899334383, 678108931);
-                Assert.AreEqual(tgi1, tgi2);
-                Assert.IsTrue(tgi1.Equals(tgi2));
-                Assert.IsTrue(tgi2.Equals(tgi1));
+                TGI tgi4 = new TGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
+                TGI tgi5 = new TGI(3899334383, 3899334383, 678108931);
+
+                Assert.AreNotEqual(tgi1, tgi2);
+                Assert.IsFalse(tgi1.Equals(tgi2));
+                Assert.IsFalse(tgi2.Equals(tgi1));
+
                 Assert.AreEqual(tgi3, tgi4);
                 Assert.IsTrue(tgi3.Equals(tgi4));
                 Assert.IsTrue(tgi4.Equals(tgi3));
@@ -265,46 +308,31 @@ namespace csDBPF_Test {
                 Assert.IsFalse(tgi1.Equals(0));
             }
 
+
             [TestMethod]
-            public void Test_054_DBPFTGI_MatchesKnownTGI() {
-                //If called from a TGI object
-                TGI tgi_blank = new TGI(0, 0, 0);
+            public void Test_043_DBPFTGI_Matches() {
+                Assert.IsTrue(DBPFTGI.BLANKTGI.Matches(DBPFTGI.BLANKTGI));
+                Assert.IsTrue(DBPFTGI.EXEMPLAR.Matches(DBPFTGI.EXEMPLAR));
+                Assert.IsTrue(DBPFTGI.EXEMPLAR_RAIL.Matches(DBPFTGI.EXEMPLAR_RAIL));
+                Assert.IsTrue(DBPFTGI.EXEMPLAR_RAIL.Matches(DBPFTGI.EXEMPLAR));
+                Assert.IsFalse(DBPFTGI.EXEMPLAR.Matches(DBPFTGI.EXEMPLAR_RAIL));
+
                 TGI tgi_exemplar = new TGI(0x6534284a, 0, 0);
                 TGI tgi_exemplarRail = new TGI(0x6534284a, 0xe8347989, 0);
                 TGI tgi_exemplarRail2 = new TGI(0x6534284a, 0xe8347989, 0x1ab4e56a);
-
-                Assert.IsTrue(tgi_blank.Matches(DBPFTGI.BLANKTGI));
-                Assert.IsTrue(tgi_blank.Matches(DBPFTGI.NULLTGI));
 
                 Assert.IsTrue(tgi_exemplar.Matches(DBPFTGI.EXEMPLAR));
                 Assert.IsTrue(tgi_exemplarRail.Matches(DBPFTGI.EXEMPLAR_RAIL));
                 Assert.IsTrue(tgi_exemplarRail2.Matches(DBPFTGI.EXEMPLAR_RAIL));
                 Assert.IsTrue(tgi_exemplarRail2.Matches(DBPFTGI.EXEMPLAR));
                 Assert.IsFalse(tgi_exemplar.Matches(DBPFTGI.COHORT));
-                Assert.IsTrue(tgi_exemplar.Matches(DBPFTGI.NULLTGI));
+                Assert.IsTrue(tgi_exemplar.Matches(DBPFTGI.BLANKTGI));
                 Assert.IsFalse(tgi_exemplar.Matches(DBPFTGI.PNG));
-
-
-                //If called from an Entry object
-                DBPFEntry entry_blank = new DBPFEntryEXMP(tgi_blank);
-                DBPFEntry entry_exemplar = new DBPFEntryEXMP(tgi_exemplar);
-                DBPFEntry entry_exemplarRail = new DBPFEntryEXMP(tgi_exemplarRail);
-                DBPFEntry entry_exemplarRail2 = new DBPFEntryEXMP(tgi_exemplarRail2);
-
-                Assert.IsTrue(entry_blank.MatchesEntryType(DBPFTGI.BLANKTGI));
-                Assert.IsTrue(entry_blank.MatchesEntryType(DBPFTGI.NULLTGI));
-
-                Assert.IsTrue(entry_exemplar.MatchesEntryType(DBPFTGI.EXEMPLAR));
-                Assert.IsTrue(entry_exemplarRail.MatchesEntryType(DBPFTGI.EXEMPLAR_RAIL));
-                Assert.IsTrue(entry_exemplarRail2.MatchesEntryType(DBPFTGI.EXEMPLAR_RAIL));
-                Assert.IsTrue(entry_exemplarRail2.MatchesEntryType(DBPFTGI.EXEMPLAR));
-                Assert.IsFalse(entry_exemplar.MatchesEntryType(DBPFTGI.COHORT));
-                Assert.IsTrue(entry_exemplar.MatchesEntryType(DBPFTGI.NULLTGI));
-                Assert.IsFalse(entry_exemplar.MatchesEntryType(DBPFTGI.PNG));
             }
 
+
             [TestMethod]
-            public void Test_055_DBPFTGI_MatchesAnyKnown() {
+            public void Test_044_DBPFTGI_MatchesAnyKnown() {
                 TGI tgi_blank = new TGI(0, 0, 0);
                 TGI tgi_exemplar = new TGI(0x6534284a, 0, 0);
                 TGI tgi_exemplarRail = new TGI(0x6534284a, 0xe8347989, 0);
@@ -338,43 +366,9 @@ namespace csDBPF_Test {
                 Assert.AreEqual("PNG", returned.GetEntryDetail());
             }
 
-            //[TestMethod]
-            //public void Test_056a_DBPFTGI_SetTGIusingTGI() {
-            //    TGI tgi1 = new TGI(0x6534284a, 0, 0);
-            //    TGI tgi2 = tgi1;
-            //    tgi2 =.SetTGI(TGI.EXEMPLAR_AVENUE);
-            //    Assert.AreEqual((uint) 0x6534284A, tgi2.TypeID);
-            //    Assert.AreEqual((uint) 0xCB730FAC, tgi2.GroupID);
-            //    Assert.AreNotEqual<uint?>(0, tgi2.InstanceID);
-            //    Assert.AreEqual("EXMP", tgi2.Category);
-            //    Assert.AreEqual("EXEMPLAR_AVENUE", tgi2.Detail);
-            //    tgi1.SetTGI(TGI.NULLTGI);
-            //    Assert.AreEqual(tgi1.ToString(), tgi1.ToString());
-
-            //    TGI tgi3 = new TGI(0, 2, 3);
-            //    tgi3.SetTGI(DBPFTGI.LUA);
-            //    Assert.AreEqual((uint) 0xCA63E2A3, tgi3.TypeID);
-            //    Assert.AreEqual((uint) 0x4A5E8EF6, tgi3.GroupID);
-            //    Assert.AreNotEqual<uint?>(0, tgi3.InstanceID);
-            //    Assert.AreEqual("LUA", tgi3.Category);
-            //    Assert.AreEqual("LUA", tgi3.Detail);
-            //}
-
-            //[TestMethod]
-            //public void Test_056b_DBPFTGI_SetTGIusingUint() {
-            //    TGI tgi1 = new TGI(0x6534284a, 0, 1000001);
-            //    tgi1.SetTGI(null, null, 100);
-            //    Assert.AreEqual("0x6534284a, 0x00000000, 0x00000064, EXMP, EXEMPLAR", tgi1.ToString());
-            //    tgi1.SetTGI(100, 100, 100);
-            //    Assert.AreEqual("0x00000064, 0x00000064, 0x00000064, NULL, NULLTGI", tgi1.ToString());
-
-            //    TGI tgi2 = new TGI(DBPFTGI.LUA);
-            //    tgi2.SetTGI(null, null, 100);
-            //    Assert.AreEqual("0xca63e2a3, 0x4a5e8ef6, 0x00000064, LUA, LUA", tgi2.ToString());
-            //}
 
             [TestMethod]
-            public void Test_057_DBPFTGI_RandomizeGroupOrInstance() {
+            public void Test_045_DBPFTGI_RandomizeGroupOrInstance() {
                 TGI tgi1 = new TGI(DBPFTGI.EXEMPLAR);
                 tgi1.RandomizeInstance();
                 tgi1.RandomizeGroup();
@@ -393,57 +387,73 @@ namespace csDBPF_Test {
                 Assert.AreNotEqual(group, tgi2.GroupID);
             }
 
-            [TestMethod]
-            public void Test_058_DBPFTGI_SetRandomFromNewInstance() {
-                TGI tgi1 = new TGI(DBPFTGI.EXEMPLAR);
-                Assert.AreNotEqual<uint?>(0, tgi1.GroupID);
-                Assert.AreNotEqual<uint?>(0, tgi1.InstanceID);
 
-                TGI tgi2 = new TGI(DBPFTGI.INI);
-                Assert.AreEqual((uint) 0, tgi2.TypeID);
-                Assert.AreEqual(0x8a5971c5, tgi2.GroupID);
-                Assert.AreNotEqual<uint?>(0, tgi2.InstanceID);
+
+            [TestMethod]
+            public void Test_048_DBPFTGI_CleanTGIFormat() {
+                string s1 = "0x5ad0e817 0x5283112c 0x00030000";
+                string s2 = "0x6534284a-0xbf3fbe81-0xe1278c85";
+                string s3 = "0x5ad0e817_____0x7c051bc2_____0x00030000";
+                string s4 = "0x6534284a, 0xbf3fbe81, 0x6208ab6f";
+                string s5 = "0x5ad0 0x5 0x003";
+
+                Assert.AreEqual("0x5ad0e817, 0x5283112c, 0x00030000", DBPFTGI.CleanTGIFormat(s1));
+                Assert.AreEqual("0x6534284a, 0xbf3fbe81, 0xe1278c85", DBPFTGI.CleanTGIFormat(s2));
+                Assert.AreEqual("0x5ad0e817, 0x7c051bc2, 0x00030000", DBPFTGI.CleanTGIFormat(s3));
+                Assert.AreEqual("0x6534284a, 0xbf3fbe81, 0x6208ab6f", DBPFTGI.CleanTGIFormat(s4));
+                Assert.AreEqual("0x00005ad0, 0x00000005, 0x00000003", DBPFTGI.CleanTGIFormat(s5));
+            }
+
+            [TestMethod]
+            public void Test_049_DBPFTGI_ParseTGIString() {
+                string s1 = "0x5ad0e817 0x5283112c 0x00030000";
+                string s2 = "0x6534284a-0xbf3fbe81-0xe1278c85";
+                string s3 = "0x5ad0e817_____0x7c051bc2_____0x00030000";
+                string s4 = "0x6534284a, 0xbf3fbe81, 0x6208ab6f";
+                string s5 = "0x5ad0 0x5 0x003";
+
+                Assert.IsTrue(new TGI(0x5ad0e817, 0x5283112c, 0x00030000).Equals(DBPFTGI.ParseTGIString(s1)));
+                Assert.IsTrue(new TGI(0x6534284a, 0xbf3fbe81, 0xe1278c85).Equals(DBPFTGI.ParseTGIString(s2)));
+                Assert.IsTrue(new TGI(0x5ad0e817, 0x7c051bc2, 0x00030000).Equals(DBPFTGI.ParseTGIString(s3)));
+                Assert.IsTrue(new TGI(0x6534284a, 0xbf3fbe81, 0x6208ab6f).Equals(DBPFTGI.ParseTGIString(s4)));
+                Assert.IsTrue(new TGI(0x5ad0, 0x5, 0x3).Equals(DBPFTGI.ParseTGIString(s5)));
+
             }
         }
 
 
 
-        /// <summary>
-        /// 06x Test Methods for DBPFProperty Class
-        /// </summary>
+        // 06x Test methods for DBPFProperty Class
         [TestClass]
         public class _06x_DBPFProperty {
             [TestMethod]
-            public void Test_060_DBPFPropertyDataType_Equals() {
-                Assert.AreEqual(DBPFPropertyDataType.SINT32, DBPFPropertyDataType.SINT32);
-                Assert.AreEqual(DBPFPropertyDataType.STRING, DBPFPropertyDataType.STRING);
-                Assert.AreNotEqual(DBPFPropertyDataType.UINT8, DBPFPropertyDataType.SINT32);
-                Assert.AreNotEqual(DBPFPropertyDataType.STRING, DBPFPropertyDataType.FLOAT32);
-            }
-
-
-            [TestMethod]
-            public void Test_060a_DBPFPropertyDataType_ReturnType() {
-                Assert.AreEqual("SINT32", DBPFPropertyDataType.SINT32.Name);
-                Assert.AreEqual(DBPFPropertyDataType.BOOL, DBPFPropertyDataType.LookupDataType(0xB00));
-                Assert.AreEqual(DBPFPropertyDataType.UINT32.Name, DBPFPropertyDataType.LookupDataType(0x300).Name);
-                Assert.AreEqual(4, DBPFPropertyDataType.LookupDataType(0x300).Length);
+            public void Test_060a_DBPFProperty_LookupDataType() {
+                Assert.AreEqual(DBPFProperty.PropertyDataType.SINT32, DBPFProperty.LookupDataType("SINT32"));
+                Assert.AreEqual(DBPFProperty.PropertyDataType.SINT32, DBPFProperty.LookupDataType("sint32"));
+                Assert.AreEqual(DBPFProperty.PropertyDataType.STRING, DBPFProperty.LookupDataType("string"));
             }
 
             [TestMethod]
-            public void Test_060b_DBPFPropertyDataType_ReturnDataType() {
-                string a = "";
-                Assert.AreEqual(a.GetType(), DBPFPropertyDataType.STRING.PrimitiveDataType);
-                uint b = 0x0;
-                Assert.AreEqual(b.GetType(), DBPFPropertyDataType.UINT32.PrimitiveDataType);
-                byte c = 0x08;
-                Assert.AreEqual(c.GetType(), DBPFPropertyDataType.UINT8.PrimitiveDataType);
+            public void Test_060b_DBPFProperty_LookupDataTypeName() {
+                Assert.AreEqual("SINT32", DBPFProperty.LookupDataTypeName(DBPFProperty.PropertyDataType.SINT32));
+                Assert.AreEqual("BOOL", DBPFProperty.LookupDataTypeName(DBPFProperty.PropertyDataType.BOOL));
+                Assert.AreEqual("BOOL", DBPFProperty.LookupDataTypeName((DBPFProperty.PropertyDataType) 0xB00));
+                Assert.AreEqual("UINT32", DBPFProperty.LookupDataTypeName((DBPFProperty.PropertyDataType) 0x300));
             }
+
+            [TestMethod]
+            public void Test_060c_DBPFProperty_LookupDataTypeLength() {
+                Assert.AreEqual(4, DBPFProperty.LookupDataTypeLength(DBPFProperty.PropertyDataType.SINT32));
+                Assert.AreEqual(1, DBPFProperty.LookupDataTypeLength(DBPFProperty.PropertyDataType.BOOL));
+                Assert.AreEqual(1, DBPFProperty.LookupDataTypeLength(DBPFProperty.PropertyDataType.STRING));
+                Assert.AreEqual(4, DBPFProperty.LookupDataTypeLength((DBPFProperty.PropertyDataType) 0x300));
+            }
+
 
             [TestMethod]
             public void Test_061a_DBPFPropertyString_Binary() {
                 DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.decompressedentry_b);
-                entry.DecodeEntry();
+                entry.Decode();
 
                 byte[] byteparks = { 0x50, 0x61, 0x72, 0x6B, 0x73 };
                 string stringparks = "Parks";
@@ -456,7 +466,7 @@ namespace csDBPF_Test {
                 DBPFProperty propb = entry.ListOfProperties.GetValueAtIndex(1);
                 Assert.AreEqual((uint) 0x20, propb.ID);
                 Assert.AreEqual(20, propb.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.STRING, propb.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.STRING, propb.DataType);
                 Assert.AreEqual(stringdataviewparksaura, propb.GetData());
 
                 //Compare to property with known values
@@ -466,6 +476,7 @@ namespace csDBPF_Test {
                 Assert.AreEqual(knownprop.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(knownprop.DataType, propb.DataType);
                 Assert.AreEqual(knownprop.GetData(), propb.GetData());
+                Assert.AreEqual(knownprop.ToString(), propb.ToString());
 
                 //Check for no differences between values and valuesDecoded when each is changed
                 propb.SetData(stringparksaura);
@@ -479,7 +490,7 @@ namespace csDBPF_Test {
             [TestMethod]
             public void Test_061b_DBPFPropertyLong_Binary() {
                 DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.decompressedentry_b);
-                entry.DecodeEntry();
+                entry.Decode();
 
                 DBPFProperty propb;
                 DBPFPropertyLong propknown;
@@ -488,10 +499,10 @@ namespace csDBPF_Test {
                 //Single UInt32 value
                 vals = new List<long> { 0x23 };
                 propb = entry.ListOfProperties.GetValueAtIndex(0);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.UINT32, 0x23);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, 0x23);
                 Assert.AreEqual((uint) 0x10, propb.ID);
                 Assert.AreEqual(0, propb.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.UINT32, propb.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propb.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
@@ -500,10 +511,10 @@ namespace csDBPF_Test {
                 //7 repetitions of 0 (for 8 total values of 8)
                 vals = new List<long> { 0, 0, 0, 0, 0, 0, 0, 0 };
                 propb = entry.ListOfProperties.GetValueAtIndex(2);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.UINT32, vals);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals);
                 Assert.AreEqual((uint) 0x4A0B47E0, propb.ID);
                 Assert.AreEqual(8, propb.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.UINT32, propb.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propb.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
@@ -512,10 +523,10 @@ namespace csDBPF_Test {
                 //Single True boolean value
                 vals = new List<long> { 1 };
                 propb = entry.ListOfProperties.GetValueAtIndex(3);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.BOOL, vals);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.BOOL, vals);
                 Assert.AreEqual((uint) 0x4A0B47E1, propb.ID);
                 Assert.AreEqual(0, propb.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.BOOL, propb.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.BOOL, propb.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
@@ -524,10 +535,10 @@ namespace csDBPF_Test {
                 //Single False boolean value
                 vals = new List<long> { 0 };
                 propb = entry.ListOfProperties.GetValueAtIndex(4);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.BOOL, vals);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.BOOL, vals);
                 Assert.AreEqual((uint) 0x4A0B47E2, propb.ID);
                 Assert.AreEqual(0, propb.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.BOOL, propb.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.BOOL, propb.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
@@ -536,10 +547,10 @@ namespace csDBPF_Test {
                 //Single UInt32 value of 0
                 vals = new List<long> { 0 };
                 propb = entry.ListOfProperties.GetValueAtIndex(5);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.UINT32, vals);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals);
                 Assert.AreEqual((uint) 0x4A0B47E3, propb.ID);
                 Assert.AreEqual(0, propb.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.UINT32, propb.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propb.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
@@ -548,26 +559,43 @@ namespace csDBPF_Test {
                 //28 UInt32s
                 vals = new List<long> { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C, 0x0000000D, 0x70D98C79, 0x00000046, 0x70D98C79, 0x0000007F, 0x70F0C5BA, 0x00000080, 0x70FFFFFF, 0x00000081, 0x70E2F1DD, 0x000000B8, 0x70C5E3BB, 0x000000B9, 0x70A8D49A, 0x000000F2, 0x708AC679, 0x000000F3, 0x706AB758, 0x000000FE, 0x7046A836, 0x000000FF, 0x70009900 };
                 propb = entry.ListOfProperties.GetValueAtIndex(6);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.UINT32, vals);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals);
                 Assert.AreEqual((uint) 0x4A0B47E4, propb.ID);
                 Assert.AreEqual(28, propb.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.UINT32, propb.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propb.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
                 CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
             }
 
-            [Ignore]
             [TestMethod]
             public void Test_061c_DBPFPropertyFloat_Binary() {
+                DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.decompressedentry2_b);
+                entry.Decode();
 
+                DBPFProperty propb;
+                DBPFPropertyFloat propknown;
+                List<float> vals;
+
+                //5 floats
+                vals = new List<float> { 6000f, 1024f, 288f, 48f, 16f };
+                propb = entry.ListOfProperties.GetValueAtIndex(4);
+                propknown = new DBPFPropertyFloat(vals);
+                Assert.AreEqual((uint) 0x8A020202, propb.ID);
+                Assert.AreEqual(5, propb.NumberOfReps);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, propb.DataType);
+                CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
+                Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
+                Assert.AreEqual(propknown.DataType, propb.DataType);
+                CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
             }
+
 
             [TestMethod]
             public void Test_061d_DBPFPropertyString_Text() {
                 DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.notcompressedentry_t);
-                entry.DecodeEntry();
+                entry.Decode();
 
                 DBPFProperty propt;
                 DBPFPropertyString propknown;
@@ -575,7 +603,7 @@ namespace csDBPF_Test {
                 //1x String
                 string val = "B62-CS$_Albertsons_60s_Grocery v 1.1";
                 propt = entry.ListOfProperties.GetValueAtIndex(1);
-                Assert.AreEqual(DBPFPropertyDataType.STRING, propt.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.STRING, propt.DataType);
                 Assert.AreEqual(1, propt.NumberOfReps);
                 Assert.AreEqual(val, propt.GetData());
                 propknown = new DBPFPropertyString(val, DBPFEntry.EncodingType.Text);
@@ -587,7 +615,7 @@ namespace csDBPF_Test {
             [TestMethod]
             public void Test_061e_DBPFPropertyLong_Text() {
                 DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.notcompressedentry_t);
-                entry.DecodeEntry();
+                entry.Decode();
 
                 DBPFProperty propt;
                 DBPFPropertyLong propknown;
@@ -600,10 +628,10 @@ namespace csDBPF_Test {
                 //1x Uint32
                 vals = new List<long> { 0x2 };
                 propt = entry.ListOfProperties.GetValueAtIndex(0);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.UINT32, vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals, DBPFEntry.EncodingType.Text);
                 Assert.AreEqual((uint) 0x00000010, propt.ID);
                 Assert.AreEqual(0, propt.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.UINT32, propt.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propt.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
@@ -612,10 +640,10 @@ namespace csDBPF_Test {
                 //1x Sint64
                 vals = new List<long> { 0x00000000000000A9 };
                 propt = entry.ListOfProperties.GetValueAtIndex(2);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.SINT64, vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.SINT64, vals, DBPFEntry.EncodingType.Text);
                 Assert.AreEqual((uint) 0x099AFACD, propt.ID);
                 Assert.AreEqual(0, propt.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.SINT64, propt.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.SINT64, propt.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
@@ -624,10 +652,10 @@ namespace csDBPF_Test {
                 //1x Uint8
                 vals = new List<long> { 0x01 };
                 propt = entry.ListOfProperties.GetValueAtIndex(6);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.UINT8, vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT8, vals, DBPFEntry.EncodingType.Text);
                 Assert.AreEqual((uint) 0x27812832, propt.ID);
                 Assert.AreEqual(0, propt.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.UINT8, propt.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.UINT8, propt.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
@@ -636,10 +664,10 @@ namespace csDBPF_Test {
                 //4x Sint32
                 vals = new List<long> { 0x07, 0x03, 0x16, 0x00 };
                 propt = entry.ListOfProperties.GetValueAtIndex(9);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.SINT32, vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.SINT32, vals, DBPFEntry.EncodingType.Text);
                 Assert.AreEqual((uint) 0x27812851, propt.ID);
                 Assert.AreEqual(4, propt.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.SINT32, propt.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.SINT32, propt.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
@@ -648,10 +676,10 @@ namespace csDBPF_Test {
                 //4x Uint32
                 vals = new List<long> { 0x1001, 0x2000, 0x2001, 0x13110 };
                 propt = entry.ListOfProperties.GetValueAtIndex(19);
-                propknown = new DBPFPropertyLong(DBPFPropertyDataType.UINT32, vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals, DBPFEntry.EncodingType.Text);
                 Assert.AreEqual(0xAA1DD396, propt.ID);
                 Assert.AreEqual(4, propt.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.UINT32, propt.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propt.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
@@ -661,7 +689,7 @@ namespace csDBPF_Test {
             [TestMethod]
             public void Test_061f_DBPFPropertyFloat_Text() {
                 DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.notcompressedentry_t);
-                entry.DecodeEntry();
+                entry.Decode();
 
                 DBPFProperty propt;
                 DBPFPropertyFloat propknown;
@@ -673,7 +701,7 @@ namespace csDBPF_Test {
                 propknown = new DBPFPropertyFloat(vals, DBPFEntry.EncodingType.Text);
                 Assert.AreEqual<uint>(0x27812810, propt.ID);
                 Assert.AreEqual(3, propt.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, propt.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
@@ -685,7 +713,7 @@ namespace csDBPF_Test {
                 propknown = new DBPFPropertyFloat(0.5f, DBPFEntry.EncodingType.Text);
                 Assert.AreEqual<uint>(0x27812811, propt.ID);
                 Assert.AreEqual(1, propt.NumberOfReps);
-                Assert.AreEqual(DBPFPropertyDataType.FLOAT32, propt.DataType);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, propt.DataType);
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
@@ -695,7 +723,7 @@ namespace csDBPF_Test {
             [TestMethod]
             public void Test_062_DBPFProperty_DecodeNoProperties() {
                 DBPFEntryEXMP entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.entrynullproperty);
-                entry.DecodeEntry();
+                entry.Decode();
                 Assert.AreEqual(0, entry.ListOfProperties.Count);
 
                 entry = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.entrynullproperty_extradata);
@@ -704,19 +732,17 @@ namespace csDBPF_Test {
                 //Use an IRL example
                 DBPFFile jimspack = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\SC4 Deps\\Jim CarProp Pack 1.2.dat");
                 entry = (DBPFEntryEXMP) jimspack.GetEntry(0);
-                entry.DecodeEntry();
+                entry.Decode();
                 Assert.AreEqual(0, entry.ListOfProperties.Count);
                 entry = (DBPFEntryEXMP) jimspack.GetEntry(178);
-                entry.DecodeEntry();
+                entry.Decode();
                 Assert.AreEqual(0, entry.ListOfProperties.Count);
             }
         }
 
 
 
-        /// <summary>
-        /// 07x Test Methods for Property XML Parsing
-        /// </summary>
+        // 07x Test methods for Property XML Parsing
         [TestClass]
         public class _07x_XMLProperty {
             [TestMethod]
@@ -730,7 +756,7 @@ namespace csDBPF_Test {
                 XMLExemplarProperty exmp = XMLProperties.GetXMLProperty(0x8a2602bb);
                 Assert.AreEqual(0x8a2602bb, exmp.ID);
                 Assert.AreEqual("Item Button ID", exmp.Name);
-                Assert.AreEqual(DBPFPropertyDataType.UINT32, exmp.Type);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, exmp.DataType);
                 Assert.AreEqual(true, exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "0x00000000" }, exmp.DefaultValue);
                 Assert.AreEqual(null, exmp.MaxValue);
@@ -739,7 +765,7 @@ namespace csDBPF_Test {
                 exmp = XMLProperties.GetXMLProperty(0x29dd40c1);
                 Assert.AreEqual((uint) 0x29dd40c1, exmp.ID);
                 Assert.AreEqual("Path Offset Range for Peds", exmp.Name);
-                Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
                 Assert.AreEqual(true, exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "-1", "3" }, exmp.DefaultValue);
                 Assert.AreEqual((short) 2, exmp.Count);
@@ -748,7 +774,7 @@ namespace csDBPF_Test {
                 exmp = XMLProperties.GetXMLProperty(0x6932dc06);
                 Assert.AreEqual((uint) 0x6932dc06, exmp.ID);
                 Assert.AreEqual("WaveMinTimeInState", exmp.Name);
-                Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
                 Assert.AreEqual(true, exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "12", "0.230", "0.5", "2" }, exmp.DefaultValue);
                 Assert.AreEqual((short) 4, exmp.Count);
@@ -758,7 +784,7 @@ namespace csDBPF_Test {
                 exmp = XMLProperties.GetXMLProperty(0x891b3ae6);
                 Assert.AreEqual(0x891b3ae6, exmp.ID);
                 Assert.AreEqual("Health Effectiveness vs. Distance Effect", exmp.Name);
-                Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
                 Assert.AreEqual(true, exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "0", "100" }, exmp.DefaultValue);
                 Assert.AreEqual((short) -2, exmp.Count);
@@ -773,7 +799,7 @@ namespace csDBPF_Test {
                 XMLExemplarProperty exmp = XMLProperties.GetXMLProperty("Item Button ID");
                 Assert.AreEqual(0x8a2602bb, exmp.ID);
                 Assert.AreEqual("Item Button ID", exmp.Name);
-                Assert.AreEqual(DBPFPropertyDataType.UINT32, exmp.Type);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, exmp.DataType);
                 Assert.AreEqual(true, exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "0x00000000" }, exmp.DefaultValue);
                 Assert.AreEqual(null, exmp.MaxValue);
@@ -786,7 +812,7 @@ namespace csDBPF_Test {
                 exmp = XMLProperties.GetXMLProperty("Path Offset Range for Peds");
                 Assert.AreEqual((uint) 0x29dd40c1, exmp.ID);
                 Assert.AreEqual("Path Offset Range for Peds", exmp.Name);
-                Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
                 Assert.AreEqual(true, exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "-1", "3" }, exmp.DefaultValue);
                 Assert.AreEqual((short) 2, exmp.Count);
@@ -795,7 +821,7 @@ namespace csDBPF_Test {
                 exmp = XMLProperties.GetXMLProperty("WaveMinTimeInState");
                 Assert.AreEqual((uint) 0x6932dc06, exmp.ID);
                 Assert.AreEqual("WaveMinTimeInState", exmp.Name);
-                Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
                 Assert.AreEqual(true, exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "12", "0.230", "0.5", "2" }, exmp.DefaultValue);
                 Assert.AreEqual((short) 4, exmp.Count);
@@ -805,7 +831,7 @@ namespace csDBPF_Test {
                 exmp = XMLProperties.GetXMLProperty("Health Effectiveness vs. Distance Effect");
                 Assert.AreEqual(0x891b3ae6, exmp.ID);
                 Assert.AreEqual("Health Effectiveness vs. Distance Effect", exmp.Name);
-                Assert.AreEqual(DBPFPropertyDataType.FLOAT32, exmp.Type);
+                Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
                 Assert.AreEqual(true, exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "0", "100" }, exmp.DefaultValue);
                 Assert.AreEqual((short) -2, exmp.Count);
@@ -826,24 +852,71 @@ namespace csDBPF_Test {
         }
 
 
+
+        // 08x Test methods for DBPF Entries
         [TestClass]
         public class _08x_DBPFEntry {
-            /// <summary>
-            /// Test LTEXT entries.
-            /// </summary>
+
             [TestClass]
-            public class _080_LTEXT {
+            public class _080_DBPFEntry {
                 [TestMethod]
-                public void Test_081a_LTEXT_DecodeEntry() {
+                public void Test_080a_DBPFEntry_MatchesEntryType() {
+                    TGI tgi_blank = new TGI(0, 0, 0);
+                    TGI tgi_exemplar = new TGI(0x6534284a, 0, 0);
+                    TGI tgi_exemplarRail = new TGI(0x6534284a, 0xe8347989, 0);
+                    TGI tgi_exemplarRail2 = new TGI(0x6534284a, 0xe8347989, 0x1ab4e56a);
+
+                    DBPFEntry entry_blank = new DBPFEntryEXMP(tgi_blank);
+                    DBPFEntry entry_exemplar = new DBPFEntryEXMP(tgi_exemplar);
+                    DBPFEntry entry_exemplarRail = new DBPFEntryEXMP(tgi_exemplarRail);
+                    DBPFEntry entry_exemplarRail2 = new DBPFEntryEXMP(tgi_exemplarRail2);
+
+                    Assert.IsTrue(entry_blank.MatchesEntryType(DBPFTGI.BLANKTGI));
+
+                    Assert.IsTrue(entry_exemplar.MatchesEntryType(DBPFTGI.EXEMPLAR));
+                    Assert.IsTrue(entry_exemplarRail.MatchesEntryType(DBPFTGI.EXEMPLAR_RAIL));
+                    Assert.IsTrue(entry_exemplarRail2.MatchesEntryType(DBPFTGI.EXEMPLAR_RAIL));
+                    Assert.IsTrue(entry_exemplarRail2.MatchesEntryType(DBPFTGI.EXEMPLAR));
+                    Assert.IsFalse(entry_exemplar.MatchesEntryType(DBPFTGI.COHORT));
+                    Assert.IsTrue(entry_exemplar.MatchesEntryType(DBPFTGI.BLANKTGI));
+                    Assert.IsFalse(entry_exemplar.MatchesEntryType(DBPFTGI.PNG));
+                }
+            }
+
+
+
+            [TestClass]
+            public class _081_LTEXT {
+
+                [TestMethod]
+                public void Test_081_LTEXT_Create() {
+                    DBPFEntryLTEXT entry = new DBPFEntryLTEXT();
+                    entry.Text = "Local Medical Facility Pockets Picked";
+                    entry.Encode();
+
+                    DBPFEntryLTEXT entry2 = new DBPFEntryLTEXT("Local Medical Facility Pockets Picked");
+                    entry2.Encode();
+
+                    DBPFEntryLTEXT entry3 = new DBPFEntryLTEXT(new TGI(0x2026960B, 0x6A231EA7, 0xEA5655D2), "Local Medical Facility Pockets Picked");
+                    entry3.Encode();
+
+                    CollectionAssert.AreEqual(entry.ByteData, entry2.ByteData);
+                    CollectionAssert.AreEqual(entry.ByteData, entry3.ByteData);
+                    CollectionAssert.AreEqual(entry2.ByteData, entry3.ByteData);
+
+                }
+
+                [TestMethod]
+                public void Test_081a_LTEXT_Decode() {
                     //Parse from bytes
                     DBPFEntryLTEXT entryb = new DBPFEntryLTEXT(DBPFTGI.LTEXT, 0, 0, 0, TestArrays.notcompressedentry_b);
-                    entryb.DecodeEntry();
+                    entryb.Decode();
                     Assert.AreEqual("Parks Aura (by Cori)", entryb.Text);
 
                     //Parse from file
-                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                    DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataView - Parks Aura.dat");
                     DBPFEntryLTEXT ltext = (DBPFEntryLTEXT) dbpf.GetEntry(1);
-                    ltext.DecodeEntry();
+                    ltext.Decode();
                     Assert.AreEqual("Parks Aura (by Cori)", ltext.Text);
                 }
 
@@ -856,12 +929,43 @@ namespace csDBPF_Test {
                 }
 
                 [TestMethod]
-                public void Test_081c_LTEXT_ToBytes() {
+                public void Test_081c_LTEXT_Encode() {
                     DBPFEntryLTEXT entryknown = new DBPFEntryLTEXT(DBPFTGI.LTEXT) {
                         Text = "Parks Aura (by Cori)"
                     };
-                    entryknown.ToBytes();
+                    entryknown.Encode();
                     CollectionAssert.AreEqual(TestArrays.notcompressedentry_b, entryknown.ByteData);
+
+
+                    string baseFile = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\FUN - onlyltext_uncomp_base.dat";
+                    string outFile = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\FUN - onlyltext_uncomp_out.dat";
+                    string refFile = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\FUN - onlyltext_uncomp_ref.dat";
+                    
+                    DBPFFile dbpf = new DBPFFile(baseFile);
+                    dbpf.DecodeAllEntries();
+
+                    File.Delete(outFile);
+                    DBPFFile dbpf2 = new DBPFFile();
+                    dbpf2.AddEntries(dbpf.GetEntries(DBPFTGI.LTEXT));
+                    dbpf2.AddEntry(new DBPFEntryLTEXT("Local Medical Facility Pockets Picked"));
+                    dbpf2.EncodeAllEntries();
+                    dbpf2.SaveAs(outFile);
+
+                    byte[] dbpfoutbytes = File.ReadAllBytes(outFile)[32..274]; //Skip the first 32 bytes to skip the date modified/created which will be different between the two
+                    byte[] dbpfrefbytes = File.ReadAllBytes(refFile)[32..274]; //Also the last bytes will be different because a random G and I will be assigned each time
+                    CollectionAssert.AreEqual(dbpfrefbytes, dbpfoutbytes);
+
+
+                    File.Delete(outFile);
+                    DBPFFile dbpf3 = new DBPFFile();
+                    dbpf3.AddEntries(dbpf.GetEntries(DBPFTGI.LTEXT));
+                    dbpf3.AddEntry(new DBPFEntryLTEXT(new TGI(0x2026960b, 0x6a231ea5, 0x2a5655d6), "Local Medical Facility Pockets Picked"));
+                    dbpf3.EncodeAllEntries();
+                    dbpf3.SaveAs(outFile);
+
+                    dbpfoutbytes = File.ReadAllBytes(outFile)[32..]; //Skip the first 32 bytes to skip the date modified/created which will be different between the two
+                    dbpfrefbytes = File.ReadAllBytes(refFile)[32..];
+                    CollectionAssert.AreEqual(dbpfrefbytes, dbpfoutbytes);
                 }
             }
 
@@ -870,28 +974,43 @@ namespace csDBPF_Test {
             /// </summary>
             [TestClass]
             public class _081_EXMP {
+                [TestMethod]
+                public void Test_081_EXMP_IsTextEncoding() {
+                    DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\RJ - Block Road Barriers 1.0.dat");
+                    List<DBPFEntry> entries = dbpf.GetEntries();
+
+                    Assert.IsFalse(((DBPFEntryEXMP) entries[0]).IsTextEncoding()); //Compressed binary-encoding
+                    Assert.IsFalse(((DBPFEntryEXMP) entries[1]).IsTextEncoding()); //Uncompressed binary-encoding
+
+                    DBPFFile dbpf2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\R$$6_1x2_Beacon Apartments L _7097cb41.SC4Lot");
+                    entries = dbpf2.GetEntries();
+                    Assert.IsTrue(((DBPFEntryEXMP) entries[0]).IsTextEncoding()); //Uncompressed text-encoding
+                }
+
+
+
                 [Ignore]
                 [TestMethod]
-                public void Test_082a_EXMP_DecodeEntry() {
+                public void Test_082a_EXMP_Decode() {
 
                 }
 
                 [TestMethod]
-                public void Test_082b_EXMP_ToBytes() {
+                public void Test_082b_EXMP_Encode() {
                     //Binary Encoding
-                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                    DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataView - Parks Aura.dat");
                     DBPFEntry entry = dbpf.GetEntry(0);
-                    entry.DecodeEntry();
-                    entry.ToBytes();
+                    entry.Decode();
+                    entry.Encode();
                     Assert.AreEqual((uint) 446, entry.UncompressedSize);
                     CollectionAssert.AreEqual(TestArrays.decompressedentry_b, entry.ByteData);
-                    Assert.IsTrue(entry.IsCompressed);
+                    //Assert.IsTrue(entry.ShouldBeCompressed);
 
                     //Text Encoding
-                    dbpf = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\FINAL\\nos.17\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
+                    dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
                     entry = dbpf.GetEntry(0);
-                    entry.DecodeEntry();
-                    entry.ToBytes();
+                    entry.Decode();
+                    entry.Encode();
                     string expected = "EQZT1###..ParentCohort=Key:{0x00000000,0x00000000,0x00000000}..PropCount=0x00000018..0x00000010:{\"Exemplar Type\"}=Uint32:0:{0x00000002}..0x00000020:{\"Exemplar Name\"}=String:1:{\"B62-CS$_Albertsons_60s_Grocery v 1.1\"}..0x099afacd:{\"Bulldoze Cost\"}=Sint64:0:{0x00000000000000a9}..0x27812810:{\"Occupant Size\"}=Float32:3:{81.58979797,13.94729996,39.44250107}..0x27812811:{\"Unknown\"}=Float32:1:{0.5}..0x27812821:{\"ResourceKeyType1\"}=Uint32:3:{0x5ad0e817,0xb2d6debe,0x00030000}..0x27812832:{\"Wealth\"}=Uint8:0:{0x01}..0x27812833:{\"Purpose\"}=Uint8:0:{0x02}..0x27812834:{\"Capacity Satisfied\"}=Uint32:2:{0x00003110,0x000002ef}..0x27812851:{\"Pollution at centre\"}=Sint32:4:{0x00000007,0x00000003,0x00000016,0x00000000}..0x27812854:{\"Power Consumed\"}=Uint32:0:{0x00000010}..0x29244db5:{\"Flammability\"}=Uint8:0:{0x2d}..0x2a499f85:{\"Query exemplar GUID\"}=Uint32:0:{0xca56783a}..0x2c8f8746:{\"Exemplar Category\"}=Uint32:0:{0x8c8fbbcc}..0x499afa38:{\"Construction Time\"}=Uint8:0:{0x10}..0x49beda31:{\"MaxFireStage\"}=Uint8:0:{0x04}..0x68ee9764:{\"Pollution Radius\"}=Float32:4:{5,5,0,0}..0x8a1c3e72:{\"Worth\"}=Sint64:0:{0x00000000000000a9}..0x8cb3511f:{\"Occupant Types\"}=Uint32:1:{0x00003110}..0xaa1dd396:{\"OccupantGroups\"}=Uint32:4:{0x00001001,0x00002000,0x00002001,0x00013110}..0xaa1dd397:{\"SFX:Query Sound\"}=Uint32:0:{0x2a8916ab}..0xaa83558f:{\"Crane Hints\"}=Uint8:0:{0x00}..0xc8ed2d84:{\"Water Consumed\"}=Uint32:0:{0x00000098}..0xe91a0b5f:{\"Building value\"}=Sint64:0:{0x0000000000001678}..r";
                     string actual = ByteArrayHelper.ToAString(entry.ByteData);
                     Assert.AreEqual(expected[..85], actual[..85]); //Entry header
@@ -921,7 +1040,7 @@ namespace csDBPF_Test {
                     Assert.AreEqual(expected[1406..1467], actual[1406..1467]); //Property 24: Building Value
 
                     Assert.AreEqual((uint) 0x5BB, entry.CompressedSize);
-                    Assert.IsFalse(entry.IsCompressed);
+                    //Assert.IsFalse(entry.ShouldBeCompressed);
                 }
             }
 
@@ -931,13 +1050,13 @@ namespace csDBPF_Test {
             [TestClass]
             public class _082_DIR {
                 [TestMethod]
-                public void Test_083a_DIR_DecodeEntry() {
+                public void Test_083a_DIR_Decode() {
                     //sample from: z_DataView - Parks Aura.dat
                     byte[] dirbytes = new byte[] { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x19, 0x68, 0x0B, 0x4A, 0xBE, 0x01, 0x00, 0x00 };
 
                     //Parse from bytes
                     DBPFEntryDIR entryd = new DBPFEntryDIR(0, 0, 0, dirbytes);
-                    entryd.DecodeEntry();
+                    entryd.Decode();
                     Assert.AreEqual(1, entryd.CompressedItems.Count);
                     Assert.AreEqual((uint) 0x6534284A, entryd.CompressedItems[0].TID);
                     Assert.AreEqual((uint) 0x690F693F, entryd.CompressedItems[0].GID);
@@ -945,9 +1064,9 @@ namespace csDBPF_Test {
                     Assert.AreEqual((uint) 446, entryd.CompressedItems[0].Size);
 
                     //Parse from file
-                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                    DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataView - Parks Aura.dat");
                     DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
-                    dir.DecodeEntry();
+                    dir.Decode();
                     Assert.AreEqual(1, dir.CompressedItems.Count);
                     Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
                     Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
@@ -958,9 +1077,9 @@ namespace csDBPF_Test {
                 [TestMethod]
                 public void Test_083b_DIR_Build() {
                     //File with single DIR entry
-                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                    DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataView - Parks Aura.dat");
                     DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
-                    dir.DecodeEntry();
+                    dir.Decode();
                     dbpf.RebuildDirectory();
                     Assert.AreEqual(1, dir.CompressedItems.Count);
                     Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
@@ -969,9 +1088,9 @@ namespace csDBPF_Test {
                     Assert.AreEqual((uint) 446, dir.CompressedItems[0].Size);
 
                     //File with multiple DIR entries
-                    DBPFFile dbpf2 = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataviewModd_RH.dat");
+                    DBPFFile dbpf2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataviewModd_RH.dat");
                     DBPFEntryDIR dir2 = (DBPFEntryDIR) dbpf2.GetEntry(13);
-                    dir2.DecodeEntry();
+                    dir2.Decode();
                     dbpf2.RebuildDirectory();
                     Assert.AreEqual(7, dir2.CompressedItems.Count);
                     Assert.AreEqual((uint) 0x6534284A, dir2.CompressedItems[0].TID);
@@ -986,23 +1105,23 @@ namespace csDBPF_Test {
                 }
 
                 [TestMethod]
-                public void Test_083c_DIR_ToBytes() {
+                public void Test_083c_DIR_Encode() {
                     //File with single DIR entry
                     byte[] target = { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x19, 0x68, 0x0B, 0x4A, 0xBE, 0x01, 0x00, 0x00 };
-                    DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                    DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataView - Parks Aura.dat");
                     DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
-                    dir.DecodeEntry();
+                    dir.Decode();
                     CollectionAssert.AreEqual(target, dir.ByteData);
-                    dir.ToBytes();
+                    dir.Encode();
                     CollectionAssert.AreEqual(target, dir.ByteData);
 
                     //File with multiple DIR entries
                     byte[] target2 = { 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x4C, 0x68, 0x0B, 0x4A, 0x8C, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x4E, 0x68, 0x0B, 0x4A, 0x83, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x4F, 0x68, 0x0B, 0x4A, 0x83, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x51, 0x68, 0x0B, 0x4A, 0x8F, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x53, 0x68, 0x0B, 0x4A, 0x8D, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0x55, 0x68, 0x0B, 0x4A, 0x88, 0x01, 0x00, 0x00, 0x4A, 0x28, 0x34, 0x65, 0x3F, 0x69, 0x0F, 0x69, 0xF2, 0x68, 0x0B, 0x4A, 0xD0, 0x01, 0x00, 0x00 };
-                    DBPFFile dbpf2 = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataviewModd_RH.dat");
+                    DBPFFile dbpf2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataviewModd_RH.dat");
                     DBPFEntryDIR dir2 = (DBPFEntryDIR) dbpf2.GetEntry(13);
-                    dir2.DecodeEntry();
+                    dir2.Decode();
                     CollectionAssert.AreEqual(target2, dir2.ByteData);
-                    dir2.ToBytes();
+                    dir2.Encode();
                     CollectionAssert.AreEqual(target2, dir2.ByteData);
                 }
             }
@@ -1013,12 +1132,12 @@ namespace csDBPF_Test {
             [TestClass]
             public class _083_PNG {
                 [TestMethod]
-                public void Test_084a_PNG_DecodeEntry() {
+                public void Test_084a_PNG_Decode() {
                     DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets.dat");
                     Assert.AreEqual(8, dbpf.CountEntries());
 
                     DBPFEntryPNG pngentry1 = (DBPFEntryPNG) dbpf.GetEntry(4);
-                    pngentry1.DecodeEntry();
+                    pngentry1.Decode();
                     Image png1 = Image.Load("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets 1.png");
                     Assert.AreEqual(png1.PixelType.BitsPerPixel, pngentry1.PNGImage.PixelType.BitsPerPixel);
                     Assert.AreEqual(png1.Size.Height, pngentry1.PNGImage.Size.Height);
@@ -1033,7 +1152,7 @@ namespace csDBPF_Test {
                 public void Test_084b_PNG_SaveImage() {
                     DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets.dat");
                     DBPFEntryPNG pngentry = (DBPFEntryPNG) dbpf.GetEntry(4);
-                    pngentry.DecodeEntry();
+                    pngentry.Decode();
 
                     string path = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\testsave.png";
                     pngentry.PNGImage.SaveAsPng(path);
@@ -1045,7 +1164,7 @@ namespace csDBPF_Test {
                 public void Test_084c_PNG_SetImage() {
                     DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets.dat");
                     DBPFEntryPNG pngentry = (DBPFEntryPNG) dbpf.GetEntry(4);
-                    pngentry.DecodeEntry();
+                    pngentry.Decode();
 
                     string path2 = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets 2.png";
                     string path3 = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets 3.png";
@@ -1062,16 +1181,16 @@ namespace csDBPF_Test {
                 }
 
                 [TestMethod]
-                public void Test_084d_PNG_ToBytes() {
+                public void Test_084d_PNG_Encode() {
                     DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets.dat");
                     DBPFEntryPNG pngentry = (DBPFEntryPNG) dbpf.GetEntry(4);
-                    pngentry.DecodeEntry();
+                    pngentry.Decode();
 
                     Image targetimg = Image.Load("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Jigsaw 2010 tilesets 1.png");
                     DBPFEntryPNG target = new DBPFEntryPNG(DBPFTGI.PNG);
                     target.SetImage(targetimg);
-                    target.ToBytes();
-                    pngentry.ToBytes();
+                    target.Encode();
+                    pngentry.Encode();
                     CollectionAssert.AreEqual(target.ByteData, pngentry.ByteData);
                 }
             }
@@ -1082,16 +1201,16 @@ namespace csDBPF_Test {
             [TestClass]
             public class _084_FSH {
                 [TestMethod]
-                public void Test_084a_FSH_DecodeEntry() {
+                public void Test_084a_FSH_Decode() {
                     //DXT1
                     DBPFFile file1 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\b62- blue cart corral v.1.0-0x5ad0e817_0xf00f7c4_0x2580000.SC4Model");
                     DBPFEntryFSH fshentry1 = (DBPFEntryFSH) file1.GetEntry(1);
-                    fshentry1.DecodeEntry();
+                    fshentry1.Decode();
 
                     //DXT3
                     DBPFFile file2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\ALN_Dirt_Path_Textures.dat");
                     DBPFEntryFSH fshentry2 = (DBPFEntryFSH) file2.GetEntry(4);
-                    fshentry2.DecodeEntry();
+                    fshentry2.Decode();
                 }
 
 
@@ -1100,9 +1219,7 @@ namespace csDBPF_Test {
 
 
 
-        /// <summary>
-        /// 1xx Test Methods for DBPFFile Class
-        /// </summary>
+        // 1xx Test methods for DBPFFile Class
         [TestClass]
         public class _1xx_DBPFFile {
 
@@ -1113,17 +1230,17 @@ namespace csDBPF_Test {
                 string issue = testdbpf.GetIssueLog();
                 string[] issues = issue.Split("\r\n");
 
-                Assert.AreEqual("Logging Test File.dat,0x6534284B,0xA8FBD372,0x7097CB41,NULL,NULLTGI,Unknown TGI identifier.", issues[0]);
-                Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA4F,EXMP,EXEMPLAR,Property 0x8CB3511F is duplicated.", issues[1]);
-                Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA50,EXMP,EXEMPLAR,Missing property Exemplar Name.", issues[2]);
-                Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA51,EXMP,EXEMPLAR,Missing property Exemplar Type.", issues[3]);
-                Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA52,EXMP,EXEMPLAR,Entry contains 0 properties.", issues[4]);
-                Assert.AreEqual("Logging Test File.dat,0x6534284A,0x7B647F18,0xD097CA53,EXMP,EXEMPLAR,Property 0x27812811 contains a potential macOS TE bug.", issues[5]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284b,0xa8fbd372,0x7097cb41,Unknown TGI identifier.", issues[0]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284a,0x7b647f18,0xd097ca4f,Property 0x8cb3511f is duplicated.", issues[1]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284a,0x7b647f18,0xd097ca50,Missing property Exemplar Name.", issues[2]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284a,0x7b647f18,0xd097ca51,Missing property Exemplar Type.", issues[3]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284a,0x7b647f18,0xd097ca52,Entry contains 0 properties.", issues[4]);
+                Assert.AreEqual("Logging Test File.dat,0x6534284a,0x7b647f18,0xd097ca53,Property 0x27812811 contains a potential macOS TE bug.", issues[5]);
             }
 
             [TestMethod]
             public void Test_101a_DBPFFile_IsDBPF() {
-                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataView - Parks Aura.dat");
                 Assert.AreEqual("DBPF", dbpf.Header.Identifier);
                 Assert.AreEqual((uint) 1, dbpf.Header.MajorVersion);
                 Assert.AreEqual((uint) 0, dbpf.Header.MinorVersion);
@@ -1132,7 +1249,7 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_101b_DBPFFile_IsNotDBPF() {
-                DBPFFile notdbpf = new DBPFFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\CAS_AutoHistorical_v0.0.2.dll");
+                DBPFFile notdbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll");
                 Assert.AreEqual("CAS_AutoHistorical_v0.0.2.dll: 0 subfiles", notdbpf.ToString());
                 Assert.AreEqual(0, notdbpf.GetEntries().Count);
             }
@@ -1144,7 +1261,7 @@ namespace csDBPF_Test {
 
             [TestMethod]
             public void Test_110_DBPFFile_GetEntry() {
-                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataView - Parks Aura.dat");
                 DBPFEntry entry, entry0, entry1;
 
                 //Get by index position
@@ -1186,9 +1303,9 @@ namespace csDBPF_Test {
             public void Test_111_ParseAllEntries() {
                 DBPFEntryEXMP entryKnown = new DBPFEntryEXMP(DBPFTGI.EXEMPLAR, 0, 0, 0, TestArrays.decompressedentry_b);
 
-                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\z_DataView - Parks Aura.dat");
+                DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataView - Parks Aura.dat");
                 DBPFEntryEXMP entry0 = (DBPFEntryEXMP) dbpf.GetEntry(0);
-                entry0.DecodeEntry();
+                entry0.Decode();
                 for (int idx = 0; idx < entryKnown.ListOfProperties.Count; idx++) {
                     DBPFProperty outk = entryKnown.ListOfProperties.GetValueAtIndex(idx);
                     DBPFProperty outr = entry0.ListOfProperties.GetValueAtIndex(idx);
@@ -1199,21 +1316,21 @@ namespace csDBPF_Test {
                 }
 
                 DBPFEntryLTEXT entry1 = (DBPFEntryLTEXT) dbpf.GetEntry(1);
-                entry1.DecodeEntry();
+                entry1.Decode();
                 Assert.AreEqual("Parks Aura (by Cori)", entry1.Text);
 
                 DBPFEntryLTEXT entry11 = (DBPFEntryLTEXT) dbpf.GetEntry(dbpf.CountEntries() - 2);
-                entry11.DecodeEntry();
+                entry11.Decode();
                 Assert.AreEqual("+100  to +165", entry11.Text);
             }
 
             [Ignore]
             [TestMethod]
             public void Test_112_ParseBuildingExemplar() {
-                DBPFFile dbpf = new DBPFFile("C:\\Users\\Administrator\\OneDrive\\SC4 MODPACC\\B62\\B62-Albertsons 60's Retro v2.0\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
+                DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
                 List<DBPFEntry> entries = dbpf.GetEntries();
                 DBPFEntry entry = entries[0];
-                entry.DecodeEntry();
+                entry.Decode();
 
                 //uint[] val = (uint[]) properties[0].DecodeValues();
                 //Assert.AreEqual(DBPFProperty.ExemplarTypes.Building, val[0]);

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using csDBPF.Properties;
-using static csDBPF.Entries.DBPFEntryDIR;
+using csDBPF;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static csDBPF.DBPFEntryDIR;
+using static csDBPF.DBPFProperty;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
 	/// <summary>
 	/// An implementation of <see cref="DBPFEntry"/> for Exemplar and Cohort entries. Object data is stored in <see cref="ListOfProperties"/>.
 	/// </summary>
@@ -31,7 +33,7 @@ namespace csDBPF.Entries {
 
 		private TGI _parentCohort;
 		/// <summary>
-		/// TGI set representing the Parent Cohort for this exemplar.
+		/// The Parent Cohort for this exemplar.
 		/// </summary>
 		/// <see href="https://www.wiki.sc4devotion.com/index.php?title=Cohort"/>
 		public TGI ParentCohort {
@@ -85,13 +87,13 @@ namespace csDBPF.Entries {
         /// <remarks>
         /// Use when reading from a file.
         /// </remarks>
-        public override void DecodeEntry() {
+        public override void Decode() {
 			if (_isDecoded) return;
 			_isTextEncoding = IsTextEncoding();
 
 			byte[] dData;
-			if (DBPFCompression.IsCompressed(ByteData)) {
-				dData = DBPFCompression.Decompress(ByteData);
+			if (QFS.IsCompressed(ByteData)) {
+				dData = QFS.Decompress(ByteData);
 			} else {
 				dData = ByteData;
 			}
@@ -126,7 +128,7 @@ namespace csDBPF.Entries {
 			//Create the Property
 			DBPFProperty property;
 			for (int idx = 0; idx < propertyCount; idx++) {
-				property = DecodeProperty(pos);
+				property = DecodeProperty(dData, pos);
 				if (property is null) {
 					LogMessage($"Property #{idx} could not be decoded.");
 					return;
@@ -136,27 +138,27 @@ namespace csDBPF.Entries {
 				try {
                     _listOfProperties.Add(property.ID, property);
                 } catch {
-					LogMessage($"Property 0x{DBPFUtil.ToHexString(property.ID)} is duplicated.");
+					LogMessage($"Property {DBPFUtil.ToHexString(property.ID)} is duplicated.");
 				}
 
 				//Determine which bytes to skip to get to the start of the next property
 				if (!_isTextEncoding) {
 					if (property.NumberOfReps == 0) {
-						pos += (property.DataType.Length * (property.NumberOfReps+1)) + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
+						pos += (DBPFProperty.LookupDataTypeLength(property.DataType) * (property.NumberOfReps+1)) + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
 					} else {
-						pos += (property.DataType.Length * (property.NumberOfReps)) + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
+						pos += (DBPFProperty.LookupDataTypeLength(property.DataType) * (property.NumberOfReps)) + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
 					}
 					
 					if (property.NumberOfReps > 0) { //Skip 4 more for NumberOfValues
 						pos += 4;
 					}
 				} else {
-					pos = ByteArrayHelper.FindNextInstanceOf(dData, 0x0A, pos) + 1;
+					pos = FindNextInstanceOf(dData, 0x0A, pos) + 1;
 				}
 			}
 
 			//Lastly check to make sure we have ExemplarType (0x10) and ExemplarName (0x20) properties
-			if (GetExemplarType() == -1) {
+			if (GetExemplarType() == ExemplarType.Error) {
 				LogMessage("Missing property Exemplar Type.");
 			}
             if (GetExemplarName() == null) {
@@ -166,25 +168,26 @@ namespace csDBPF.Entries {
 
 
 
-		/// <summary>
-		/// Decodes either Binary or Text encoded data, and returns the property.
-		/// </summary>
-		/// <param name="offset">Offset (location) to start reading from</param>
-		/// <returns>A <see cref="DBPFProperty"/></returns>
-		private DBPFProperty DecodeProperty(int offset = 0) {
-			if (!_isTextEncoding) {
-				return DecodeProperty_Binary(offset);
+        /// <summary>
+        /// Decodes either Binary or Text encoded data, and returns the property.
+        /// </summary>
+        /// <param name="dData">Decompressed data array</param>
+        /// <param name="offset">Offset (location) to start reading from</param>
+        /// <returns>A <see cref="DBPFProperty"/></returns>
+        private DBPFProperty DecodeProperty(byte[] dData, int offset = 0) {
+			if (_isTextEncoding) {
+				return DecodeProperty_Text(dData, offset);
 			} else {
-				return DecodeProperty_Text(offset);
+				return DecodeProperty_Binary(dData, offset);
 			}
 		}
-		/// <summary>
-		/// Decodes the property from raw binary data at the given offset.
-		/// </summary>
-		/// <param name="offset">Offset to start decoding from</param>
-		/// <returns>The DBPFProperty; null if it cannot be decoded</returns>
-		private DBPFProperty DecodeProperty_Binary(int offset = 24) {
-			byte[] dData = ByteData;
+        /// <summary>
+        /// Decodes the property from raw binary data at the given offset.
+        /// </summary>
+        /// <param name="dData">Decompressed data array</param>
+        /// <param name="offset">Offset to start decoding from</param>
+        /// <returns>The DBPFProperty; null if it cannot be decoded</returns>
+        private DBPFProperty DecodeProperty_Binary(byte[] dData, int offset = 24) {
 
 			//Check for exemplars with no properties. Later checks against dData.Length to account for extraneous bytes on the end of dData that do not correspond to valid properties of the property
 			if (dData.Length <= 24) return null;
@@ -204,8 +207,8 @@ namespace csDBPF.Entries {
 
 			//Get the data value type
 			ushort valueType = BitConverter.ToUInt16(dData, offset);
-			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(valueType);
-			if (dataType is null) {
+            DBPFProperty.PropertyDataType dataType = (DBPFProperty.PropertyDataType) valueType;
+			if (dataType is DBPFProperty.PropertyDataType.UNKNOWN) {
 				LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid data type. Unable to decode property.");
                 return null;
             }
@@ -227,10 +230,10 @@ namespace csDBPF.Entries {
 				offset += 1; //There is a 1 byte unused flag
 				countOfReps = BitConverter.ToUInt32(dData, offset);
 				offset += 4;
-				if (dataType == DBPFPropertyDataType.STRING) {
+				if (dataType == DBPFProperty.PropertyDataType.STRING) {
 					dataValues = ByteArrayHelper.ToAString(dData, offset, (int) countOfReps);
 				}
-				else if (dataType == DBPFPropertyDataType.FLOAT32) {
+				else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 					dataValues = new List<float>();
 					for (int idx = 0; idx < countOfReps; idx++) {
 						((List<float>) dataValues).Add(BitConverter.ToSingle(dData,offset));
@@ -241,9 +244,9 @@ namespace csDBPF.Entries {
 					dataValues = new List<long>();
 					byte[] oneVal = new byte[8];
 					for (int idx = 0; idx < countOfReps; idx++) {
-						Array.Copy(dData, offset, oneVal, 0, dataType.Length);
+						Array.Copy(dData, offset, oneVal, 0, DBPFProperty.LookupDataTypeLength(dataType));
 						((List<long>) dataValues).Add(BitConverter.ToInt64(oneVal));
-						offset += dataType.Length;
+						offset += DBPFProperty.LookupDataTypeLength(dataType);
 					}
 				}
 			}
@@ -253,10 +256,10 @@ namespace csDBPF.Entries {
 				countOfReps = 0;
 				offset += 1; //This one byte is number of value repetitions; seems to always be 0
 				byte[] byteVals = new byte[8];
-				Array.Copy(dData, offset, byteVals, 0, dataType.Length);
-				if (dataType == DBPFPropertyDataType.STRING) {
+				Array.Copy(dData, offset, byteVals, 0, DBPFProperty.LookupDataTypeLength(dataType));
+				if (dataType == DBPFProperty.PropertyDataType.STRING) {
 					dataValues = ByteArrayHelper.ToAString(dData, offset, 1);
-				} else if (dataType == DBPFPropertyDataType.FLOAT32) {
+				} else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 					dataValues = new List<float> { BitConverter.ToSingle(byteVals) };
 				} else {
 					dataValues = new List<long> { BitConverter.ToInt64(byteVals) };
@@ -266,38 +269,28 @@ namespace csDBPF.Entries {
 
 			//Create new decoded property then set ID and DataValues
 			DBPFProperty newProperty;
-			if (dataType == DBPFPropertyDataType.STRING) {
+			if (dataType == DBPFProperty.PropertyDataType.STRING) {
 				newProperty = new DBPFPropertyString();
-			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
+			} else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 				if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-					LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
+					LogMessage($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
             } else {
 				newProperty = new DBPFPropertyLong(dataType);
             }
 			newProperty.ID = propertyID;
-			newProperty.IsTextEncoding = EncodingType.Binary;
+			newProperty.Encoding = EncodingType.Binary;
             newProperty.SetData(dataValues, countOfReps);
             return newProperty;
 		}
 		/// <summary>
-		/// Enumeration for special delimiting characters when reading text encoded properties.
-		/// </summary>
-		private enum SpecialChars : byte {
-			Colon = 0x3A, // :
-			Comma = 0x2C, // ,
-			Equal = 0x3D, // =
-			OpeningBrace = 0x7B, // {
-			ClosingBrace = 0x7D, // }
-			Quotation = 0x22 // "
-		}
-		/// <summary>
 		/// Decodes the property from raw text data at the given offset.
 		/// </summary>
+		/// <param name="dData">Decompressed data array</param>
 		/// <param name="offset">Offset to start decoding from</param>
 		/// <returns>The DBPFProperty; null if cannot be decoded</returns>
-		private DBPFProperty DecodeProperty_Text(int offset = 85) {
+		private DBPFProperty DecodeProperty_Text(byte[] dData, int offset = 85) {
 			//The sequence 0D0A (i.e. {0x0D, 0x0A}) separates each piece of entry header information and each property
 
 			//The first 8 bytes are the fileIdentifier, as usual (EQZT1### etc)
@@ -314,7 +307,6 @@ namespace csDBPF.Entries {
 			//If data type if Float32, byte values are interpreted literally, e.g., {0x38, 0x31, 0x2E, 0x35} = {"8", "1", ".", "5"} -> 81.5
 
 			//The first 85 bytes are features of the entry: ParentCohort TGI and property count. When examining a specific property in the entry we are not concerned about them.
-			byte[] dData = ByteData;
 			if (offset < 85) {
 				offset = 85;
 			}
@@ -326,14 +318,14 @@ namespace csDBPF.Entries {
 
 			//Capture the DataType
 			//Skip over the property name `:{"Exemplar Type"}=` or `:{"Bulldoze Cost"}=` are examples
-			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Equal, offset) + 1;
-			int endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset); //this represents the ending position (offset) of whatever we are looking for
+			offset = FindNextInstanceOf(dData, (byte) SpecialChars.Equal, offset) + 1;
+			int endPos = FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset); //this represents the ending position (offset) of whatever we are looking for
 			string type = ByteArrayHelper.ToAString(dData, offset, endPos - offset);
 			offset = endPos + 1;
-			DBPFPropertyDataType dataType = DBPFPropertyDataType.LookupDataType(type);
+            DBPFProperty.PropertyDataType dataType = DBPFProperty.LookupDataType(type);
 
 			//Determine number of reps; Problem if countOfReps = 0, then the loop below will not execute. If one value, the loop should run just once. Be careful with the difference between the "number of values" and "number of repetitions".
-			endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
+			endPos = FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
 			int countOfReps = ByteArrayHelper.ReadTextToInt(dData, offset, endPos - offset);
 			int countOfValues;
 			if (countOfReps == 0) {
@@ -343,15 +335,15 @@ namespace csDBPF.Entries {
 			}
 
 			//Parse the text values into a byte array and set the property values equal to the array. Algorithm differs depending on if the data type is float, string, or other number.
-			offset = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
+			offset = FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
 			object dataValues;
 
-			if (dataType == DBPFPropertyDataType.FLOAT32) {
+			if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 				dataValues = new List<float>();
 				float value;
 
 				if (countOfReps == 1) {
-					endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
+					endPos = FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
 					value = ByteArrayHelper.ReadTextToFloat(dData, offset, endPos - offset);
 					((List<float>) dataValues).Add(value);
 				} 
@@ -359,9 +351,9 @@ namespace csDBPF.Entries {
 					for (int rep = 0; rep < countOfReps; rep++) {
 						int endRepPos;
 						if (rep != countOfReps - 1) {//get all except last rep (aka reps appended by a comma)
-							endRepPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.Comma, offset);
+							endRepPos = FindNextInstanceOf(dData, (byte) SpecialChars.Comma, offset);
 						} else { //get the last rep in the list (rep appended by a closing bracket
-							endRepPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
+							endRepPos = FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
 						}
 
 						//Precision of floats is ~6-9 digits so this number may be rounded or truncated
@@ -372,9 +364,9 @@ namespace csDBPF.Entries {
 				}
 			} 
 			
-			else if (dataType == DBPFPropertyDataType.STRING) {
+			else if (dataType == DBPFProperty.PropertyDataType.STRING) {
 				//strings are encoded with quotes, so we start one position after and end one position sooner to avoid incorporating them into the decoded string
-				endPos = ByteArrayHelper.FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset) - 2;
+				endPos = FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset) - 2;
 				string result = ByteArrayHelper.ToAString(dData, offset+1, endPos - offset);
 				dataValues = result;
 			} 
@@ -383,62 +375,125 @@ namespace csDBPF.Entries {
 				dataValues = new List<long>();
 				for (int rep = 0; rep < countOfValues; rep++) {
 					offset += 2; //skip "0x"
-					long result = ByteArrayHelper.ReadTextToLong(dData, offset, dataType.Length * 2);
+					long result = ByteArrayHelper.ReadTextToLong(dData, offset, DBPFProperty.LookupDataTypeLength(dataType) * 2);
 					((List<long>) dataValues).Add(result);
-					offset += (dataType.Length * 2) + 1; //skip comma
+					offset += (DBPFProperty.LookupDataTypeLength(dataType) * 2) + 1; //skip comma
 				}
 			}
 
 			//Create new decoded property then set ID and DataValues
 			DBPFProperty newProperty;
-			if (dataType == DBPFPropertyDataType.STRING) {
+			if (dataType == DBPFProperty.PropertyDataType.STRING) {
 				newProperty = new DBPFPropertyString();
-			} else if (dataType == DBPFPropertyDataType.FLOAT32) {
+			} else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
                 if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-                    LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
+                    LogMessage($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
 			} else {
 				newProperty = new DBPFPropertyLong(dataType);
 			}
 			newProperty.ID = propertyID;
-			newProperty.IsTextEncoding = EncodingType.Text;
+			newProperty.Encoding = EncodingType.Text;
 			newProperty.SetData(dataValues);
 			return newProperty;
+        }
+        /// <summary>
+        /// Enumeration for special delimiting characters when reading text encoded properties.
+        /// </summary>
+        private enum SpecialChars : byte {
+            Colon = 0x3A, // :
+            Comma = 0x2C, // ,
+            Equal = 0x3D, // =
+            OpeningBrace = 0x7B, // {
+            ClosingBrace = 0x7D, // }
+            Quotation = 0x22 // "
+        }
+
+
+
+        /// <summary>
+        /// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
+        /// </summary>
+		/// <param name="compress">Whether to compress the ByteData. Default is FALSE</param>
+        public override void Encode(bool compress = false) {
+            //If not decoded then assumed no changes have been made to the entry → decompressed size and compressed size are unchanged
+            if (!_isDecoded) return;
+
+            string id;
+            if (_isCohort) {
+                id = "C";
+            } else {
+                id = "E";
+            }
+
+            //Text Encoding
+            if (_isTextEncoding) {
+                id += "QZT1###";
+
+                StringBuilder sb = new StringBuilder();
+                sb.Append(id + "\r\n");
+                sb.Append($"ParentCohort=Key:{{0x{DBPFUtil.ToHexString(_parentCohort.TypeID)},0x{DBPFUtil.ToHexString(_parentCohort.GroupID)},0x{DBPFUtil.ToHexString(_parentCohort.InstanceID)}}}\r\n");
+                sb.Append($"PropCount=0x{DBPFUtil.ToHexString(_listOfProperties.Count)}\r\n");
+                foreach (DBPFProperty prop in _listOfProperties.Values) {
+                    sb.Append(prop.ToBytes());
+                }
+                ByteData = ByteArrayHelper.ToBytes(sb.ToString(), true);
+                UncompressedSize = (uint) ByteData.Length;
+            }
+
+            //Binary Encoding
+            else {
+                id += "QZB1###";
+
+                List<byte> bytes = new List<byte>();
+                bytes.AddRange(ByteArrayHelper.ToBytes(id, true));
+                bytes.AddRange(BitConverter.GetBytes(_parentCohort.TypeID));
+                bytes.AddRange(BitConverter.GetBytes(_parentCohort.GroupID));
+                bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID));
+                bytes.AddRange(BitConverter.GetBytes(_listOfProperties.Count));
+                foreach (DBPFProperty prop in _listOfProperties.Values) {
+                    bytes.AddRange(prop.ToBytes());
+                }
+                ByteData = bytes.ToArray();
+                UncompressedSize = (uint) ByteData.Length;
+            }
+
+            ByteData = QFS.Compress(ByteData);
+        }
+
+
+
+        /// <summary>
+        /// Returns the encoding type of this entry.
+        /// </summary>
+        /// <returns>TRUE if text encoding; FALSE otherwise</returns>
+        public bool IsTextEncoding() {
+			byte identifier;
+			if (IsCompressed) {
+				identifier = ByteData[13];
+			} else {
+                identifier = ByteData[3];
+            }
+			return identifier == 0x54; //0x54 = T (0x42 = B)
 		}
 
 
 
-		/// <summary>
-		/// Returns the encoding type of this entry.
-		/// </summary>
-		/// <returns>TRUE if text encoding; FALSE otherwise</returns>
-		/// <remarks>This will decompress the data if it is not already uncompressed.</remarks>
-		public bool IsTextEncoding() {
-			if (IsCompressedNow) {
-				ByteData = DBPFCompression.Decompress(ByteData);
-				IsCompressedNow = false;
-			}
-
-			string fileIdentifier = ByteArrayHelper.ToAString(ByteData, 0, 4);
-			return fileIdentifier.Substring(fileIdentifier.Length - 1) == "T";
-		}
-
-
-
-		/// <summary>
-		/// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="DBPFProperty.ExemplarTypes"/> for the full list.
-		/// </summary>
-		/// <returns>Exemplar Type if found; -1 if ExemplarType (0x00000010) property is not found</returns>
-		public int GetExemplarType() {
+        /// <summary>
+        /// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="ExemplarType"/> for the full list.
+        /// </summary>
+        /// <returns>Exemplar Type if found; <see cref="ExemplarType.Error"/> if property is not found</returns>
+		/// <remarks>Simply a shortcut for <c>Entry.GetProperty(0x10)</c></remarks>
+        public ExemplarType GetExemplarType() {
 			DBPFProperty property = GetProperty(0x00000010);
 			if (property is null) {
-				return -1;
+				return ExemplarType.Error;
 			}
 
 			//We know exemplar type can only hold one value, so grab the first one
 			List<long> dataValues = (List<long>) property.GetData();
-			return Convert.ToInt32(dataValues[0]);
+			return (ExemplarType) Convert.ToInt32(dataValues[0]);
 		}
 
 
@@ -446,7 +501,8 @@ namespace csDBPF.Entries {
         /// <summary>
         /// Gets the Exemplar Name of the property.
         /// </summary>
-        /// <returns>ExemplarName if found; null if ExemplarName (0x00000020) property is not found</returns>
+        /// <returns>Exemplar Name if found; null property is not found</returns>
+		/// <remarks>Simply a shortcut for <c>Entry.GetProperty(0x20)</c></remarks>
         public string GetExemplarName() {
             DBPFProperty property = GetProperty(0x00000020);
             if (property is null) {
@@ -553,57 +609,26 @@ namespace csDBPF.Entries {
 		/// </summary>
 		public void RemoveAllProperties() {
 			_listOfProperties.Clear();
-		}
+        }
 
 
+        /// <summary>
+        /// Finds the first instance of a given byte starting at the specified offset.
+        /// </summary>
+        /// <param name="data">Array to search in</param>
+        /// <param name="byteToFind">Byte value to find</param>
+        /// <param name="offset">Location in array to start at</param>
+        /// <returns>Index of next occurrence of the target byte; 0 if byte is not found</returns>
+        private static int FindNextInstanceOf(byte[] data, byte byteToFind, int offset = 0) {
+            //return FindNextInstanceOf(data, byteToFind, offset);
+			//TODO - replace this method with indexOf?
 
-		/// <summary>
-		/// Build <see cref="DBPFEntry.ByteData"/> from the current state of this instance.
-		/// </summary>
-		public override void ToBytes() {
-			//If not decoded then assumed no changes have been made to the entry → decompressed size and compressed size are unchanged
-			if (!_isDecoded) return;
-
-			string id;
-			if (_isCohort) {
-				id = "C";
-			} else {
-				id = "E";
-			}
-
-			//Text Encoding
-			if (_isTextEncoding) {
-				id += "QZT1###";
-
-				StringBuilder sb = new StringBuilder();
-				sb.Append(id+"\r\n");
-				sb.Append($"ParentCohort=Key:{{0x{DBPFUtil.ToHexString(_parentCohort.TypeID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.GroupID.Value)},0x{DBPFUtil.ToHexString(_parentCohort.InstanceID.Value)}}}\r\n");
-				sb.Append($"PropCount=0x{DBPFUtil.ToHexString(_listOfProperties.Count)}\r\n");
-				foreach (DBPFProperty prop in _listOfProperties.Values) {
-					sb.Append(prop.ToRawBytes());
-				}
-				ByteData = ByteArrayHelper.ToBytes(sb.ToString(), true);
-				UncompressedSize = (uint) ByteData.Length;
-				IsCompressed = false;
-			}
-
-			//Binary Encoding
-			else {
-				id += "QZB1###";
-
-				List<byte> bytes = new List<byte>();
-				bytes.AddRange(ByteArrayHelper.ToBytes(id,true));
-				bytes.AddRange(BitConverter.GetBytes(_parentCohort.TypeID.Value));
-				bytes.AddRange(BitConverter.GetBytes(_parentCohort.GroupID.Value));
-				bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID.Value));
-				bytes.AddRange(BitConverter.GetBytes(_listOfProperties.Count));
-				foreach (DBPFProperty prop in _listOfProperties.Values) {
-					bytes.AddRange(prop.ToRawBytes());
-				}
-				ByteData = bytes.ToArray();
-				UncompressedSize = (uint) ByteData.Length;
-				IsCompressed= true;
-			}
-		}
-	}
+            for (int idx = offset; idx < data.Length; idx++) {
+                if (data[idx] == byteToFind) {
+                    return idx;
+                }
+            }
+            return 0;
+        }
+    }
 }

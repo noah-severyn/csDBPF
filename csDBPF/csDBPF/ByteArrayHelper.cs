@@ -166,6 +166,8 @@ namespace csDBPF {
 		}
 		#endregion FromByteArrayToArray
 
+
+
 		#region FromByteArrayToA
 		/// <summary>
 		/// Reads a byte array and returns a string of the entire array.
@@ -288,22 +290,20 @@ namespace csDBPF {
 		/// <param name="length">Length to read</param>
 		/// <returns></returns>
 		public static float ReadTextToFloat(byte[] data, int offset, int length) {
-			float.TryParse(ToAString(data, offset, length), out float result);
+            float.TryParse(ToAString(data, offset, length), out float result);
 			return result;
 		}
-
-
 		#endregion FromByteArrayToA
 
 
-		//Convert from the specific data type to a byte[]
-		#region ToByteArray
+
+		#region ToBytes
 		/// <summary>
 		/// Reads a string and parses into a byte array the same length as the string
 		/// </summary>
 		/// <param name="data">Data to parse</param>
-		/// <param name="singleByte">Parse type. FALSE (Default) is two byte output per char: Unicode; TRUE is one byte per char: ANSI (Windows-1252) </param>
-		/// <returns>A byte array of parsed data</returns>
+		/// <param name="singleByte">Parse type. FALSE (Default) is two byte output per char (Unicode); TRUE is one byte output per char: (ANSI/Windows-1252)</param>
+		/// <returns>The string as bytes</returns>
 		public static byte[] ToBytes(string data, bool singleByte = false) {
 			if (data is null) {
 				return Array.Empty<byte>();
@@ -314,8 +314,7 @@ namespace csDBPF {
 				if (singleByte) {
 					bytes.Add(Convert.ToByte(c));
 				} else {
-					//Convert char to two byte int, then get the bytes of that int
-					bytes.AddRange(BitConverter.GetBytes(Convert.ToInt16(c)));
+					bytes.AddRange(BitConverter.GetBytes(c));
 				}
 			}
 			return bytes.ToArray();
@@ -331,11 +330,11 @@ namespace csDBPF {
 			return bytes[0..numPlaces];
 		}
 		/// <summary>
-		/// Pareses the boolean array and returns the corresponding byte array.
+		/// Parses an array of booleans into bytes.
 		/// </summary>
 		/// <param name="data">Data to parse</param>
-		/// <returns>A byte array of parsed data</returns>
-		public static byte[] ToByteArray(bool[] data) {
+		/// <returns>The array of data as bytes</returns>
+		public static byte[] ToBytes(bool[] data) {
 			byte[] result = new byte[data.Length];
 			for (int idx = 0; idx < result.Length; idx++) {
 				if (data[idx] == true) {
@@ -346,115 +345,74 @@ namespace csDBPF {
 			}
 			return result;
 		}
-		/// <summary>
-		/// Pareses the char (UInt8) array and returns the corresponding byte array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>A byte array of parsed data</returns>
-		public static byte[] ToByteArray(char[] data) {
+        /// <summary>
+        /// Parses an array of chars (UInt8) into bytes.
+        /// </summary>
+        /// <param name="data">Data to parse</param>
+        /// <returns>The array of data as bytes</returns>
+        public static byte[] ToBytes(char[] data) {
 			byte[] result = new byte[data.Length];
 			Array.Copy(data, result, data.Length);
 			return result;
 		}
-		/// <summary>
-		/// Pareses the ushort (UInt16) array and returns the corresponding byte array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>A byte array of parsed data</returns>
-		public static byte[] ToByteArray(ushort[] data) {
+        /// <summary>
+        /// Parses an array of ushorts (UInt16) into bytes.
+        /// </summary>
+        /// <param name="data">Data to parse</param>
+        /// <returns>The array of data as bytes</returns>
+        public static byte[] ToBytes(ushort[] data) {
 			byte[] result = new byte[data.Length * 2];
 			for (int pos = 0; pos < data.Length; pos++) {
 				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 2, 2);
 			}
 			return result;
 		}
-		/// <summary>
-		/// Pareses the int (Sint32) array and returns the corresponding byte array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>A byte array of parsed data</returns>
-		public static byte[] ToByteArray(int[] data) {
+        /// <summary>
+        /// Parses an array of ints (Sint32) into bytes.
+        /// </summary>
+        /// <param name="data">Data to parse</param>
+        /// <returns>The array of data as bytes</returns>
+        public static byte[] ToBytes(int[] data) {
 			byte[] result = new byte[data.Length * 4];
 			for (int pos = 0; pos < data.Length; pos++) {
 				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 4, 4);
 			}
 			return result;
 		}
-		/// <summary>
-		/// Pareses the uint (UInt32) array and returns the corresponding byte array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>A byte array of parsed data</returns>
-		public static byte[] ToByteArray(uint[] data) {
+        /// <summary>
+        /// Parses an array of uints (UInt32) into bytes.
+        /// </summary>
+        /// <param name="data">Data to parse</param>
+        /// <returns>The array of data as bytes</returns>
+        public static byte[] ToBytes(uint[] data) {
 			byte[] result = new byte[data.Length * 4];
 			for (int pos = 0; pos < data.Length; pos++) {
 				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 4, 4);
 			}
 			return result;
 		}
-		/// <summary>
-		/// Pareses the float (Float32) array and returns the corresponding byte array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>A byte array of parsed data</returns>
-		public static byte[] ToByteArray(float[] data) {
+        /// <summary>
+        /// Parses an array of floats (Float32) into bytes.
+        /// </summary>
+        /// <param name="data">Data to parse</param>
+        /// <returns>The array of data as bytes</returns>
+        public static byte[] ToBytes(float[] data) {
 			byte[] result = new byte[data.Length * 4];
 			Buffer.BlockCopy(data, 0, result, 0, result.Length);
 			return result;
 		}
-		/// <summary>
-		/// Pareses the long (SInt64) array and returns the corresponding byte array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>A byte array of parsed data</returns>
-		public static byte[] ToByteArray(long[] data) {
+        /// <summary>
+        /// Parses an array of longs (SInt64) into bytes.
+        /// </summary>
+        /// <param name="data">Data to parse</param>
+        /// <returns>The array of data as bytes</returns>
+        public static byte[] ToBytes(long[] data) {
 			byte[] result = new byte[data.Length * 8];
 			for (int pos = 0; pos < data.Length; pos++) {
 				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 8, 8);
 			}
 			return result;
 		}
-
-		public static byte[] ToByteArray(Array data) {
-			Type type = data.GetType().GetElementType();
-			switch (type.Name) {
-				case "Int32":
-					return ToByteArray((int[]) data);
-				case "Float32":
-					return ToByteArray((float[]) data);
-				case "UInt32":
-					return ToByteArray((uint[]) data);
-				case "Boolean":
-					return ToByteArray((bool[]) data);
-				case "Byte": //Uint8
-					return (byte[]) data;
-				case "Int64":
-					return ToByteArray((long[]) data);
-				case "UInt16":
-					return ToByteArray((ushort[]) data);
-				default:
-					return null;
-			}
-		}
-
-
-		#endregion ToByteArrayFrom
-
-
-		/// <summary>
-		/// Finds the first instance of a given byte starting at the specified offset.
-		/// </summary>
-		/// <param name="data">Array to search in</param>
-		/// <param name="byteToFind">Byte value to find</param>
-		/// <param name="offset">Location in array to start at</param>
-		/// <returns>Index of next occurrence of the target byte; 0 if byte is not found</returns>
-		public static int FindNextInstanceOf(byte[] data, byte byteToFind, int offset = 0) {
-			for (int idx = offset; idx < data.Length; idx++) {
-				if (data[idx] == byteToFind) {
-					return idx;
-				}
-			}
-			return 0;
-		}
+		#endregion ToBytes
 	}
 }

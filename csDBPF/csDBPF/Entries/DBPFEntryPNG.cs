@@ -6,7 +6,7 @@ using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 
-namespace csDBPF.Entries {
+namespace csDBPF {
     /// <summary>
     /// An implementation of <see cref="DBPFEntry"/> for PNG entries. Object data is stored in <see cref="PNGImage"/>.
     /// </summary>
@@ -47,14 +47,15 @@ namespace csDBPF.Entries {
 		/// <remarks>
 		/// Use when reading from a file.
 		/// </remarks>
-        public override void DecodeEntry() {
+        public override void Decode() {
             _image = Image.Load(ByteData);
         }
 
         /// <summary>
         /// Build <see cref="DBPFEntry.ByteData"/> from the current state of <see cref="PNGImage"/>.
         /// </summary>
-        public override void ToBytes() {
+		/// <param name="compress">This has no effect as PNG entries are always uncompressed</param>
+        public override void Encode(bool compress = false) {
             using MemoryStream ms = new MemoryStream();
 
             _image.Save(ms, new PngEncoder());

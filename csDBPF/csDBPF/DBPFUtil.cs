@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace csDBPF {
 	/// <summary>
@@ -14,7 +15,7 @@ namespace csDBPF {
 		private static readonly string[] sc4Extensions = { "dat", "sc4lot", "sc4desc", "sc4model" };
 		private static readonly byte[] DBPF = { 0x44, 0x42, 0x50, 0x46 };
 
-
+		//TODO - should redo this function as an extension method? Split to Quick and Full versions
 		/// <summary>
 		/// Filters a list of file paths based on SC4 file extensions.
 		/// </summary>
@@ -66,7 +67,7 @@ namespace csDBPF {
         /// </summary>
         /// <param name="file">File to examine</param>
         /// <param name="validateDBPFVersion">Should the version information in the header be validated</param>
-        /// <returns>true if valid SC4 DBPF file, false otherwise</returns>
+        /// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
 		/// <remarks>
 		/// In most circumstances, validateDBPFVersions should be omitted or set to false. If set to true, a temporary copy of <see cref="DBPFFile.DBPFHeader"/> is created to validate multiple fields to check for DBPF version 1.0 used with SC4. There is significantly more overhead with this call, especially when iterating over multiple files. 
 		/// </remarks>
@@ -77,8 +78,7 @@ namespace csDBPF {
 			if (validateDBPFVersion) {
 				//To determine if the file is DBPF or not, can just look at the first few bytes which make up the header - no need to examine any of the rest of the file.
 				try {
-					DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader();
-					header.Initialize(br);
+					DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader(br);
 				}
 
 				catch (InvalidDataException) {
@@ -207,5 +207,14 @@ namespace csDBPF {
 			}
 			return sb.ToString();
 		}
-	}
+
+        /// <summary>
+        /// Generate a random uint value.
+        /// </summary>
+        public static uint GenerateRandomUint() {
+            //https://stackoverflow.com/a/18332307/10802255
+            Random rand = new Random();
+            return (uint) (rand.Next(1 << 30)) << 2 | (uint) (rand.Next(1 << 2));
+        }
+    }
 }

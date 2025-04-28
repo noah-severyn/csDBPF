@@ -13,58 +13,76 @@ namespace csDBPF {
     /// </summary>
     public struct TGI : IComparable<TGI> {
         /// <summary>
-        /// Type ID (TID). See <see href="https://www.wiki.sc4devotion.com/index.php?title=Type_ID"/>
+        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=Type_ID">Type ID</see> (TID).
         /// </summary>
-        public uint? TypeID { get; private set; }
+        public uint TypeID  { get; private set; }
+
         /// <summary>
-        /// Group ID (GID). See <see href="https://www.wiki.sc4devotion.com/index.php?title=Group_ID"/>
+        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=Group_ID">Group ID</see> (GID).
         /// </summary>
-        public uint? GroupID { get; private set; }
+        public uint GroupID { get; private set; }
+
         /// <summary>
-        /// Instance ID (IID). See <see href="https://www.wiki.sc4devotion.com/index.php?title=Instance_ID"/>
+        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=Instance_ID">Instance ID</see> (IID).
         /// </summary>
-        public uint? InstanceID { get; private set; }
+        public uint InstanceID { get; private set; }
 
 
-        //IMPORTANT: Never allow public creation of null TID, GID, or IID because they interfere with the lookups of KnownType.
         internal TGI(uint? t, uint? g, uint? i) {
-            TypeID = t;
-            GroupID = g;
-            InstanceID = i;
+            if (t.HasValue) {
+                TypeID = (uint) t;
+            } else {
+                TypeID = 0;
+            }
+            if (g.HasValue) {
+                GroupID = (uint) g;
+            } else {
+                GroupID = 0;
+            }
+            if (i.HasValue) {
+                InstanceID = (uint) i;
+            } else {
+                InstanceID = 0;
+            }
         }
         /// <summary>
-        /// Create a struct representing three uints as a Type, Group, Instance triplet. Providing a null parameter indicates that identifier will not be set.
+        /// Create a struct representing three uints as a Type, Group, Instance triplet. A random value will be set for a Group or Instance if either is zero.
         /// </summary>
-        /// <param name="t">Type</param>
-        /// <param name="g">Group</param>
-        /// <param name="i">Instance</param>
+        /// <param name="t">Type ID</param>
+        /// <param name="g">Group ID</param>
+        /// <param name="i">Instance ID</param>
         public TGI(uint t, uint g, uint i) {
             TypeID = t;
-            GroupID = g;
-            InstanceID = i;
+            if (g == 0) {
+                GroupID = DBPFUtil.GenerateRandomUint();
+            } else {
+                GroupID = g;
+            }
+            if (i == 0) {
+                InstanceID = DBPFUtil.GenerateRandomUint();
+            } else {
+                InstanceID = i;
+            }
         }
         /// <summary>
         /// Create a new DBPFTGI based on a known entry type. Assigns a random Group or Instance as appropriate.
         /// </summary>
         /// <param name="knownEntry">Known entry type. Should be one of the static types in <see cref="DBPFTGI"/> class.</param>
         public TGI(TGI knownEntry) {
-            if (knownEntry.TypeID is null) {
-                TypeID = 0;
-            } else {
-                TypeID = knownEntry.TypeID;
-            }
-            if (knownEntry.GroupID is null) {
-                RandomizeGroup();
+            TypeID = knownEntry.TypeID;
+            if (knownEntry.GroupID == 0) {
+                GroupID = DBPFUtil.GenerateRandomUint();
             } else {
                 GroupID = knownEntry.GroupID;
             }
-            if (knownEntry.InstanceID is null) {
-                RandomizeInstance();
+            if (knownEntry.InstanceID == 0) {
+                InstanceID = DBPFUtil.GenerateRandomUint();
             } else {
                 InstanceID = knownEntry.InstanceID;
             }
         }
 
+        /// <inheritdoc/>
         public int CompareTo(TGI other) {
             //Check if the T difers first, then if the G differs, then if the I differs
             var typediff = TypeID - other.TypeID;
@@ -88,8 +106,11 @@ namespace csDBPF {
             if (obj is not TGI _tgi) return false;
             return TypeID == _tgi.TypeID && GroupID == _tgi.GroupID && InstanceID == _tgi.InstanceID;
         }
+        /// <inheritdoc/>
         public static bool operator ==(TGI left, TGI right) { return left.Equals(right); }
+        /// <inheritdoc/>
         public static bool operator !=(TGI left, TGI right) { return !(left == right); }
+        /// <inheritdoc/>
         public override int GetHashCode() {
             return TypeID.GetHashCode() ^ GroupID.GetHashCode() ^ InstanceID.GetHashCode();
         }
@@ -100,58 +121,37 @@ namespace csDBPF {
         /// </summary>
         /// <param name="otherTGI">TGI to compare to</param>
         /// <returns>TRUE if Type, Group, and Instance of both values are match; FALSE if any differ</returns>
+        /// <remarks>
+        /// If any component of the specified TGI is 0 then the check will be skipped. This may be used to check against one of the <see cref="DBPFTGI.KnownEntries"/> as a pseudo "is a" check.
+        /// </remarks>
         /// <remarks>A type, group, or instance of null in either item will match with any other value.</remarks>
         public readonly bool Matches(TGI otherTGI) {
             bool evalT, evalG, evalI;
-            if (otherTGI.TypeID is not null) {
-                evalT = TypeID == otherTGI.TypeID;
-            } else {
+            if (otherTGI.TypeID == 0) {
                 evalT = true;
-            }
-            if (otherTGI.GroupID is not null) {
-                evalG = GroupID == otherTGI.GroupID;
             } else {
+                evalT = TypeID == otherTGI.TypeID;
+            }
+            if (otherTGI.GroupID == 0) {
                 evalG = true;
-            }
-            if (otherTGI.InstanceID is not null) {
-                evalI = InstanceID == otherTGI.InstanceID;
             } else {
+                evalG = GroupID == otherTGI.GroupID;
+            }
+            if (otherTGI.InstanceID == 0) {
                 evalI = true;
+            } else {
+                evalI = InstanceID == otherTGI.InstanceID;
             }
             return evalT && evalG && evalI;
         }
 
         /// <summary>
-        /// Check if the type, group, and instance of two TGIs are equal.
+        /// Check if the Type, Group, and Instance of two TGIs are identical.
         /// </summary>
-        /// <remarks>
-        /// If any component of the provided TGI is null that component will be skipped. This is opposed to <see cref="Matches(TGI)"/> which explicitly checks every component.
-        /// Only the provided TGI of knownType is checked for null components.
-        /// </remarks>
-        /// <param name="otherTGI">A DBPFTGI to check against</param>
+        /// <param name="otherTGI">TGI to check against</param>
         /// <returns>TRUE if check passes; FALSE otherwise</returns>
         public readonly bool MatchesExactly(TGI otherTGI) {
-            bool isTIDok, isGIDok, isIIDok;
-
-            if (!otherTGI.TypeID.HasValue) {
-                isTIDok = true;
-            } else {
-                isTIDok = TypeID == otherTGI.TypeID;
-            }
-
-            if (!otherTGI.GroupID.HasValue) {
-                isGIDok = true;
-            } else {
-                isGIDok = GroupID == otherTGI.GroupID;
-            }
-
-            if (!otherTGI.InstanceID.HasValue) {
-                isIIDok = true;
-            } else {
-                isIIDok = InstanceID == otherTGI.InstanceID;
-            }
-
-            return isTIDok && isGIDok && isIIDok;
+            return TypeID == otherTGI.TypeID && GroupID == otherTGI.GroupID && InstanceID == otherTGI.InstanceID;
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace csDBPF {
                     return tgi;
                 }
             }
-            return DBPFTGI.NULLTGI;
+            return DBPFTGI.BLANKTGI;
         }
 
 
@@ -196,14 +196,11 @@ namespace csDBPF {
 
 
 
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>A string that represents the current object</returns>
+        /// <inheritdoc/>
         public override readonly string ToString() {
-            string t = TypeID is null ? "#" : DBPFUtil.ToHexString(TypeID, prefix: true);
-            string g = GroupID is null ? "#" : DBPFUtil.ToHexString(GroupID, prefix: true);
-            string i = InstanceID is null ? "#" : DBPFUtil.ToHexString(InstanceID, prefix: true);
+            string t = TypeID == 0 ? "#" : DBPFUtil.ToHexString(TypeID, prefix: true);
+            string g = GroupID == 0 ? "#" : DBPFUtil.ToHexString(GroupID, prefix: true);
+            string i = InstanceID == 0 ? "#" : DBPFUtil.ToHexString(InstanceID, prefix: true);
             return $"{t}, {g}, {i}";
         }
 
@@ -213,16 +210,14 @@ namespace csDBPF {
         /// Assign a random Group ID.
         /// </summary>
         public void RandomizeGroup() {
-            //https://stackoverflow.com/a/18332307/10802255
-            Random rand = new Random();
-            GroupID = (uint) (rand.Next(1 << 30)) << 2 | (uint) (rand.Next(1 << 2));
+            GroupID = DBPFUtil.GenerateRandomUint();
         }
         /// <summary>
         /// Assign a random Instance ID.
         /// </summary>
         public void RandomizeInstance() {
             Random rand = new Random();
-            InstanceID = (uint) (rand.Next(1 << 30)) << 2 | (uint) (rand.Next(1 << 2));
+            InstanceID = DBPFUtil.GenerateRandomUint();
         }
     }
 
@@ -253,12 +248,10 @@ namespace csDBPF {
             }
         }
         #region KnownTGIs
-        /// <summary>BLANKTGI (0, 0, 0)</summary>
-        public static readonly TGI BLANKTGI;
 		/// <summary>Directory file (0xe86b1eef, 0xe86b1eef, 0x286b1f03)</summary>
 		public static readonly TGI DIRECTORY;
-		/// <summary>LD file (0x6be74c6#, 0x6be74c6#, #) </summary>
-		public static readonly TGI LD; /** */
+        /// <summary>LD file (0x6be74c6#, 0x6be74c60, #) </summary>
+        public static readonly TGI LD;
 		/// <summary>Exemplar file: road network (0x6534284a, 0x2821ed93, #)</summary>
 		public static readonly TGI EXEMPLAR_ROAD;
 		/// <summary>Exemplar file: street network (0x6534284a, 0xa92a02ea, #)</summary>
@@ -330,7 +323,7 @@ namespace csDBPF {
 		public static readonly TGI WAV;
 		/// <summary>LTEXT file (0x2026960b, #, #)</summary>
 		public static readonly TGI LTEXT;
-		/// <summary>Effect Directory file (0xea5118b#, #, #)</summary>
+		/// <summary>Effect Directory file (0xea5118b0, #, #)</summary>
 		public static readonly TGI EFFDIR;
 		/// <summary>Font Table INI (#, 0x4a87bfe8, 0x2a87bffc)</summary>
 		public static readonly TGI INI_FONT;
@@ -340,8 +333,8 @@ namespace csDBPF {
 		public static readonly TGI INI;
 		/// <summary>XML file (0x88777602, #, #)</summary>
 		public static readonly TGI XML;
-		/// <summary>NULLTGI (#, #, #)</summary>
-		public static readonly TGI NULLTGI;
+        /// <summary>BLANKTGI (0, 0, 0)</summary>
+        public static readonly TGI BLANKTGI;
         #endregion KnownTGIs
 
         /// <summary>
@@ -349,7 +342,7 @@ namespace csDBPF {
         /// Known types need to be ordered "bottom-up", that is, specialized entries need to be inserted first, more general ones later.
         /// </summary>
         static DBPFTGI() {
-            BLANKTGI = new TGI(0, 0, 0);
+            
             DIRECTORY = new TGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
             LD = new TGI(0x6be74c60, 0x6be74c60, null);
             S3D_MAXIS = new TGI(0x5ad0e817, 0xbadb57f1, null);
@@ -395,9 +388,8 @@ namespace csDBPF {
             RUL = new TGI(0x0a5bcf4b, 0xaa5bcf57, null);
             XML = new TGI(0x88777602, null, null);
             EFFDIR = new TGI(0xea5118b0, null, null);
-            NULLTGI = new TGI(null, null, null); // NULLTGI matches with everything
+            BLANKTGI = new TGI(null, null, null); // BLANKTGI matches with everything - this MUST be last in the list
 
-            KnownEntries.Add(BLANKTGI, new TGIDetails("BLANK", "BLANKTGI"));
             KnownEntries.Add(DIRECTORY, new TGIDetails("DIR", "DIR"));
             KnownEntries.Add(LD, new TGIDetails("LD", "LD"));
             KnownEntries.Add(S3D_MAXIS, new TGIDetails("S3D", "S3D"));
@@ -439,7 +431,7 @@ namespace csDBPF {
             KnownEntries.Add(XML, new TGIDetails("RUL", "RUL"));
             KnownEntries.Add(RUL, new TGIDetails("XML", "XML"));
             KnownEntries.Add(EFFDIR, new TGIDetails("EFF", "EFFDIR"));
-            KnownEntries.Add(NULLTGI, new TGIDetails("NULL", "NULLTGI"));
+            KnownEntries.Add(BLANKTGI, new TGIDetails("BLANK", "BLANKTGI"));
         }
 
 
