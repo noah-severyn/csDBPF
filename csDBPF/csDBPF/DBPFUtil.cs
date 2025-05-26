@@ -12,39 +12,24 @@ namespace csDBPF {
 	/// Collection of miscellaneous utility methods to use with DBPFFiles.
 	/// </summary>
 	public static class DBPFUtil {
-		private static readonly string[] sc4Extensions = { "dat", "sc4lot", "sc4desc", "sc4model" };
+		private static readonly string[] sc4Extensions = { ".dat", ".sc4lot", ".sc4desc", ".sc4model" };
 		private static readonly byte[] DBPF = { 0x44, 0x42, 0x50, 0x46 };
 
-		//TODO - should redo this function as an extension method? Split to Quick and Full versions
-		/// <summary>
-		/// Filters a list of file paths based on SC4 file extensions.
-		/// </summary>
-		/// <param name="filesToFilter">List of all files to filter through</param>
-		/// <param name="examineFileContents">Optionally examine the Header (first 28 bytes) of each file to determine if valid DBPF format. If set to false only the file extension will be examined.</param>
-		/// <returns>Tuple of List&lt;FileInfo&gt;(dbpfFiles,skippedFiles)</returns>
-		public static (List<FileInfo>, List<FileInfo>) FilterDBPFFiles(List<string> filesToFilter, bool examineFileContents) {
-			List<FileInfo> dbpfFiles = new List<FileInfo>();
-			List<FileInfo> skippedFiles = new List<FileInfo>();
-
-
-			foreach (string item in filesToFilter) {
-				FileInfo file = new FileInfo(item);
-				if (!examineFileContents) {
-					if (sc4Extensions.Any(file.Extension.Contains)) {
-						dbpfFiles.Add(file);
-					} else {
-						skippedFiles.Add(file);
-					}
-				} else {
-					if (IsValidDBPF(file)) { //https://stackoverflow.com/a/2912483/10802255
-						dbpfFiles.Add(file);
-					} else {
-						skippedFiles.Add(file);
-					}
-				}
+        //TODO - should redo this function as an extension method? Split to Quick and Full versions
+        /// <summary>
+        /// Filters a list of file paths based on SC4 file extensions.
+        /// </summary>
+        /// <param name="filesToFilter">List of all files to filter through</param>
+        /// <param name="validateIdentifier">Optionally examine the first 4 bytes of the specified file to determine if valid DBPF format. If omitted or set to false, only the file extension will be examined.</param>
+        /// <returns>A listing of DBPF files</returns>
+        public static List<string> FilterDBPFFiles(IEnumerable<string> filesToFilter, bool validateIdentifier = false) {
+			List<string> dbpfFiles = [];
+			foreach (string file in filesToFilter) {
+                if (IsValidDBPF(file, validateIdentifier)) {
+                    dbpfFiles.Add(file);
+                }
 			}
-
-			return (dbpfFiles, skippedFiles);
+			return dbpfFiles;
 		}
 
 
@@ -53,53 +38,30 @@ namespace csDBPF {
         /// Examines the first bytes of the file to determine if the file is valid DBPF or not.
         /// </summary>
         /// <param name="filePath">Full File path of the file to examine</param>
-        /// <param name="validateDBPFVersion">Should the version information in the header be validated</param>
+        /// <param name="validateIdentifier">Optionally examine the first 4 bytes of the specified file to determine if valid DBPF format. If omitted or set to false, only the file extension will be examined.</param>
         /// <returns>true if valid SC4 DBPF file, false otherwisee</returns>
-		/// /// <remarks>
-		/// In most circumstances, validateDBPFVersions should be omitted or set to false. If set to true, a temporary copy of <see cref="DBPFFile.DBPFHeader"/> is created to validate multiple fields to check for DBPF version 1.0 used with SC4. There is significantly more overhead with this call, especially when iterating over multiple files. 
-		/// </remarks>
-        public static bool IsValidDBPF(string filePath, bool validateDBPFVersion = false) {
-            return IsValidDBPF(new FileInfo(filePath), validateDBPFVersion);
-        }
+        public static bool IsValidDBPF(string filePath, bool validateIdentifier = false) {
+            FileStream fs = new FileStream(filePath, FileMode.Open);
+            BinaryReader br = new BinaryReader(fs);
 
+            if (validateIdentifier) {
+                byte[] firstFour = br.ReadBytes(4);
+                br.Close();
+                fs.Close();
+                return firstFour.SequenceEqual(DBPF);
+            } else {
+                return Array.IndexOf(sc4Extensions, Path.GetExtension(filePath).ToLower()) > -1;
+            }
+        }
         /// <summary>
         /// Examines the first bytes of the file to determine if the file is valid DBPF or not.
         /// </summary>
         /// <param name="file">File to examine</param>
-        /// <param name="validateDBPFVersion">Should the version information in the header be validated</param>
+        /// <param name="validateIdentifier">Optionally examine the first 4 bytes of the specified file to determine if valid DBPF format. If omitted or set to false, only the file extension will be examined.</param>
         /// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
-		/// <remarks>
-		/// In most circumstances, validateDBPFVersions should be omitted or set to false. If set to true, a temporary copy of <see cref="DBPFFile.DBPFHeader"/> is created to validate multiple fields to check for DBPF version 1.0 used with SC4. There is significantly more overhead with this call, especially when iterating over multiple files. 
-		/// </remarks>
-        public static bool IsValidDBPF(FileInfo file, bool validateDBPFVersion = false) {
-			FileStream fs = new FileStream(file.FullName, FileMode.Open);
-			BinaryReader br = new BinaryReader(fs);
-
-			if (validateDBPFVersion) {
-				//To determine if the file is DBPF or not, can just look at the first few bytes which make up the header - no need to examine any of the rest of the file.
-				try {
-					DBPFFile.DBPFHeader header = new DBPFFile.DBPFHeader(br);
-				}
-
-				catch (InvalidDataException) {
-					return false;
-				}
-
-				finally {
-					br.Close();
-					fs.Close();
-				}
-
-				return true;
-			} 
-			
-			else {
-                byte[] firstFour = br.ReadBytes(4); 
-				br.Close();
-                fs.Close();
-                return firstFour.SequenceEqual(DBPF);
-            }
-		}
+        public static bool IsValidDBPF(FileInfo file, bool validateIdentifier = false) {
+            return IsValidDBPF(file.FullName, validateIdentifier);
+        }
 
 
 
