@@ -185,15 +185,15 @@ namespace csDBPF {
                             _listOfEntries.Add(new DBPFEntryWAV(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
                             break;
                         default:
-                            LogMessage("Unknown TGI identifier.", _listOfTGIs[idx]);
-                            _listOfEntries.Add(new DBPFEntryUnknown(_listOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
+                            LogIssue("Unknown TGI identifier.", ListOfTGIs[idx]);
+                            ListOfEntries.Add(new DBPFEntryUnknown(ListOfTGIs[idx], offsets[idx], sizes[idx], (uint) idx, byteData));
                             break;
 					}
 				}
 			}
 
 			catch {
-				LogMessage("Unable to read DBPF file. Format unknown.");
+				LogIssue("Unable to read DBPF file. Format unknown.");
 			}
 
 			finally {
@@ -226,25 +226,9 @@ namespace csDBPF {
 
 
         
-        private void LogMessage(string message, TGI tgi = new TGI()) {
-			 _issueLog.AppendLine(File.Name + "," + tgi.ToString().Replace(" ", "") + "," + message);
+        private void LogIssue(string message, TGI tgi = new TGI()) {
+			 ErrorLog.Add(new DBPFError(File.Name, tgi, message));
         }
-
-
-        /// <summary>
-        /// Return the messages/issues raised when reading this file and its entries. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message. Designed to be written to a CSV file.
-        /// </summary>
-        /// <returns>A comma separated string of issues encountered</returns>
-        public string GetIssueLog() {
-			StringBuilder issues = new StringBuilder(_issueLog.ToString());
-
-            foreach (DBPFEntry entry in _listOfEntries) {
-                if (entry.IssueLog.ToString().Length > 0) {
-                    issues.Append(File.Name + entry.IssueLog.ToString());
-                }
-            }
-            return issues.ToString();
-		}
 
 
 

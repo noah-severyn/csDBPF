@@ -72,12 +72,12 @@ namespace csDBPF {
 		}
 
         /// <summary>
-        /// Comma delineated list of issues encountered when loading this entry.
+        /// Gets a list of issues encountered when parsing this entry.
         /// </summary>
 		/// <remarks>
-		/// This is a multi line string in the format of  <see cref="TGI.ToString"/> followed by the message. Format is: FileName, Type, Group, Instance, TGIType, TGISubtype, Message. For items logged at the entry level, FileName is left blank as it is unknown (it's a property of this entry's <see cref="DBPFFile.File"/>).
+		/// For Entries, the FileName is blank as it is unknown in this item's context - it's a property of this entry's parent DBPFFile.
 		/// </remarks>
-        internal StringBuilder IssueLog { get; private set; }
+        public List<DBPFError> ErrorLog { get; private set; }
 
 
 
@@ -88,7 +88,7 @@ namespace csDBPF {
 		/// <param name="tgi"></param>
 		public DBPFEntry(TGI tgi) {
             TGI = tgi;
-            IssueLog = new StringBuilder();
+			ErrorLog = [];
         }
 
 		
@@ -106,7 +106,7 @@ namespace csDBPF {
             IndexPos = index;
             CompressedSize = size;
             _byteData = bytes;
-            IssueLog = new StringBuilder();
+			ErrorLog = [];
 
             //Peek at bytes 4 and 5 to determine compression status
             IsCompressed = (_byteData.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(_byteData, 4) == 0x10FB);
@@ -179,11 +179,11 @@ namespace csDBPF {
 		}
 
 		/// <summary>
-		/// Adds the specified message to the entry's <see cref="IssueLog"/>.
+		/// Adds the specified message to the entry's <see cref="ErrorLog"/>.
 		/// </summary>
 		/// <param name="message">Message to add</param>
-		private protected void LogMessage(string message) {
-			IssueLog.AppendLine("," + TGI.ToString().Replace(" ", "") + "," + message);
+		private protected void LogError(string message) {
+			ErrorLog.Add(new DBPFError("", TGI, message));
 		}
 
 

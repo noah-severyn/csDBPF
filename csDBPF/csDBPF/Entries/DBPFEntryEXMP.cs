@@ -121,7 +121,7 @@ namespace csDBPF {
 			}
 
 			if (propertyCount == 0) {
-				LogMessage("Entry contains 0 properties.");
+				LogError("Entry contains 0 properties.");
 				return;
 			}
 
@@ -130,7 +130,7 @@ namespace csDBPF {
 			for (int idx = 0; idx < propertyCount; idx++) {
 				property = DecodeProperty(dData, pos);
 				if (property is null) {
-					LogMessage($"Property #{idx} could not be decoded.");
+					LogError($"Property #{idx} could not be decoded.");
 					return;
 				}
 
@@ -138,7 +138,7 @@ namespace csDBPF {
 				try {
                     _listOfProperties.Add(property.ID, property);
                 } catch {
-					LogMessage($"Property {DBPFUtil.ToHexString(property.ID)} is duplicated.");
+					LogError($"Property {DBPFUtil.ToHexString(property.ID)} is duplicated.");
 				}
 
 				//Determine which bytes to skip to get to the start of the next property
@@ -159,10 +159,10 @@ namespace csDBPF {
 
 			//Lastly check to make sure we have ExemplarType (0x10) and ExemplarName (0x20) properties
 			if (GetExemplarType() == ExemplarType.Error) {
-				LogMessage("Missing property Exemplar Type.");
+				LogError("Missing property Exemplar Type.");
 			}
             if (GetExemplarName() == null) {
-                LogMessage("Missing property Exemplar Name.");
+                LogError("Missing property Exemplar Name.");
             }
         }
 
@@ -199,7 +199,7 @@ namespace csDBPF {
 
 			//Get the property ID
 			if (offset + 4 > dData.Length) {
-                LogMessage($"Offset of {offset} does not contain enough data to hold a property. Unable to decode property.");
+                LogError($"Offset of {offset} does not contain enough data to hold a property. Unable to decode property.");
                 return null; 
 			}
 			uint propertyID = BitConverter.ToUInt32(dData, offset);
@@ -209,14 +209,14 @@ namespace csDBPF {
 			ushort valueType = BitConverter.ToUInt16(dData, offset);
             DBPFProperty.PropertyDataType dataType = (DBPFProperty.PropertyDataType) valueType;
 			if (dataType is DBPFProperty.PropertyDataType.UNKNOWN) {
-				LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid data type. Unable to decode property.");
+				LogError($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid data type. Unable to decode property.");
                 return null;
             }
 			offset += 2;
 
 			//Get the property keyType
 			if (offset + 2 > dData.Length) {
-                LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid key type. Unable to decode property.");
+                LogError($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid key type. Unable to decode property.");
                 return null; 
 			}
 			ushort keyType = BitConverter.ToUInt16(dData, offset);
@@ -273,7 +273,7 @@ namespace csDBPF {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 				if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-					LogMessage($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
+					LogError($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
             } else {
@@ -387,7 +387,7 @@ namespace csDBPF {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
                 if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-                    LogMessage($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
+                    LogError($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
 			} else {
