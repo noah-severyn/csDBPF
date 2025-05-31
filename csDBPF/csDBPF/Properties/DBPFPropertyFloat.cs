@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using csDBPF;
 using static csDBPF.DBPFEntry;
-using static csDBPF.DBPFProperty;
 
 namespace csDBPF {
 	/// <summary>
@@ -17,12 +17,12 @@ namespace csDBPF {
 		public override uint ID { get; set; }
 
         /// <summary>
-        /// The <see cref="PropertyDataType"/> for this property.
+        /// The data type for this property.
         /// </summary>
         public override PropertyDataType DataType { get; }
 
            /// <summary>
-        /// The number of repetitions of <see cref="PropertyDataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
+        /// The number of repetitions of <see cref="DataType"/> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
         /// </summary>
         /// <remarks>
         /// Determining the count partially depends on the encoding type. For binary encoded float-type properties: 0 reps = single value, 1 reps = multiple values but currently held to 1 value (problematic on macOS), n reps = n number of values. For text encoded float-type properties: n reps = n number of values.
@@ -60,7 +60,7 @@ namespace csDBPF {
         /// <param name="encodingType">Text or Binary encoding type</param>
         public DBPFPropertyFloat(float value, EncodingType encodingType = EncodingType.Binary) {
 			DataType = PropertyDataType.FLOAT32;
-			_dataValues = new List<float> { value };
+			_dataValues = [value];
 			Encoding = encodingType;
 			if (Encoding == EncodingType.Text) {
                 NumberOfReps = 1;
@@ -108,7 +108,7 @@ namespace csDBPF {
 		/// Returns a list of data values which are stored in this property.
 		/// </summary>
 		/// <returns>List of data values which are stored in this property</returns>
-		public override List<float> GetData() {
+		public override IEnumerable GetData() {
 			return _dataValues;
         }
         /// <summary>
@@ -119,7 +119,7 @@ namespace csDBPF {
         /// <remarks>
         /// If the position parameter is greater than the number of values, the last value is returned.
         /// </remarks>
-        public override object GetData(int position) {
+        public override ValueType GetData(int position) {
             if (position < 0) {
                 throw new ArgumentException("Value must be greater than or equal to 0.");
             }
@@ -132,13 +132,13 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Set the data values stored in this property. Value should be of type <![CDATA[List<float>]]>.
+        /// Set the data values stored in this property. Value should be of type <![CDATA[IEnumerable<float>]]>.
         /// </summary>
         /// <param name="value">Values to set</param>
-        /// <exception cref="ArgumentException">Argument to DBPFPropertyFloat.SetData must be <![CDATA[List<float>]]>.</exception>
-        public override void SetData(object value) {
-			if (value is not List<float>) {
-				throw new ArgumentException($"Argument to DBPFPropertyFloat.SetData must be List<float>. {value.GetType()} was provided.");
+        /// <exception cref="ArgumentException">Argument to DBPFPropertyFloat.SetData must be <![CDATA[IEnumerable<float>]]>.</exception>
+        public override void SetData(IEnumerable value) {
+			if (value is not IEnumerable<float>) {
+				throw new ArgumentException($"Argument to DBPFPropertyFloat.SetData must be IEnumerable<float>. {value.GetType()} was provided.");
 			}
 			_dataValues = (List<float>) value;
 
@@ -157,9 +157,9 @@ namespace csDBPF {
         /// Set the values(s) stored in this property. Value should be of type <![CDATA[List<float>]]>.
         /// </summary>
         /// <remarks>
-        /// This implementation for float-type properties is identical to <see cref="SetData(object)"/> to avoid the macOS float bug.
+        /// This implementation for float-type properties is identical to <see cref="SetData(IEnumerable)"/> to avoid the macOS float bug.
         /// </remarks>
-        internal override void SetData(object value, uint countOfReps) {
+        internal override void SetData(IEnumerable value, uint countOfReps) {
 			SetData(value);
         }
 
@@ -174,9 +174,9 @@ namespace csDBPF {
 				StringBuilder sb = new StringBuilder();
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(ID);
 				sb.Append($"0x{DBPFUtil.ToHexString(ID)}:{{\"{xmlprop.Name}\"}}=Float32:{NumberOfReps}:{{");
-				for (int idx = 0; idx < _dataValues.Count; idx++) {
+				for (int idx = 0; idx < _dataValues.Count(); idx++) {
 					sb.Append(_dataValues[idx]);
-					if (idx != _dataValues.Count-1) {
+					if (idx != _dataValues.Count() - 1) {
 						sb.Append(',');
 					}
 				}

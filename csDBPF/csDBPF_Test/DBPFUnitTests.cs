@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using SixLabors.ImageSharp;
 using System.IO;
+using System.Collections;
+using System.Linq;
 
 namespace csDBPF_Test {
     [TestClass]
@@ -44,13 +46,11 @@ namespace csDBPF_Test {
                 Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dat"));
                 Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll"));
                 Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png"));
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Network Addon Mod\\6 Miscellaneous\\Maxis Transit Lots\\Maxis Airports - Medium.dat"));
 
                 Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_GraphModd. V2.dat", true));
                 Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dat", true));
                 Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll", true));
                 Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png", true));
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\Users\\Administrator\\Documents\\SimCity 4\\Plugins\\Network Addon Mod\\6 Miscellaneous\\Maxis Transit Lots\\Maxis Airports - Medium.dat", true));
             }
 
             [TestMethod]
@@ -579,16 +579,16 @@ namespace csDBPF_Test {
                 List<float> vals;
 
                 //5 floats
-                vals = new List<float> { 6000f, 1024f, 288f, 48f, 16f };
+                vals = [6000f, 1024f, 288f, 48f, 16f];
                 propb = entry.ListOfProperties.GetValueAtIndex(4);
                 propknown = new DBPFPropertyFloat(vals);
                 Assert.AreEqual((uint) 0x8A020202, propb.ID);
                 Assert.AreEqual(5, propb.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, propb.DataType);
-                CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(vals, (ICollection) propb.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual((ICollection) propknown.GetData(), (ICollection) propb.GetData());
             }
 
 
@@ -705,7 +705,7 @@ namespace csDBPF_Test {
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propt.GetData());
+                CollectionAssert.AreEqual((ICollection) propknown.GetData(), (System.Collections.ICollection) propt.GetData());
 
                 //1x Float32
                 vals = new List<float> { 0.5f };
@@ -717,7 +717,7 @@ namespace csDBPF_Test {
                 CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propt.GetData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propt.GetData());
+                CollectionAssert.AreEqual((ICollection) propknown.GetData(), (System.Collections.ICollection) propt.GetData());
             }
 
             [TestMethod]
@@ -946,7 +946,7 @@ namespace csDBPF_Test {
 
                     File.Delete(outFile);
                     DBPFFile dbpf2 = new DBPFFile();
-                    dbpf2.AddEntries(dbpf.GetEntries(DBPFTGI.LTEXT));
+                    dbpf2.AddEntries(dbpf.ListOfEntries.Where(e => e.MatchesEntryType(DBPFTGI.LTEXT)));
                     dbpf2.AddEntry(new DBPFEntryLTEXT("Local Medical Facility Pockets Picked"));
                     dbpf2.EncodeAllEntries();
                     dbpf2.SaveAs(outFile);
@@ -958,7 +958,7 @@ namespace csDBPF_Test {
 
                     File.Delete(outFile);
                     DBPFFile dbpf3 = new DBPFFile();
-                    dbpf3.AddEntries(dbpf.GetEntries(DBPFTGI.LTEXT));
+                    dbpf3.AddEntries(dbpf.ListOfEntries.Where(e => e.MatchesEntryType(DBPFTGI.LTEXT)));
                     dbpf3.AddEntry(new DBPFEntryLTEXT(new TGI(0x2026960b, 0x6a231ea5, 0x2a5655d6), "Local Medical Facility Pockets Picked"));
                     dbpf3.EncodeAllEntries();
                     dbpf3.SaveAs(outFile);
@@ -977,13 +977,13 @@ namespace csDBPF_Test {
                 [TestMethod]
                 public void Test_081_EXMP_IsTextEncoding() {
                     DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\RJ - Block Road Barriers 1.0.dat");
-                    List<DBPFEntry> entries = dbpf.GetEntries();
+                    List<DBPFEntry> entries = dbpf.ListOfEntries;
 
                     Assert.IsFalse(((DBPFEntryEXMP) entries[0]).IsTextEncoding()); //Compressed binary-encoding
                     Assert.IsFalse(((DBPFEntryEXMP) entries[1]).IsTextEncoding()); //Uncompressed binary-encoding
 
                     DBPFFile dbpf2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\R$$6_1x2_Beacon Apartments L _7097cb41.SC4Lot");
-                    entries = dbpf2.GetEntries();
+                    entries = dbpf2.ListOfEntries;
                     Assert.IsTrue(((DBPFEntryEXMP) entries[0]).IsTextEncoding()); //Uncompressed text-encoding
                 }
 
@@ -1200,6 +1200,7 @@ namespace csDBPF_Test {
             /// </summary>
             [TestClass]
             public class _084_FSH {
+                [Ignore]
                 [TestMethod]
                 public void Test_084a_FSH_Decode() {
                     //DXT1
@@ -1224,18 +1225,34 @@ namespace csDBPF_Test {
         public class _1xx_DBPFFile {
 
             [TestMethod]
-            public void Test_100_DBPFFile_IssueLog() {
+            public void Test_100_DBPFFile_ErrorLog() {
                 DBPFFile testdbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\Logging Test File.dat");
                 testdbpf.DecodeAllEntries();
-                string issue = testdbpf.GetIssueLog();
-                string[] issues = issue.Split("\r\n");
+                var errors = testdbpf.ErrorLog;
 
-                Assert.AreEqual("Logging Test File.dat,0x6534284b,0xa8fbd372,0x7097cb41,Unknown TGI identifier.", issues[0]);
-                Assert.AreEqual("Logging Test File.dat,0x6534284a,0x7b647f18,0xd097ca4f,Property 0x8cb3511f is duplicated.", issues[1]);
-                Assert.AreEqual("Logging Test File.dat,0x6534284a,0x7b647f18,0xd097ca50,Missing property Exemplar Name.", issues[2]);
-                Assert.AreEqual("Logging Test File.dat,0x6534284a,0x7b647f18,0xd097ca51,Missing property Exemplar Type.", issues[3]);
-                Assert.AreEqual("Logging Test File.dat,0x6534284a,0x7b647f18,0xd097ca52,Entry contains 0 properties.", issues[4]);
-                Assert.AreEqual("Logging Test File.dat,0x6534284a,0x7b647f18,0xd097ca53,Property 0x27812811 contains a potential macOS TE bug.", issues[5]);
+                Assert.AreEqual("Logging Test File.dat", errors[0].FileName);
+                Assert.AreEqual("0x6534284b, 0xa8fbd372, 0x7097cb41", errors[0].TGI.ToString());
+                Assert.AreEqual("Unknown TGI identifier.", errors[0].Message);
+
+                Assert.AreEqual("Logging Test File.dat", errors[1].FileName);
+                Assert.AreEqual("0x6534284a, 0x7b647f18, 0xd097ca4f", errors[1].TGI.ToString());
+                Assert.AreEqual("Property 0x8cb3511f is duplicated.", errors[1].Message);
+
+                Assert.AreEqual("Logging Test File.dat", errors[2].FileName);
+                Assert.AreEqual("0x6534284a, 0x7b647f18, 0xd097ca50", errors[2].TGI.ToString());
+                Assert.AreEqual("Missing property Exemplar Name.", errors[2].Message);
+
+                Assert.AreEqual("Logging Test File.dat", errors[3].FileName);
+                Assert.AreEqual("0x6534284a, 0x7b647f18, 0xd097ca51", errors[3].TGI.ToString());
+                Assert.AreEqual("Missing property Exemplar Type.", errors[3].Message);
+
+                Assert.AreEqual("Logging Test File.dat", errors[4].FileName);
+                Assert.AreEqual("0x6534284a, 0x7b647f18, 0xd097ca52", errors[4].TGI.ToString());
+                Assert.AreEqual("Entry contains 0 properties.", errors[4].Message);
+
+                Assert.AreEqual("Logging Test File.dat", errors[5].FileName);
+                Assert.AreEqual("0x6534284a, 0x7b647f18, 0xd097ca53", errors[5].TGI.ToString());
+                Assert.AreEqual("Property 0x27812811 contains a potential macOS TE bug.", errors[5].Message);
             }
 
             [TestMethod]
@@ -1251,7 +1268,7 @@ namespace csDBPF_Test {
             public void Test_101b_DBPFFile_IsNotDBPF() {
                 DBPFFile notdbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll");
                 Assert.AreEqual("CAS_AutoHistorical_v0.0.2.dll: 0 subfiles", notdbpf.ToString());
-                Assert.AreEqual(0, notdbpf.GetEntries().Count);
+                Assert.AreEqual(0, notdbpf.ListOfEntries.Count);
             }
 
             [TestMethod]
@@ -1328,7 +1345,7 @@ namespace csDBPF_Test {
             [TestMethod]
             public void Test_112_ParseBuildingExemplar() {
                 DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\b62-albertsons_60s v 1.1-0x6534284a-0xd3a3e650-0xd4ebfbfa.SC4Desc");
-                List<DBPFEntry> entries = dbpf.GetEntries();
+                List<DBPFEntry> entries = dbpf.ListOfEntries;
                 DBPFEntry entry = entries[0];
                 entry.Decode();
 

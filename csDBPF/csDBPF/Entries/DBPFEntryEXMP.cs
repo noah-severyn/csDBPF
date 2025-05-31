@@ -1,11 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using csDBPF;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static csDBPF.DBPFEntryDIR;
-using static csDBPF.DBPFProperty;
 
 namespace csDBPF {
 	/// <summary>
@@ -158,7 +155,7 @@ namespace csDBPF {
 			}
 
 			//Lastly check to make sure we have ExemplarType (0x10) and ExemplarName (0x20) properties
-			if (GetExemplarType() == ExemplarType.Error) {
+			if (GetExemplarType() == DBPFProperty.ExemplarType.Error) {
 				LogError("Missing property Exemplar Type.");
 			}
             if (GetExemplarName() == null) {
@@ -222,8 +219,8 @@ namespace csDBPF {
 			ushort keyType = BitConverter.ToUInt16(dData, offset);
 			offset += 2;
 
-			//Examine the keyType to determine how to set the values for the new property
-			object dataValues;
+            //Examine the keyType to determine how to set the values for the new property
+            IEnumerable dataValues;
 			uint countOfReps;
 			//keyType == 0x80 ... this is one or more repetitions of the data type (2+ values of the data type)
 			if (keyType == 0x80) {
@@ -336,7 +333,7 @@ namespace csDBPF {
 
 			//Parse the text values into a byte array and set the property values equal to the array. Algorithm differs depending on if the data type is float, string, or other number.
 			offset = FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
-			object dataValues;
+            IEnumerable dataValues;
 
 			if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 				dataValues = new List<float>();
@@ -481,19 +478,19 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="ExemplarType"/> for the full list.
+        /// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="DBPFProperty.ExemplarType"/> for the full list.
         /// </summary>
-        /// <returns>Exemplar Type if found; <see cref="ExemplarType.Error"/> if property is not found</returns>
+        /// <returns>Exemplar Type if found; <see cref="DBPFProperty.ExemplarType.Error"/> if property is not found</returns>
 		/// <remarks>Simply a shortcut for <c>Entry.GetProperty(0x10)</c></remarks>
-        public ExemplarType GetExemplarType() {
+        public DBPFProperty.ExemplarType GetExemplarType() {
 			DBPFProperty property = GetProperty(0x00000010);
 			if (property is null) {
-				return ExemplarType.Error;
+				return DBPFProperty.ExemplarType.Error;
 			}
 
 			//We know exemplar type can only hold one value, so grab the first one
-			List<long> dataValues = (List<long>) property.GetData();
-			return (ExemplarType) Convert.ToInt32(dataValues[0]);
+			var dataValues = (long[]) property.GetData();
+			return (DBPFProperty.ExemplarType) dataValues[0];
 		}
 
 
@@ -510,8 +507,8 @@ namespace csDBPF {
             }
 
             //We know exemplar type can only hold one value, so grab the first one
-            string dataValue = (string) property.GetData();
-            return dataValue;
+            var dataValues = (string) property.GetData();
+            return dataValues;
         }
 
 

@@ -47,13 +47,25 @@ namespace csDBPF {
         /// </remarks>
         public List<TGI> ListOfTGIs { get; private set; }
 
+        private List<DBPFError> _errorLog;
         /// <summary>
         /// Gets a list of issues encountered when parsing this file.
         /// </summary>
 		/// <remarks>
 		/// Each entry additionally stores its own error log.
 		/// </remarks>
-        public List<DBPFError> ErrorLog { get; private set; }
+        public List<DBPFError> ErrorLog {
+            get {
+                var combinedLog = _errorLog;
+                foreach (DBPFEntry entry in ListOfEntries) {
+                    foreach (var error in entry.ErrorLog) {
+                        combinedLog.Add(new DBPFError(File.Name, error.TGI, error.Message));
+                    }
+                }
+                return combinedLog;
+            }
+            private set { _errorLog = value; }
+        }
 
         /// <summary>
         /// Instantiates a DBPFFile from a file path. If the file exists, its contents are read into the new DBPFFile.
