@@ -41,10 +41,9 @@ namespace csDBPF {
         /// <param name="validateIdentifier">Optionally examine the first 4 bytes of the specified file to determine if valid DBPF format. If omitted or set to false, only the file extension will be examined.</param>
         /// <returns>true if valid SC4 DBPF file, false otherwisee</returns>
         public static bool IsValidDBPF(string filePath, bool validateIdentifier = false) {
-            FileStream fs = new FileStream(filePath, FileMode.Open);
-            BinaryReader br = new BinaryReader(fs);
-
             if (validateIdentifier) {
+                FileStream fs = new FileStream(filePath, FileMode.Open);
+                BinaryReader br = new BinaryReader(fs);
                 byte[] firstFour = br.ReadBytes(4);
                 br.Close();
                 fs.Close();
