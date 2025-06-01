@@ -15,144 +15,144 @@ namespace csDBPF {
 			/// <summary>
 			/// The use of T00 exemplars is relatively unknown. 
 			/// </summary>
-			T00,
-			/// <summary>
-			/// Tuning Exemplars. These control various game properties such as transit network slopes. 
-			/// </summary>
-			Tuning,
-			/// <summary>
-			/// Building Exemplars. These contain properties related to buildings. 
-			/// </summary>
-			Building,
-			/// <summary>
-			/// RCI Exemplars. 
-			/// </summary>
-			RCI,
-			/// <summary>
-			/// Developer Exemplars. 
-			/// </summary>
-			Developer,
-			/// <summary>
-			/// Simulator Exemplars. These are among the most critical to game functionality, and include among them the Demand Simulator and the Traffic Simulator. 
-			/// </summary>
-			Simulator,
-			/// <summary>
-			/// Road Exemplars. These are generally used for tunnel entrance models. 
-			/// </summary>
-			Road,
-			/// <summary>
-			/// Bridge Exemplars. These are used to specify bridge properties. 
-			/// </summary>
-			Bridge,
-			/// <summary>
-			/// Misc Network Exemplars.
-			/// </summary>
-			MiscNetwork,
-			/// <summary>
-			/// Unknown type.
-			/// </summary>
-			UnknownType,
-			/// <summary>
-			/// Rail Exemplars.
-			/// </summary>
-			Rail,
-			/// <summary>
-			/// Highway Exemplars, used to reference transit models. They are among the most important exemplars used in the transit-modding world. Virtually all NAM Puzzle Pieces, as well as draggable model-based functionality, as exemplified by the High Speed Rail mod, use Type 0B exemplars. 
-			/// </summary>
-			Highway,
-			/// <summary>
-			/// Power line Exemplars.
-			/// </summary>
-			PowerLine,
-			/// <summary>
-			/// Terrain Exemplars.
-			/// </summary>
-			Terrain,
-			/// <summary>
-			/// Ordinance Exemplars.
-			/// </summary>
-			Ordinance,
-			/// <summary>
-			/// Flora/Fauna Exemplars.
-			/// </summary>
-			FloraFauna,
-			/// <summary>
-			/// LotConfiguration and Building Exemplars, and are used to specify the location of props, textures and buildings on Lots, along with other properties. Type 10 Exemplars for plopped buildings are stored in a city's Savefile upon save.
-			/// </summary>
-			LotConfiguration,
-			/// <summary>
-			/// Foundation Exemplars.
-			/// </summary>
-			Foundation,
-			/// <summary>
-			/// Lighting Exemplars.
-			/// </summary>
-			Lighting,
-			/// <summary>
-			/// LotRetainingWall Exemplars.
-			/// </summary>
-			LotRetianingWall,
-			/// <summary>
-			/// Vehicle Exemplars. Used to reference automata.
-			/// </summary>
-			Vehicle,
-			/// <summary>
-			/// Pedestrian Exemplars. Used to reference pedestrian automata.
-			/// </summary>
-			Pedestrian,
-			/// <summary>
-			/// Aircraft Exemplars. Used to reference aircraft automata
-			/// </summary>
-			Aircraft,
-			/// <summary>
-			/// Prop Exemplars.
-			/// </summary>
-			Prop,
-			/// <summary>
-			/// Construction Exemplars.
-			/// </summary>
-			Construction,
-			/// <summary>
-			/// Automata Tuning Exemplars.
-			/// </summary>
-			AutomataTuning,
-			/// <summary>
-			/// Network Lots, often referred to as T21 Exemplars. Used to add props rendered in BAT (isometric) to networks, such as traffic lights and lamp posts. These exemplars differ from Lot Exemplars (T10) in that they don't allow for base or overlay textures and can't be Transit Enabled.
-			/// </summary>
-			NetworkLot,
-			/// <summary>
-			/// Disaster Exemplars
-			/// </summary>
-			Disaster,
-			/// <summary>
-			/// DataView Exemplars.
-			/// </summary>
-			DataView,
-			/// <summary>
-			/// Crime Exemplars.
-			/// </summary>
-			Crime,
-			/// <summary>
-			/// Audio Exemplars.
-			/// </summary>
-			Audio,
-			/// <summary>
-			/// God Mode Exemplars.
-			/// </summary>
-			GodMode,
-			/// <summary>
-			/// Mayor Mode Exemplars.
-			/// </summary>
-			MayorMode,
-			/// <summary>
-			/// Trend Bar Exemplars.
-			/// </summary>
-			TrendBar,
-			/// <summary>
-			///  	Graph Control Exemplars.
-			/// </summary>
-			GraphControl
-		}
+			T00 = 0x00,
+            /// <summary>
+            /// Tuning Exemplars. These control various game properties such as transit network slopes. 
+            /// </summary>
+            Tuning = 0x01,
+            /// <summary>
+            /// Building Exemplars. These contain properties related to buildings. 
+            /// </summary>
+            Building = 0x02,
+            /// <summary>
+            /// RCI Exemplars. 
+            /// </summary>
+            RCI = 0x03,
+            /// <summary>
+            /// Developer Exemplars. 
+            /// </summary>
+            Developer = 0x04,
+            /// <summary>
+            /// Simulator Exemplars. These are among the most critical to game functionality, and include among them the Demand Simulator and the Traffic Simulator. 
+            /// </summary>
+            Simulator = 0x05,
+            /// <summary>
+            /// Road Exemplars. These are generally used for tunnel entrance models. 
+            /// </summary>
+            Road = 0x06,
+            /// <summary>
+            /// Bridge Exemplars. These are used to specify bridge properties. 
+            /// </summary>
+            Bridge = 0x07,
+            /// <summary>
+            /// Misc Network Exemplars.
+            /// </summary>
+            MiscNetwork = 0x08,
+            /// <summary>
+            /// Unknown type.
+            /// </summary>
+            UnknownType = 0x09,
+            /// <summary>
+            /// Rail Exemplars.
+            /// </summary>
+            Rail = 0x0A,
+            /// <summary>
+            /// Highway Exemplars, used to reference transit models. They are among the most important exemplars used in the transit-modding world. Virtually all NAM Puzzle Pieces, as well as draggable model-based functionality, as exemplified by the High Speed Rail mod, use Type 0B exemplars. 
+            /// </summary>
+            Highway = 0x0B,
+            /// <summary>
+            /// Power line Exemplars.
+            /// </summary>
+            PowerLine = 0x0C,
+            /// <summary>
+            /// Terrain Exemplars.
+            /// </summary>
+            Terrain = 0x0D,
+            /// <summary>
+            /// Ordinance Exemplars.
+            /// </summary>
+            Ordinance = 0x0E,
+            /// <summary>
+            /// Flora/Fauna Exemplars.
+            /// </summary>
+            FloraFauna = 0x0F,
+            /// <summary>
+            /// LotConfiguration and Building Exemplars, and are used to specify the location of props, textures and buildings on Lots, along with other properties. Type 10 Exemplars for plopped buildings are stored in a city's Savefile upon save.
+            /// </summary>
+            LotConfiguration = 0x10,
+            /// <summary>
+            /// Foundation Exemplars.
+            /// </summary>
+            Foundation = 0x11,
+            /// <summary>
+            /// Lighting Exemplars.
+            /// </summary>
+            Lighting = 0x13,
+            /// <summary>
+            /// LotRetainingWall Exemplars.
+            /// </summary>
+            LotRetianingWall = 0x15,
+            /// <summary>
+            /// Vehicle Exemplars. Used to reference automata.
+            /// </summary>
+            Vehicle = 0x16,
+            /// <summary>
+            /// Pedestrian Exemplars. Used to reference pedestrian automata.
+            /// </summary>
+            Pedestrian = 0x17,
+            /// <summary>
+            /// Aircraft Exemplars. Used to reference aircraft automata
+            /// </summary>
+            Aircraft = 0x18,
+            /// <summary>
+            /// Prop Exemplars.
+            /// </summary>
+            Prop = 0x1E,
+            /// <summary>
+            /// Construction Exemplars.
+            /// </summary>
+            Construction = 0x1F,
+            /// <summary>
+            /// Automata Tuning Exemplars.
+            /// </summary>
+            AutomataTuning = 0x20,
+            /// <summary>
+            /// Network Lots, often referred to as T21 Exemplars. Used to add props rendered in BAT (isometric) to networks, such as traffic lights and lamp posts. These exemplars differ from Lot Exemplars (T10) in that they don't allow for base or overlay textures and can't be Transit Enabled.
+            /// </summary>
+            NetworkLot = 0x21,
+            /// <summary>
+            /// Disaster Exemplars
+            /// </summary>
+            Disaster = 0x22,
+            /// <summary>
+            /// DataView Exemplars.
+            /// </summary>
+            DataView = 0x23,
+            /// <summary>
+            /// Crime Exemplars.
+            /// </summary>
+            Crime = 0x24,
+            /// <summary>
+            /// Audio Exemplars.
+            /// </summary>
+            Audio = 0x25,
+            /// <summary>
+            /// God Mode Exemplars.
+            /// </summary>
+            GodMode = 0x27,
+            /// <summary>
+            /// Mayor Mode Exemplars.
+            /// </summary>
+            MayorMode = 0x28,
+            /// <summary>
+            /// Trend Bar Exemplars.
+            /// </summary>
+            TrendBar = 0x2A,
+            /// <summary>
+            ///  	Graph Control Exemplars.
+            /// </summary>
+            GraphControl = 0x2B
+        }
 
 
         /// <summary>
