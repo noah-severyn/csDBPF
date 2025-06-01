@@ -155,7 +155,7 @@ namespace csDBPF {
 		/// Returns whether this entry is an Exemplar or Cohort Entry
 		/// </summary>
 		/// <returns>TRUE if is an Exemplar or Cohort; FALSE otherwise</returns>
-		public bool IsEXMP() {
+		public bool IsExemplar() {
 			byte[] data;
 			if (IsCompressed) {
 				data = QFS.Decompress(_byteData[0..16]);
