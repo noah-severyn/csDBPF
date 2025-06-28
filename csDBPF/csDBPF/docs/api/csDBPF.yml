@@ -1,0 +1,466 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF
+  commentId: N:csDBPF
+  id: csDBPF
+  children:
+  - csDBPF.ByteArrayHelper
+  - csDBPF.DBPFEntry
+  - csDBPF.DBPFEntry.EncodingType
+  - csDBPF.DBPFEntryDIR
+  - csDBPF.DBPFEntryDIR.DBDFItem
+  - csDBPF.DBPFEntryEXMP
+  - csDBPF.DBPFEntryFSH
+  - csDBPF.DBPFEntryFSH.BitmapType
+  - csDBPF.DBPFEntryFSH.FSHEntry
+  - csDBPF.DBPFEntryFSH.FSHImageData
+  - csDBPF.DBPFEntryLTEXT
+  - csDBPF.DBPFEntryPNG
+  - csDBPF.DBPFError
+  - csDBPF.DBPFFile
+  - csDBPF.DBPFFileExtensions
+  - csDBPF.DBPFHeader
+  - csDBPF.DBPFProperty
+  - csDBPF.DBPFProperty.ExemplarType
+  - csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  - csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  - csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  - csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  - csDBPF.DBPFProperty.PropertyDataType
+  - csDBPF.DBPFPropertyFloat
+  - csDBPF.DBPFPropertyLong
+  - csDBPF.DBPFPropertyString
+  - csDBPF.DBPFTGI
+  - csDBPF.DBPFUtil
+  - csDBPF.QFS
+  - csDBPF.StreamExtensions
+  - csDBPF.TGI
+  - csDBPF.XMLExemplarProperty
+  - csDBPF.XMLProperties
+  langs:
+  - csharp
+  - vb
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+  type: Namespace
+  assemblies:
+  - csDBPF
+references:
+- uid: csDBPF.ByteArrayHelper
+  commentId: T:csDBPF.ByteArrayHelper
+  href: csDBPF.ByteArrayHelper.html
+  name: ByteArrayHelper
+  nameWithType: ByteArrayHelper
+  fullName: csDBPF.ByteArrayHelper
+- uid: csDBPF.DBPFError
+  commentId: T:csDBPF.DBPFError
+  href: csDBPF.DBPFError.html
+  name: DBPFError
+  nameWithType: DBPFError
+  fullName: csDBPF.DBPFError
+- uid: csDBPF.DBPFFile
+  commentId: T:csDBPF.DBPFFile
+  href: csDBPF.DBPFFile.html
+  name: DBPFFile
+  nameWithType: DBPFFile
+  fullName: csDBPF.DBPFFile
+- uid: csDBPF.DBPFFileExtensions
+  commentId: T:csDBPF.DBPFFileExtensions
+  href: csDBPF.DBPFFileExtensions.html
+  name: DBPFFileExtensions
+  nameWithType: DBPFFileExtensions
+  fullName: csDBPF.DBPFFileExtensions
+- uid: csDBPF.DBPFHeader
+  commentId: T:csDBPF.DBPFHeader
+  parent: csDBPF
+  href: csDBPF.DBPFHeader.html
+  name: DBPFHeader
+  nameWithType: DBPFHeader
+  fullName: csDBPF.DBPFHeader
+- uid: csDBPF.TGI
+  commentId: T:csDBPF.TGI
+  parent: csDBPF
+  href: csDBPF.TGI.html
+  name: TGI
+  nameWithType: TGI
+  fullName: csDBPF.TGI
+- uid: csDBPF.DBPFTGI
+  commentId: T:csDBPF.DBPFTGI
+  href: csDBPF.DBPFTGI.html
+  name: DBPFTGI
+  nameWithType: DBPFTGI
+  fullName: csDBPF.DBPFTGI
+- uid: csDBPF.DBPFUtil
+  commentId: T:csDBPF.DBPFUtil
+  href: csDBPF.DBPFUtil.html
+  name: DBPFUtil
+  nameWithType: DBPFUtil
+  fullName: csDBPF.DBPFUtil
+- uid: csDBPF.DBPFEntry
+  commentId: T:csDBPF.DBPFEntry
+  parent: csDBPF
+  href: csDBPF.DBPFEntry.html
+  name: DBPFEntry
+  nameWithType: DBPFEntry
+  fullName: csDBPF.DBPFEntry
+- uid: csDBPF.DBPFEntry.EncodingType
+  commentId: T:csDBPF.DBPFEntry.EncodingType
+  parent: csDBPF
+  href: csDBPF.DBPFEntry.html
+  name: DBPFEntry.EncodingType
+  nameWithType: DBPFEntry.EncodingType
+  fullName: csDBPF.DBPFEntry.EncodingType
+  spec.csharp:
+  - uid: csDBPF.DBPFEntry
+    name: DBPFEntry
+    href: csDBPF.DBPFEntry.html
+  - name: .
+  - uid: csDBPF.DBPFEntry.EncodingType
+    name: EncodingType
+    href: csDBPF.DBPFEntry.EncodingType.html
+  spec.vb:
+  - uid: csDBPF.DBPFEntry
+    name: DBPFEntry
+    href: csDBPF.DBPFEntry.html
+  - name: .
+  - uid: csDBPF.DBPFEntry.EncodingType
+    name: EncodingType
+    href: csDBPF.DBPFEntry.EncodingType.html
+- uid: csDBPF.DBPFEntryDIR
+  commentId: T:csDBPF.DBPFEntryDIR
+  href: csDBPF.DBPFEntryDIR.html
+  name: DBPFEntryDIR
+  nameWithType: DBPFEntryDIR
+  fullName: csDBPF.DBPFEntryDIR
+- uid: csDBPF.DBPFEntryDIR.DBDFItem
+  commentId: T:csDBPF.DBPFEntryDIR.DBDFItem
+  href: csDBPF.DBPFEntryDIR.html
+  name: DBPFEntryDIR.DBDFItem
+  nameWithType: DBPFEntryDIR.DBDFItem
+  fullName: csDBPF.DBPFEntryDIR.DBDFItem
+  spec.csharp:
+  - uid: csDBPF.DBPFEntryDIR
+    name: DBPFEntryDIR
+    href: csDBPF.DBPFEntryDIR.html
+  - name: .
+  - uid: csDBPF.DBPFEntryDIR.DBDFItem
+    name: DBDFItem
+    href: csDBPF.DBPFEntryDIR.DBDFItem.html
+  spec.vb:
+  - uid: csDBPF.DBPFEntryDIR
+    name: DBPFEntryDIR
+    href: csDBPF.DBPFEntryDIR.html
+  - name: .
+  - uid: csDBPF.DBPFEntryDIR.DBDFItem
+    name: DBDFItem
+    href: csDBPF.DBPFEntryDIR.DBDFItem.html
+- uid: csDBPF.DBPFEntryEXMP
+  commentId: T:csDBPF.DBPFEntryEXMP
+  href: csDBPF.DBPFEntryEXMP.html
+  name: DBPFEntryEXMP
+  nameWithType: DBPFEntryEXMP
+  fullName: csDBPF.DBPFEntryEXMP
+- uid: csDBPF.DBPFEntryFSH
+  commentId: T:csDBPF.DBPFEntryFSH
+  href: csDBPF.DBPFEntryFSH.html
+  name: DBPFEntryFSH
+  nameWithType: DBPFEntryFSH
+  fullName: csDBPF.DBPFEntryFSH
+- uid: csDBPF.DBPFEntryFSH.BitmapType
+  commentId: T:csDBPF.DBPFEntryFSH.BitmapType
+  parent: csDBPF
+  href: csDBPF.DBPFEntryFSH.html
+  name: DBPFEntryFSH.BitmapType
+  nameWithType: DBPFEntryFSH.BitmapType
+  fullName: csDBPF.DBPFEntryFSH.BitmapType
+  spec.csharp:
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    href: csDBPF.DBPFEntryFSH.html
+  - name: .
+  - uid: csDBPF.DBPFEntryFSH.BitmapType
+    name: BitmapType
+    href: csDBPF.DBPFEntryFSH.BitmapType.html
+  spec.vb:
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    href: csDBPF.DBPFEntryFSH.html
+  - name: .
+  - uid: csDBPF.DBPFEntryFSH.BitmapType
+    name: BitmapType
+    href: csDBPF.DBPFEntryFSH.BitmapType.html
+- uid: csDBPF.DBPFEntryFSH.FSHEntry
+  commentId: T:csDBPF.DBPFEntryFSH.FSHEntry
+  href: csDBPF.DBPFEntryFSH.html
+  name: DBPFEntryFSH.FSHEntry
+  nameWithType: DBPFEntryFSH.FSHEntry
+  fullName: csDBPF.DBPFEntryFSH.FSHEntry
+  spec.csharp:
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    href: csDBPF.DBPFEntryFSH.html
+  - name: .
+  - uid: csDBPF.DBPFEntryFSH.FSHEntry
+    name: FSHEntry
+    href: csDBPF.DBPFEntryFSH.FSHEntry.html
+  spec.vb:
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    href: csDBPF.DBPFEntryFSH.html
+  - name: .
+  - uid: csDBPF.DBPFEntryFSH.FSHEntry
+    name: FSHEntry
+    href: csDBPF.DBPFEntryFSH.FSHEntry.html
+- uid: csDBPF.DBPFEntryFSH.FSHImageData
+  commentId: T:csDBPF.DBPFEntryFSH.FSHImageData
+  href: csDBPF.DBPFEntryFSH.html
+  name: DBPFEntryFSH.FSHImageData
+  nameWithType: DBPFEntryFSH.FSHImageData
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData
+  spec.csharp:
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    href: csDBPF.DBPFEntryFSH.html
+  - name: .
+  - uid: csDBPF.DBPFEntryFSH.FSHImageData
+    name: FSHImageData
+    href: csDBPF.DBPFEntryFSH.FSHImageData.html
+  spec.vb:
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    href: csDBPF.DBPFEntryFSH.html
+  - name: .
+  - uid: csDBPF.DBPFEntryFSH.FSHImageData
+    name: FSHImageData
+    href: csDBPF.DBPFEntryFSH.FSHImageData.html
+- uid: csDBPF.DBPFEntryLTEXT
+  commentId: T:csDBPF.DBPFEntryLTEXT
+  href: csDBPF.DBPFEntryLTEXT.html
+  name: DBPFEntryLTEXT
+  nameWithType: DBPFEntryLTEXT
+  fullName: csDBPF.DBPFEntryLTEXT
+- uid: csDBPF.DBPFEntryPNG
+  commentId: T:csDBPF.DBPFEntryPNG
+  href: csDBPF.DBPFEntryPNG.html
+  name: DBPFEntryPNG
+  nameWithType: DBPFEntryPNG
+  fullName: csDBPF.DBPFEntryPNG
+- uid: csDBPF.DBPFProperty
+  commentId: T:csDBPF.DBPFProperty
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty
+  nameWithType: DBPFProperty
+  fullName: csDBPF.DBPFProperty
+- uid: csDBPF.DBPFProperty.PropertyDataType
+  commentId: T:csDBPF.DBPFProperty.PropertyDataType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.PropertyDataType
+  nameWithType: DBPFProperty.PropertyDataType
+  fullName: csDBPF.DBPFProperty.PropertyDataType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: PropertyDataType
+    href: csDBPF.DBPFProperty.PropertyDataType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: PropertyDataType
+    href: csDBPF.DBPFProperty.PropertyDataType.html
+- uid: csDBPF.DBPFProperty.ExemplarType
+  commentId: T:csDBPF.DBPFProperty.ExemplarType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.ExemplarType
+  nameWithType: DBPFProperty.ExemplarType
+  fullName: csDBPF.DBPFProperty.ExemplarType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.ExemplarType
+    name: ExemplarType
+    href: csDBPF.DBPFProperty.ExemplarType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.ExemplarType
+    name: ExemplarType
+    href: csDBPF.DBPFProperty.ExemplarType.html
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.LotConfigPropertyLotObjectType
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+    name: LotConfigPropertyLotObjectType
+    href: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+    name: LotConfigPropertyLotObjectType
+    href: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.html
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.LotConfigPropertyPurposeType
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+    name: LotConfigPropertyPurposeType
+    href: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+    name: LotConfigPropertyPurposeType
+    href: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.html
+- uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.LotConfigPropertyWealthType
+  nameWithType: DBPFProperty.LotConfigPropertyWealthType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+    name: LotConfigPropertyWealthType
+    href: csDBPF.DBPFProperty.LotConfigPropertyWealthType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+    name: LotConfigPropertyWealthType
+    href: csDBPF.DBPFProperty.LotConfigPropertyWealthType.html
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.LotConfigPropertyZoneType
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+    name: LotConfigPropertyZoneType
+    href: csDBPF.DBPFProperty.LotConfigPropertyZoneType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+    name: LotConfigPropertyZoneType
+    href: csDBPF.DBPFProperty.LotConfigPropertyZoneType.html
+- uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.LotConfigPropertyRoadRequirement
+  nameWithType: DBPFProperty.LotConfigPropertyRoadRequirement
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+    name: LotConfigPropertyRoadRequirement
+    href: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+    name: LotConfigPropertyRoadRequirement
+    href: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.html
+- uid: csDBPF.DBPFPropertyFloat
+  commentId: T:csDBPF.DBPFPropertyFloat
+  href: csDBPF.DBPFPropertyFloat.html
+  name: DBPFPropertyFloat
+  nameWithType: DBPFPropertyFloat
+  fullName: csDBPF.DBPFPropertyFloat
+- uid: csDBPF.DBPFPropertyLong
+  commentId: T:csDBPF.DBPFPropertyLong
+  href: csDBPF.DBPFPropertyLong.html
+  name: DBPFPropertyLong
+  nameWithType: DBPFPropertyLong
+  fullName: csDBPF.DBPFPropertyLong
+- uid: csDBPF.DBPFPropertyString
+  commentId: T:csDBPF.DBPFPropertyString
+  href: csDBPF.DBPFPropertyString.html
+  name: DBPFPropertyString
+  nameWithType: DBPFPropertyString
+  fullName: csDBPF.DBPFPropertyString
+- uid: csDBPF.XMLExemplarProperty
+  commentId: T:csDBPF.XMLExemplarProperty
+  parent: csDBPF
+  href: csDBPF.XMLExemplarProperty.html
+  name: XMLExemplarProperty
+  nameWithType: XMLExemplarProperty
+  fullName: csDBPF.XMLExemplarProperty
+- uid: csDBPF.XMLProperties
+  commentId: T:csDBPF.XMLProperties
+  href: csDBPF.XMLProperties.html
+  name: XMLProperties
+  nameWithType: XMLProperties
+  fullName: csDBPF.XMLProperties
+- uid: csDBPF.QFS
+  commentId: T:csDBPF.QFS
+  href: csDBPF.QFS.html
+  name: QFS
+  nameWithType: QFS
+  fullName: csDBPF.QFS
+- uid: csDBPF.StreamExtensions
+  commentId: T:csDBPF.StreamExtensions
+  href: csDBPF.StreamExtensions.html
+  name: StreamExtensions
+  nameWithType: StreamExtensions
+  fullName: csDBPF.StreamExtensions
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF

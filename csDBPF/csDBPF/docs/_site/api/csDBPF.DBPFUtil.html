@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class DBPFUtil | csDBPF </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class DBPFUtil | csDBPF ">
+      
+      <meta name="description" content="Collection of miscellaneous utility methods to use with DBPFFiles.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/noah-severyn/csDBPF/new/docs/apiSpec/new?filename=csDBPF_DBPFUtil.md&amp;value=---%0Auid%3A%20csDBPF.DBPFUtil%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="csDBPF">
+            csDBPF
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="csDBPF.DBPFUtil">
+
+
+
+  <h1 id="csDBPF_DBPFUtil" data-uid="csDBPF.DBPFUtil" class="text-break">
+Class DBPFUtil  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="csDBPF.html">csDBPF</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>csDBPF.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Collection of miscellaneous utility methods to use with DBPFFiles.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class DBPFUtil</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">DBPFUtil</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="csDBPF_DBPFUtil_FilterDBPFFiles_" data-uid="csDBPF.DBPFUtil.FilterDBPFFiles*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_FilterDBPFFiles_System_Collections_Generic_IEnumerable_System_String__System_Boolean_" data-uid="csDBPF.DBPFUtil.FilterDBPFFiles(System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
+  FilterDBPFFiles(IEnumerable&lt;string&gt;, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Filters a list of file paths based on SC4 file extensions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;string&gt; FilterDBPFFiles(this IEnumerable&lt;string&gt; filesToFilter, bool validateIdentifier = false)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>filesToFilter</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>List of all files to filter through</p>
+</dd>
+    <dt><code>validateIdentifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Optionally examine the first 4 bytes of each for a valid DBPF format. If omitted or set to <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>, only the file extension will be examined.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>A listing of DBPF files</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFUtil_GenerateRandomUint_" data-uid="csDBPF.DBPFUtil.GenerateRandomUint*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_GenerateRandomUint" data-uid="csDBPF.DBPFUtil.GenerateRandomUint">
+  GenerateRandomUint()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L174"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Generate a random uint value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static uint GenerateRandomUint()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFUtil_IsValidDBPF_" data-uid="csDBPF.DBPFUtil.IsValidDBPF*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_IsValidDBPF_System_IO_FileInfo_System_Boolean_" data-uid="csDBPF.DBPFUtil.IsValidDBPF(System.IO.FileInfo,System.Boolean)">
+  IsValidDBPF(FileInfo, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Examines the first bytes of the file to determine if the file is valid DBPF or not.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsValidDBPF(this FileInfo file, bool validateIdentifier = false)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>file</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.io.fileinfo">FileInfo</a></dt>
+    <dd><p>File to examine</p>
+</dd>
+    <dt><code>validateIdentifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Optionally examine the first 4 bytes of the specified file to determine if valid DBPF format. If omitted or set to false, only the file extension will be examined.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>TRUE if valid SC4 DBPF file, FALSE otherwise</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFUtil_IsValidDBPF_" data-uid="csDBPF.DBPFUtil.IsValidDBPF*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_IsValidDBPF_System_String_System_Boolean_" data-uid="csDBPF.DBPFUtil.IsValidDBPF(System.String,System.Boolean)">
+  IsValidDBPF(string, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Examines the first bytes of the file to determine if the file is valid DBPF or not.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsValidDBPF(this string filePath, bool validateIdentifier = false)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>filePath</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Full File path of the file to examine</p>
+</dd>
+    <dt><code>validateIdentifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Optionally examine the first 4 bytes of each for a valid DBPF format. If omitted or set to <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>, only the file extension will be examined.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if file is a valid SC4 DBPF file; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a></p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFUtil_PrintByteValues_" data-uid="csDBPF.DBPFUtil.PrintByteValues*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_PrintByteValues_System_Byte___" data-uid="csDBPF.DBPFUtil.PrintByteValues(System.Byte[])">
+  PrintByteValues(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L163"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Appends an array of byte values sequentially into a string.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string PrintByteValues(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Byte data to print.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>String of 2 character bytes, space separated</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFUtil_ReverseBytes_" data-uid="csDBPF.DBPFUtil.ReverseBytes*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_ReverseBytes_System_Int64_" data-uid="csDBPF.DBPFUtil.ReverseBytes(System.Int64)">
+  ReverseBytes(long)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reverses the byte order for a ulong. See <a class="xref" href="csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_ReverseBytes_System_UInt32_">ReverseBytes(uint)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static long ReverseBytes(long value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd><p>Value to reverse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd><p>Reversed uint</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFUtil_ReverseBytes_" data-uid="csDBPF.DBPFUtil.ReverseBytes*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_ReverseBytes_System_UInt16_" data-uid="csDBPF.DBPFUtil.ReverseBytes(System.UInt16)">
+  ReverseBytes(ushort)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reverses the byte order for a ushort. Example: 3 (0x0003) returns 768 (0x0300)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ushort ReverseBytes(ushort value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>Value to reverse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>Reversed ushort</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="csDBPF_DBPFUtil_ReverseBytes_System_UInt16__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>See:https://www.csharp-examples.net/reverse-bytes/</p>
+</div>
+
+
+
+
+  <a id="csDBPF_DBPFUtil_ReverseBytes_" data-uid="csDBPF.DBPFUtil.ReverseBytes*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_ReverseBytes_System_UInt32_" data-uid="csDBPF.DBPFUtil.ReverseBytes(System.UInt32)">
+  ReverseBytes(uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reverses the byte order for a uint. See <a class="xref" href="csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_ReverseBytes_System_UInt32_">ReverseBytes(uint)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static uint ReverseBytes(uint value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Value to reverse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Reversed uint</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFUtil_ToHexString_" data-uid="csDBPF.DBPFUtil.ToHexString*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_ToHexString_System_Int64_System_Int32_System_Boolean_System_Boolean_" data-uid="csDBPF.DBPFUtil.ToHexString(System.Int64,System.Int32,System.Boolean,System.Boolean)">
+  ToHexString(long, int, bool, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L109"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string ToHexString(long value, int places = 8, bool uppercase = false, bool prefix = true)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd><p>Value to return</p>
+</dd>
+    <dt><code>places</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Number of places to pad the value. 0-8 valid; 8 is default</p>
+</dd>
+    <dt><code>uppercase</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Specify output as uppercase. Default is lowercase.</p>
+</dd>
+    <dt><code>prefix</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Specify to omit &quot;0x&quot; prefixed to the front of the string. Default is true to include.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Uppercase string representing the value</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Number of places must be between 0 and 8.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="csDBPF_DBPFUtil_ToHexString_" data-uid="csDBPF.DBPFUtil.ToHexString*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_ToHexString_System_Nullable_System_UInt32__System_Int32_System_Boolean_System_Boolean_" data-uid="csDBPF.DBPFUtil.ToHexString(System.Nullable{System.UInt32},System.Int32,System.Boolean,System.Boolean)">
+  ToHexString(uint?, int, bool, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L129"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string ToHexString(uint? value, int places = 8, bool uppercase = false, bool prefix = true)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>?</dt>
+    <dd><p>Value to return</p>
+</dd>
+    <dt><code>places</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Number of places to pad the value. 0-8 valid; 8 is default</p>
+</dd>
+    <dt><code>uppercase</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Specify output as uppercase. Default is lowercase.</p>
+</dd>
+    <dt><code>prefix</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Specify to omit &quot;0x&quot; prefixed to the front of the string. Default is true to include.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Uppercase string representing the value</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Number of places must be between 0 and 8.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="csDBPF_DBPFUtil_UnixToDate_" data-uid="csDBPF.DBPFUtil.UnixToDate*"></a>
+
+  <h3 id="csDBPF_DBPFUtil_UnixToDate_System_UInt32_" data-uid="csDBPF.DBPFUtil.UnixToDate(System.UInt32)">
+  UnixToDate(uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L153"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convert Unix datetime to a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a> object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static DateTime UnixToDate(uint time)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>time</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Unix time</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></dt>
+    <dd><p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a> object equal to the provided Unix time</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFUtil.cs/#L14" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

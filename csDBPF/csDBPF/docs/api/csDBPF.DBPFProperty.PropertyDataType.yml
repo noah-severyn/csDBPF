@@ -1,0 +1,322 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFProperty.PropertyDataType
+  commentId: T:csDBPF.DBPFProperty.PropertyDataType
+  id: DBPFProperty.PropertyDataType
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFProperty.PropertyDataType.BOOL
+  - csDBPF.DBPFProperty.PropertyDataType.FLOAT32
+  - csDBPF.DBPFProperty.PropertyDataType.SINT32
+  - csDBPF.DBPFProperty.PropertyDataType.SINT64
+  - csDBPF.DBPFProperty.PropertyDataType.STRING
+  - csDBPF.DBPFProperty.PropertyDataType.UINT16
+  - csDBPF.DBPFProperty.PropertyDataType.UINT32
+  - csDBPF.DBPFProperty.PropertyDataType.UINT8
+  - csDBPF.DBPFProperty.PropertyDataType.UNKNOWN
+  langs:
+  - csharp
+  - vb
+  name: DBPFProperty.PropertyDataType
+  nameWithType: DBPFProperty.PropertyDataType
+  fullName: csDBPF.DBPFProperty.PropertyDataType
+  type: Enum
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFProperty.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: PropertyDataType
+    path: ../Properties/DBPFProperty.cs
+    startLine: 79
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: This class stores information related to the possible data types for properties.
+  remarks: See <a href="https://www.wiki.sc4devotion.com/index.php?title=EXMP#ValueType">Value Types</a>.
+  example: []
+  syntax:
+    content: public enum DBPFProperty.PropertyDataType
+    content.vb: Public Enum DBPFProperty.PropertyDataType
+- uid: csDBPF.DBPFProperty.PropertyDataType.UNKNOWN
+  commentId: F:csDBPF.DBPFProperty.PropertyDataType.UNKNOWN
+  id: UNKNOWN
+  parent: csDBPF.DBPFProperty.PropertyDataType
+  langs:
+  - csharp
+  - vb
+  name: UNKNOWN
+  nameWithType: DBPFProperty.PropertyDataType.UNKNOWN
+  fullName: csDBPF.DBPFProperty.PropertyDataType.UNKNOWN
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFProperty.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: UNKNOWN
+    path: ../Properties/DBPFProperty.cs
+    startLine: 83
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Unknown type. Equivalent to null
+  example: []
+  syntax:
+    content: UNKNOWN = 0
+    return:
+      type: csDBPF.DBPFProperty.PropertyDataType
+- uid: csDBPF.DBPFProperty.PropertyDataType.UINT8
+  commentId: F:csDBPF.DBPFProperty.PropertyDataType.UINT8
+  id: UINT8
+  parent: csDBPF.DBPFProperty.PropertyDataType
+  langs:
+  - csharp
+  - vb
+  name: UINT8
+  nameWithType: DBPFProperty.PropertyDataType.UINT8
+  fullName: csDBPF.DBPFProperty.PropertyDataType.UINT8
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFProperty.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: UINT8
+    path: ../Properties/DBPFProperty.cs
+    startLine: 87
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Equivalent to System.Byte
+  example: []
+  syntax:
+    content: UINT8 = 256
+    return:
+      type: csDBPF.DBPFProperty.PropertyDataType
+- uid: csDBPF.DBPFProperty.PropertyDataType.UINT16
+  commentId: F:csDBPF.DBPFProperty.PropertyDataType.UINT16
+  id: UINT16
+  parent: csDBPF.DBPFProperty.PropertyDataType
+  langs:
+  - csharp
+  - vb
+  name: UINT16
+  nameWithType: DBPFProperty.PropertyDataType.UINT16
+  fullName: csDBPF.DBPFProperty.PropertyDataType.UINT16
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFProperty.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: UINT16
+    path: ../Properties/DBPFProperty.cs
+    startLine: 91
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Equivalent to System.UInt16
+  example: []
+  syntax:
+    content: UINT16 = 512
+    return:
+      type: csDBPF.DBPFProperty.PropertyDataType
+- uid: csDBPF.DBPFProperty.PropertyDataType.UINT32
+  commentId: F:csDBPF.DBPFProperty.PropertyDataType.UINT32
+  id: UINT32
+  parent: csDBPF.DBPFProperty.PropertyDataType
+  langs:
+  - csharp
+  - vb
+  name: UINT32
+  nameWithType: DBPFProperty.PropertyDataType.UINT32
+  fullName: csDBPF.DBPFProperty.PropertyDataType.UINT32
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFProperty.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: UINT32
+    path: ../Properties/DBPFProperty.cs
+    startLine: 95
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Equivalent to System.UInt32
+  example: []
+  syntax:
+    content: UINT32 = 768
+    return:
+      type: csDBPF.DBPFProperty.PropertyDataType
+- uid: csDBPF.DBPFProperty.PropertyDataType.SINT32
+  commentId: F:csDBPF.DBPFProperty.PropertyDataType.SINT32
+  id: SINT32
+  parent: csDBPF.DBPFProperty.PropertyDataType
+  langs:
+  - csharp
+  - vb
+  name: SINT32
+  nameWithType: DBPFProperty.PropertyDataType.SINT32
+  fullName: csDBPF.DBPFProperty.PropertyDataType.SINT32
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFProperty.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: SINT32
+    path: ../Properties/DBPFProperty.cs
+    startLine: 99
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Equivalent to System.Int32
+  example: []
+  syntax:
+    content: SINT32 = 1792
+    return:
+      type: csDBPF.DBPFProperty.PropertyDataType
+- uid: csDBPF.DBPFProperty.PropertyDataType.SINT64
+  commentId: F:csDBPF.DBPFProperty.PropertyDataType.SINT64
+  id: SINT64
+  parent: csDBPF.DBPFProperty.PropertyDataType
+  langs:
+  - csharp
+  - vb
+  name: SINT64
+  nameWithType: DBPFProperty.PropertyDataType.SINT64
+  fullName: csDBPF.DBPFProperty.PropertyDataType.SINT64
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFProperty.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: SINT64
+    path: ../Properties/DBPFProperty.cs
+    startLine: 103
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Equivalent to System.Int64
+  example: []
+  syntax:
+    content: SINT64 = 2048
+    return:
+      type: csDBPF.DBPFProperty.PropertyDataType
+- uid: csDBPF.DBPFProperty.PropertyDataType.FLOAT32
+  commentId: F:csDBPF.DBPFProperty.PropertyDataType.FLOAT32
+  id: FLOAT32
+  parent: csDBPF.DBPFProperty.PropertyDataType
+  langs:
+  - csharp
+  - vb
+  name: FLOAT32
+  nameWithType: DBPFProperty.PropertyDataType.FLOAT32
+  fullName: csDBPF.DBPFProperty.PropertyDataType.FLOAT32
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFProperty.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: FLOAT32
+    path: ../Properties/DBPFProperty.cs
+    startLine: 107
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Equivalent to System.Double
+  example: []
+  syntax:
+    content: FLOAT32 = 2304
+    return:
+      type: csDBPF.DBPFProperty.PropertyDataType
+- uid: csDBPF.DBPFProperty.PropertyDataType.BOOL
+  commentId: F:csDBPF.DBPFProperty.PropertyDataType.BOOL
+  id: BOOL
+  parent: csDBPF.DBPFProperty.PropertyDataType
+  langs:
+  - csharp
+  - vb
+  name: BOOL
+  nameWithType: DBPFProperty.PropertyDataType.BOOL
+  fullName: csDBPF.DBPFProperty.PropertyDataType.BOOL
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFProperty.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: BOOL
+    path: ../Properties/DBPFProperty.cs
+    startLine: 111
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Equivalent to System.Boolean
+  example: []
+  syntax:
+    content: BOOL = 2816
+    return:
+      type: csDBPF.DBPFProperty.PropertyDataType
+- uid: csDBPF.DBPFProperty.PropertyDataType.STRING
+  commentId: F:csDBPF.DBPFProperty.PropertyDataType.STRING
+  id: STRING
+  parent: csDBPF.DBPFProperty.PropertyDataType
+  langs:
+  - csharp
+  - vb
+  name: STRING
+  nameWithType: DBPFProperty.PropertyDataType.STRING
+  fullName: csDBPF.DBPFProperty.PropertyDataType.STRING
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFProperty.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: STRING
+    path: ../Properties/DBPFProperty.cs
+    startLine: 115
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Equivalent to System.String
+  example: []
+  syntax:
+    content: STRING = 3072
+    return:
+      type: csDBPF.DBPFProperty.PropertyDataType
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: csDBPF.DBPFProperty.PropertyDataType
+  commentId: T:csDBPF.DBPFProperty.PropertyDataType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.PropertyDataType
+  nameWithType: DBPFProperty.PropertyDataType
+  fullName: csDBPF.DBPFProperty.PropertyDataType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: PropertyDataType
+    href: csDBPF.DBPFProperty.PropertyDataType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: PropertyDataType
+    href: csDBPF.DBPFProperty.PropertyDataType.html

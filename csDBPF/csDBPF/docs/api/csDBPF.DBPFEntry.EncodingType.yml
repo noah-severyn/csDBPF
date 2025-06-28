@@ -1,0 +1,118 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFEntry.EncodingType
+  commentId: T:csDBPF.DBPFEntry.EncodingType
+  id: DBPFEntry.EncodingType
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFEntry.EncodingType.Binary
+  - csDBPF.DBPFEntry.EncodingType.Text
+  langs:
+  - csharp
+  - vb
+  name: DBPFEntry.EncodingType
+  nameWithType: DBPFEntry.EncodingType
+  fullName: csDBPF.DBPFEntry.EncodingType
+  type: Enum
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: EncodingType
+    path: ../Entries/DBPFEntry.cs
+    startLine: 192
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Specifies the encoding type for an entry or properties.
+  example: []
+  syntax:
+    content: public enum DBPFEntry.EncodingType
+    content.vb: Public Enum DBPFEntry.EncodingType
+- uid: csDBPF.DBPFEntry.EncodingType.Binary
+  commentId: F:csDBPF.DBPFEntry.EncodingType.Binary
+  id: Binary
+  parent: csDBPF.DBPFEntry.EncodingType
+  langs:
+  - csharp
+  - vb
+  name: Binary
+  nameWithType: DBPFEntry.EncodingType.Binary
+  fullName: csDBPF.DBPFEntry.EncodingType.Binary
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Binary
+    path: ../Entries/DBPFEntry.cs
+    startLine: 196
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Entry/property is encoded in binary format.
+  example: []
+  syntax:
+    content: Binary = 0
+    return:
+      type: csDBPF.DBPFEntry.EncodingType
+- uid: csDBPF.DBPFEntry.EncodingType.Text
+  commentId: F:csDBPF.DBPFEntry.EncodingType.Text
+  id: Text
+  parent: csDBPF.DBPFEntry.EncodingType
+  langs:
+  - csharp
+  - vb
+  name: Text
+  nameWithType: DBPFEntry.EncodingType.Text
+  fullName: csDBPF.DBPFEntry.EncodingType.Text
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Text
+    path: ../Entries/DBPFEntry.cs
+    startLine: 200
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Entry/property is encoded in text format.
+  example: []
+  syntax:
+    content: Text = 1
+    return:
+      type: csDBPF.DBPFEntry.EncodingType
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: csDBPF.DBPFEntry.EncodingType
+  commentId: T:csDBPF.DBPFEntry.EncodingType
+  parent: csDBPF
+  href: csDBPF.DBPFEntry.html
+  name: DBPFEntry.EncodingType
+  nameWithType: DBPFEntry.EncodingType
+  fullName: csDBPF.DBPFEntry.EncodingType
+  spec.csharp:
+  - uid: csDBPF.DBPFEntry
+    name: DBPFEntry
+    href: csDBPF.DBPFEntry.html
+  - name: .
+  - uid: csDBPF.DBPFEntry.EncodingType
+    name: EncodingType
+    href: csDBPF.DBPFEntry.EncodingType.html
+  spec.vb:
+  - uid: csDBPF.DBPFEntry
+    name: DBPFEntry
+    href: csDBPF.DBPFEntry.html
+  - name: .
+  - uid: csDBPF.DBPFEntry.EncodingType
+    name: EncodingType
+    href: csDBPF.DBPFEntry.EncodingType.html

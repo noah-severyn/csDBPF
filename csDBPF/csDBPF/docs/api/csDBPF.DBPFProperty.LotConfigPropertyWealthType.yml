@@ -1,0 +1,176 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  id: DBPFProperty.LotConfigPropertyWealthType
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFProperty.LotConfigPropertyWealthType.High
+  - csDBPF.DBPFProperty.LotConfigPropertyWealthType.Low
+  - csDBPF.DBPFProperty.LotConfigPropertyWealthType.Medium
+  - csDBPF.DBPFProperty.LotConfigPropertyWealthType.None
+  langs:
+  - csharp
+  - vb
+  name: DBPFProperty.LotConfigPropertyWealthType
+  nameWithType: DBPFProperty.LotConfigPropertyWealthType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  type: Enum
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LotConfigPropertyWealthType
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 239
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines the <a href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">wealth</a> for a lot.
+  example: []
+  syntax:
+    content: public enum DBPFProperty.LotConfigPropertyWealthType
+    content.vb: Public Enum DBPFProperty.LotConfigPropertyWealthType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType.None
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyWealthType.None
+  id: None
+  parent: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: DBPFProperty.LotConfigPropertyWealthType.None
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyWealthType.None
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: None
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 243
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: No wealth (civic, landmark, etc.).
+  example: []
+  syntax:
+    content: None = 0
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType.Low
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyWealthType.Low
+  id: Low
+  parent: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  langs:
+  - csharp
+  - vb
+  name: Low
+  nameWithType: DBPFProperty.LotConfigPropertyWealthType.Low
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyWealthType.Low
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Low
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 247
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Low Wealth ($)
+  example: []
+  syntax:
+    content: Low = 1
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType.Medium
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyWealthType.Medium
+  id: Medium
+  parent: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  langs:
+  - csharp
+  - vb
+  name: Medium
+  nameWithType: DBPFProperty.LotConfigPropertyWealthType.Medium
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyWealthType.Medium
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Medium
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 251
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Medium Wealth ($$)
+  example: []
+  syntax:
+    content: Medium = 2
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType.High
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyWealthType.High
+  id: High
+  parent: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  langs:
+  - csharp
+  - vb
+  name: High
+  nameWithType: DBPFProperty.LotConfigPropertyWealthType.High
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyWealthType.High
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: High
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 255
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: High Wealth ($$$)
+  example: []
+  syntax:
+    content: High = 3
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.LotConfigPropertyWealthType
+  nameWithType: DBPFProperty.LotConfigPropertyWealthType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+    name: LotConfigPropertyWealthType
+    href: csDBPF.DBPFProperty.LotConfigPropertyWealthType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+    name: LotConfigPropertyWealthType
+    href: csDBPF.DBPFProperty.LotConfigPropertyWealthType.html

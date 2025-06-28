@@ -1,0 +1,1107 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFPropertyString
+  commentId: T:csDBPF.DBPFPropertyString
+  id: DBPFPropertyString
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFPropertyString.#ctor(System.String,csDBPF.DBPFEntry.EncodingType)
+  - csDBPF.DBPFPropertyString.#ctor(csDBPF.DBPFEntry.EncodingType)
+  - csDBPF.DBPFPropertyString.DataType
+  - csDBPF.DBPFPropertyString.Encoding
+  - csDBPF.DBPFPropertyString.GetData
+  - csDBPF.DBPFPropertyString.GetData(System.Int32)
+  - csDBPF.DBPFPropertyString.ID
+  - csDBPF.DBPFPropertyString.NumberOfReps
+  - csDBPF.DBPFPropertyString.SetData(System.Collections.IEnumerable)
+  - csDBPF.DBPFPropertyString.ToBytes
+  - csDBPF.DBPFPropertyString.ToString
+  langs:
+  - csharp
+  - vb
+  name: DBPFPropertyString
+  nameWithType: DBPFPropertyString
+  fullName: csDBPF.DBPFPropertyString
+  type: Class
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: DBPFPropertyString
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 11
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Represents a property storing a string value.
+  example: []
+  syntax:
+    content: 'public class DBPFPropertyString : DBPFProperty'
+    content.vb: Public Class DBPFPropertyString Inherits DBPFProperty
+  inheritance:
+  - System.Object
+  - csDBPF.DBPFProperty
+  inheritedMembers:
+  - csDBPF.DBPFProperty.LookupDataType(System.String)
+  - csDBPF.DBPFProperty.LookupDataTypeName(csDBPF.DBPFProperty.PropertyDataType)
+  - csDBPF.DBPFProperty.LookupDataTypeLength(csDBPF.DBPFProperty.PropertyDataType)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: csDBPF.DBPFPropertyString.ID
+  commentId: P:csDBPF.DBPFPropertyString.ID
+  id: ID
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: ID
+  nameWithType: DBPFPropertyString.ID
+  fullName: csDBPF.DBPFPropertyString.ID
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ID
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 15
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Hexadecimal identifier for this property. <xref href="csDBPF.XMLExemplarProperty" data-throw-if-not-resolved="false"></xref> and <xref href="csDBPF.XMLProperties.AllProperties" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public override uint ID { get; set; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public Overrides Property ID As UInteger
+  overridden: csDBPF.DBPFProperty.ID
+  overload: csDBPF.DBPFPropertyString.ID*
+- uid: csDBPF.DBPFPropertyString.DataType
+  commentId: P:csDBPF.DBPFPropertyString.DataType
+  id: DataType
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: DataType
+  nameWithType: DBPFPropertyString.DataType
+  fullName: csDBPF.DBPFPropertyString.DataType
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: DataType
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 20
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: The <xref href="csDBPF.DBPFProperty.PropertyDataType" data-throw-if-not-resolved="false"></xref> for this property.
+  example: []
+  syntax:
+    content: public override DBPFProperty.PropertyDataType DataType { get; }
+    parameters: []
+    return:
+      type: csDBPF.DBPFProperty.PropertyDataType
+    content.vb: Public Overrides ReadOnly Property DataType As DBPFProperty.PropertyDataType
+  overridden: csDBPF.DBPFProperty.DataType
+  overload: csDBPF.DBPFPropertyString.DataType*
+- uid: csDBPF.DBPFPropertyString.NumberOfReps
+  commentId: P:csDBPF.DBPFPropertyString.NumberOfReps
+  id: NumberOfReps
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: NumberOfReps
+  nameWithType: DBPFPropertyString.NumberOfReps
+  fullName: csDBPF.DBPFPropertyString.NumberOfReps
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: NumberOfReps
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 28
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: The number of repetitions of <xref href="csDBPF.DBPFProperty.PropertyDataType" data-throw-if-not-resolved="false"></xref> this property has. This informs (in part) how many bytes to read for this property. Initialized to 0.
+  remarks: 'Determining the count partially depends on the encoding type. For binary encoded string-type properties: length of string. For text encoded string-type properties: always 1.'
+  example: []
+  syntax:
+    content: public override int NumberOfReps { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Overrides Property NumberOfReps As Integer
+  overridden: csDBPF.DBPFProperty.NumberOfReps
+  overload: csDBPF.DBPFPropertyString.NumberOfReps*
+- uid: csDBPF.DBPFPropertyString.Encoding
+  commentId: P:csDBPF.DBPFPropertyString.Encoding
+  id: Encoding
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: Encoding
+  nameWithType: DBPFPropertyString.Encoding
+  fullName: csDBPF.DBPFPropertyString.Encoding
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Encoding
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 36
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Specifies the encoding style (Binary or Text) of the property.
+  remarks: This property affects <xref href="csDBPF.DBPFPropertyString.NumberOfReps" data-throw-if-not-resolved="false"></xref>. This also determines how this property will be written to file.
+  example: []
+  syntax:
+    content: public override DBPFEntry.EncodingType Encoding { get; set; }
+    parameters: []
+    return:
+      type: csDBPF.DBPFEntry.EncodingType
+    content.vb: Public Overrides Property Encoding As DBPFEntry.EncodingType
+  overridden: csDBPF.DBPFProperty.Encoding
+  overload: csDBPF.DBPFPropertyString.Encoding*
+- uid: csDBPF.DBPFPropertyString.#ctor(csDBPF.DBPFEntry.EncodingType)
+  commentId: M:csDBPF.DBPFPropertyString.#ctor(csDBPF.DBPFEntry.EncodingType)
+  id: '#ctor(csDBPF.DBPFEntry.EncodingType)'
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: DBPFPropertyString(EncodingType)
+  nameWithType: DBPFPropertyString.DBPFPropertyString(DBPFEntry.EncodingType)
+  fullName: csDBPF.DBPFPropertyString.DBPFPropertyString(csDBPF.DBPFEntry.EncodingType)
+  type: Constructor
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: .ctor
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 50
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Construct a new DBPFProperty with a string data type.
+  example: []
+  syntax:
+    content: public DBPFPropertyString(DBPFEntry.EncodingType encodingType = EncodingType.Binary)
+    parameters:
+    - id: encodingType
+      type: csDBPF.DBPFEntry.EncodingType
+      description: Text or Binary encoding type
+    content.vb: Public Sub New(encodingType As DBPFEntry.EncodingType = EncodingType.Binary)
+  overload: csDBPF.DBPFPropertyString.#ctor*
+  nameWithType.vb: DBPFPropertyString.New(DBPFEntry.EncodingType)
+  fullName.vb: csDBPF.DBPFPropertyString.New(csDBPF.DBPFEntry.EncodingType)
+  name.vb: New(EncodingType)
+- uid: csDBPF.DBPFPropertyString.#ctor(System.String,csDBPF.DBPFEntry.EncodingType)
+  commentId: M:csDBPF.DBPFPropertyString.#ctor(System.String,csDBPF.DBPFEntry.EncodingType)
+  id: '#ctor(System.String,csDBPF.DBPFEntry.EncodingType)'
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: DBPFPropertyString(string, EncodingType)
+  nameWithType: DBPFPropertyString.DBPFPropertyString(string, DBPFEntry.EncodingType)
+  fullName: csDBPF.DBPFPropertyString.DBPFPropertyString(string, csDBPF.DBPFEntry.EncodingType)
+  type: Constructor
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: .ctor
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 60
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Construct a DBPFProperty with a string data type holding a specified string.
+  example: []
+  syntax:
+    content: public DBPFPropertyString(string value, DBPFEntry.EncodingType encodingType = EncodingType.Binary)
+    parameters:
+    - id: value
+      type: System.String
+      description: String to set
+    - id: encodingType
+      type: csDBPF.DBPFEntry.EncodingType
+      description: Text or Binary encoding type
+    content.vb: Public Sub New(value As String, encodingType As DBPFEntry.EncodingType = EncodingType.Binary)
+  overload: csDBPF.DBPFPropertyString.#ctor*
+  nameWithType.vb: DBPFPropertyString.New(String, DBPFEntry.EncodingType)
+  fullName.vb: csDBPF.DBPFPropertyString.New(String, csDBPF.DBPFEntry.EncodingType)
+  name.vb: New(String, EncodingType)
+- uid: csDBPF.DBPFPropertyString.ToString
+  commentId: M:csDBPF.DBPFPropertyString.ToString
+  id: ToString
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: DBPFPropertyString.ToString()
+  fullName: csDBPF.DBPFPropertyString.ToString()
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ToString
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 74
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Returns a string that represents the current object.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: A string that represents the current object.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.Object.ToString
+  overload: csDBPF.DBPFPropertyString.ToString*
+- uid: csDBPF.DBPFPropertyString.GetData
+  commentId: M:csDBPF.DBPFPropertyString.GetData
+  id: GetData
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: GetData()
+  nameWithType: DBPFPropertyString.GetData()
+  fullName: csDBPF.DBPFPropertyString.GetData()
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: GetData
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 88
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Returns the data value stored in this property.
+  example: []
+  syntax:
+    content: public override string GetData()
+    return:
+      type: System.String
+      description: The data value stored in this property
+    content.vb: Public Overrides Function GetData() As String
+  overridden: csDBPF.DBPFProperty.GetData
+  overload: csDBPF.DBPFPropertyString.GetData*
+- uid: csDBPF.DBPFPropertyString.GetData(System.Int32)
+  commentId: M:csDBPF.DBPFPropertyString.GetData(System.Int32)
+  id: GetData(System.Int32)
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: GetData(int)
+  nameWithType: DBPFPropertyString.GetData(int)
+  fullName: csDBPF.DBPFPropertyString.GetData(int)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: GetData
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 101
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Returns the value stored in this property at the given position.
+  remarks: The position parameter is ignored because type DBPFPropertyString only stores one string as its data.
+  example: []
+  syntax:
+    content: public override string GetData(int position)
+    parameters:
+    - id: position
+      type: System.Int32
+      description: Position (or rep) to return
+    return:
+      type: System.String
+      description: The data value at the specified position
+    content.vb: Public Overrides Function GetData(position As Integer) As String
+  overridden: csDBPF.DBPFProperty.GetData(System.Int32)
+  overload: csDBPF.DBPFPropertyString.GetData*
+  nameWithType.vb: DBPFPropertyString.GetData(Integer)
+  fullName.vb: csDBPF.DBPFPropertyString.GetData(Integer)
+  name.vb: GetData(Integer)
+- uid: csDBPF.DBPFPropertyString.SetData(System.Collections.IEnumerable)
+  commentId: M:csDBPF.DBPFPropertyString.SetData(System.Collections.IEnumerable)
+  id: SetData(System.Collections.IEnumerable)
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: SetData(IEnumerable)
+  nameWithType: DBPFPropertyString.SetData(IEnumerable)
+  fullName: csDBPF.DBPFPropertyString.SetData(System.Collections.IEnumerable)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: SetData
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 111
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Set the data value stored in this property. Value should be of type string.
+  example: []
+  syntax:
+    content: public override void SetData(IEnumerable value)
+    parameters:
+    - id: value
+      type: System.Collections.IEnumerable
+      description: String to set
+    content.vb: Public Overrides Sub SetData(value As IEnumerable)
+  overridden: csDBPF.DBPFProperty.SetData(System.Collections.IEnumerable)
+  overload: csDBPF.DBPFPropertyString.SetData*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Argument to DBPFPropertyString.SetData must be string.
+- uid: csDBPF.DBPFPropertyString.ToBytes
+  commentId: M:csDBPF.DBPFPropertyString.ToBytes
+  id: ToBytes
+  parent: csDBPF.DBPFPropertyString
+  langs:
+  - csharp
+  - vb
+  name: ToBytes()
+  nameWithType: DBPFPropertyString.ToBytes()
+  fullName: csDBPF.DBPFPropertyString.ToBytes()
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyString.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ToBytes
+    path: ../Properties/DBPFPropertyString.cs
+    startLine: 137
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Process the features and data values of this property into a byte array according to the set encoding type.
+  example: []
+  syntax:
+    content: public override byte[] ToBytes()
+    return:
+      type: System.Byte[]
+      description: A byte array encoding all information for this property
+    content.vb: Public Overrides Function ToBytes() As Byte()
+  overridden: csDBPF.DBPFProperty.ToBytes
+  overload: csDBPF.DBPFPropertyString.ToBytes*
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: csDBPF.DBPFProperty
+  commentId: T:csDBPF.DBPFProperty
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty
+  nameWithType: DBPFProperty
+  fullName: csDBPF.DBPFProperty
+- uid: csDBPF.DBPFProperty.LookupDataType(System.String)
+  commentId: M:csDBPF.DBPFProperty.LookupDataType(System.String)
+  parent: csDBPF.DBPFProperty
+  isExternal: true
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_LookupDataType_System_String_
+  name: LookupDataType(string)
+  nameWithType: DBPFProperty.LookupDataType(string)
+  fullName: csDBPF.DBPFProperty.LookupDataType(string)
+  nameWithType.vb: DBPFProperty.LookupDataType(String)
+  fullName.vb: csDBPF.DBPFProperty.LookupDataType(String)
+  name.vb: LookupDataType(String)
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty.LookupDataType(System.String)
+    name: LookupDataType
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_LookupDataType_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: csDBPF.DBPFProperty.LookupDataType(System.String)
+    name: LookupDataType
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_LookupDataType_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: csDBPF.DBPFProperty.LookupDataTypeName(csDBPF.DBPFProperty.PropertyDataType)
+  commentId: M:csDBPF.DBPFProperty.LookupDataTypeName(csDBPF.DBPFProperty.PropertyDataType)
+  parent: csDBPF.DBPFProperty
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_LookupDataTypeName_csDBPF_DBPFProperty_PropertyDataType_
+  name: LookupDataTypeName(PropertyDataType)
+  nameWithType: DBPFProperty.LookupDataTypeName(DBPFProperty.PropertyDataType)
+  fullName: csDBPF.DBPFProperty.LookupDataTypeName(csDBPF.DBPFProperty.PropertyDataType)
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty.LookupDataTypeName(csDBPF.DBPFProperty.PropertyDataType)
+    name: LookupDataTypeName
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_LookupDataTypeName_csDBPF_DBPFProperty_PropertyDataType_
+  - name: (
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: PropertyDataType
+    href: csDBPF.DBPFProperty.PropertyDataType.html
+  - name: )
+  spec.vb:
+  - uid: csDBPF.DBPFProperty.LookupDataTypeName(csDBPF.DBPFProperty.PropertyDataType)
+    name: LookupDataTypeName
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_LookupDataTypeName_csDBPF_DBPFProperty_PropertyDataType_
+  - name: (
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: PropertyDataType
+    href: csDBPF.DBPFProperty.PropertyDataType.html
+  - name: )
+- uid: csDBPF.DBPFProperty.LookupDataTypeLength(csDBPF.DBPFProperty.PropertyDataType)
+  commentId: M:csDBPF.DBPFProperty.LookupDataTypeLength(csDBPF.DBPFProperty.PropertyDataType)
+  parent: csDBPF.DBPFProperty
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_LookupDataTypeLength_csDBPF_DBPFProperty_PropertyDataType_
+  name: LookupDataTypeLength(PropertyDataType)
+  nameWithType: DBPFProperty.LookupDataTypeLength(DBPFProperty.PropertyDataType)
+  fullName: csDBPF.DBPFProperty.LookupDataTypeLength(csDBPF.DBPFProperty.PropertyDataType)
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty.LookupDataTypeLength(csDBPF.DBPFProperty.PropertyDataType)
+    name: LookupDataTypeLength
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_LookupDataTypeLength_csDBPF_DBPFProperty_PropertyDataType_
+  - name: (
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: PropertyDataType
+    href: csDBPF.DBPFProperty.PropertyDataType.html
+  - name: )
+  spec.vb:
+  - uid: csDBPF.DBPFProperty.LookupDataTypeLength(csDBPF.DBPFProperty.PropertyDataType)
+    name: LookupDataTypeLength
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_LookupDataTypeLength_csDBPF_DBPFProperty_PropertyDataType_
+  - name: (
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: PropertyDataType
+    href: csDBPF.DBPFProperty.PropertyDataType.html
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: csDBPF.XMLExemplarProperty
+  commentId: T:csDBPF.XMLExemplarProperty
+  parent: csDBPF
+  href: csDBPF.XMLExemplarProperty.html
+  name: XMLExemplarProperty
+  nameWithType: XMLExemplarProperty
+  fullName: csDBPF.XMLExemplarProperty
+- uid: csDBPF.XMLProperties.AllProperties
+  commentId: P:csDBPF.XMLProperties.AllProperties
+  href: csDBPF.XMLProperties.html#csDBPF_XMLProperties_AllProperties
+  name: AllProperties
+  nameWithType: XMLProperties.AllProperties
+  fullName: csDBPF.XMLProperties.AllProperties
+- uid: csDBPF.DBPFProperty.ID
+  commentId: P:csDBPF.DBPFProperty.ID
+  parent: csDBPF.DBPFProperty
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_ID
+  name: ID
+  nameWithType: DBPFProperty.ID
+  fullName: csDBPF.DBPFProperty.ID
+- uid: csDBPF.DBPFPropertyString.ID*
+  commentId: Overload:csDBPF.DBPFPropertyString.ID
+  href: csDBPF.DBPFPropertyString.html#csDBPF_DBPFPropertyString_ID
+  name: ID
+  nameWithType: DBPFPropertyString.ID
+  fullName: csDBPF.DBPFPropertyString.ID
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: csDBPF.DBPFProperty.PropertyDataType
+  commentId: T:csDBPF.DBPFProperty.PropertyDataType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.PropertyDataType
+  nameWithType: DBPFProperty.PropertyDataType
+  fullName: csDBPF.DBPFProperty.PropertyDataType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: PropertyDataType
+    href: csDBPF.DBPFProperty.PropertyDataType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: PropertyDataType
+    href: csDBPF.DBPFProperty.PropertyDataType.html
+- uid: csDBPF.DBPFProperty.DataType
+  commentId: P:csDBPF.DBPFProperty.DataType
+  parent: csDBPF.DBPFProperty
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_DataType
+  name: DataType
+  nameWithType: DBPFProperty.DataType
+  fullName: csDBPF.DBPFProperty.DataType
+- uid: csDBPF.DBPFPropertyString.DataType*
+  commentId: Overload:csDBPF.DBPFPropertyString.DataType
+  href: csDBPF.DBPFPropertyString.html#csDBPF_DBPFPropertyString_DataType
+  name: DataType
+  nameWithType: DBPFPropertyString.DataType
+  fullName: csDBPF.DBPFPropertyString.DataType
+- uid: csDBPF.DBPFProperty.NumberOfReps
+  commentId: P:csDBPF.DBPFProperty.NumberOfReps
+  parent: csDBPF.DBPFProperty
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_NumberOfReps
+  name: NumberOfReps
+  nameWithType: DBPFProperty.NumberOfReps
+  fullName: csDBPF.DBPFProperty.NumberOfReps
+- uid: csDBPF.DBPFPropertyString.NumberOfReps*
+  commentId: Overload:csDBPF.DBPFPropertyString.NumberOfReps
+  href: csDBPF.DBPFPropertyString.html#csDBPF_DBPFPropertyString_NumberOfReps
+  name: NumberOfReps
+  nameWithType: DBPFPropertyString.NumberOfReps
+  fullName: csDBPF.DBPFPropertyString.NumberOfReps
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: csDBPF.DBPFPropertyString.NumberOfReps
+  commentId: P:csDBPF.DBPFPropertyString.NumberOfReps
+  href: csDBPF.DBPFPropertyString.html#csDBPF_DBPFPropertyString_NumberOfReps
+  name: NumberOfReps
+  nameWithType: DBPFPropertyString.NumberOfReps
+  fullName: csDBPF.DBPFPropertyString.NumberOfReps
+- uid: csDBPF.DBPFProperty.Encoding
+  commentId: P:csDBPF.DBPFProperty.Encoding
+  parent: csDBPF.DBPFProperty
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_Encoding
+  name: Encoding
+  nameWithType: DBPFProperty.Encoding
+  fullName: csDBPF.DBPFProperty.Encoding
+- uid: csDBPF.DBPFPropertyString.Encoding*
+  commentId: Overload:csDBPF.DBPFPropertyString.Encoding
+  href: csDBPF.DBPFPropertyString.html#csDBPF_DBPFPropertyString_Encoding
+  name: Encoding
+  nameWithType: DBPFPropertyString.Encoding
+  fullName: csDBPF.DBPFPropertyString.Encoding
+- uid: csDBPF.DBPFEntry.EncodingType
+  commentId: T:csDBPF.DBPFEntry.EncodingType
+  parent: csDBPF
+  href: csDBPF.DBPFEntry.html
+  name: DBPFEntry.EncodingType
+  nameWithType: DBPFEntry.EncodingType
+  fullName: csDBPF.DBPFEntry.EncodingType
+  spec.csharp:
+  - uid: csDBPF.DBPFEntry
+    name: DBPFEntry
+    href: csDBPF.DBPFEntry.html
+  - name: .
+  - uid: csDBPF.DBPFEntry.EncodingType
+    name: EncodingType
+    href: csDBPF.DBPFEntry.EncodingType.html
+  spec.vb:
+  - uid: csDBPF.DBPFEntry
+    name: DBPFEntry
+    href: csDBPF.DBPFEntry.html
+  - name: .
+  - uid: csDBPF.DBPFEntry.EncodingType
+    name: EncodingType
+    href: csDBPF.DBPFEntry.EncodingType.html
+- uid: csDBPF.DBPFPropertyString.#ctor*
+  commentId: Overload:csDBPF.DBPFPropertyString.#ctor
+  href: csDBPF.DBPFPropertyString.html#csDBPF_DBPFPropertyString__ctor_csDBPF_DBPFEntry_EncodingType_
+  name: DBPFPropertyString
+  nameWithType: DBPFPropertyString.DBPFPropertyString
+  fullName: csDBPF.DBPFPropertyString.DBPFPropertyString
+  nameWithType.vb: DBPFPropertyString.New
+  fullName.vb: csDBPF.DBPFPropertyString.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: csDBPF.DBPFPropertyString.ToString*
+  commentId: Overload:csDBPF.DBPFPropertyString.ToString
+  href: csDBPF.DBPFPropertyString.html#csDBPF_DBPFPropertyString_ToString
+  name: ToString
+  nameWithType: DBPFPropertyString.ToString
+  fullName: csDBPF.DBPFPropertyString.ToString
+- uid: csDBPF.DBPFProperty.GetData
+  commentId: M:csDBPF.DBPFProperty.GetData
+  parent: csDBPF.DBPFProperty
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_GetData
+  name: GetData()
+  nameWithType: DBPFProperty.GetData()
+  fullName: csDBPF.DBPFProperty.GetData()
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty.GetData
+    name: GetData
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_GetData
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: csDBPF.DBPFProperty.GetData
+    name: GetData
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_GetData
+  - name: (
+  - name: )
+- uid: csDBPF.DBPFPropertyString.GetData*
+  commentId: Overload:csDBPF.DBPFPropertyString.GetData
+  href: csDBPF.DBPFPropertyString.html#csDBPF_DBPFPropertyString_GetData
+  name: GetData
+  nameWithType: DBPFPropertyString.GetData
+  fullName: csDBPF.DBPFPropertyString.GetData
+- uid: csDBPF.DBPFProperty.GetData(System.Int32)
+  commentId: M:csDBPF.DBPFProperty.GetData(System.Int32)
+  parent: csDBPF.DBPFProperty
+  isExternal: true
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_GetData_System_Int32_
+  name: GetData(int)
+  nameWithType: DBPFProperty.GetData(int)
+  fullName: csDBPF.DBPFProperty.GetData(int)
+  nameWithType.vb: DBPFProperty.GetData(Integer)
+  fullName.vb: csDBPF.DBPFProperty.GetData(Integer)
+  name.vb: GetData(Integer)
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty.GetData(System.Int32)
+    name: GetData
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_GetData_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: csDBPF.DBPFProperty.GetData(System.Int32)
+    name: GetData
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_GetData_System_Int32_
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentexception
+  name: ArgumentException
+  nameWithType: ArgumentException
+  fullName: System.ArgumentException
+- uid: csDBPF.DBPFProperty.SetData(System.Collections.IEnumerable)
+  commentId: M:csDBPF.DBPFProperty.SetData(System.Collections.IEnumerable)
+  parent: csDBPF.DBPFProperty
+  isExternal: true
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_SetData_System_Collections_IEnumerable_
+  name: SetData(IEnumerable)
+  nameWithType: DBPFProperty.SetData(IEnumerable)
+  fullName: csDBPF.DBPFProperty.SetData(System.Collections.IEnumerable)
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty.SetData(System.Collections.IEnumerable)
+    name: SetData
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_SetData_System_Collections_IEnumerable_
+  - name: (
+  - uid: System.Collections.IEnumerable
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  - name: )
+  spec.vb:
+  - uid: csDBPF.DBPFProperty.SetData(System.Collections.IEnumerable)
+    name: SetData
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_SetData_System_Collections_IEnumerable_
+  - name: (
+  - uid: System.Collections.IEnumerable
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  - name: )
+- uid: csDBPF.DBPFPropertyString.SetData*
+  commentId: Overload:csDBPF.DBPFPropertyString.SetData
+  href: csDBPF.DBPFPropertyString.html#csDBPF_DBPFPropertyString_SetData_System_Collections_IEnumerable_
+  name: SetData
+  nameWithType: DBPFPropertyString.SetData
+  fullName: csDBPF.DBPFPropertyString.SetData
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: csDBPF.DBPFProperty.ToBytes
+  commentId: M:csDBPF.DBPFProperty.ToBytes
+  parent: csDBPF.DBPFProperty
+  href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_ToBytes
+  name: ToBytes()
+  nameWithType: DBPFProperty.ToBytes()
+  fullName: csDBPF.DBPFProperty.ToBytes()
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty.ToBytes
+    name: ToBytes
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_ToBytes
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: csDBPF.DBPFProperty.ToBytes
+    name: ToBytes
+    href: csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_ToBytes
+  - name: (
+  - name: )
+- uid: csDBPF.DBPFPropertyString.ToBytes*
+  commentId: Overload:csDBPF.DBPFPropertyString.ToBytes
+  href: csDBPF.DBPFPropertyString.html#csDBPF_DBPFPropertyString_ToBytes
+  name: ToBytes
+  nameWithType: DBPFPropertyString.ToBytes
+  fullName: csDBPF.DBPFPropertyString.ToBytes
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )

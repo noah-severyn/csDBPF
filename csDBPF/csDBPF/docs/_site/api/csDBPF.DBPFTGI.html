@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class DBPFTGI | csDBPF </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class DBPFTGI | csDBPF ">
+      
+      <meta name="description" content="A DBPFTGI encapsulates a Type, Group, Instance identifier.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/noah-severyn/csDBPF/new/docs/apiSpec/new?filename=csDBPF_DBPFTGI.md&amp;value=---%0Auid%3A%20csDBPF.DBPFTGI%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="csDBPF">
+            csDBPF
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="csDBPF.DBPFTGI">
+
+
+
+  <h1 id="csDBPF_DBPFTGI" data-uid="csDBPF.DBPFTGI" class="text-break">
+Class DBPFTGI  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L232"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="csDBPF.html">csDBPF</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>csDBPF.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A DBPFTGI encapsulates a Type, Group, Instance identifier.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class DBPFTGI</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">DBPFTGI</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="csDBPF_DBPFTGI_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Common known entry types are listed in <span class="xref">csDBPF.DBPFTGI.KnownEntries</span>.</p>
+</div>
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="csDBPF_DBPFTGI_BLANKTGI" data-uid="csDBPF.DBPFTGI.BLANKTGI">
+  BLANKTGI
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L337"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>BLANKTGI (0, 0, 0)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI BLANKTGI</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_COHORT" data-uid="csDBPF.DBPFTGI.COHORT">
+  COHORT
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L282"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Cohort file (0x05342861, #, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI COHORT</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_DIRECTORY" data-uid="csDBPF.DBPFTGI.DIRECTORY">
+  DIRECTORY
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L252"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Directory file (0xe86b1eef, 0xe86b1eef, 0x286b1f03)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI DIRECTORY</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EFFDIR" data-uid="csDBPF.DBPFTGI.EFFDIR">
+  EFFDIR
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L327"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Effect Directory file (0xea5118b0, #, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EFFDIR</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR" data-uid="csDBPF.DBPFTGI.EXEMPLAR">
+  EXEMPLAR
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L280"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: LotInfo, LotConfig (0x6534284a, #, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_AVENUE" data-uid="csDBPF.DBPFTGI.EXEMPLAR_AVENUE">
+  EXEMPLAR_AVENUE
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L262"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: avenue network (0x6534284a, 0xcb730fac, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_AVENUE</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_DIRTROAD" data-uid="csDBPF.DBPFTGI.EXEMPLAR_DIRTROAD">
+  EXEMPLAR_DIRTROAD
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L268"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: dirt road/ANT/RHW network (0x6534284a, 0x6be08658, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_DIRTROAD</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_GROUNDHIGHWAY" data-uid="csDBPF.DBPFTGI.EXEMPLAR_GROUNDHIGHWAY">
+  EXEMPLAR_GROUNDHIGHWAY
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L266"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: ground highway network (0x6534284a, 0xebe084d1, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_GROUNDHIGHWAY</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_HIGHWAY" data-uid="csDBPF.DBPFTGI.EXEMPLAR_HIGHWAY">
+  EXEMPLAR_HIGHWAY
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: elevated highway network (0x6534284a, 0xa8434037, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_HIGHWAY</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_LIGHTRAIL" data-uid="csDBPF.DBPFTGI.EXEMPLAR_LIGHTRAIL">
+  EXEMPLAR_LIGHTRAIL
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L272"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: light rail network (0x6534284a, 0x2b79dffb, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_LIGHTRAIL</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_MONORAIL" data-uid="csDBPF.DBPFTGI.EXEMPLAR_MONORAIL">
+  EXEMPLAR_MONORAIL
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L274"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: monorail network (0x6534284a, 0xebe084c2, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_MONORAIL</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_ONEWAYROAD" data-uid="csDBPF.DBPFTGI.EXEMPLAR_ONEWAYROAD">
+  EXEMPLAR_ONEWAYROAD
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L260"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: one-way road network (0x6534284a, 0xcbe084cb, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_ONEWAYROAD</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_POWERPOLE" data-uid="csDBPF.DBPFTGI.EXEMPLAR_POWERPOLE">
+  EXEMPLAR_POWERPOLE
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L276"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: power poles network (0x6534284a, 0x088e1962, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_POWERPOLE</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_RAIL" data-uid="csDBPF.DBPFTGI.EXEMPLAR_RAIL">
+  EXEMPLAR_RAIL
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L270"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: rail network (0x6534284a, 0xe8347989, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_RAIL</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_ROAD" data-uid="csDBPF.DBPFTGI.EXEMPLAR_ROAD">
+  EXEMPLAR_ROAD
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: road network (0x6534284a, 0x2821ed93, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_ROAD</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_STREET" data-uid="csDBPF.DBPFTGI.EXEMPLAR_STREET">
+  EXEMPLAR_STREET
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L258"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: street network (0x6534284a, 0xa92a02ea, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_STREET</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_EXEMPLAR_T21" data-uid="csDBPF.DBPFTGI.EXEMPLAR_T21">
+  EXEMPLAR_T21
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L278"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Exemplar file: Type 21 (0x6534284a, 0x89AC5643, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI EXEMPLAR_T21</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_FSH" data-uid="csDBPF.DBPFTGI.FSH">
+  FSH
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L305"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>FSH file: Textures (0x7ab50e44, #, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI FSH</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_FSH_ANIM_NONPROPS" data-uid="csDBPF.DBPFTGI.FSH_ANIM_NONPROPS">
+  FSH_ANIM_NONPROPS
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L299"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>FSH file: Animation Sprites (Non Props) (0x7ab50e44, 0x49a593e7, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI FSH_ANIM_NONPROPS</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_FSH_ANIM_PROPS" data-uid="csDBPF.DBPFTGI.FSH_ANIM_PROPS">
+  FSH_ANIM_PROPS
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L297"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>FSH file: Animation Sprites (Props) (0x7ab50e44, 0x2a2458f9, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI FSH_ANIM_PROPS</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_FSH_BASE_OVERLAY" data-uid="csDBPF.DBPFTGI.FSH_BASE_OVERLAY">
+  FSH_BASE_OVERLAY
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L293"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>FSH file: Base and Overlay Lot Textures (0x7ab50e44, 0x0986135e, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI FSH_BASE_OVERLAY</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_FSH_MISC" data-uid="csDBPF.DBPFTGI.FSH_MISC">
+  FSH_MISC
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L291"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>FSH file: Transit Textures/Buildings/Bridges/Misc (0x7ab50e44, 0x1abe787d, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI FSH_MISC</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_FSH_SHADOW" data-uid="csDBPF.DBPFTGI.FSH_SHADOW">
+  FSH_SHADOW
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L295"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>FSH file: Transit Network Shadows (Masks) (0x7ab50e44, 0x2BC2759a, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI FSH_SHADOW</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_FSH_TERRAIN_FOUNDATION" data-uid="csDBPF.DBPFTGI.FSH_TERRAIN_FOUNDATION">
+  FSH_TERRAIN_FOUNDATION
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L301"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>FSH file: Terrain And Foundations (0x7ab50e44, 0x891b0e1a, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI FSH_TERRAIN_FOUNDATION</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_FSH_TRANSIT" data-uid="csDBPF.DBPFTGI.FSH_TRANSIT">
+  FSH_TRANSIT
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L289"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>FSH file: Transit Textures/Buildings/Bridges/Misc (0x7ab50e44, 0x1abe787d, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use FISH_MISC instead.&quot;)]
+public static readonly TGI FSH_TRANSIT</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_FSH_UI" data-uid="csDBPF.DBPFTGI.FSH_UI">
+  FSH_UI
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L303"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>FSH file: User Interface Images (0x7ab50e44, 0x46a006b#, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI FSH_UI</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_INI" data-uid="csDBPF.DBPFTGI.INI">
+  INI
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L333"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>INI file (#, 0x8a5971c5, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI INI</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_INI_FONT" data-uid="csDBPF.DBPFTGI.INI_FONT">
+  INI_FONT
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L329"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Font Table INI (#, 0x4a87bfe8, 0x2a87bffc)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI INI_FONT</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_INI_NETWORK" data-uid="csDBPF.DBPFTGI.INI_NETWORK">
+  INI_NETWORK
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L331"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Network INI: Remapping, Bridge Exemplars (#, 0x8a5971c5, 0x8a5993b9)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI INI_NETWORK</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_LD" data-uid="csDBPF.DBPFTGI.LD">
+  LD
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L254"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>LD file (0x6be74c6#, 0x6be74c60, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI LD</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_LTEXT" data-uid="csDBPF.DBPFTGI.LTEXT">
+  LTEXT
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L325"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>LTEXT file (0x2026960b, #, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI LTEXT</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_LUA" data-uid="csDBPF.DBPFTGI.LUA">
+  LUA
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L317"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>LUA file: Missions, Advisors, Tutorials and Packaging files (0xca63e2a3, 0x4a5e8ef6, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI LUA</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_LUA_GEN" data-uid="csDBPF.DBPFTGI.LUA_GEN">
+  LUA_GEN
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L319"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>LUA file: Generators, Attractors, Repulsors and System LUA (0xca63e2a3, 0x4a5e8f3f, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI LUA_GEN</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_PNG" data-uid="csDBPF.DBPFTGI.PNG">
+  PNG
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L286"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>PNG file (image, icon) (0x856ddbac, #, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI PNG</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_PNG_ICON" data-uid="csDBPF.DBPFTGI.PNG_ICON">
+  PNG_ICON
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L284"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>PNG file: Menu building icons, bridges, overlays (0x856ddbac, 0x6a386d26, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI PNG_ICON</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_RUL" data-uid="csDBPF.DBPFTGI.RUL">
+  RUL
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L321"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>RUL file: Network rules (0x0a5bcf4b, 0xaa5bcf57, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI RUL</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_S3D" data-uid="csDBPF.DBPFTGI.S3D">
+  S3D
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L309"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>S3D file: Models (0x5ad0e817, #, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI S3D</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_S3D_MAXIS" data-uid="csDBPF.DBPFTGI.S3D_MAXIS">
+  S3D_MAXIS
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L307"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>S3D file: Maxis Models (0x5ad0e817, 0xbadb57f1, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI S3D_MAXIS</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_SC4PATH" data-uid="csDBPF.DBPFTGI.SC4PATH">
+  SC4PATH
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L315"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>SC4PATH file (0x296678f7, #, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI SC4PATH</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_SC4PATH_2D" data-uid="csDBPF.DBPFTGI.SC4PATH_2D">
+  SC4PATH_2D
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L311"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>SC4PATH (2D) (0x296678f7, 0x69668828, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI SC4PATH_2D</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_SC4PATH_3D" data-uid="csDBPF.DBPFTGI.SC4PATH_3D">
+  SC4PATH_3D
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L313"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>SC4PATH (3D) (0x296678f7, 0xa966883f, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI SC4PATH_3D</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_WAV" data-uid="csDBPF.DBPFTGI.WAV">
+  WAV
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L323"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>WAV file (0x2026960b, 0xaa4d1933, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI WAV</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="csDBPF_DBPFTGI_XML" data-uid="csDBPF.DBPFTGI.XML">
+  XML
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L335"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>XML file (0x88777602, #, #)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TGI XML</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="csDBPF_DBPFTGI_CleanTGIFormat_" data-uid="csDBPF.DBPFTGI.CleanTGIFormat*"></a>
+
+  <h3 id="csDBPF_DBPFTGI_CleanTGIFormat_System_String_" data-uid="csDBPF.DBPFTGI.CleanTGIFormat(System.String)">
+  CleanTGIFormat(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L445"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a string of the TGI in the same format as <a class="xref" href="csDBPF.TGI.html#csDBPF_TGI_ToString">ToString()</a> for comparison.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string CleanTGIFormat(string tgi)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tgi</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>TGI string to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The TGI properly formated delimited by comma space, in the format of <code>0x########, 0x########, 0x########</code>, with leading zeros added up to 8 characters each.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="csDBPF_DBPFTGI_CleanTGIFormat_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The input string must contain three hexadecimal numbers, each prefixed with <code>0x</code>.</p>
+</div>
+
+
+
+
+  <a id="csDBPF_DBPFTGI_ParseTGIString_" data-uid="csDBPF.DBPFTGI.ParseTGIString*"></a>
+
+  <h3 id="csDBPF_DBPFTGI_ParseTGIString_System_String_" data-uid="csDBPF.DBPFTGI.ParseTGIString(System.String)">
+  ParseTGIString(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L477"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parse a TGI string into it's component Type, Group, Index values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TGI ParseTGIString(string tgi)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tgi</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>String to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd><p>A TGI struct</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/DBPFTGI.cs/#L232" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

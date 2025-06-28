@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class DBPFEntryEXMP | csDBPF </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class DBPFEntryEXMP | csDBPF ">
+      
+      <meta name="description" content="An implementation of  for Exemplar and Cohort entries. Object data is stored in .">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/noah-severyn/csDBPF/new/docs/apiSpec/new?filename=csDBPF_DBPFEntryEXMP.md&amp;value=---%0Auid%3A%20csDBPF.DBPFEntryEXMP%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="csDBPF">
+            csDBPF
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="csDBPF.DBPFEntryEXMP">
+
+
+
+  <h1 id="csDBPF_DBPFEntryEXMP" data-uid="csDBPF.DBPFEntryEXMP" class="text-break">
+Class DBPFEntryEXMP  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="csDBPF.html">csDBPF</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>csDBPF.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>An implementation of <a class="xref" href="csDBPF.DBPFEntry.html">DBPFEntry</a> for Exemplar and Cohort entries. Object data is stored in <a class="xref" href="csDBPF.DBPFEntryEXMP.html#csDBPF_DBPFEntryEXMP_ListOfProperties">ListOfProperties</a>.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class DBPFEntryEXMP : DBPFEntry</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="csDBPF.DBPFEntry.html">DBPFEntry</a></div>
+      <div><span class="xref">DBPFEntryEXMP</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_TGI">DBPFEntry.TGI</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_Offset">DBPFEntry.Offset</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_IndexPos">DBPFEntry.IndexPos</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_UncompressedSize">DBPFEntry.UncompressedSize</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_CompressedSize">DBPFEntry.CompressedSize</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_IsCompressed">DBPFEntry.IsCompressed</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_ByteData">DBPFEntry.ByteData</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_ErrorLog">DBPFEntry.ErrorLog</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_ToString">DBPFEntry.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_MatchesEntryType_csDBPF_TGI_">DBPFEntry.MatchesEntryType(TGI)</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_IsExemplar">DBPFEntry.IsExemplar()</a>
+    </div>
+    <div>
+      <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_GetSize">DBPFEntry.GetSize()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="csDBPF_DBPFEntryEXMP__ctor_" data-uid="csDBPF.DBPFEntryEXMP.#ctor*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP__ctor_csDBPF_TGI_" data-uid="csDBPF.DBPFEntryEXMP.#ctor(csDBPF.TGI)">
+  DBPFEntryEXMP(TGI)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Create a new instance. Use when creating a new exemplar.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DBPFEntryEXMP(TGI tgi)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tgi</code> <a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP__ctor_" data-uid="csDBPF.DBPFEntryEXMP.#ctor*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP__ctor_csDBPF_TGI_System_UInt32_System_UInt32_System_UInt32_System_Byte___" data-uid="csDBPF.DBPFEntryEXMP.#ctor(csDBPF.TGI,System.UInt32,System.UInt32,System.UInt32,System.Byte[])">
+  DBPFEntryEXMP(TGI, uint, uint, uint, byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Create a new instance. Use when reading an existing exemplar from a file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DBPFEntryEXMP(TGI tgi, uint offset, uint size, uint index, byte[] bytes)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tgi</code> <a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd><p><a class="xref" href="csDBPF.DBPFTGI.html">DBPFTGI</a> object representing the entry</p>
+</dd>
+    <dt><code>offset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Offset (location) of the entry within the DBPF file</p>
+</dd>
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set</p>
+</dd>
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Entry position in the file, 0-n</p>
+</dd>
+    <dt><code>bytes</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Byte data for this entry</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="csDBPF_DBPFEntryEXMP_IsCohort_" data-uid="csDBPF.DBPFEntryEXMP.IsCohort*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_IsCohort" data-uid="csDBPF.DBPFEntryEXMP.IsCohort">
+  IsCohort
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determine if the file is Exemplar or Cohort.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsCohort { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_ListOfProperties_" data-uid="csDBPF.DBPFEntryEXMP.ListOfProperties*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_ListOfProperties" data-uid="csDBPF.DBPFEntryEXMP.ListOfProperties">
+  ListOfProperties
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>List of one or more <a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a> associated with this entry. Sorted by <a class="xref" href="csDBPF.DBPFProperty.html#csDBPF_DBPFProperty_ID">ID</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SortedList&lt;uint, DBPFProperty&gt; ListOfProperties { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.sortedlist-2">SortedList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>, <a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_ParentCohort_" data-uid="csDBPF.DBPFEntryEXMP.ParentCohort*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_ParentCohort" data-uid="csDBPF.DBPFEntryEXMP.ParentCohort">
+  ParentCohort
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The Parent Cohort for this exemplar.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TGI ParentCohort { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="csDBPF_DBPFEntryEXMP_AddOrUpdateProperty_" data-uid="csDBPF.DBPFEntryEXMP.AddOrUpdateProperty*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_AddOrUpdateProperty_csDBPF_DBPFProperty_" data-uid="csDBPF.DBPFEntryEXMP.AddOrUpdateProperty(csDBPF.DBPFProperty)">
+  AddOrUpdateProperty(DBPFProperty)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L586"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Update a property if it exists or add if it is not found.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddOrUpdateProperty(DBPFProperty prop)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>prop</code> <a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a></dt>
+    <dd><p>Property to add or update</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_AddProperty_" data-uid="csDBPF.DBPFEntryEXMP.AddProperty*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_AddProperty_csDBPF_DBPFProperty_" data-uid="csDBPF.DBPFEntryEXMP.AddProperty(csDBPF.DBPFProperty)">
+  AddProperty(DBPFProperty)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L555"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Add a property to this exemplar/cohort. If the property already exists no action is taken.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddProperty(DBPFProperty prop)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>prop</code> <a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a></dt>
+    <dd><p>Property to add</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_Decode_" data-uid="csDBPF.DBPFEntryEXMP.Decode*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_Decode" data-uid="csDBPF.DBPFEntryEXMP.Decode">
+  Decode()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decompresses the exemplar/cohort instance and sets <a class="xref" href="csDBPF.DBPFEntryEXMP.html#csDBPF_DBPFEntryEXMP_ListOfProperties">ListOfProperties</a> as one or more <a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a> from a byte sequence.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Decode()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h4 class="section" id="csDBPF_DBPFEntryEXMP_Decode_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Use when reading from a file.</p>
+</div>
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_Encode_" data-uid="csDBPF.DBPFEntryEXMP.Encode*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_Encode_System_Boolean_" data-uid="csDBPF.DBPFEntryEXMP.Encode(System.Boolean)">
+  Encode(bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L404"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Build <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_ByteData">ByteData</a> from the current state of this instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Encode(bool compress = false)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>compress</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Whether to compress the ByteData. Default is FALSE</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_GetExemplarName_" data-uid="csDBPF.DBPFEntryEXMP.GetExemplarName*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_GetExemplarName" data-uid="csDBPF.DBPFEntryEXMP.GetExemplarName">
+  GetExemplarName()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L491"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the Exemplar Name of the property.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string GetExemplarName()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Exemplar Name if found; null property is not found</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="csDBPF_DBPFEntryEXMP_GetExemplarName_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Simply a shortcut for <code>Entry.GetProperty(0x20)</code></p>
+</div>
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_GetExemplarType_" data-uid="csDBPF.DBPFEntryEXMP.GetExemplarType*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_GetExemplarType" data-uid="csDBPF.DBPFEntryEXMP.GetExemplarType">
+  GetExemplarType()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L473"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the Exemplar Type (0x00 - 0x2B) of the property. See <a class="xref" href="csDBPF.DBPFProperty.ExemplarType.html">DBPFProperty.ExemplarType</a> for the full list.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DBPFProperty.ExemplarType GetExemplarType()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a>.<a class="xref" href="csDBPF.DBPFProperty.ExemplarType.html">ExemplarType</a></dt>
+    <dd><p>Exemplar Type if found; <a class="xref" href="csDBPF.DBPFProperty.ExemplarType.html#csDBPF_DBPFProperty_ExemplarType_Error">Error</a> if property is not found</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="csDBPF_DBPFEntryEXMP_GetExemplarType_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Simply a shortcut for <code>Entry.GetProperty(0x10)</code></p>
+</div>
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_GetProperty_" data-uid="csDBPF.DBPFEntryEXMP.GetProperty*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_GetProperty_System_String_" data-uid="csDBPF.DBPFEntryEXMP.GetProperty(System.String)">
+  GetProperty(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L523"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Lookup and return a property from a list of properties in the entry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DBPFProperty GetProperty(string name)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Name of property to check. Name is case insensitive and ignores spaces.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a></dt>
+    <dd><p>A <a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a> of the match if found; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_GetProperty_" data-uid="csDBPF.DBPFEntryEXMP.GetProperty*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_GetProperty_System_UInt32_" data-uid="csDBPF.DBPFEntryEXMP.GetProperty(System.UInt32)">
+  GetProperty(uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L509"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Lookup and return a property from a list of properties in the entry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DBPFProperty GetProperty(uint propertyId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>propertyId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Id of the property to find.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a></dt>
+    <dd><p>A <a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a> of the match if found; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_HasProperty_" data-uid="csDBPF.DBPFEntryEXMP.HasProperty*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_HasProperty_System_String_" data-uid="csDBPF.DBPFEntryEXMP.HasProperty(System.String)">
+  HasProperty(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L533"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Evaluate whether this entry contains the specified property.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasProperty(string name)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Name of property to check. Name is case insensitive and ignores spaces.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the property is present; otherwise <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_HasProperty_" data-uid="csDBPF.DBPFEntryEXMP.HasProperty*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_HasProperty_System_UInt32_" data-uid="csDBPF.DBPFEntryEXMP.HasProperty(System.UInt32)">
+  HasProperty(uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L542"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Evaluate whether this entry contains the specified property.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasProperty(uint propertyId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>propertyId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Id of the property to check</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the property is present; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_IsTextEncoding_" data-uid="csDBPF.DBPFEntryEXMP.IsTextEncoding*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_IsTextEncoding" data-uid="csDBPF.DBPFEntryEXMP.IsTextEncoding">
+  IsTextEncoding()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L456"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the encoding type of this entry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsTextEncoding()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>TRUE if text encoding; FALSE otherwise</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_RemoveAllProperties_" data-uid="csDBPF.DBPFEntryEXMP.RemoveAllProperties*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_RemoveAllProperties" data-uid="csDBPF.DBPFEntryEXMP.RemoveAllProperties">
+  RemoveAllProperties()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L615"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes all the properties from this cohort/exemplar.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RemoveAllProperties()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_RemoveProperty_" data-uid="csDBPF.DBPFEntryEXMP.RemoveProperty*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_RemoveProperty_System_UInt32_" data-uid="csDBPF.DBPFEntryEXMP.RemoveProperty(System.UInt32)">
+  RemoveProperty(uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L601"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Remove a property to this exemplar/cohort. No action is taken if the property is not found.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RemoveProperty(uint id)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Property ID to remove</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_DBPFEntryEXMP_UpdateProperty_" data-uid="csDBPF.DBPFEntryEXMP.UpdateProperty*"></a>
+
+  <h3 id="csDBPF_DBPFEntryEXMP_UpdateProperty_csDBPF_DBPFProperty_" data-uid="csDBPF.DBPFEntryEXMP.UpdateProperty(csDBPF.DBPFProperty)">
+  UpdateProperty(DBPFProperty)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L570"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Update a property in this exemplar/cohort</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UpdateProperty(DBPFProperty prop)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>prop</code> <a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a></dt>
+    <dd><p>Property to update</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/Entries/DBPFEntryEXMP.cs/#L12" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

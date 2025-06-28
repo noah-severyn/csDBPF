@@ -1,0 +1,292 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFEntryFSH.BitmapType
+  commentId: T:csDBPF.DBPFEntryFSH.BitmapType
+  id: DBPFEntryFSH.BitmapType
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFEntryFSH.BitmapType.DXT1
+  - csDBPF.DBPFEntryFSH.BitmapType.DXT3
+  - csDBPF.DBPFEntryFSH.BitmapType.EightBit
+  - csDBPF.DBPFEntryFSH.BitmapType.SixteenBit
+  - csDBPF.DBPFEntryFSH.BitmapType.SixteenBitAlpha4
+  - csDBPF.DBPFEntryFSH.BitmapType.SixteenBitAlpha5
+  - csDBPF.DBPFEntryFSH.BitmapType.ThirtyTwoBit
+  - csDBPF.DBPFEntryFSH.BitmapType.TwentyFourBit
+  langs:
+  - csharp
+  - vb
+  name: DBPFEntryFSH.BitmapType
+  nameWithType: DBPFEntryFSH.BitmapType
+  fullName: csDBPF.DBPFEntryFSH.BitmapType
+  type: Enum
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: BitmapType
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 128
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines the bitmap type stored in this file.
+  example: []
+  syntax:
+    content: public enum DBPFEntryFSH.BitmapType
+    content.vb: Public Enum DBPFEntryFSH.BitmapType
+- uid: csDBPF.DBPFEntryFSH.BitmapType.EightBit
+  commentId: F:csDBPF.DBPFEntryFSH.BitmapType.EightBit
+  id: EightBit
+  parent: csDBPF.DBPFEntryFSH.BitmapType
+  langs:
+  - csharp
+  - vb
+  name: EightBit
+  nameWithType: DBPFEntryFSH.BitmapType.EightBit
+  fullName: csDBPF.DBPFEntryFSH.BitmapType.EightBit
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: EightBit
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 132
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: 'Type: 8-bit indexed<br />Palette: directly follows bitmap or uses global palette<br />Compression: none'
+  example: []
+  syntax:
+    content: EightBit = 123
+    return:
+      type: csDBPF.DBPFEntryFSH.BitmapType
+- uid: csDBPF.DBPFEntryFSH.BitmapType.ThirtyTwoBit
+  commentId: F:csDBPF.DBPFEntryFSH.BitmapType.ThirtyTwoBit
+  id: ThirtyTwoBit
+  parent: csDBPF.DBPFEntryFSH.BitmapType
+  langs:
+  - csharp
+  - vb
+  name: ThirtyTwoBit
+  nameWithType: DBPFEntryFSH.BitmapType.ThirtyTwoBit
+  fullName: csDBPF.DBPFEntryFSH.BitmapType.ThirtyTwoBit
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ThirtyTwoBit
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 136
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: 'Type: 32-bit A8 R8 G8 B8<br />Palette: none<br />Compression: none'
+  example: []
+  syntax:
+    content: ThirtyTwoBit = 125
+    return:
+      type: csDBPF.DBPFEntryFSH.BitmapType
+- uid: csDBPF.DBPFEntryFSH.BitmapType.TwentyFourBit
+  commentId: F:csDBPF.DBPFEntryFSH.BitmapType.TwentyFourBit
+  id: TwentyFourBit
+  parent: csDBPF.DBPFEntryFSH.BitmapType
+  langs:
+  - csharp
+  - vb
+  name: TwentyFourBit
+  nameWithType: DBPFEntryFSH.BitmapType.TwentyFourBit
+  fullName: csDBPF.DBPFEntryFSH.BitmapType.TwentyFourBit
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: TwentyFourBit
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 140
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: 'Type: 24-bit A0 R8 G8 B8<br />Palette: none<br />Compression: none'
+  example: []
+  syntax:
+    content: TwentyFourBit = 127
+    return:
+      type: csDBPF.DBPFEntryFSH.BitmapType
+- uid: csDBPF.DBPFEntryFSH.BitmapType.SixteenBitAlpha5
+  commentId: F:csDBPF.DBPFEntryFSH.BitmapType.SixteenBitAlpha5
+  id: SixteenBitAlpha5
+  parent: csDBPF.DBPFEntryFSH.BitmapType
+  langs:
+  - csharp
+  - vb
+  name: SixteenBitAlpha5
+  nameWithType: DBPFEntryFSH.BitmapType.SixteenBitAlpha5
+  fullName: csDBPF.DBPFEntryFSH.BitmapType.SixteenBitAlpha5
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: SixteenBitAlpha5
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 144
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: 'Type: 16-bit A1 R5 G5 B5<br />Palette: none<br />Compression: none'
+  example: []
+  syntax:
+    content: SixteenBitAlpha5 = 126
+    return:
+      type: csDBPF.DBPFEntryFSH.BitmapType
+- uid: csDBPF.DBPFEntryFSH.BitmapType.SixteenBit
+  commentId: F:csDBPF.DBPFEntryFSH.BitmapType.SixteenBit
+  id: SixteenBit
+  parent: csDBPF.DBPFEntryFSH.BitmapType
+  langs:
+  - csharp
+  - vb
+  name: SixteenBit
+  nameWithType: DBPFEntryFSH.BitmapType.SixteenBit
+  fullName: csDBPF.DBPFEntryFSH.BitmapType.SixteenBit
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: SixteenBit
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 148
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: 'Type: 16-bit A0 R5 G6 B5<br />Palette: none<br />Compression: none'
+  example: []
+  syntax:
+    content: SixteenBit = 120
+    return:
+      type: csDBPF.DBPFEntryFSH.BitmapType
+- uid: csDBPF.DBPFEntryFSH.BitmapType.SixteenBitAlpha4
+  commentId: F:csDBPF.DBPFEntryFSH.BitmapType.SixteenBitAlpha4
+  id: SixteenBitAlpha4
+  parent: csDBPF.DBPFEntryFSH.BitmapType
+  langs:
+  - csharp
+  - vb
+  name: SixteenBitAlpha4
+  nameWithType: DBPFEntryFSH.BitmapType.SixteenBitAlpha4
+  fullName: csDBPF.DBPFEntryFSH.BitmapType.SixteenBitAlpha4
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: SixteenBitAlpha4
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 152
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: 'Type: 16-bit A4 R4 G4 B4<br />Palette: none<br />Compression: none'
+  example: []
+  syntax:
+    content: SixteenBitAlpha4 = 109
+    return:
+      type: csDBPF.DBPFEntryFSH.BitmapType
+- uid: csDBPF.DBPFEntryFSH.BitmapType.DXT3
+  commentId: F:csDBPF.DBPFEntryFSH.BitmapType.DXT3
+  id: DXT3
+  parent: csDBPF.DBPFEntryFSH.BitmapType
+  langs:
+  - csharp
+  - vb
+  name: DXT3
+  nameWithType: DBPFEntryFSH.BitmapType.DXT3
+  fullName: csDBPF.DBPFEntryFSH.BitmapType.DXT3
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: DXT3
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 156
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: 'Type: DXT3 4x4 packed, 4-bit alpha<br />Palette: none<br />Compression: 4x4 grid compressed, half-byte per pixel'
+  example: []
+  syntax:
+    content: DXT3 = 97
+    return:
+      type: csDBPF.DBPFEntryFSH.BitmapType
+- uid: csDBPF.DBPFEntryFSH.BitmapType.DXT1
+  commentId: F:csDBPF.DBPFEntryFSH.BitmapType.DXT1
+  id: DXT1
+  parent: csDBPF.DBPFEntryFSH.BitmapType
+  langs:
+  - csharp
+  - vb
+  name: DXT1
+  nameWithType: DBPFEntryFSH.BitmapType.DXT1
+  fullName: csDBPF.DBPFEntryFSH.BitmapType.DXT1
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: DXT1
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 160
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: 'Type: DXT1 4x4 packed, 1-bit alpha<br />Palette: none<br />Compression: 4x4 grid compressed, half-byte per pixel'
+  example: []
+  syntax:
+    content: DXT1 = 96
+    return:
+      type: csDBPF.DBPFEntryFSH.BitmapType
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: csDBPF.DBPFEntryFSH.BitmapType
+  commentId: T:csDBPF.DBPFEntryFSH.BitmapType
+  parent: csDBPF
+  href: csDBPF.DBPFEntryFSH.html
+  name: DBPFEntryFSH.BitmapType
+  nameWithType: DBPFEntryFSH.BitmapType
+  fullName: csDBPF.DBPFEntryFSH.BitmapType
+  spec.csharp:
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    href: csDBPF.DBPFEntryFSH.html
+  - name: .
+  - uid: csDBPF.DBPFEntryFSH.BitmapType
+    name: BitmapType
+    href: csDBPF.DBPFEntryFSH.BitmapType.html
+  spec.vb:
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    href: csDBPF.DBPFEntryFSH.html
+  - name: .
+  - uid: csDBPF.DBPFEntryFSH.BitmapType
+    name: BitmapType
+    href: csDBPF.DBPFEntryFSH.BitmapType.html

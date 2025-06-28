@@ -1,0 +1,565 @@
+{
+  "source_base_path": "C:/source/repos/csDBPF/csDBPF/csDBPF/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.ByteArrayHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.ByteArrayHelper.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.ByteArrayHelper",
+      "Summary": "<p sourcefile=\"api/csDBPF.ByteArrayHelper.yml\" sourcestartlinenumber=\"1\">Helper methods to parse a byte array into an array of one of the DBPF data types.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntry.EncodingType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntry.EncodingType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntry.EncodingType",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntry.EncodingType.yml\" sourcestartlinenumber=\"1\">Specifies the encoding type for an entry or properties.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntry",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntry.yml\" sourcestartlinenumber=\"1\">An abstract form of an entry item, representing an instance of a subfile that may be contained in a <xref href=\"csDBPF.DBPFFile\" data-throw-if-not-resolved=\"false\"></xref>. The data for each entry is not parsed or decoded until <xref href=\"csDBPF.DBPFEntry.Decode\" data-throw-if-not-resolved=\"false\"></xref> is called to decompress and set the actual entry data.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntryDIR.DBDFItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntryDIR.DBDFItem.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntryDIR.DBDFItem",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntryDIR.DBDFItem.yml\" sourcestartlinenumber=\"1\">Struct which represents one item in the DBDF directory list. Each item is a reference to a compressed entry in the DBPF file.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntryDIR.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntryDIR.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntryDIR",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntryDIR.yml\" sourcestartlinenumber=\"1\">An implementation of <xref href=\"csDBPF.DBPFEntry\" data-throw-if-not-resolved=\"false\"></xref> for Directory entries. Object data is stored in <xref href=\"csDBPF.DBPFEntryDIR.CompressedItems\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntryEXMP.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntryEXMP.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntryEXMP",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntryEXMP.yml\" sourcestartlinenumber=\"1\">An implementation of <xref href=\"csDBPF.DBPFEntry\" data-throw-if-not-resolved=\"false\"></xref> for Exemplar and Cohort entries. Object data is stored in <xref href=\"csDBPF.DBPFEntryEXMP.ListOfProperties\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntryFSH.BitmapType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntryFSH.BitmapType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntryFSH.BitmapType",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntryFSH.BitmapType.yml\" sourcestartlinenumber=\"1\">Defines the bitmap type stored in this file.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntryFSH.FSHEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntryFSH.FSHEntry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntryFSH.FSHEntry",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntryFSH.FSHEntry.yml\" sourcestartlinenumber=\"1\">Holds information about the bitmap data.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntryFSH.FSHImageData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntryFSH.FSHImageData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntryFSH.FSHImageData",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntryFSH.FSHImageData.yml\" sourcestartlinenumber=\"1\">Contains the raw, encoded and potentially compressed image data. This is the entry point for actually getting the raw bitmap.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntryFSH.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntryFSH.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntryFSH",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntryFSH.yml\" sourcestartlinenumber=\"1\">An implementation of <xref href=\"csDBPF.DBPFEntry\" data-throw-if-not-resolved=\"false\"></xref> for FSH entries.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntryLTEXT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntryLTEXT.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntryLTEXT",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntryLTEXT.yml\" sourcestartlinenumber=\"1\">An implementation of <xref href=\"csDBPF.DBPFEntry\" data-throw-if-not-resolved=\"false\"></xref> for LTEXT entries. Object data is stored in <xref href=\"csDBPF.DBPFEntryLTEXT.Text\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFEntryPNG.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFEntryPNG.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFEntryPNG",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFEntryPNG.yml\" sourcestartlinenumber=\"1\">An implementation of <xref href=\"csDBPF.DBPFEntry\" data-throw-if-not-resolved=\"false\"></xref> for PNG entries. Object data is stored in <xref href=\"csDBPF.DBPFEntryPNG.PNGImage\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFError",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFError.yml\" sourcestartlinenumber=\"1\">Details an error encountered when parsing a DBPF file.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFFile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFFile.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFFile",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFFile.yml\" sourcestartlinenumber=\"1\">Contains the header data and all entries for a DBPF file.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFFileExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFFileExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFFileExtensions",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFFileExtensions.yml\" sourcestartlinenumber=\"1\">A set of extension methods for working with DBPF items</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFHeader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFHeader.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFHeader",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFHeader.yml\" sourcestartlinenumber=\"1\">Stores key information about the DBPFFile. The Header is the first 96 bytes of the DBPFFile.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFProperty.ExemplarType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFProperty.ExemplarType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFProperty.ExemplarType",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFProperty.ExemplarType.yml\" sourcestartlinenumber=\"1\">Defines the <a href=\"https://www.wiki.sc4devotion.com/index.php?title=Exemplar#Exemplar_Types\">type of exemplar</a> and what game systems or components the exemplar contains info for.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFProperty.LotConfigPropertyLotObjectType",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.yml\" sourcestartlinenumber=\"1\">The first rep (0) of a LotConfigPropertyLotObject describes its <a href=\"https://www.wiki.sc4devotion.com/index.php?title=LotConfigPropertyLotObject#Specification\">object type</a>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFProperty.LotConfigPropertyPurposeType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFProperty.LotConfigPropertyPurposeType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFProperty.LotConfigPropertyPurposeType",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFProperty.LotConfigPropertyPurposeType.yml\" sourcestartlinenumber=\"1\">Defines the <a href=\"https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration\">RCI type</a> for a lot.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.yml\" sourcestartlinenumber=\"1\">Defines the <a href=\"https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration\">road orientation</a> for a lot.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFProperty.LotConfigPropertyWealthType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFProperty.LotConfigPropertyWealthType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFProperty.LotConfigPropertyWealthType",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFProperty.LotConfigPropertyWealthType.yml\" sourcestartlinenumber=\"1\">Defines the <a href=\"https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration\">wealth</a> for a lot.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFProperty.LotConfigPropertyZoneType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFProperty.LotConfigPropertyZoneType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFProperty.LotConfigPropertyZoneType",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFProperty.LotConfigPropertyZoneType.yml\" sourcestartlinenumber=\"1\">Defines the <a href=\"https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration\">zone type</a> for a lot - which type of zones the lot will grow on or was plopped as.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFProperty.PropertyDataType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFProperty.PropertyDataType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFProperty.PropertyDataType",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFProperty.PropertyDataType.yml\" sourcestartlinenumber=\"1\">This class stores information related to the possible data types for properties.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFProperty.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFProperty.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFProperty",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFProperty.yml\" sourcestartlinenumber=\"1\">An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFPropertyFloat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFPropertyFloat.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFPropertyFloat",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFPropertyFloat.yml\" sourcestartlinenumber=\"1\">Represents a property storing float value(s).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFPropertyLong.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFPropertyLong.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFPropertyLong",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFPropertyLong.yml\" sourcestartlinenumber=\"1\">Represents a property storing integer-based value(s).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFPropertyString.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFPropertyString.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFPropertyString",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFPropertyString.yml\" sourcestartlinenumber=\"1\">Represents a property storing a string value.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFTGI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFTGI.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFTGI",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFTGI.yml\" sourcestartlinenumber=\"1\">A DBPFTGI encapsulates a Type, Group, Instance identifier.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.DBPFUtil.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.DBPFUtil.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.DBPFUtil",
+      "Summary": "<p sourcefile=\"api/csDBPF.DBPFUtil.yml\" sourcestartlinenumber=\"1\">Collection of miscellaneous utility methods to use with DBPFFiles.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.QFS.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.QFS.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.QFS",
+      "Summary": "<p sourcefile=\"api/csDBPF.QFS.yml\" sourcestartlinenumber=\"1\">An Implementation of the QFS/RefPack/LZ77 compression format used in SC4 DBPF Files.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.StreamExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.StreamExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.StreamExtensions",
+      "Summary": "<p sourcefile=\"api/csDBPF.StreamExtensions.yml\" sourcestartlinenumber=\"1\">A set of extension methods for working with Streams and Readers</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.TGI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.TGI.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.TGI",
+      "Summary": "<p sourcefile=\"api/csDBPF.TGI.yml\" sourcestartlinenumber=\"1\">A struct representing three unsigned integers as a Type, Group, Instance pair.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.XMLExemplarProperty.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.XMLExemplarProperty.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.XMLExemplarProperty",
+      "Summary": "<p sourcefile=\"api/csDBPF.XMLExemplarProperty.yml\" sourcestartlinenumber=\"1\">Represents a property stored in the new_properties.xml file.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.XMLProperties.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.XMLProperties.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF.XMLProperties",
+      "Summary": "<p sourcefile=\"api/csDBPF.XMLProperties.yml\" sourcestartlinenumber=\"1\">Static class for interfacing with new_properties.xml file through <xref href=\"csDBPF.XMLExemplarProperty\" data-throw-if-not-resolved=\"false\"></xref> objects.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/csDBPF.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/csDBPF.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "csDBPF",
+      "Summary": null
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "getting-started.md",
+      "output": {
+        ".html": {
+          "relative_path": "getting-started.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "introduction.md",
+      "output": {
+        ".html": {
+          "relative_path": "introduction.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

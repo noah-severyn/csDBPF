@@ -1,0 +1,524 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  id: DBPFProperty.LotConfigPropertyZoneType
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.Agriculture
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.Airport
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.CivicPlopped
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityC
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityI
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityR
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.Landmark
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.LowDensityC
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.LowDensityR
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityC
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityI
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityR
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.Military
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.None
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.Seaport
+  - csDBPF.DBPFProperty.LotConfigPropertyZoneType.SpacePort
+  langs:
+  - csharp
+  - vb
+  name: DBPFProperty.LotConfigPropertyZoneType
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  type: Enum
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LotConfigPropertyZoneType
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 262
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines the <a href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">zone type</a> for a lot - which type of zones the lot will grow on or was plopped as.
+  example: []
+  syntax:
+    content: public enum DBPFProperty.LotConfigPropertyZoneType
+    content.vb: Public Enum DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.None
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.None
+  id: None
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.None
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.None
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: None
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 266
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: None
+  example: []
+  syntax:
+    content: None = 0
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.LowDensityR
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.LowDensityR
+  id: LowDensityR
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: LowDensityR
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.LowDensityR
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.LowDensityR
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LowDensityR
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 270
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Low density residential zones.
+  example: []
+  syntax:
+    content: LowDensityR = 1
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityR
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityR
+  id: MediumDensityR
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: MediumDensityR
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.MediumDensityR
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityR
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: MediumDensityR
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 274
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Medium density residential zones.
+  example: []
+  syntax:
+    content: MediumDensityR = 2
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityR
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityR
+  id: HighDensityR
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: HighDensityR
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.HighDensityR
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityR
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: HighDensityR
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 278
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: High density residential zones.
+  example: []
+  syntax:
+    content: HighDensityR = 3
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.LowDensityC
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.LowDensityC
+  id: LowDensityC
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: LowDensityC
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.LowDensityC
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.LowDensityC
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LowDensityC
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 282
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Low density commercial zones.
+  example: []
+  syntax:
+    content: LowDensityC = 4
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityC
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityC
+  id: MediumDensityC
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: MediumDensityC
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.MediumDensityC
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityC
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: MediumDensityC
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 286
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Medium density commercial zones.
+  example: []
+  syntax:
+    content: MediumDensityC = 5
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityC
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityC
+  id: HighDensityC
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: HighDensityC
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.HighDensityC
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityC
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: HighDensityC
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 290
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: High density commercial zones.
+  example: []
+  syntax:
+    content: HighDensityC = 6
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.Agriculture
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.Agriculture
+  id: Agriculture
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: Agriculture
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.Agriculture
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.Agriculture
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Agriculture
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 294
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Agricultrual zones.
+  example: []
+  syntax:
+    content: Agriculture = 7
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityI
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityI
+  id: MediumDensityI
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: MediumDensityI
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.MediumDensityI
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.MediumDensityI
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: MediumDensityI
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 298
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Medium density industrial zones.
+  example: []
+  syntax:
+    content: MediumDensityI = 8
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityI
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityI
+  id: HighDensityI
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: HighDensityI
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.HighDensityI
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.HighDensityI
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: HighDensityI
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 302
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: High density industrial zones.
+  example: []
+  syntax:
+    content: HighDensityI = 9
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.Military
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.Military
+  id: Military
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: Military
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.Military
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.Military
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Military
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 306
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Military plopped.
+  example: []
+  syntax:
+    content: Military = 10
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.Airport
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.Airport
+  id: Airport
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: Airport
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.Airport
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.Airport
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Airport
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 310
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Airport plopped.
+  example: []
+  syntax:
+    content: Airport = 11
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.Seaport
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.Seaport
+  id: Seaport
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: Seaport
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.Seaport
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.Seaport
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Seaport
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 314
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Seaport plopped.
+  example: []
+  syntax:
+    content: Seaport = 12
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.SpacePort
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.SpacePort
+  id: SpacePort
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: SpacePort
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.SpacePort
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.SpacePort
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: SpacePort
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 318
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Spaceport plopped.
+  example: []
+  syntax:
+    content: SpacePort = 13
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.Landmark
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.Landmark
+  id: Landmark
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: Landmark
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.Landmark
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.Landmark
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Landmark
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 322
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Landmark plopped.
+  example: []
+  syntax:
+    content: Landmark = 14
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType.CivicPlopped
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyZoneType.CivicPlopped
+  id: CivicPlopped
+  parent: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  langs:
+  - csharp
+  - vb
+  name: CivicPlopped
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType.CivicPlopped
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType.CivicPlopped
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: CivicPlopped
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 326
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Civic plopped.
+  example: []
+  syntax:
+    content: CivicPlopped = 15
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.LotConfigPropertyZoneType
+  nameWithType: DBPFProperty.LotConfigPropertyZoneType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+    name: LotConfigPropertyZoneType
+    href: csDBPF.DBPFProperty.LotConfigPropertyZoneType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+    name: LotConfigPropertyZoneType
+    href: csDBPF.DBPFProperty.LotConfigPropertyZoneType.html

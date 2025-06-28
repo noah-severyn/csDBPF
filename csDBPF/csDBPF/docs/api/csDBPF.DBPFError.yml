@@ -1,0 +1,417 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFError
+  commentId: T:csDBPF.DBPFError
+  id: DBPFError
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFError.#ctor(System.String,csDBPF.TGI,System.String)
+  - csDBPF.DBPFError.FileName
+  - csDBPF.DBPFError.Message
+  - csDBPF.DBPFError.TGI
+  langs:
+  - csharp
+  - vb
+  name: DBPFError
+  nameWithType: DBPFError
+  fullName: csDBPF.DBPFError
+  type: Struct
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPF.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: DBPFError
+    path: ../DBPF.cs
+    startLine: 11
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Details an error encountered when parsing a DBPF file.
+  example: []
+  syntax:
+    content: public struct DBPFError
+    content.vb: Public Structure DBPFError
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: csDBPF.DBPFError.#ctor(System.String,csDBPF.TGI,System.String)
+  commentId: M:csDBPF.DBPFError.#ctor(System.String,csDBPF.TGI,System.String)
+  id: '#ctor(System.String,csDBPF.TGI,System.String)'
+  parent: csDBPF.DBPFError
+  langs:
+  - csharp
+  - vb
+  name: DBPFError(string, TGI, string)
+  nameWithType: DBPFError.DBPFError(string, TGI, string)
+  fullName: csDBPF.DBPFError.DBPFError(string, csDBPF.TGI, string)
+  type: Constructor
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPF.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: .ctor
+    path: ../DBPF.cs
+    startLine: 11
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Details an error encountered when parsing a DBPF file.
+  example: []
+  syntax:
+    content: public DBPFError(string fileName, TGI tgi, string message)
+    parameters:
+    - id: fileName
+      type: System.String
+    - id: tgi
+      type: csDBPF.TGI
+    - id: message
+      type: System.String
+    content.vb: Public Sub New(fileName As String, tgi As TGI, message As String)
+  overload: csDBPF.DBPFError.#ctor*
+  nameWithType.vb: DBPFError.New(String, TGI, String)
+  fullName.vb: csDBPF.DBPFError.New(String, csDBPF.TGI, String)
+  name.vb: New(String, TGI, String)
+- uid: csDBPF.DBPFError.FileName
+  commentId: F:csDBPF.DBPFError.FileName
+  id: FileName
+  parent: csDBPF.DBPFError
+  langs:
+  - csharp
+  - vb
+  name: FileName
+  nameWithType: DBPFError.FileName
+  fullName: csDBPF.DBPFError.FileName
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPF.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: FileName
+    path: ../DBPF.cs
+    startLine: 15
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Name of the current DBPF file
+  example: []
+  syntax:
+    content: public string FileName
+    return:
+      type: System.String
+    content.vb: Public FileName As String
+- uid: csDBPF.DBPFError.TGI
+  commentId: F:csDBPF.DBPFError.TGI
+  id: TGI
+  parent: csDBPF.DBPFError
+  langs:
+  - csharp
+  - vb
+  name: TGI
+  nameWithType: DBPFError.TGI
+  fullName: csDBPF.DBPFError.TGI
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPF.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: TGI
+    path: ../DBPF.cs
+    startLine: 19
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: TGI of the current subfile
+  example: []
+  syntax:
+    content: public TGI TGI
+    return:
+      type: csDBPF.TGI
+    content.vb: Public TGI As TGI
+- uid: csDBPF.DBPFError.Message
+  commentId: F:csDBPF.DBPFError.Message
+  id: Message
+  parent: csDBPF.DBPFError
+  langs:
+  - csharp
+  - vb
+  name: Message
+  nameWithType: DBPFError.Message
+  fullName: csDBPF.DBPFError.Message
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPF.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Message
+    path: ../DBPF.cs
+    startLine: 23
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Error message
+  example: []
+  syntax:
+    content: public string Message
+    return:
+      type: System.String
+    content.vb: Public Message As String
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: csDBPF.DBPFError.#ctor*
+  commentId: Overload:csDBPF.DBPFError.#ctor
+  href: csDBPF.DBPFError.html#csDBPF_DBPFError__ctor_System_String_csDBPF_TGI_System_String_
+  name: DBPFError
+  nameWithType: DBPFError.DBPFError
+  fullName: csDBPF.DBPFError.DBPFError
+  nameWithType.vb: DBPFError.New
+  fullName.vb: csDBPF.DBPFError.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: csDBPF.TGI
+  commentId: T:csDBPF.TGI
+  parent: csDBPF
+  href: csDBPF.TGI.html
+  name: TGI
+  nameWithType: TGI
+  fullName: csDBPF.TGI

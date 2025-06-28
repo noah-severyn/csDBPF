@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace csDBPF | csDBPF </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace csDBPF | csDBPF ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="csDBPF">
+            csDBPF
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="csDBPF">
+
+  <h1 id="csDBPF" data-uid="csDBPF" class="text-break">Namespace csDBPF</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.ByteArrayHelper.html">ByteArrayHelper</a></dt>
+      <dd><p>Helper methods to parse a byte array into an array of one of the DBPF data types.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntry.html">DBPFEntry</a></dt>
+      <dd><p>An abstract form of an entry item, representing an instance of a subfile that may be contained in a <a class="xref" href="csDBPF.DBPFFile.html">DBPFFile</a>. The data for each entry is not parsed or decoded until <a class="xref" href="csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_Decode">Decode()</a> is called to decompress and set the actual entry data.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntryDIR.html">DBPFEntryDIR</a></dt>
+      <dd><p>An implementation of <a class="xref" href="csDBPF.DBPFEntry.html">DBPFEntry</a> for Directory entries. Object data is stored in <a class="xref" href="csDBPF.DBPFEntryDIR.html#csDBPF_DBPFEntryDIR_CompressedItems">CompressedItems</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntryEXMP.html">DBPFEntryEXMP</a></dt>
+      <dd><p>An implementation of <a class="xref" href="csDBPF.DBPFEntry.html">DBPFEntry</a> for Exemplar and Cohort entries. Object data is stored in <a class="xref" href="csDBPF.DBPFEntryEXMP.html#csDBPF_DBPFEntryEXMP_ListOfProperties">ListOfProperties</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntryFSH.html">DBPFEntryFSH</a></dt>
+      <dd><p>An implementation of <a class="xref" href="csDBPF.DBPFEntry.html">DBPFEntry</a> for FSH entries.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntryFSH.FSHEntry.html">DBPFEntryFSH.FSHEntry</a></dt>
+      <dd><p>Holds information about the bitmap data.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntryFSH.FSHImageData.html">DBPFEntryFSH.FSHImageData</a></dt>
+      <dd><p>Contains the raw, encoded and potentially compressed image data. This is the entry point for actually getting the raw bitmap.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntryLTEXT.html">DBPFEntryLTEXT</a></dt>
+      <dd><p>An implementation of <a class="xref" href="csDBPF.DBPFEntry.html">DBPFEntry</a> for LTEXT entries. Object data is stored in <a class="xref" href="csDBPF.DBPFEntryLTEXT.html#csDBPF_DBPFEntryLTEXT_Text">Text</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntryPNG.html">DBPFEntryPNG</a></dt>
+      <dd><p>An implementation of <a class="xref" href="csDBPF.DBPFEntry.html">DBPFEntry</a> for PNG entries. Object data is stored in <a class="xref" href="csDBPF.DBPFEntryPNG.html#csDBPF_DBPFEntryPNG_PNGImage">PNGImage</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFFile.html">DBPFFile</a></dt>
+      <dd><p>Contains the header data and all entries for a DBPF file.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFFileExtensions.html">DBPFFileExtensions</a></dt>
+      <dd><p>A set of extension methods for working with DBPF items</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFHeader.html">DBPFHeader</a></dt>
+      <dd><p>Stores key information about the DBPFFile. The Header is the first 96 bytes of the DBPFFile.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFProperty.html">DBPFProperty</a></dt>
+      <dd><p>An abstract class defining the structure of a Property and the methods for interfacing with it. This class is only relevant for Exemplar and Cohort type entries.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFPropertyFloat.html">DBPFPropertyFloat</a></dt>
+      <dd><p>Represents a property storing float value(s).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFPropertyLong.html">DBPFPropertyLong</a></dt>
+      <dd><p>Represents a property storing integer-based value(s).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFPropertyString.html">DBPFPropertyString</a></dt>
+      <dd><p>Represents a property storing a string value.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFTGI.html">DBPFTGI</a></dt>
+      <dd><p>A DBPFTGI encapsulates a Type, Group, Instance identifier.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFUtil.html">DBPFUtil</a></dt>
+      <dd><p>Collection of miscellaneous utility methods to use with DBPFFiles.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.QFS.html">QFS</a></dt>
+      <dd><p>An Implementation of the QFS/RefPack/LZ77 compression format used in SC4 DBPF Files.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.StreamExtensions.html">StreamExtensions</a></dt>
+      <dd><p>A set of extension methods for working with Streams and Readers</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.XMLExemplarProperty.html">XMLExemplarProperty</a></dt>
+      <dd><p>Represents a property stored in the new_properties.xml file.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.XMLProperties.html">XMLProperties</a></dt>
+      <dd><p>Static class for interfacing with new_properties.xml file through <a class="xref" href="csDBPF.XMLExemplarProperty.html">XMLExemplarProperty</a> objects.</p>
+</dd>
+    </dl>
+    <h3 id="structs">
+Structs
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntryDIR.DBDFItem.html">DBPFEntryDIR.DBDFItem</a></dt>
+      <dd><p>Struct which represents one item in the DBDF directory list. Each item is a reference to a compressed entry in the DBPF file.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFError.html">DBPFError</a></dt>
+      <dd><p>Details an error encountered when parsing a DBPF file.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.TGI.html">TGI</a></dt>
+      <dd><p>A struct representing three unsigned integers as a Type, Group, Instance pair.</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntry.EncodingType.html">DBPFEntry.EncodingType</a></dt>
+      <dd><p>Specifies the encoding type for an entry or properties.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFEntryFSH.BitmapType.html">DBPFEntryFSH.BitmapType</a></dt>
+      <dd><p>Defines the bitmap type stored in this file.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFProperty.ExemplarType.html">DBPFProperty.ExemplarType</a></dt>
+      <dd><p>Defines the <a href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar#Exemplar_Types">type of exemplar</a> and what game systems or components the exemplar contains info for.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.html">DBPFProperty.LotConfigPropertyLotObjectType</a></dt>
+      <dd><p>The first rep (0) of a LotConfigPropertyLotObject describes its <a href="https://www.wiki.sc4devotion.com/index.php?title=LotConfigPropertyLotObject#Specification">object type</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFProperty.LotConfigPropertyPurposeType.html">DBPFProperty.LotConfigPropertyPurposeType</a></dt>
+      <dd><p>Defines the <a href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">RCI type</a> for a lot.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.html">DBPFProperty.LotConfigPropertyRoadRequirement</a></dt>
+      <dd><p>Defines the <a href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">road orientation</a> for a lot.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFProperty.LotConfigPropertyWealthType.html">DBPFProperty.LotConfigPropertyWealthType</a></dt>
+      <dd><p>Defines the <a href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">wealth</a> for a lot.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFProperty.LotConfigPropertyZoneType.html">DBPFProperty.LotConfigPropertyZoneType</a></dt>
+      <dd><p>Defines the <a href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">zone type</a> for a lot - which type of zones the lot will grow on or was plopped as.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="csDBPF.DBPFProperty.PropertyDataType.html">DBPFProperty.PropertyDataType</a></dt>
+      <dd><p>This class stores information related to the possible data types for properties.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

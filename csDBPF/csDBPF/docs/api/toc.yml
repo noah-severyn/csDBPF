@@ -1,0 +1,109 @@
+### YamlMime:TableOfContent
+items:
+- uid: csDBPF
+  name: csDBPF
+  type: Namespace
+  items:
+  - uid: csDBPF.ByteArrayHelper
+    name: ByteArrayHelper
+    type: Class
+  - uid: csDBPF.DBPFEntry
+    name: DBPFEntry
+    type: Class
+  - uid: csDBPF.DBPFEntry.EncodingType
+    name: DBPFEntry.EncodingType
+    type: Enum
+  - uid: csDBPF.DBPFEntryDIR
+    name: DBPFEntryDIR
+    type: Class
+  - uid: csDBPF.DBPFEntryDIR.DBDFItem
+    name: DBPFEntryDIR.DBDFItem
+    type: Struct
+  - uid: csDBPF.DBPFEntryEXMP
+    name: DBPFEntryEXMP
+    type: Class
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    type: Class
+  - uid: csDBPF.DBPFEntryFSH.BitmapType
+    name: DBPFEntryFSH.BitmapType
+    type: Enum
+  - uid: csDBPF.DBPFEntryFSH.FSHEntry
+    name: DBPFEntryFSH.FSHEntry
+    type: Class
+  - uid: csDBPF.DBPFEntryFSH.FSHImageData
+    name: DBPFEntryFSH.FSHImageData
+    type: Class
+  - uid: csDBPF.DBPFEntryLTEXT
+    name: DBPFEntryLTEXT
+    type: Class
+  - uid: csDBPF.DBPFEntryPNG
+    name: DBPFEntryPNG
+    type: Class
+  - uid: csDBPF.DBPFError
+    name: DBPFError
+    type: Struct
+  - uid: csDBPF.DBPFFile
+    name: DBPFFile
+    type: Class
+  - uid: csDBPF.DBPFFileExtensions
+    name: DBPFFileExtensions
+    type: Class
+  - uid: csDBPF.DBPFHeader
+    name: DBPFHeader
+    type: Class
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    type: Class
+  - uid: csDBPF.DBPFProperty.ExemplarType
+    name: DBPFProperty.ExemplarType
+    type: Enum
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+    name: DBPFProperty.LotConfigPropertyLotObjectType
+    type: Enum
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+    name: DBPFProperty.LotConfigPropertyPurposeType
+    type: Enum
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+    name: DBPFProperty.LotConfigPropertyRoadRequirement
+    type: Enum
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyWealthType
+    name: DBPFProperty.LotConfigPropertyWealthType
+    type: Enum
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyZoneType
+    name: DBPFProperty.LotConfigPropertyZoneType
+    type: Enum
+  - uid: csDBPF.DBPFProperty.PropertyDataType
+    name: DBPFProperty.PropertyDataType
+    type: Enum
+  - uid: csDBPF.DBPFPropertyFloat
+    name: DBPFPropertyFloat
+    type: Class
+  - uid: csDBPF.DBPFPropertyLong
+    name: DBPFPropertyLong
+    type: Class
+  - uid: csDBPF.DBPFPropertyString
+    name: DBPFPropertyString
+    type: Class
+  - uid: csDBPF.DBPFTGI
+    name: DBPFTGI
+    type: Class
+  - uid: csDBPF.DBPFUtil
+    name: DBPFUtil
+    type: Class
+  - uid: csDBPF.QFS
+    name: QFS
+    type: Class
+  - uid: csDBPF.StreamExtensions
+    name: StreamExtensions
+    type: Class
+  - uid: csDBPF.TGI
+    name: TGI
+    type: Struct
+  - uid: csDBPF.XMLExemplarProperty
+    name: XMLExemplarProperty
+    type: Class
+  - uid: csDBPF.XMLProperties
+    name: XMLProperties
+    type: Class
+memberLayout: SamePage

@@ -1,0 +1,1187 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFEntry
+  commentId: T:csDBPF.DBPFEntry
+  id: DBPFEntry
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFEntry.#ctor(csDBPF.TGI)
+  - csDBPF.DBPFEntry.#ctor(csDBPF.TGI,System.UInt32,System.UInt32,System.UInt32,System.Byte[])
+  - csDBPF.DBPFEntry.ByteData
+  - csDBPF.DBPFEntry.CompressedSize
+  - csDBPF.DBPFEntry.Decode
+  - csDBPF.DBPFEntry.Encode(System.Boolean)
+  - csDBPF.DBPFEntry.ErrorLog
+  - csDBPF.DBPFEntry.GetSize
+  - csDBPF.DBPFEntry.IndexPos
+  - csDBPF.DBPFEntry.IsCompressed
+  - csDBPF.DBPFEntry.IsExemplar
+  - csDBPF.DBPFEntry.MatchesEntryType(csDBPF.TGI)
+  - csDBPF.DBPFEntry.Offset
+  - csDBPF.DBPFEntry.TGI
+  - csDBPF.DBPFEntry.ToString
+  - csDBPF.DBPFEntry.UncompressedSize
+  langs:
+  - csharp
+  - vb
+  name: DBPFEntry
+  nameWithType: DBPFEntry
+  fullName: csDBPF.DBPFEntry
+  type: Class
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: DBPFEntry
+    path: ../Entries/DBPFEntry.cs
+    startLine: 12
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: An abstract form of an entry item, representing an instance of a subfile that may be contained in a <xref href="csDBPF.DBPFFile" data-throw-if-not-resolved="false"></xref>. The data for each entry is not parsed or decoded until <xref href="csDBPF.DBPFEntry.Decode" data-throw-if-not-resolved="false"></xref> is called to decompress and set the actual entry data.
+  example: []
+  syntax:
+    content: public abstract class DBPFEntry
+    content.vb: Public MustInherit Class DBPFEntry
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - csDBPF.DBPFEntryDIR
+  - csDBPF.DBPFEntryEXMP
+  - csDBPF.DBPFEntryFSH
+  - csDBPF.DBPFEntryLTEXT
+  - csDBPF.DBPFEntryPNG
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: csDBPF.DBPFEntry.TGI
+  commentId: P:csDBPF.DBPFEntry.TGI
+  id: TGI
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: TGI
+  nameWithType: DBPFEntry.TGI
+  fullName: csDBPF.DBPFEntry.TGI
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: TGI
+    path: ../Entries/DBPFEntry.cs
+    startLine: 16
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: The TGI set representing the file type of the entry.
+  example: []
+  syntax:
+    content: public TGI TGI { get; }
+    parameters: []
+    return:
+      type: csDBPF.TGI
+    content.vb: Public ReadOnly Property TGI As TGI
+  overload: csDBPF.DBPFEntry.TGI*
+- uid: csDBPF.DBPFEntry.Offset
+  commentId: P:csDBPF.DBPFEntry.Offset
+  id: Offset
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: Offset
+  nameWithType: DBPFEntry.Offset
+  fullName: csDBPF.DBPFEntry.Offset
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Offset
+    path: ../Entries/DBPFEntry.cs
+    startLine: 21
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: >-
+    H
+        Byte position of this entry within the <xref href="csDBPF.DBPFFile" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public uint Offset { get; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public Property Offset As UInteger
+  overload: csDBPF.DBPFEntry.Offset*
+- uid: csDBPF.DBPFEntry.IndexPos
+  commentId: P:csDBPF.DBPFEntry.IndexPos
+  id: IndexPos
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: IndexPos
+  nameWithType: DBPFEntry.IndexPos
+  fullName: csDBPF.DBPFEntry.IndexPos
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: IndexPos
+    path: ../Entries/DBPFEntry.cs
+    startLine: 26
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Position of this entry in relation to the other entries in the <xref href="csDBPF.DBPFFile" data-throw-if-not-resolved="false"></xref>, 0-n.
+  example: []
+  syntax:
+    content: public uint IndexPos { get; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public Property IndexPos As UInteger
+  overload: csDBPF.DBPFEntry.IndexPos*
+- uid: csDBPF.DBPFEntry.UncompressedSize
+  commentId: P:csDBPF.DBPFEntry.UncompressedSize
+  id: UncompressedSize
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: UncompressedSize
+  nameWithType: DBPFEntry.UncompressedSize
+  fullName: csDBPF.DBPFEntry.UncompressedSize
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: UncompressedSize
+    path: ../Entries/DBPFEntry.cs
+    startLine: 34
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Uncompressed size of the entry data, in bytes.
+  remarks: This may be null if ByteData is null.
+  example: []
+  syntax:
+    content: public uint UncompressedSize { get; protected set; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public Property UncompressedSize As UInteger
+  overload: csDBPF.DBPFEntry.UncompressedSize*
+- uid: csDBPF.DBPFEntry.CompressedSize
+  commentId: P:csDBPF.DBPFEntry.CompressedSize
+  id: CompressedSize
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: CompressedSize
+  nameWithType: DBPFEntry.CompressedSize
+  fullName: csDBPF.DBPFEntry.CompressedSize
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: CompressedSize
+    path: ../Entries/DBPFEntry.cs
+    startLine: 42
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Compressed size of the entry data, in bytes.
+  remarks: This may be null if ByteData is null or if ByteData has been updated and not yet re-compressed.
+  example: []
+  syntax:
+    content: public uint CompressedSize { get; protected set; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public Property CompressedSize As UInteger
+  overload: csDBPF.DBPFEntry.CompressedSize*
+- uid: csDBPF.DBPFEntry.IsCompressed
+  commentId: P:csDBPF.DBPFEntry.IsCompressed
+  id: IsCompressed
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: IsCompressed
+  nameWithType: DBPFEntry.IsCompressed
+  fullName: csDBPF.DBPFEntry.IsCompressed
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: IsCompressed
+    path: ../Entries/DBPFEntry.cs
+    startLine: 47
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Get the current compression state of <xref href="csDBPF.DBPFEntry.ByteData" data-throw-if-not-resolved="false"></xref>. May be null if the compression state is unknown.
+  example: []
+  syntax:
+    content: public bool IsCompressed { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property IsCompressed As Boolean
+  overload: csDBPF.DBPFEntry.IsCompressed*
+- uid: csDBPF.DBPFEntry.ByteData
+  commentId: P:csDBPF.DBPFEntry.ByteData
+  id: ByteData
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: ByteData
+  nameWithType: DBPFEntry.ByteData
+  fullName: csDBPF.DBPFEntry.ByteData
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ByteData
+    path: ../Entries/DBPFEntry.cs
+    startLine: 56
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Byte array of raw data pertaining to this entry. This may or may not be compressed.
+  remarks: The interpretation of the entry data depends on the compression status and the entry type (known through its <xref href="csDBPF.DBPFEntry.TGI" data-throw-if-not-resolved="false"></xref>). Always check if the data is compressed before processing.
+  example: []
+  syntax:
+    content: public byte[] ByteData { get; protected set; }
+    parameters: []
+    return:
+      type: System.Byte[]
+    content.vb: Public Property ByteData As Byte()
+  overload: csDBPF.DBPFEntry.ByteData*
+- uid: csDBPF.DBPFEntry.ErrorLog
+  commentId: P:csDBPF.DBPFEntry.ErrorLog
+  id: ErrorLog
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: ErrorLog
+  nameWithType: DBPFEntry.ErrorLog
+  fullName: csDBPF.DBPFEntry.ErrorLog
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ErrorLog
+    path: ../Entries/DBPFEntry.cs
+    startLine: 79
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Gets a list of issues encountered when parsing this entry.
+  remarks: For Entries, the FileName is blank as it is unknown in this item's context - it's a property of this entry's parent DBPFFile.
+  example: []
+  syntax:
+    content: public List<DBPFError> ErrorLog { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{csDBPF.DBPFError}
+    content.vb: Public Property ErrorLog As List(Of DBPFError)
+  overload: csDBPF.DBPFEntry.ErrorLog*
+- uid: csDBPF.DBPFEntry.#ctor(csDBPF.TGI)
+  commentId: M:csDBPF.DBPFEntry.#ctor(csDBPF.TGI)
+  id: '#ctor(csDBPF.TGI)'
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: DBPFEntry(TGI)
+  nameWithType: DBPFEntry.DBPFEntry(TGI)
+  fullName: csDBPF.DBPFEntry.DBPFEntry(csDBPF.TGI)
+  type: Constructor
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: .ctor
+    path: ../Entries/DBPFEntry.cs
+    startLine: 88
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Create a new DBPFEntry object with a given TGI struct.
+  example: []
+  syntax:
+    content: public DBPFEntry(TGI tgi)
+    parameters:
+    - id: tgi
+      type: csDBPF.TGI
+      description: ''
+    content.vb: Public Sub New(tgi As TGI)
+  overload: csDBPF.DBPFEntry.#ctor*
+  nameWithType.vb: DBPFEntry.New(TGI)
+  fullName.vb: csDBPF.DBPFEntry.New(csDBPF.TGI)
+  name.vb: New(TGI)
+- uid: csDBPF.DBPFEntry.#ctor(csDBPF.TGI,System.UInt32,System.UInt32,System.UInt32,System.Byte[])
+  commentId: M:csDBPF.DBPFEntry.#ctor(csDBPF.TGI,System.UInt32,System.UInt32,System.UInt32,System.Byte[])
+  id: '#ctor(csDBPF.TGI,System.UInt32,System.UInt32,System.UInt32,System.Byte[])'
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: DBPFEntry(TGI, uint, uint, uint, byte[])
+  nameWithType: DBPFEntry.DBPFEntry(TGI, uint, uint, uint, byte[])
+  fullName: csDBPF.DBPFEntry.DBPFEntry(csDBPF.TGI, uint, uint, uint, byte[])
+  type: Constructor
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: .ctor
+    path: ../Entries/DBPFEntry.cs
+    startLine: 102
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Create a new DBPFEntry object.
+  example: []
+  syntax:
+    content: public DBPFEntry(TGI tgi, uint offset, uint size, uint index, byte[] bytes)
+    parameters:
+    - id: tgi
+      type: csDBPF.TGI
+      description: <xref href="csDBPF.DBPFEntry.TGI" data-throw-if-not-resolved="false"></xref> object representing the entry
+    - id: offset
+      type: System.UInt32
+      description: Offset (location) of the entry within the DBPF file
+    - id: size
+      type: System.UInt32
+      description: Compressed size of data for the entry, in bytes. Uncompressed size is also temporarily set to this to this until the data is set
+    - id: index
+      type: System.UInt32
+      description: Entry position in the file, 0-n
+    - id: bytes
+      type: System.Byte[]
+      description: Byte data for this entry
+    content.vb: Public Sub New(tgi As TGI, offset As UInteger, size As UInteger, index As UInteger, bytes As Byte())
+  overload: csDBPF.DBPFEntry.#ctor*
+  nameWithType.vb: DBPFEntry.New(TGI, UInteger, UInteger, UInteger, Byte())
+  fullName.vb: csDBPF.DBPFEntry.New(csDBPF.TGI, UInteger, UInteger, UInteger, Byte())
+  name.vb: New(TGI, UInteger, UInteger, UInteger, Byte())
+- uid: csDBPF.DBPFEntry.Decode
+  commentId: M:csDBPF.DBPFEntry.Decode
+  id: Decode
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: Decode()
+  nameWithType: DBPFEntry.Decode()
+  fullName: csDBPF.DBPFEntry.Decode()
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Decode
+    path: ../Entries/DBPFEntry.cs
+    startLine: 125
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Decompresses the data (if necessary) and sets the entry's data object from <xref href="csDBPF.DBPFEntry.ByteData" data-throw-if-not-resolved="false"></xref> according to the specific entry's type.
+  example: []
+  syntax:
+    content: public abstract void Decode()
+    content.vb: Public MustOverride Sub Decode()
+  overload: csDBPF.DBPFEntry.Decode*
+- uid: csDBPF.DBPFEntry.Encode(System.Boolean)
+  commentId: M:csDBPF.DBPFEntry.Encode(System.Boolean)
+  id: Encode(System.Boolean)
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: Encode(bool)
+  nameWithType: DBPFEntry.Encode(bool)
+  fullName: csDBPF.DBPFEntry.Encode(bool)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Encode
+    path: ../Entries/DBPFEntry.cs
+    startLine: 131
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Builds <xref href="csDBPF.DBPFEntry.ByteData" data-throw-if-not-resolved="false"></xref> with the current state of the entry's data object. The encoding can be either text or binary according to <xref href="csDBPF.DBPFEntry.EncodingType" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public abstract void Encode(bool compress = false)
+    parameters:
+    - id: compress
+      type: System.Boolean
+      description: Whether to compress the ByteData. Default is FALSE
+    content.vb: Public MustOverride Sub Encode(compress As Boolean = False)
+  overload: csDBPF.DBPFEntry.Encode*
+  nameWithType.vb: DBPFEntry.Encode(Boolean)
+  fullName.vb: csDBPF.DBPFEntry.Encode(Boolean)
+  name.vb: Encode(Boolean)
+- uid: csDBPF.DBPFEntry.ToString
+  commentId: M:csDBPF.DBPFEntry.ToString
+  id: ToString
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: DBPFEntry.ToString()
+  fullName: csDBPF.DBPFEntry.ToString()
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ToString
+    path: ../Entries/DBPFEntry.cs
+    startLine: 136
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Returns a string that represents the current object.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: A string that represents the current object.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.Object.ToString
+  overload: csDBPF.DBPFEntry.ToString*
+- uid: csDBPF.DBPFEntry.MatchesEntryType(csDBPF.TGI)
+  commentId: M:csDBPF.DBPFEntry.MatchesEntryType(csDBPF.TGI)
+  id: MatchesEntryType(csDBPF.TGI)
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: MatchesEntryType(TGI)
+  nameWithType: DBPFEntry.MatchesEntryType(TGI)
+  fullName: csDBPF.DBPFEntry.MatchesEntryType(csDBPF.TGI)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: MatchesEntryType
+    path: ../Entries/DBPFEntry.cs
+    startLine: 148
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Determine if the entry is the same entry type as the specified one.
+  remarks: This is a shortcut equivalent to <xref href="csDBPF.TGI.Matches(csDBPF.TGI)" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public bool MatchesEntryType(TGI known)
+    parameters:
+    - id: known
+      type: csDBPF.TGI
+      description: <xref href="csDBPF.DBPFTGI" data-throw-if-not-resolved="false"></xref> to compare against
+    return:
+      type: System.Boolean
+      description: TRUE if this Entry matches the specified; FALSE otherwise.
+    content.vb: Public Function MatchesEntryType(known As TGI) As Boolean
+  overload: csDBPF.DBPFEntry.MatchesEntryType*
+- uid: csDBPF.DBPFEntry.IsExemplar
+  commentId: M:csDBPF.DBPFEntry.IsExemplar
+  id: IsExemplar
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: IsExemplar()
+  nameWithType: DBPFEntry.IsExemplar()
+  fullName: csDBPF.DBPFEntry.IsExemplar()
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: IsExemplar
+    path: ../Entries/DBPFEntry.cs
+    startLine: 157
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Returns whether this entry is an Exemplar or Cohort Entry
+  example: []
+  syntax:
+    content: public bool IsExemplar()
+    return:
+      type: System.Boolean
+      description: TRUE if is an Exemplar or Cohort; FALSE otherwise
+    content.vb: Public Function IsExemplar() As Boolean
+  overload: csDBPF.DBPFEntry.IsExemplar*
+- uid: csDBPF.DBPFEntry.GetSize
+  commentId: M:csDBPF.DBPFEntry.GetSize
+  id: GetSize
+  parent: csDBPF.DBPFEntry
+  langs:
+  - csharp
+  - vb
+  name: GetSize()
+  nameWithType: DBPFEntry.GetSize()
+  fullName: csDBPF.DBPFEntry.GetSize()
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntry.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: GetSize
+    path: ../Entries/DBPFEntry.cs
+    startLine: 172
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Return either the Compressed or Uncompressed size depending on if this entry is compressed or not.
+  example: []
+  syntax:
+    content: public uint GetSize()
+    return:
+      type: System.UInt32
+      description: The size in bytes
+    content.vb: Public Function GetSize() As UInteger
+  overload: csDBPF.DBPFEntry.GetSize*
+references:
+- uid: csDBPF.DBPFFile
+  commentId: T:csDBPF.DBPFFile
+  href: csDBPF.DBPFFile.html
+  name: DBPFFile
+  nameWithType: DBPFFile
+  fullName: csDBPF.DBPFFile
+- uid: csDBPF.DBPFEntry.Decode
+  commentId: M:csDBPF.DBPFEntry.Decode
+  parent: csDBPF.DBPFEntry
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_Decode
+  name: Decode()
+  nameWithType: DBPFEntry.Decode()
+  fullName: csDBPF.DBPFEntry.Decode()
+  spec.csharp:
+  - uid: csDBPF.DBPFEntry.Decode
+    name: Decode
+    href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_Decode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: csDBPF.DBPFEntry.Decode
+    name: Decode
+    href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_Decode
+  - name: (
+  - name: )
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: csDBPF.DBPFEntry
+  commentId: T:csDBPF.DBPFEntry
+  parent: csDBPF
+  href: csDBPF.DBPFEntry.html
+  name: DBPFEntry
+  nameWithType: DBPFEntry
+  fullName: csDBPF.DBPFEntry
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: csDBPF.DBPFEntry.TGI*
+  commentId: Overload:csDBPF.DBPFEntry.TGI
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_TGI
+  name: TGI
+  nameWithType: DBPFEntry.TGI
+  fullName: csDBPF.DBPFEntry.TGI
+- uid: csDBPF.TGI
+  commentId: T:csDBPF.TGI
+  parent: csDBPF
+  href: csDBPF.TGI.html
+  name: TGI
+  nameWithType: TGI
+  fullName: csDBPF.TGI
+- uid: csDBPF.DBPFEntry.Offset*
+  commentId: Overload:csDBPF.DBPFEntry.Offset
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_Offset
+  name: Offset
+  nameWithType: DBPFEntry.Offset
+  fullName: csDBPF.DBPFEntry.Offset
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: csDBPF.DBPFEntry.IndexPos*
+  commentId: Overload:csDBPF.DBPFEntry.IndexPos
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_IndexPos
+  name: IndexPos
+  nameWithType: DBPFEntry.IndexPos
+  fullName: csDBPF.DBPFEntry.IndexPos
+- uid: csDBPF.DBPFEntry.UncompressedSize*
+  commentId: Overload:csDBPF.DBPFEntry.UncompressedSize
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_UncompressedSize
+  name: UncompressedSize
+  nameWithType: DBPFEntry.UncompressedSize
+  fullName: csDBPF.DBPFEntry.UncompressedSize
+- uid: csDBPF.DBPFEntry.CompressedSize*
+  commentId: Overload:csDBPF.DBPFEntry.CompressedSize
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_CompressedSize
+  name: CompressedSize
+  nameWithType: DBPFEntry.CompressedSize
+  fullName: csDBPF.DBPFEntry.CompressedSize
+- uid: csDBPF.DBPFEntry.ByteData
+  commentId: P:csDBPF.DBPFEntry.ByteData
+  parent: csDBPF.DBPFEntry
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_ByteData
+  name: ByteData
+  nameWithType: DBPFEntry.ByteData
+  fullName: csDBPF.DBPFEntry.ByteData
+- uid: csDBPF.DBPFEntry.IsCompressed*
+  commentId: Overload:csDBPF.DBPFEntry.IsCompressed
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_IsCompressed
+  name: IsCompressed
+  nameWithType: DBPFEntry.IsCompressed
+  fullName: csDBPF.DBPFEntry.IsCompressed
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: csDBPF.DBPFEntry.TGI
+  commentId: P:csDBPF.DBPFEntry.TGI
+  parent: csDBPF.DBPFEntry
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_TGI
+  name: TGI
+  nameWithType: DBPFEntry.TGI
+  fullName: csDBPF.DBPFEntry.TGI
+- uid: csDBPF.DBPFEntry.ByteData*
+  commentId: Overload:csDBPF.DBPFEntry.ByteData
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_ByteData
+  name: ByteData
+  nameWithType: DBPFEntry.ByteData
+  fullName: csDBPF.DBPFEntry.ByteData
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: csDBPF.DBPFEntry.ErrorLog*
+  commentId: Overload:csDBPF.DBPFEntry.ErrorLog
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_ErrorLog
+  name: ErrorLog
+  nameWithType: DBPFEntry.ErrorLog
+  fullName: csDBPF.DBPFEntry.ErrorLog
+- uid: System.Collections.Generic.List{csDBPF.DBPFError}
+  commentId: T:System.Collections.Generic.List{csDBPF.DBPFError}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<DBPFError>
+  nameWithType: List<DBPFError>
+  fullName: System.Collections.Generic.List<csDBPF.DBPFError>
+  nameWithType.vb: List(Of DBPFError)
+  fullName.vb: System.Collections.Generic.List(Of csDBPF.DBPFError)
+  name.vb: List(Of DBPFError)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: csDBPF.DBPFError
+    name: DBPFError
+    href: csDBPF.DBPFError.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: csDBPF.DBPFError
+    name: DBPFError
+    href: csDBPF.DBPFError.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: csDBPF.DBPFEntry.#ctor*
+  commentId: Overload:csDBPF.DBPFEntry.#ctor
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry__ctor_csDBPF_TGI_
+  name: DBPFEntry
+  nameWithType: DBPFEntry.DBPFEntry
+  fullName: csDBPF.DBPFEntry.DBPFEntry
+  nameWithType.vb: DBPFEntry.New
+  fullName.vb: csDBPF.DBPFEntry.New
+  name.vb: New
+- uid: csDBPF.DBPFEntry.Decode*
+  commentId: Overload:csDBPF.DBPFEntry.Decode
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_Decode
+  name: Decode
+  nameWithType: DBPFEntry.Decode
+  fullName: csDBPF.DBPFEntry.Decode
+- uid: csDBPF.DBPFEntry.EncodingType
+  commentId: T:csDBPF.DBPFEntry.EncodingType
+  parent: csDBPF
+  href: csDBPF.DBPFEntry.html
+  name: DBPFEntry.EncodingType
+  nameWithType: DBPFEntry.EncodingType
+  fullName: csDBPF.DBPFEntry.EncodingType
+  spec.csharp:
+  - uid: csDBPF.DBPFEntry
+    name: DBPFEntry
+    href: csDBPF.DBPFEntry.html
+  - name: .
+  - uid: csDBPF.DBPFEntry.EncodingType
+    name: EncodingType
+    href: csDBPF.DBPFEntry.EncodingType.html
+  spec.vb:
+  - uid: csDBPF.DBPFEntry
+    name: DBPFEntry
+    href: csDBPF.DBPFEntry.html
+  - name: .
+  - uid: csDBPF.DBPFEntry.EncodingType
+    name: EncodingType
+    href: csDBPF.DBPFEntry.EncodingType.html
+- uid: csDBPF.DBPFEntry.Encode*
+  commentId: Overload:csDBPF.DBPFEntry.Encode
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_Encode_System_Boolean_
+  name: Encode
+  nameWithType: DBPFEntry.Encode
+  fullName: csDBPF.DBPFEntry.Encode
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: csDBPF.DBPFEntry.ToString*
+  commentId: Overload:csDBPF.DBPFEntry.ToString
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_ToString
+  name: ToString
+  nameWithType: DBPFEntry.ToString
+  fullName: csDBPF.DBPFEntry.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: csDBPF.DBPFTGI
+  commentId: T:csDBPF.DBPFTGI
+  href: csDBPF.DBPFTGI.html
+  name: DBPFTGI
+  nameWithType: DBPFTGI
+  fullName: csDBPF.DBPFTGI
+- uid: csDBPF.TGI.Matches(csDBPF.TGI)
+  commentId: M:csDBPF.TGI.Matches(csDBPF.TGI)
+  href: csDBPF.TGI.html#csDBPF_TGI_Matches_csDBPF_TGI_
+  name: Matches(TGI)
+  nameWithType: TGI.Matches(TGI)
+  fullName: csDBPF.TGI.Matches(csDBPF.TGI)
+  spec.csharp:
+  - uid: csDBPF.TGI.Matches(csDBPF.TGI)
+    name: Matches
+    href: csDBPF.TGI.html#csDBPF_TGI_Matches_csDBPF_TGI_
+  - name: (
+  - uid: csDBPF.TGI
+    name: TGI
+    href: csDBPF.TGI.html
+  - name: )
+  spec.vb:
+  - uid: csDBPF.TGI.Matches(csDBPF.TGI)
+    name: Matches
+    href: csDBPF.TGI.html#csDBPF_TGI_Matches_csDBPF_TGI_
+  - name: (
+  - uid: csDBPF.TGI
+    name: TGI
+    href: csDBPF.TGI.html
+  - name: )
+- uid: csDBPF.DBPFEntry.MatchesEntryType*
+  commentId: Overload:csDBPF.DBPFEntry.MatchesEntryType
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_MatchesEntryType_csDBPF_TGI_
+  name: MatchesEntryType
+  nameWithType: DBPFEntry.MatchesEntryType
+  fullName: csDBPF.DBPFEntry.MatchesEntryType
+- uid: csDBPF.DBPFEntry.IsExemplar*
+  commentId: Overload:csDBPF.DBPFEntry.IsExemplar
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_IsExemplar
+  name: IsExemplar
+  nameWithType: DBPFEntry.IsExemplar
+  fullName: csDBPF.DBPFEntry.IsExemplar
+- uid: csDBPF.DBPFEntry.GetSize*
+  commentId: Overload:csDBPF.DBPFEntry.GetSize
+  href: csDBPF.DBPFEntry.html#csDBPF_DBPFEntry_GetSize
+  name: GetSize
+  nameWithType: DBPFEntry.GetSize
+  fullName: csDBPF.DBPFEntry.GetSize

@@ -1,0 +1,292 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  id: DBPFProperty.LotConfigPropertyPurposeType
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFProperty.LotConfigPropertyPurposeType.Agriculture
+  - csDBPF.DBPFProperty.LotConfigPropertyPurposeType.CommercialOffice
+  - csDBPF.DBPFProperty.LotConfigPropertyPurposeType.CommercialService
+  - csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryDirty
+  - csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryHighTech
+  - csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryMfg
+  - csDBPF.DBPFProperty.LotConfigPropertyPurposeType.None
+  - csDBPF.DBPFProperty.LotConfigPropertyPurposeType.Residential
+  langs:
+  - csharp
+  - vb
+  name: DBPFProperty.LotConfigPropertyPurposeType
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  type: Enum
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LotConfigPropertyPurposeType
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 200
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines the <a href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">RCI type</a> for a lot.
+  example: []
+  syntax:
+    content: public enum DBPFProperty.LotConfigPropertyPurposeType
+    content.vb: Public Enum DBPFProperty.LotConfigPropertyPurposeType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.None
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyPurposeType.None
+  id: None
+  parent: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType.None
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.None
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: None
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 204
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: None.
+  example: []
+  syntax:
+    content: None = 0
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.Residential
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyPurposeType.Residential
+  id: Residential
+  parent: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  langs:
+  - csharp
+  - vb
+  name: Residential
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType.Residential
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.Residential
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Residential
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 208
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Residential (R).
+  example: []
+  syntax:
+    content: Residential = 1
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.CommercialService
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyPurposeType.CommercialService
+  id: CommercialService
+  parent: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  langs:
+  - csharp
+  - vb
+  name: CommercialService
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType.CommercialService
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.CommercialService
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: CommercialService
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 212
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Commercial Service (CS).
+  example: []
+  syntax:
+    content: CommercialService = 2
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.CommercialOffice
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyPurposeType.CommercialOffice
+  id: CommercialOffice
+  parent: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  langs:
+  - csharp
+  - vb
+  name: CommercialOffice
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType.CommercialOffice
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.CommercialOffice
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: CommercialOffice
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 216
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Commercial Office (CO)
+  example: []
+  syntax:
+    content: CommercialOffice = 3
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.Agriculture
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyPurposeType.Agriculture
+  id: Agriculture
+  parent: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  langs:
+  - csharp
+  - vb
+  name: Agriculture
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType.Agriculture
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.Agriculture
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Agriculture
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 220
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Agriculture (AG)
+  example: []
+  syntax:
+    content: Agriculture = 5
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryDirty
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryDirty
+  id: IndustryDirty
+  parent: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  langs:
+  - csharp
+  - vb
+  name: IndustryDirty
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType.IndustryDirty
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryDirty
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: IndustryDirty
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 224
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Industrial Dirty (ID)
+  example: []
+  syntax:
+    content: IndustryDirty = 6
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryMfg
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryMfg
+  id: IndustryMfg
+  parent: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  langs:
+  - csharp
+  - vb
+  name: IndustryMfg
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType.IndustryMfg
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryMfg
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: IndustryMfg
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 228
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Industrial Manufacturing (IM)
+  example: []
+  syntax:
+    content: IndustryMfg = 7
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryHighTech
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryHighTech
+  id: IndustryHighTech
+  parent: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  langs:
+  - csharp
+  - vb
+  name: IndustryHighTech
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType.IndustryHighTech
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.IndustryHighTech
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: IndustryHighTech
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 232
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Industial High Tech (IHT)
+  example: []
+  syntax:
+    content: IndustryHighTech = 8
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.LotConfigPropertyPurposeType
+  nameWithType: DBPFProperty.LotConfigPropertyPurposeType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+    name: LotConfigPropertyPurposeType
+    href: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyPurposeType
+    name: LotConfigPropertyPurposeType
+    href: csDBPF.DBPFProperty.LotConfigPropertyPurposeType.html

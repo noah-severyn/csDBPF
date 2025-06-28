@@ -1,0 +1,147 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  id: DBPFProperty.LotConfigPropertyRoadRequirement
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.LeftCorner
+  - csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.Normal
+  - csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.RightCorner
+  langs:
+  - csharp
+  - vb
+  name: DBPFProperty.LotConfigPropertyRoadRequirement
+  nameWithType: DBPFProperty.LotConfigPropertyRoadRequirement
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  type: Enum
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LotConfigPropertyRoadRequirement
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 333
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines the <a href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar_properties#Lot_Configuration">road orientation</a> for a lot.
+  example: []
+  syntax:
+    content: public enum DBPFProperty.LotConfigPropertyRoadRequirement
+    content.vb: Public Enum DBPFProperty.LotConfigPropertyRoadRequirement
+- uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.Normal
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.Normal
+  id: Normal
+  parent: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  langs:
+  - csharp
+  - vb
+  name: Normal
+  nameWithType: DBPFProperty.LotConfigPropertyRoadRequirement.Normal
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.Normal
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Normal
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 337
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Front road requirement.
+  example: []
+  syntax:
+    content: Normal = 8
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+- uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.LeftCorner
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.LeftCorner
+  id: LeftCorner
+  parent: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  langs:
+  - csharp
+  - vb
+  name: LeftCorner
+  nameWithType: DBPFProperty.LotConfigPropertyRoadRequirement.LeftCorner
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.LeftCorner
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LeftCorner
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 341
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Front and left road requirement.
+  example: []
+  syntax:
+    content: LeftCorner = 9
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+- uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.RightCorner
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.RightCorner
+  id: RightCorner
+  parent: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  langs:
+  - csharp
+  - vb
+  name: RightCorner
+  nameWithType: DBPFProperty.LotConfigPropertyRoadRequirement.RightCorner
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.RightCorner
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: RightCorner
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 345
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Front and right road requirement.
+  example: []
+  syntax:
+    content: RightCorner = 12
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.LotConfigPropertyRoadRequirement
+  nameWithType: DBPFProperty.LotConfigPropertyRoadRequirement
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+    name: LotConfigPropertyRoadRequirement
+    href: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement
+    name: LotConfigPropertyRoadRequirement
+    href: csDBPF.DBPFProperty.LotConfigPropertyRoadRequirement.html

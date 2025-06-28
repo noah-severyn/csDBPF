@@ -1,0 +1,424 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFEntryDIR.DBDFItem
+  commentId: T:csDBPF.DBPFEntryDIR.DBDFItem
+  id: DBPFEntryDIR.DBDFItem
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFEntryDIR.DBDFItem.GID
+  - csDBPF.DBPFEntryDIR.DBDFItem.IID
+  - csDBPF.DBPFEntryDIR.DBDFItem.Size
+  - csDBPF.DBPFEntryDIR.DBDFItem.TID
+  langs:
+  - csharp
+  - vb
+  name: DBPFEntryDIR.DBDFItem
+  nameWithType: DBPFEntryDIR.DBDFItem
+  fullName: csDBPF.DBPFEntryDIR.DBDFItem
+  type: Struct
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryDIR.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: DBDFItem
+    path: ../Entries/DBPFEntryDIR.cs
+    startLine: 33
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Struct which represents one item in the DBDF directory list. Each item is a reference to a compressed entry in the DBPF file.
+  example: []
+  syntax:
+    content: public readonly struct DBPFEntryDIR.DBDFItem
+    content.vb: Public Structure DBPFEntryDIR.DBDFItem
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: csDBPF.DBPFEntryDIR.DBDFItem.TID
+  commentId: P:csDBPF.DBPFEntryDIR.DBDFItem.TID
+  id: TID
+  parent: csDBPF.DBPFEntryDIR.DBDFItem
+  langs:
+  - csharp
+  - vb
+  name: TID
+  nameWithType: DBPFEntryDIR.DBDFItem.TID
+  fullName: csDBPF.DBPFEntryDIR.DBDFItem.TID
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryDIR.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: TID
+    path: ../Entries/DBPFEntryDIR.cs
+    startLine: 37
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Item Type ID.
+  example: []
+  syntax:
+    content: public uint TID { get; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public ReadOnly Property TID As UInteger
+  overload: csDBPF.DBPFEntryDIR.DBDFItem.TID*
+- uid: csDBPF.DBPFEntryDIR.DBDFItem.GID
+  commentId: P:csDBPF.DBPFEntryDIR.DBDFItem.GID
+  id: GID
+  parent: csDBPF.DBPFEntryDIR.DBDFItem
+  langs:
+  - csharp
+  - vb
+  name: GID
+  nameWithType: DBPFEntryDIR.DBDFItem.GID
+  fullName: csDBPF.DBPFEntryDIR.DBDFItem.GID
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryDIR.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: GID
+    path: ../Entries/DBPFEntryDIR.cs
+    startLine: 41
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Item Group ID.
+  example: []
+  syntax:
+    content: public uint GID { get; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public ReadOnly Property GID As UInteger
+  overload: csDBPF.DBPFEntryDIR.DBDFItem.GID*
+- uid: csDBPF.DBPFEntryDIR.DBDFItem.IID
+  commentId: P:csDBPF.DBPFEntryDIR.DBDFItem.IID
+  id: IID
+  parent: csDBPF.DBPFEntryDIR.DBDFItem
+  langs:
+  - csharp
+  - vb
+  name: IID
+  nameWithType: DBPFEntryDIR.DBDFItem.IID
+  fullName: csDBPF.DBPFEntryDIR.DBDFItem.IID
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryDIR.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: IID
+    path: ../Entries/DBPFEntryDIR.cs
+    startLine: 45
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Item Instance ID.
+  example: []
+  syntax:
+    content: public uint IID { get; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public ReadOnly Property IID As UInteger
+  overload: csDBPF.DBPFEntryDIR.DBDFItem.IID*
+- uid: csDBPF.DBPFEntryDIR.DBDFItem.Size
+  commentId: P:csDBPF.DBPFEntryDIR.DBDFItem.Size
+  id: Size
+  parent: csDBPF.DBPFEntryDIR.DBDFItem
+  langs:
+  - csharp
+  - vb
+  name: Size
+  nameWithType: DBPFEntryDIR.DBDFItem.Size
+  fullName: csDBPF.DBPFEntryDIR.DBDFItem.Size
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryDIR.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Size
+    path: ../Entries/DBPFEntryDIR.cs
+    startLine: 49
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Item size in bytes.
+  example: []
+  syntax:
+    content: public uint Size { get; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public ReadOnly Property Size As UInteger
+  overload: csDBPF.DBPFEntryDIR.DBDFItem.Size*
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: csDBPF.DBPFEntryDIR.DBDFItem.TID*
+  commentId: Overload:csDBPF.DBPFEntryDIR.DBDFItem.TID
+  href: csDBPF.DBPFEntryDIR.DBDFItem.html#csDBPF_DBPFEntryDIR_DBDFItem_TID
+  name: TID
+  nameWithType: DBPFEntryDIR.DBDFItem.TID
+  fullName: csDBPF.DBPFEntryDIR.DBDFItem.TID
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: csDBPF.DBPFEntryDIR.DBDFItem.GID*
+  commentId: Overload:csDBPF.DBPFEntryDIR.DBDFItem.GID
+  href: csDBPF.DBPFEntryDIR.DBDFItem.html#csDBPF_DBPFEntryDIR_DBDFItem_GID
+  name: GID
+  nameWithType: DBPFEntryDIR.DBDFItem.GID
+  fullName: csDBPF.DBPFEntryDIR.DBDFItem.GID
+- uid: csDBPF.DBPFEntryDIR.DBDFItem.IID*
+  commentId: Overload:csDBPF.DBPFEntryDIR.DBDFItem.IID
+  href: csDBPF.DBPFEntryDIR.DBDFItem.html#csDBPF_DBPFEntryDIR_DBDFItem_IID
+  name: IID
+  nameWithType: DBPFEntryDIR.DBDFItem.IID
+  fullName: csDBPF.DBPFEntryDIR.DBDFItem.IID
+- uid: csDBPF.DBPFEntryDIR.DBDFItem.Size*
+  commentId: Overload:csDBPF.DBPFEntryDIR.DBDFItem.Size
+  href: csDBPF.DBPFEntryDIR.DBDFItem.html#csDBPF_DBPFEntryDIR_DBDFItem_Size
+  name: Size
+  nameWithType: DBPFEntryDIR.DBDFItem.Size
+  fullName: csDBPF.DBPFEntryDIR.DBDFItem.Size

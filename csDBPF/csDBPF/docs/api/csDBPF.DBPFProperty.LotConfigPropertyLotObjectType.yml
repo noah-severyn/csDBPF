@@ -1,0 +1,305 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  id: DBPFProperty.LotConfigPropertyLotObjectType
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Building
+  - csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Fence
+  - csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Flora
+  - csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.LandConstraint
+  - csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.NetworkNode
+  - csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Prop
+  - csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Texture
+  - csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.WaterConstraint
+  langs:
+  - csharp
+  - vb
+  name: DBPFProperty.LotConfigPropertyLotObjectType
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  type: Enum
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LotConfigPropertyLotObjectType
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 160
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: The first rep (0) of a LotConfigPropertyLotObject describes its <a href="https://www.wiki.sc4devotion.com/index.php?title=LotConfigPropertyLotObject#Specification">object type</a>.
+  example: []
+  syntax:
+    content: public enum DBPFProperty.LotConfigPropertyLotObjectType
+    content.vb: Public Enum DBPFProperty.LotConfigPropertyLotObjectType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Building
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Building
+  id: Building
+  parent: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  langs:
+  - csharp
+  - vb
+  name: Building
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType.Building
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Building
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Building
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 164
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines position and IID reference of building exemplar.
+  example: []
+  syntax:
+    content: Building = 0
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Prop
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Prop
+  id: Prop
+  parent: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  langs:
+  - csharp
+  - vb
+  name: Prop
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType.Prop
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Prop
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Prop
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 168
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines position and IID reference of a prop exemplar.
+  example: []
+  syntax:
+    content: Prop = 1
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Texture
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Texture
+  id: Texture
+  parent: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  langs:
+  - csharp
+  - vb
+  name: Texture
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType.Texture
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Texture
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Texture
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 172
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines position and IID reference of a base or overlay texture.
+  example: []
+  syntax:
+    content: Texture = 2
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Fence
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Fence
+  id: Fence
+  parent: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  langs:
+  - csharp
+  - vb
+  name: Fence
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType.Fence
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Fence
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Fence
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 176
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Not implemented currently.
+  example: []
+  syntax:
+    content: >-
+      [Obsolete("Not implemented in SC4.")]
+
+      Fence = 3
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+    content.vb: >-
+      <Obsolete("Not implemented in SC4.")>
+
+      Fence = 3
+  attributes:
+  - type: System.ObsoleteAttribute
+    ctor: System.ObsoleteAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Not implemented in SC4.
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Flora
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Flora
+  id: Flora
+  parent: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  langs:
+  - csharp
+  - vb
+  name: Flora
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType.Flora
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.Flora
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Flora
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 181
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines position, and IID reference of a flora/growable tree exemplar.
+  example: []
+  syntax:
+    content: Flora = 4
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.WaterConstraint
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.WaterConstraint
+  id: WaterConstraint
+  parent: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  langs:
+  - csharp
+  - vb
+  name: WaterConstraint
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType.WaterConstraint
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.WaterConstraint
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: WaterConstraint
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 185
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines a water constraint tile.
+  example: []
+  syntax:
+    content: WaterConstraint = 5
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.LandConstraint
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.LandConstraint
+  id: LandConstraint
+  parent: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  langs:
+  - csharp
+  - vb
+  name: LandConstraint
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType.LandConstraint
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.LandConstraint
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LandConstraint
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 189
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines a land constraint tile.
+  example: []
+  syntax:
+    content: LandConstraint = 6
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.NetworkNode
+  commentId: F:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.NetworkNode
+  id: NetworkNode
+  parent: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  langs:
+  - csharp
+  - vb
+  name: NetworkNode
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType.NetworkNode
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.NetworkNode
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: NetworkNode
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 193
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines transit connections and automata paths.
+  example: []
+  syntax:
+    content: NetworkNode = 7
+    return:
+      type: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  commentId: T:csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.LotConfigPropertyLotObjectType
+  nameWithType: DBPFProperty.LotConfigPropertyLotObjectType
+  fullName: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+    name: LotConfigPropertyLotObjectType
+    href: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType
+    name: LotConfigPropertyLotObjectType
+    href: csDBPF.DBPFProperty.LotConfigPropertyLotObjectType.html

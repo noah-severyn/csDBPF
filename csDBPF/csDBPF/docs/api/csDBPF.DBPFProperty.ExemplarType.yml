@@ -1,0 +1,1104 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFProperty.ExemplarType
+  commentId: T:csDBPF.DBPFProperty.ExemplarType
+  id: DBPFProperty.ExemplarType
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFProperty.ExemplarType.Aircraft
+  - csDBPF.DBPFProperty.ExemplarType.Audio
+  - csDBPF.DBPFProperty.ExemplarType.AutomataTuning
+  - csDBPF.DBPFProperty.ExemplarType.Bridge
+  - csDBPF.DBPFProperty.ExemplarType.Building
+  - csDBPF.DBPFProperty.ExemplarType.Construction
+  - csDBPF.DBPFProperty.ExemplarType.Crime
+  - csDBPF.DBPFProperty.ExemplarType.DataView
+  - csDBPF.DBPFProperty.ExemplarType.Developer
+  - csDBPF.DBPFProperty.ExemplarType.Disaster
+  - csDBPF.DBPFProperty.ExemplarType.Error
+  - csDBPF.DBPFProperty.ExemplarType.FloraFauna
+  - csDBPF.DBPFProperty.ExemplarType.Foundation
+  - csDBPF.DBPFProperty.ExemplarType.GodMode
+  - csDBPF.DBPFProperty.ExemplarType.GraphControl
+  - csDBPF.DBPFProperty.ExemplarType.Highway
+  - csDBPF.DBPFProperty.ExemplarType.Lighting
+  - csDBPF.DBPFProperty.ExemplarType.LotConfiguration
+  - csDBPF.DBPFProperty.ExemplarType.LotRetianingWall
+  - csDBPF.DBPFProperty.ExemplarType.MayorMode
+  - csDBPF.DBPFProperty.ExemplarType.MiscNetwork
+  - csDBPF.DBPFProperty.ExemplarType.NetworkLot
+  - csDBPF.DBPFProperty.ExemplarType.Ordinance
+  - csDBPF.DBPFProperty.ExemplarType.Pedestrian
+  - csDBPF.DBPFProperty.ExemplarType.PowerLine
+  - csDBPF.DBPFProperty.ExemplarType.Prop
+  - csDBPF.DBPFProperty.ExemplarType.RCI
+  - csDBPF.DBPFProperty.ExemplarType.Rail
+  - csDBPF.DBPFProperty.ExemplarType.Road
+  - csDBPF.DBPFProperty.ExemplarType.Simulator
+  - csDBPF.DBPFProperty.ExemplarType.T00
+  - csDBPF.DBPFProperty.ExemplarType.Terrain
+  - csDBPF.DBPFProperty.ExemplarType.TrendBar
+  - csDBPF.DBPFProperty.ExemplarType.Tuning
+  - csDBPF.DBPFProperty.ExemplarType.UnknownType
+  - csDBPF.DBPFProperty.ExemplarType.Vehicle
+  langs:
+  - csharp
+  - vb
+  name: DBPFProperty.ExemplarType
+  nameWithType: DBPFProperty.ExemplarType
+  fullName: csDBPF.DBPFProperty.ExemplarType
+  type: Enum
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ExemplarType
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 9
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Defines the <a href="https://www.wiki.sc4devotion.com/index.php?title=Exemplar#Exemplar_Types">type of exemplar</a> and what game systems or components the exemplar contains info for.
+  example: []
+  syntax:
+    content: public enum DBPFProperty.ExemplarType
+    content.vb: Public Enum DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Error
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Error
+  id: Error
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Error
+  nameWithType: DBPFProperty.ExemplarType.Error
+  fullName: csDBPF.DBPFProperty.ExemplarType.Error
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Error
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 13
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Error reading type or type is not present.
+  example: []
+  syntax:
+    content: Error = -1
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.T00
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.T00
+  id: T00
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: T00
+  nameWithType: DBPFProperty.ExemplarType.T00
+  fullName: csDBPF.DBPFProperty.ExemplarType.T00
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: T00
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 17
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: The use of T00 exemplars is relatively unknown.
+  example: []
+  syntax:
+    content: T00 = 0
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Tuning
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Tuning
+  id: Tuning
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Tuning
+  nameWithType: DBPFProperty.ExemplarType.Tuning
+  fullName: csDBPF.DBPFProperty.ExemplarType.Tuning
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Tuning
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 21
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Tuning Exemplars. These control various game properties such as transit network slopes.
+  example: []
+  syntax:
+    content: Tuning = 1
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Building
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Building
+  id: Building
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Building
+  nameWithType: DBPFProperty.ExemplarType.Building
+  fullName: csDBPF.DBPFProperty.ExemplarType.Building
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Building
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 25
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Building Exemplars. These contain properties related to buildings.
+  example: []
+  syntax:
+    content: Building = 2
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.RCI
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.RCI
+  id: RCI
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: RCI
+  nameWithType: DBPFProperty.ExemplarType.RCI
+  fullName: csDBPF.DBPFProperty.ExemplarType.RCI
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: RCI
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 29
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: RCI Exemplars.
+  example: []
+  syntax:
+    content: RCI = 3
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Developer
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Developer
+  id: Developer
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Developer
+  nameWithType: DBPFProperty.ExemplarType.Developer
+  fullName: csDBPF.DBPFProperty.ExemplarType.Developer
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Developer
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 33
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Developer Exemplars.
+  example: []
+  syntax:
+    content: Developer = 4
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Simulator
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Simulator
+  id: Simulator
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Simulator
+  nameWithType: DBPFProperty.ExemplarType.Simulator
+  fullName: csDBPF.DBPFProperty.ExemplarType.Simulator
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Simulator
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 37
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Simulator Exemplars. These are among the most critical to game functionality, and include among them the Demand Simulator and the Traffic Simulator.
+  example: []
+  syntax:
+    content: Simulator = 5
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Road
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Road
+  id: Road
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Road
+  nameWithType: DBPFProperty.ExemplarType.Road
+  fullName: csDBPF.DBPFProperty.ExemplarType.Road
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Road
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 41
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Road Exemplars. These are generally used for tunnel entrance models.
+  example: []
+  syntax:
+    content: Road = 6
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Bridge
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Bridge
+  id: Bridge
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Bridge
+  nameWithType: DBPFProperty.ExemplarType.Bridge
+  fullName: csDBPF.DBPFProperty.ExemplarType.Bridge
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Bridge
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 45
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Bridge Exemplars. These are used to specify bridge properties.
+  example: []
+  syntax:
+    content: Bridge = 7
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.MiscNetwork
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.MiscNetwork
+  id: MiscNetwork
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: MiscNetwork
+  nameWithType: DBPFProperty.ExemplarType.MiscNetwork
+  fullName: csDBPF.DBPFProperty.ExemplarType.MiscNetwork
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: MiscNetwork
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 49
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Misc Network Exemplars.
+  example: []
+  syntax:
+    content: MiscNetwork = 8
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.UnknownType
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.UnknownType
+  id: UnknownType
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: UnknownType
+  nameWithType: DBPFProperty.ExemplarType.UnknownType
+  fullName: csDBPF.DBPFProperty.ExemplarType.UnknownType
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: UnknownType
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 53
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Unknown type.
+  example: []
+  syntax:
+    content: UnknownType = 9
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Rail
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Rail
+  id: Rail
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Rail
+  nameWithType: DBPFProperty.ExemplarType.Rail
+  fullName: csDBPF.DBPFProperty.ExemplarType.Rail
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Rail
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 57
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Rail Exemplars.
+  example: []
+  syntax:
+    content: Rail = 10
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Highway
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Highway
+  id: Highway
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Highway
+  nameWithType: DBPFProperty.ExemplarType.Highway
+  fullName: csDBPF.DBPFProperty.ExemplarType.Highway
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Highway
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 61
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Highway Exemplars, used to reference transit models. They are among the most important exemplars used in the transit-modding world. Virtually all NAM Puzzle Pieces, as well as draggable model-based functionality, as exemplified by the High Speed Rail mod, use Type 0B exemplars.
+  example: []
+  syntax:
+    content: Highway = 11
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.PowerLine
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.PowerLine
+  id: PowerLine
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: PowerLine
+  nameWithType: DBPFProperty.ExemplarType.PowerLine
+  fullName: csDBPF.DBPFProperty.ExemplarType.PowerLine
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: PowerLine
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 65
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Power line Exemplars.
+  example: []
+  syntax:
+    content: PowerLine = 12
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Terrain
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Terrain
+  id: Terrain
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Terrain
+  nameWithType: DBPFProperty.ExemplarType.Terrain
+  fullName: csDBPF.DBPFProperty.ExemplarType.Terrain
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Terrain
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 69
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Terrain Exemplars.
+  example: []
+  syntax:
+    content: Terrain = 13
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Ordinance
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Ordinance
+  id: Ordinance
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Ordinance
+  nameWithType: DBPFProperty.ExemplarType.Ordinance
+  fullName: csDBPF.DBPFProperty.ExemplarType.Ordinance
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Ordinance
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 73
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Ordinance Exemplars.
+  example: []
+  syntax:
+    content: Ordinance = 14
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.FloraFauna
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.FloraFauna
+  id: FloraFauna
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: FloraFauna
+  nameWithType: DBPFProperty.ExemplarType.FloraFauna
+  fullName: csDBPF.DBPFProperty.ExemplarType.FloraFauna
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: FloraFauna
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 77
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Flora/Fauna Exemplars.
+  example: []
+  syntax:
+    content: FloraFauna = 15
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.LotConfiguration
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.LotConfiguration
+  id: LotConfiguration
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: LotConfiguration
+  nameWithType: DBPFProperty.ExemplarType.LotConfiguration
+  fullName: csDBPF.DBPFProperty.ExemplarType.LotConfiguration
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LotConfiguration
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 81
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: LotConfiguration and Building Exemplars, and are used to specify the location of props, textures and buildings on Lots, along with other properties. Type 10 Exemplars for plopped buildings are stored in a city's Savefile upon save.
+  example: []
+  syntax:
+    content: LotConfiguration = 16
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Foundation
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Foundation
+  id: Foundation
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Foundation
+  nameWithType: DBPFProperty.ExemplarType.Foundation
+  fullName: csDBPF.DBPFProperty.ExemplarType.Foundation
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Foundation
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 85
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Foundation Exemplars.
+  example: []
+  syntax:
+    content: Foundation = 17
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Lighting
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Lighting
+  id: Lighting
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Lighting
+  nameWithType: DBPFProperty.ExemplarType.Lighting
+  fullName: csDBPF.DBPFProperty.ExemplarType.Lighting
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Lighting
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 89
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Lighting Exemplars.
+  example: []
+  syntax:
+    content: Lighting = 19
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.LotRetianingWall
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.LotRetianingWall
+  id: LotRetianingWall
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: LotRetianingWall
+  nameWithType: DBPFProperty.ExemplarType.LotRetianingWall
+  fullName: csDBPF.DBPFProperty.ExemplarType.LotRetianingWall
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: LotRetianingWall
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 93
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: LotRetainingWall Exemplars.
+  example: []
+  syntax:
+    content: LotRetianingWall = 21
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Vehicle
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Vehicle
+  id: Vehicle
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Vehicle
+  nameWithType: DBPFProperty.ExemplarType.Vehicle
+  fullName: csDBPF.DBPFProperty.ExemplarType.Vehicle
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Vehicle
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 97
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Vehicle Exemplars. Used to reference automata.
+  example: []
+  syntax:
+    content: Vehicle = 22
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Pedestrian
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Pedestrian
+  id: Pedestrian
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Pedestrian
+  nameWithType: DBPFProperty.ExemplarType.Pedestrian
+  fullName: csDBPF.DBPFProperty.ExemplarType.Pedestrian
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Pedestrian
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 101
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Pedestrian Exemplars. Used to reference pedestrian automata.
+  example: []
+  syntax:
+    content: Pedestrian = 23
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Aircraft
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Aircraft
+  id: Aircraft
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Aircraft
+  nameWithType: DBPFProperty.ExemplarType.Aircraft
+  fullName: csDBPF.DBPFProperty.ExemplarType.Aircraft
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Aircraft
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 105
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Aircraft Exemplars. Used to reference aircraft automata
+  example: []
+  syntax:
+    content: Aircraft = 24
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Prop
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Prop
+  id: Prop
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Prop
+  nameWithType: DBPFProperty.ExemplarType.Prop
+  fullName: csDBPF.DBPFProperty.ExemplarType.Prop
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Prop
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 109
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Prop Exemplars.
+  example: []
+  syntax:
+    content: Prop = 30
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Construction
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Construction
+  id: Construction
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Construction
+  nameWithType: DBPFProperty.ExemplarType.Construction
+  fullName: csDBPF.DBPFProperty.ExemplarType.Construction
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Construction
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 113
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Construction Exemplars.
+  example: []
+  syntax:
+    content: Construction = 31
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.AutomataTuning
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.AutomataTuning
+  id: AutomataTuning
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: AutomataTuning
+  nameWithType: DBPFProperty.ExemplarType.AutomataTuning
+  fullName: csDBPF.DBPFProperty.ExemplarType.AutomataTuning
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: AutomataTuning
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 117
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Automata Tuning Exemplars.
+  example: []
+  syntax:
+    content: AutomataTuning = 32
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.NetworkLot
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.NetworkLot
+  id: NetworkLot
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: NetworkLot
+  nameWithType: DBPFProperty.ExemplarType.NetworkLot
+  fullName: csDBPF.DBPFProperty.ExemplarType.NetworkLot
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: NetworkLot
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 121
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Network Lots, often referred to as T21 Exemplars. Used to add props rendered in BAT (isometric) to networks, such as traffic lights and lamp posts. These exemplars differ from Lot Exemplars (T10) in that they don't allow for base or overlay textures and can't be Transit Enabled.
+  example: []
+  syntax:
+    content: NetworkLot = 33
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Disaster
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Disaster
+  id: Disaster
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Disaster
+  nameWithType: DBPFProperty.ExemplarType.Disaster
+  fullName: csDBPF.DBPFProperty.ExemplarType.Disaster
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Disaster
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 125
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Disaster Exemplars
+  example: []
+  syntax:
+    content: Disaster = 34
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.DataView
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.DataView
+  id: DataView
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: DataView
+  nameWithType: DBPFProperty.ExemplarType.DataView
+  fullName: csDBPF.DBPFProperty.ExemplarType.DataView
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: DataView
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 129
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: DataView Exemplars.
+  example: []
+  syntax:
+    content: DataView = 35
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Crime
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Crime
+  id: Crime
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Crime
+  nameWithType: DBPFProperty.ExemplarType.Crime
+  fullName: csDBPF.DBPFProperty.ExemplarType.Crime
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Crime
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 133
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Crime Exemplars.
+  example: []
+  syntax:
+    content: Crime = 36
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.Audio
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.Audio
+  id: Audio
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: Audio
+  nameWithType: DBPFProperty.ExemplarType.Audio
+  fullName: csDBPF.DBPFProperty.ExemplarType.Audio
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Audio
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 137
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Audio Exemplars.
+  example: []
+  syntax:
+    content: Audio = 37
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.GodMode
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.GodMode
+  id: GodMode
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: GodMode
+  nameWithType: DBPFProperty.ExemplarType.GodMode
+  fullName: csDBPF.DBPFProperty.ExemplarType.GodMode
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: GodMode
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 141
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: God Mode Exemplars.
+  example: []
+  syntax:
+    content: GodMode = 39
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.MayorMode
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.MayorMode
+  id: MayorMode
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: MayorMode
+  nameWithType: DBPFProperty.ExemplarType.MayorMode
+  fullName: csDBPF.DBPFProperty.ExemplarType.MayorMode
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: MayorMode
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 145
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Mayor Mode Exemplars.
+  example: []
+  syntax:
+    content: MayorMode = 40
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.TrendBar
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.TrendBar
+  id: TrendBar
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: TrendBar
+  nameWithType: DBPFProperty.ExemplarType.TrendBar
+  fullName: csDBPF.DBPFProperty.ExemplarType.TrendBar
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: TrendBar
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 149
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Trend Bar Exemplars.
+  example: []
+  syntax:
+    content: TrendBar = 42
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+- uid: csDBPF.DBPFProperty.ExemplarType.GraphControl
+  commentId: F:csDBPF.DBPFProperty.ExemplarType.GraphControl
+  id: GraphControl
+  parent: csDBPF.DBPFProperty.ExemplarType
+  langs:
+  - csharp
+  - vb
+  name: GraphControl
+  nameWithType: DBPFProperty.ExemplarType.GraphControl
+  fullName: csDBPF.DBPFProperty.ExemplarType.GraphControl
+  type: Field
+  source:
+    remote:
+      path: csDBPF/csDBPF/Properties/DBPFPropertyEnums.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: GraphControl
+    path: ../Properties/DBPFPropertyEnums.cs
+    startLine: 153
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Graph Control Exemplars.
+  example: []
+  syntax:
+    content: GraphControl = 43
+    return:
+      type: csDBPF.DBPFProperty.ExemplarType
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: csDBPF.DBPFProperty.ExemplarType
+  commentId: T:csDBPF.DBPFProperty.ExemplarType
+  parent: csDBPF
+  href: csDBPF.DBPFProperty.html
+  name: DBPFProperty.ExemplarType
+  nameWithType: DBPFProperty.ExemplarType
+  fullName: csDBPF.DBPFProperty.ExemplarType
+  spec.csharp:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.ExemplarType
+    name: ExemplarType
+    href: csDBPF.DBPFProperty.ExemplarType.html
+  spec.vb:
+  - uid: csDBPF.DBPFProperty
+    name: DBPFProperty
+    href: csDBPF.DBPFProperty.html
+  - name: .
+  - uid: csDBPF.DBPFProperty.ExemplarType
+    name: ExemplarType
+    href: csDBPF.DBPFProperty.ExemplarType.html

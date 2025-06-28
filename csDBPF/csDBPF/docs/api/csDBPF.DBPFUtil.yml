@@ -1,0 +1,1109 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFUtil
+  commentId: T:csDBPF.DBPFUtil
+  id: DBPFUtil
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFUtil.FilterDBPFFiles(System.Collections.Generic.IEnumerable{System.String},System.Boolean)
+  - csDBPF.DBPFUtil.GenerateRandomUint
+  - csDBPF.DBPFUtil.IsValidDBPF(System.IO.FileInfo,System.Boolean)
+  - csDBPF.DBPFUtil.IsValidDBPF(System.String,System.Boolean)
+  - csDBPF.DBPFUtil.PrintByteValues(System.Byte[])
+  - csDBPF.DBPFUtil.ReverseBytes(System.Int64)
+  - csDBPF.DBPFUtil.ReverseBytes(System.UInt16)
+  - csDBPF.DBPFUtil.ReverseBytes(System.UInt32)
+  - csDBPF.DBPFUtil.ToHexString(System.Int64,System.Int32,System.Boolean,System.Boolean)
+  - csDBPF.DBPFUtil.ToHexString(System.Nullable{System.UInt32},System.Int32,System.Boolean,System.Boolean)
+  - csDBPF.DBPFUtil.UnixToDate(System.UInt32)
+  langs:
+  - csharp
+  - vb
+  name: DBPFUtil
+  nameWithType: DBPFUtil
+  fullName: csDBPF.DBPFUtil
+  type: Class
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: DBPFUtil
+    path: ../DBPFUtil.cs
+    startLine: 13
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Collection of miscellaneous utility methods to use with DBPFFiles.
+  example: []
+  syntax:
+    content: public static class DBPFUtil
+    content.vb: Public Module DBPFUtil
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: csDBPF.DBPFUtil.FilterDBPFFiles(System.Collections.Generic.IEnumerable{System.String},System.Boolean)
+  commentId: M:csDBPF.DBPFUtil.FilterDBPFFiles(System.Collections.Generic.IEnumerable{System.String},System.Boolean)
+  id: FilterDBPFFiles(System.Collections.Generic.IEnumerable{System.String},System.Boolean)
+  isExtensionMethod: true
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: FilterDBPFFiles(IEnumerable<string>, bool)
+  nameWithType: DBPFUtil.FilterDBPFFiles(IEnumerable<string>, bool)
+  fullName: csDBPF.DBPFUtil.FilterDBPFFiles(System.Collections.Generic.IEnumerable<string>, bool)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: FilterDBPFFiles
+    path: ../DBPFUtil.cs
+    startLine: 23
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Filters a list of file paths based on SC4 file extensions.
+  example: []
+  syntax:
+    content: public static IEnumerable<string> FilterDBPFFiles(this IEnumerable<string> filesToFilter, bool validateIdentifier = false)
+    parameters:
+    - id: filesToFilter
+      type: System.Collections.Generic.IEnumerable{System.String}
+      description: List of all files to filter through
+    - id: validateIdentifier
+      type: System.Boolean
+      description: Optionally examine the first 4 bytes of each for a valid DBPF format. If omitted or set to <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>, only the file extension will be examined.
+    return:
+      type: System.Collections.Generic.IEnumerable{System.String}
+      description: A listing of DBPF files
+    content.vb: Public Shared Function FilterDBPFFiles(filesToFilter As IEnumerable(Of String), validateIdentifier As Boolean = False) As IEnumerable(Of String)
+  overload: csDBPF.DBPFUtil.FilterDBPFFiles*
+  nameWithType.vb: DBPFUtil.FilterDBPFFiles(IEnumerable(Of String), Boolean)
+  fullName.vb: csDBPF.DBPFUtil.FilterDBPFFiles(System.Collections.Generic.IEnumerable(Of String), Boolean)
+  name.vb: FilterDBPFFiles(IEnumerable(Of String), Boolean)
+- uid: csDBPF.DBPFUtil.IsValidDBPF(System.String,System.Boolean)
+  commentId: M:csDBPF.DBPFUtil.IsValidDBPF(System.String,System.Boolean)
+  id: IsValidDBPF(System.String,System.Boolean)
+  isExtensionMethod: true
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: IsValidDBPF(string, bool)
+  nameWithType: DBPFUtil.IsValidDBPF(string, bool)
+  fullName: csDBPF.DBPFUtil.IsValidDBPF(string, bool)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: IsValidDBPF
+    path: ../DBPFUtil.cs
+    startLine: 41
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Examines the first bytes of the file to determine if the file is valid DBPF or not.
+  example: []
+  syntax:
+    content: public static bool IsValidDBPF(this string filePath, bool validateIdentifier = false)
+    parameters:
+    - id: filePath
+      type: System.String
+      description: Full File path of the file to examine
+    - id: validateIdentifier
+      type: System.Boolean
+      description: Optionally examine the first 4 bytes of each for a valid DBPF format. If omitted or set to <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>, only the file extension will be examined.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if file is a valid SC4 DBPF file; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>
+    content.vb: Public Shared Function IsValidDBPF(filePath As String, validateIdentifier As Boolean = False) As Boolean
+  overload: csDBPF.DBPFUtil.IsValidDBPF*
+  nameWithType.vb: DBPFUtil.IsValidDBPF(String, Boolean)
+  fullName.vb: csDBPF.DBPFUtil.IsValidDBPF(String, Boolean)
+  name.vb: IsValidDBPF(String, Boolean)
+- uid: csDBPF.DBPFUtil.IsValidDBPF(System.IO.FileInfo,System.Boolean)
+  commentId: M:csDBPF.DBPFUtil.IsValidDBPF(System.IO.FileInfo,System.Boolean)
+  id: IsValidDBPF(System.IO.FileInfo,System.Boolean)
+  isExtensionMethod: true
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: IsValidDBPF(FileInfo, bool)
+  nameWithType: DBPFUtil.IsValidDBPF(FileInfo, bool)
+  fullName: csDBPF.DBPFUtil.IsValidDBPF(System.IO.FileInfo, bool)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: IsValidDBPF
+    path: ../DBPFUtil.cs
+    startLine: 59
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Examines the first bytes of the file to determine if the file is valid DBPF or not.
+  example: []
+  syntax:
+    content: public static bool IsValidDBPF(this FileInfo file, bool validateIdentifier = false)
+    parameters:
+    - id: file
+      type: System.IO.FileInfo
+      description: File to examine
+    - id: validateIdentifier
+      type: System.Boolean
+      description: Optionally examine the first 4 bytes of the specified file to determine if valid DBPF format. If omitted or set to false, only the file extension will be examined.
+    return:
+      type: System.Boolean
+      description: TRUE if valid SC4 DBPF file, FALSE otherwise
+    content.vb: Public Shared Function IsValidDBPF(file As FileInfo, validateIdentifier As Boolean = False) As Boolean
+  overload: csDBPF.DBPFUtil.IsValidDBPF*
+  nameWithType.vb: DBPFUtil.IsValidDBPF(FileInfo, Boolean)
+  fullName.vb: csDBPF.DBPFUtil.IsValidDBPF(System.IO.FileInfo, Boolean)
+  name.vb: IsValidDBPF(FileInfo, Boolean)
+- uid: csDBPF.DBPFUtil.ReverseBytes(System.UInt16)
+  commentId: M:csDBPF.DBPFUtil.ReverseBytes(System.UInt16)
+  id: ReverseBytes(System.UInt16)
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: ReverseBytes(ushort)
+  nameWithType: DBPFUtil.ReverseBytes(ushort)
+  fullName: csDBPF.DBPFUtil.ReverseBytes(ushort)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ReverseBytes
+    path: ../DBPFUtil.cs
+    startLine: 75
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: 'Reverses the byte order for a ushort. Example: 3 (0x0003) returns 768 (0x0300)'
+  remarks: See:https://www.csharp-examples.net/reverse-bytes/
+  example: []
+  syntax:
+    content: public static ushort ReverseBytes(ushort value)
+    parameters:
+    - id: value
+      type: System.UInt16
+      description: Value to reverse
+    return:
+      type: System.UInt16
+      description: Reversed ushort
+    content.vb: Public Shared Function ReverseBytes(value As UShort) As UShort
+  overload: csDBPF.DBPFUtil.ReverseBytes*
+  nameWithType.vb: DBPFUtil.ReverseBytes(UShort)
+  fullName.vb: csDBPF.DBPFUtil.ReverseBytes(UShort)
+  name.vb: ReverseBytes(UShort)
+- uid: csDBPF.DBPFUtil.ReverseBytes(System.UInt32)
+  commentId: M:csDBPF.DBPFUtil.ReverseBytes(System.UInt32)
+  id: ReverseBytes(System.UInt32)
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: ReverseBytes(uint)
+  nameWithType: DBPFUtil.ReverseBytes(uint)
+  fullName: csDBPF.DBPFUtil.ReverseBytes(uint)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ReverseBytes
+    path: ../DBPFUtil.cs
+    startLine: 84
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Reverses the byte order for a uint. See <xref href="csDBPF.DBPFUtil.ReverseBytes(System.UInt32)" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static uint ReverseBytes(uint value)
+    parameters:
+    - id: value
+      type: System.UInt32
+      description: Value to reverse
+    return:
+      type: System.UInt32
+      description: Reversed uint
+    content.vb: Public Shared Function ReverseBytes(value As UInteger) As UInteger
+  overload: csDBPF.DBPFUtil.ReverseBytes*
+  nameWithType.vb: DBPFUtil.ReverseBytes(UInteger)
+  fullName.vb: csDBPF.DBPFUtil.ReverseBytes(UInteger)
+  name.vb: ReverseBytes(UInteger)
+- uid: csDBPF.DBPFUtil.ReverseBytes(System.Int64)
+  commentId: M:csDBPF.DBPFUtil.ReverseBytes(System.Int64)
+  id: ReverseBytes(System.Int64)
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: ReverseBytes(long)
+  nameWithType: DBPFUtil.ReverseBytes(long)
+  fullName: csDBPF.DBPFUtil.ReverseBytes(long)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ReverseBytes
+    path: ../DBPFUtil.cs
+    startLine: 93
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Reverses the byte order for a ulong. See <xref href="csDBPF.DBPFUtil.ReverseBytes(System.UInt32)" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static long ReverseBytes(long value)
+    parameters:
+    - id: value
+      type: System.Int64
+      description: Value to reverse
+    return:
+      type: System.Int64
+      description: Reversed uint
+    content.vb: Public Shared Function ReverseBytes(value As Long) As Long
+  overload: csDBPF.DBPFUtil.ReverseBytes*
+  nameWithType.vb: DBPFUtil.ReverseBytes(Long)
+  fullName.vb: csDBPF.DBPFUtil.ReverseBytes(Long)
+  name.vb: ReverseBytes(Long)
+- uid: csDBPF.DBPFUtil.ToHexString(System.Int64,System.Int32,System.Boolean,System.Boolean)
+  commentId: M:csDBPF.DBPFUtil.ToHexString(System.Int64,System.Int32,System.Boolean,System.Boolean)
+  id: ToHexString(System.Int64,System.Int32,System.Boolean,System.Boolean)
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: ToHexString(long, int, bool, bool)
+  nameWithType: DBPFUtil.ToHexString(long, int, bool, bool)
+  fullName: csDBPF.DBPFUtil.ToHexString(long, int, bool, bool)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ToHexString
+    path: ../DBPFUtil.cs
+    startLine: 108
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
+  example: []
+  syntax:
+    content: public static string ToHexString(long value, int places = 8, bool uppercase = false, bool prefix = true)
+    parameters:
+    - id: value
+      type: System.Int64
+      description: Value to return
+    - id: places
+      type: System.Int32
+      description: Number of places to pad the value. 0-8 valid; 8 is default
+    - id: uppercase
+      type: System.Boolean
+      description: Specify output as uppercase. Default is lowercase.
+    - id: prefix
+      type: System.Boolean
+      description: Specify to omit "0x" prefixed to the front of the string. Default is true to include.
+    return:
+      type: System.String
+      description: Uppercase string representing the value
+    content.vb: Public Shared Function ToHexString(value As Long, places As Integer = 8, uppercase As Boolean = False, prefix As Boolean = True) As String
+  overload: csDBPF.DBPFUtil.ToHexString*
+  exceptions:
+  - type: System.ArgumentOutOfRangeException
+    commentId: T:System.ArgumentOutOfRangeException
+    description: Number of places must be between 0 and 8.
+  nameWithType.vb: DBPFUtil.ToHexString(Long, Integer, Boolean, Boolean)
+  fullName.vb: csDBPF.DBPFUtil.ToHexString(Long, Integer, Boolean, Boolean)
+  name.vb: ToHexString(Long, Integer, Boolean, Boolean)
+- uid: csDBPF.DBPFUtil.ToHexString(System.Nullable{System.UInt32},System.Int32,System.Boolean,System.Boolean)
+  commentId: M:csDBPF.DBPFUtil.ToHexString(System.Nullable{System.UInt32},System.Int32,System.Boolean,System.Boolean)
+  id: ToHexString(System.Nullable{System.UInt32},System.Int32,System.Boolean,System.Boolean)
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: ToHexString(uint?, int, bool, bool)
+  nameWithType: DBPFUtil.ToHexString(uint?, int, bool, bool)
+  fullName: csDBPF.DBPFUtil.ToHexString(uint?, int, bool, bool)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ToHexString
+    path: ../DBPFUtil.cs
+    startLine: 128
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
+  example: []
+  syntax:
+    content: public static string ToHexString(uint? value, int places = 8, bool uppercase = false, bool prefix = true)
+    parameters:
+    - id: value
+      type: System.Nullable{System.UInt32}
+      description: Value to return
+    - id: places
+      type: System.Int32
+      description: Number of places to pad the value. 0-8 valid; 8 is default
+    - id: uppercase
+      type: System.Boolean
+      description: Specify output as uppercase. Default is lowercase.
+    - id: prefix
+      type: System.Boolean
+      description: Specify to omit "0x" prefixed to the front of the string. Default is true to include.
+    return:
+      type: System.String
+      description: Uppercase string representing the value
+    content.vb: Public Shared Function ToHexString(value As UInteger?, places As Integer = 8, uppercase As Boolean = False, prefix As Boolean = True) As String
+  overload: csDBPF.DBPFUtil.ToHexString*
+  exceptions:
+  - type: System.ArgumentOutOfRangeException
+    commentId: T:System.ArgumentOutOfRangeException
+    description: Number of places must be between 0 and 8.
+  nameWithType.vb: DBPFUtil.ToHexString(UInteger?, Integer, Boolean, Boolean)
+  fullName.vb: csDBPF.DBPFUtil.ToHexString(UInteger?, Integer, Boolean, Boolean)
+  name.vb: ToHexString(UInteger?, Integer, Boolean, Boolean)
+- uid: csDBPF.DBPFUtil.UnixToDate(System.UInt32)
+  commentId: M:csDBPF.DBPFUtil.UnixToDate(System.UInt32)
+  id: UnixToDate(System.UInt32)
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: UnixToDate(uint)
+  nameWithType: DBPFUtil.UnixToDate(uint)
+  fullName: csDBPF.DBPFUtil.UnixToDate(uint)
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: UnixToDate
+    path: ../DBPFUtil.cs
+    startLine: 152
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Convert Unix datetime to a <xref href="System.DateTime" data-throw-if-not-resolved="false"></xref> object.
+  example: []
+  syntax:
+    content: public static DateTime UnixToDate(uint time)
+    parameters:
+    - id: time
+      type: System.UInt32
+      description: Unix time
+    return:
+      type: System.DateTime
+      description: <xref href="System.DateTime" data-throw-if-not-resolved="false"></xref> object equal to the provided Unix time
+    content.vb: Public Shared Function UnixToDate(time As UInteger) As Date
+  overload: csDBPF.DBPFUtil.UnixToDate*
+  nameWithType.vb: DBPFUtil.UnixToDate(UInteger)
+  fullName.vb: csDBPF.DBPFUtil.UnixToDate(UInteger)
+  name.vb: UnixToDate(UInteger)
+- uid: csDBPF.DBPFUtil.PrintByteValues(System.Byte[])
+  commentId: M:csDBPF.DBPFUtil.PrintByteValues(System.Byte[])
+  id: PrintByteValues(System.Byte[])
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: PrintByteValues(byte[])
+  nameWithType: DBPFUtil.PrintByteValues(byte[])
+  fullName: csDBPF.DBPFUtil.PrintByteValues(byte[])
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: PrintByteValues
+    path: ../DBPFUtil.cs
+    startLine: 162
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Appends an array of byte values sequentially into a string.
+  example: []
+  syntax:
+    content: public static string PrintByteValues(byte[] data)
+    parameters:
+    - id: data
+      type: System.Byte[]
+      description: Byte data to print.
+    return:
+      type: System.String
+      description: String of 2 character bytes, space separated
+    content.vb: Public Shared Function PrintByteValues(data As Byte()) As String
+  overload: csDBPF.DBPFUtil.PrintByteValues*
+  nameWithType.vb: DBPFUtil.PrintByteValues(Byte())
+  fullName.vb: csDBPF.DBPFUtil.PrintByteValues(Byte())
+  name.vb: PrintByteValues(Byte())
+- uid: csDBPF.DBPFUtil.GenerateRandomUint
+  commentId: M:csDBPF.DBPFUtil.GenerateRandomUint
+  id: GenerateRandomUint
+  parent: csDBPF.DBPFUtil
+  langs:
+  - csharp
+  - vb
+  name: GenerateRandomUint()
+  nameWithType: DBPFUtil.GenerateRandomUint()
+  fullName: csDBPF.DBPFUtil.GenerateRandomUint()
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/DBPFUtil.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: GenerateRandomUint
+    path: ../DBPFUtil.cs
+    startLine: 173
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Generate a random uint value.
+  example: []
+  syntax:
+    content: public static uint GenerateRandomUint()
+    return:
+      type: System.UInt32
+    content.vb: Public Shared Function GenerateRandomUint() As UInteger
+  overload: csDBPF.DBPFUtil.GenerateRandomUint*
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: csDBPF.DBPFUtil.FilterDBPFFiles*
+  commentId: Overload:csDBPF.DBPFUtil.FilterDBPFFiles
+  href: csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_FilterDBPFFiles_System_Collections_Generic_IEnumerable_System_String__System_Boolean_
+  name: FilterDBPFFiles
+  nameWithType: DBPFUtil.FilterDBPFFiles
+  fullName: csDBPF.DBPFUtil.FilterDBPFFiles
+- uid: System.Collections.Generic.IEnumerable{System.String}
+  commentId: T:System.Collections.Generic.IEnumerable{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<string>
+  nameWithType: IEnumerable<string>
+  fullName: System.Collections.Generic.IEnumerable<string>
+  nameWithType.vb: IEnumerable(Of String)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of String)
+  name.vb: IEnumerable(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: csDBPF.DBPFUtil.IsValidDBPF*
+  commentId: Overload:csDBPF.DBPFUtil.IsValidDBPF
+  href: csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_IsValidDBPF_System_String_System_Boolean_
+  name: IsValidDBPF
+  nameWithType: DBPFUtil.IsValidDBPF
+  fullName: csDBPF.DBPFUtil.IsValidDBPF
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.IO.FileInfo
+  commentId: T:System.IO.FileInfo
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.fileinfo
+  name: FileInfo
+  nameWithType: FileInfo
+  fullName: System.IO.FileInfo
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+- uid: csDBPF.DBPFUtil.ReverseBytes*
+  commentId: Overload:csDBPF.DBPFUtil.ReverseBytes
+  href: csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_ReverseBytes_System_UInt16_
+  name: ReverseBytes
+  nameWithType: DBPFUtil.ReverseBytes
+  fullName: csDBPF.DBPFUtil.ReverseBytes
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: csDBPF.DBPFUtil.ReverseBytes(System.UInt32)
+  commentId: M:csDBPF.DBPFUtil.ReverseBytes(System.UInt32)
+  isExternal: true
+  href: csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_ReverseBytes_System_UInt32_
+  name: ReverseBytes(uint)
+  nameWithType: DBPFUtil.ReverseBytes(uint)
+  fullName: csDBPF.DBPFUtil.ReverseBytes(uint)
+  nameWithType.vb: DBPFUtil.ReverseBytes(UInteger)
+  fullName.vb: csDBPF.DBPFUtil.ReverseBytes(UInteger)
+  name.vb: ReverseBytes(UInteger)
+  spec.csharp:
+  - uid: csDBPF.DBPFUtil.ReverseBytes(System.UInt32)
+    name: ReverseBytes
+    href: csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_ReverseBytes_System_UInt32_
+  - name: (
+  - uid: System.UInt32
+    name: uint
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint32
+  - name: )
+  spec.vb:
+  - uid: csDBPF.DBPFUtil.ReverseBytes(System.UInt32)
+    name: ReverseBytes
+    href: csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_ReverseBytes_System_UInt32_
+  - name: (
+  - uid: System.UInt32
+    name: UInteger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint32
+  - name: )
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: System.ArgumentOutOfRangeException
+  commentId: T:System.ArgumentOutOfRangeException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception
+  name: ArgumentOutOfRangeException
+  nameWithType: ArgumentOutOfRangeException
+  fullName: System.ArgumentOutOfRangeException
+- uid: csDBPF.DBPFUtil.ToHexString*
+  commentId: Overload:csDBPF.DBPFUtil.ToHexString
+  href: csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_ToHexString_System_Int64_System_Int32_System_Boolean_System_Boolean_
+  name: ToHexString
+  nameWithType: DBPFUtil.ToHexString
+  fullName: csDBPF.DBPFUtil.ToHexString
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Nullable{System.UInt32}
+  commentId: T:System.Nullable{System.UInt32}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint?
+  nameWithType: uint?
+  fullName: uint?
+  nameWithType.vb: UInteger?
+  fullName.vb: UInteger?
+  name.vb: UInteger?
+  spec.csharp:
+  - uid: System.UInt32
+    name: uint
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint32
+  - name: '?'
+  spec.vb:
+  - uid: System.UInt32
+    name: UInteger
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint32
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.DateTime
+  commentId: T:System.DateTime
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.datetime
+  name: DateTime
+  nameWithType: DateTime
+  fullName: System.DateTime
+  nameWithType.vb: Date
+  fullName.vb: Date
+  name.vb: Date
+- uid: csDBPF.DBPFUtil.UnixToDate*
+  commentId: Overload:csDBPF.DBPFUtil.UnixToDate
+  href: csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_UnixToDate_System_UInt32_
+  name: UnixToDate
+  nameWithType: DBPFUtil.UnixToDate
+  fullName: csDBPF.DBPFUtil.UnixToDate
+- uid: csDBPF.DBPFUtil.PrintByteValues*
+  commentId: Overload:csDBPF.DBPFUtil.PrintByteValues
+  href: csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_PrintByteValues_System_Byte___
+  name: PrintByteValues
+  nameWithType: DBPFUtil.PrintByteValues
+  fullName: csDBPF.DBPFUtil.PrintByteValues
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: csDBPF.DBPFUtil.GenerateRandomUint*
+  commentId: Overload:csDBPF.DBPFUtil.GenerateRandomUint
+  href: csDBPF.DBPFUtil.html#csDBPF_DBPFUtil_GenerateRandomUint
+  name: GenerateRandomUint
+  nameWithType: DBPFUtil.GenerateRandomUint
+  fullName: csDBPF.DBPFUtil.GenerateRandomUint

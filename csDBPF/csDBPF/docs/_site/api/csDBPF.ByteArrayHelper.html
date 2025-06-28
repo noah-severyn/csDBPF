@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ByteArrayHelper | csDBPF </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ByteArrayHelper | csDBPF ">
+      
+      <meta name="description" content="Helper methods to parse a byte array into an array of one of the DBPF data types.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/noah-severyn/csDBPF/new/docs/apiSpec/new?filename=csDBPF_ByteArrayHelper.md&amp;value=---%0Auid%3A%20csDBPF.ByteArrayHelper%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="csDBPF">
+            csDBPF
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="csDBPF.ByteArrayHelper">
+
+
+
+  <h1 id="csDBPF_ByteArrayHelper" data-uid="csDBPF.ByteArrayHelper" class="text-break">
+Class ByteArrayHelper  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="csDBPF.html">csDBPF</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>csDBPF.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Helper methods to parse a byte array into an array of one of the DBPF data types.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class ByteArrayHelper</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ByteArrayHelper</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="csDBPF_ByteArrayHelper_ReadBytesIntoUint_" data-uid="csDBPF.ByteArrayHelper.ReadBytesIntoUint*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ReadBytesIntoUint_System_Byte___System_Int32_" data-uid="csDBPF.ByteArrayHelper.ReadBytesIntoUint(System.Byte[],System.Int32)">
+  ReadBytesIntoUint(byte[], int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L224"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sequentially reads 4 bytes and assigns them to a uint in big-endian order.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static uint ReadBytesIntoUint(byte[] data, int offset = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Array to read from</p>
+</dd>
+    <dt><code>offset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Location in array to start at. Default is 0</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Uint value</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ReadBytesIntoUshort_" data-uid="csDBPF.ByteArrayHelper.ReadBytesIntoUshort*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ReadBytesIntoUshort_System_Byte___System_Int32_" data-uid="csDBPF.ByteArrayHelper.ReadBytesIntoUshort(System.Byte[],System.Int32)">
+  ReadBytesIntoUshort(byte[], int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L234"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sequentially reads 2 bytes from the specified position and assigns them to a uint in big-endian order.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ushort ReadBytesIntoUshort(byte[] data, int offset = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Array to read from</p>
+</dd>
+    <dt><code>offset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Location in array to start at. Default is 0</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd><p>Ushort value</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ReadTextIntoByte_" data-uid="csDBPF.ByteArrayHelper.ReadTextIntoByte*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ReadTextIntoByte_System_Byte___System_Int32_" data-uid="csDBPF.ByteArrayHelper.ReadTextIntoByte(System.Byte[],System.Int32)">
+  ReadTextIntoByte(byte[], int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L245"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sequentially reads 1 byte, converts it to string equivalent, then parses back into a byte.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte ReadTextIntoByte(byte[] data, int offset = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Array to read from</p>
+</dd>
+    <dt><code>offset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Location in array to start at. Default is 0</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+    <dd><p>Byte value</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ReadTextToFloat_" data-uid="csDBPF.ByteArrayHelper.ReadTextToFloat*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ReadTextToFloat_System_Byte___System_Int32_System_Int32_" data-uid="csDBPF.ByteArrayHelper.ReadTextToFloat(System.Byte[],System.Int32,System.Int32)">
+  ReadTextToFloat(byte[], int, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L292"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sequentially reads a number of bytes, converts them to string equivalents, then parses them into a float.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static float ReadTextToFloat(byte[] data, int offset, int length)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Array to read from</p>
+</dd>
+    <dt><code>offset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Location in array to start at. Default is 0</p>
+</dd>
+    <dt><code>length</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Length to read</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ReadTextToInt_" data-uid="csDBPF.ByteArrayHelper.ReadTextToInt*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ReadTextToInt_System_Byte___System_Int32_System_Int32_" data-uid="csDBPF.ByteArrayHelper.ReadTextToInt(System.Byte[],System.Int32,System.Int32)">
+  ReadTextToInt(byte[], int, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L268"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sequentially reads a number of bytes, converts them to string equivalents, then parses them into an int.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int ReadTextToInt(byte[] data, int offset, int length)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Array to read from</p>
+</dd>
+    <dt><code>offset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Location in array to start at. Default is 0</p>
+</dd>
+    <dt><code>length</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Length to read</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ReadTextToLong_" data-uid="csDBPF.ByteArrayHelper.ReadTextToLong*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ReadTextToLong_System_Byte___System_Int32_System_Int32_" data-uid="csDBPF.ByteArrayHelper.ReadTextToLong(System.Byte[],System.Int32,System.Int32)">
+  ReadTextToLong(byte[], int, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L280"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sequentially reads a number of bytes, converts them to string equivalents, then parses them into a long.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static long ReadTextToLong(byte[] data, int offset, int length)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Array to read from</p>
+</dd>
+    <dt><code>offset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Location in array to start at. Default is 0</p>
+</dd>
+    <dt><code>length</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Length to read</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ReadTextToUint_" data-uid="csDBPF.ByteArrayHelper.ReadTextToUint*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ReadTextToUint_System_Byte___System_Int32_" data-uid="csDBPF.ByteArrayHelper.ReadTextToUint(System.Byte[],System.Int32)">
+  ReadTextToUint(byte[], int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sequentially reads 4 bytes, converts them to string equivalents, then parses them into a uint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static uint ReadTextToUint(byte[] data, int offset = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Array to read from</p>
+</dd>
+    <dt><code>offset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Location in array to start at. Default is 0</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Uint value</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToAString_" data-uid="csDBPF.ByteArrayHelper.ToAString*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToAString_System_Byte___" data-uid="csDBPF.ByteArrayHelper.ToAString(System.Byte[])">
+  ToAString(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reads a byte array and returns a string of the entire array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string ToAString(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A string of parsed data</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToAString_" data-uid="csDBPF.ByteArrayHelper.ToAString*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToAString_System_Byte___System_Int32_" data-uid="csDBPF.ByteArrayHelper.ToAString(System.Byte[],System.Int32)">
+  ToAString(byte[], int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L188"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reads a byte array and returns a string from the specified location to the end of the array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string ToAString(byte[] data, int start)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+    <dt><code>start</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Location to start parsing at</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A string of parsed data</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToAString_" data-uid="csDBPF.ByteArrayHelper.ToAString*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToAString_System_Byte___System_Int32_System_Int32_" data-uid="csDBPF.ByteArrayHelper.ToAString(System.Byte[],System.Int32,System.Int32)">
+  ToAString(byte[], int, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L203"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reads a byte array and returns a string from the specified location for a determined length.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string ToAString(byte[] data, int start, int length)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+    <dt><code>start</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Location to start parsing at</p>
+</dd>
+    <dt><code>length</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Length of the provided data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A string of parsed data</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="csDBPF_ByteArrayHelper_ToAString_System_Byte___System_Int32_System_Int32__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Any non-printable characters are replaced with a period ('.').</p>
+</div>
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToBoolArray_" data-uid="csDBPF.ByteArrayHelper.ToBoolArray*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToBoolArray_System_Byte___" data-uid="csDBPF.ByteArrayHelper.ToBoolArray(System.Byte[])">
+  ToBoolArray(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convert byte array to boolean array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool[] ToBoolArray(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>[]</dt>
+    <dd><p>Array of boolean values</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToBytes_" data-uid="csDBPF.ByteArrayHelper.ToBytes*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToBytes_System_Boolean___" data-uid="csDBPF.ByteArrayHelper.ToBytes(System.Boolean[])">
+  ToBytes(bool[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L337"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses an array of booleans into bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToBytes(bool[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The array of data as bytes</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToBytes_" data-uid="csDBPF.ByteArrayHelper.ToBytes*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToBytes_System_Char___" data-uid="csDBPF.ByteArrayHelper.ToBytes(System.Char[])">
+  ToBytes(char[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L353"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses an array of chars (UInt8) into bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToBytes(char[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">char</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The array of data as bytes</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToBytes_" data-uid="csDBPF.ByteArrayHelper.ToBytes*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToBytes_System_Int32___" data-uid="csDBPF.ByteArrayHelper.ToBytes(System.Int32[])">
+  ToBytes(int[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L375"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses an array of ints (Sint32) into bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToBytes(int[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The array of data as bytes</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToBytes_" data-uid="csDBPF.ByteArrayHelper.ToBytes*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToBytes_System_Int64_System_Int32_" data-uid="csDBPF.ByteArrayHelper.ToBytes(System.Int64,System.Int32)">
+  ToBytes(long, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L328"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Converts a long to byte array with the given length.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToBytes(long value, int numPlaces = 8)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd><p>Value to convert</p>
+</dd>
+    <dt><code>numPlaces</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Length of returned array</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToBytes_" data-uid="csDBPF.ByteArrayHelper.ToBytes*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToBytes_System_Int64___" data-uid="csDBPF.ByteArrayHelper.ToBytes(System.Int64[])">
+  ToBytes(long[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L409"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses an array of longs (SInt64) into bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToBytes(long[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The array of data as bytes</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToBytes_" data-uid="csDBPF.ByteArrayHelper.ToBytes*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToBytes_System_Single___" data-uid="csDBPF.ByteArrayHelper.ToBytes(System.Single[])">
+  ToBytes(float[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L399"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses an array of floats (Float32) into bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToBytes(float[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The array of data as bytes</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToBytes_" data-uid="csDBPF.ByteArrayHelper.ToBytes*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToBytes_System_String_System_Boolean_" data-uid="csDBPF.ByteArrayHelper.ToBytes(System.String,System.Boolean)">
+  ToBytes(string, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L307"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reads a string and parses into a byte array the same length as the string</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToBytes(string data, bool singleByte = false)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Data to parse</p>
+</dd>
+    <dt><code>singleByte</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Parse type. FALSE (Default) is two byte output per char (Unicode); TRUE is one byte output per char: (ANSI/Windows-1252)</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The string as bytes</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToBytes_" data-uid="csDBPF.ByteArrayHelper.ToBytes*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToBytes_System_UInt16___" data-uid="csDBPF.ByteArrayHelper.ToBytes(System.UInt16[])">
+  ToBytes(ushort[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L363"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses an array of ushorts (UInt16) into bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToBytes(ushort[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The array of data as bytes</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToBytes_" data-uid="csDBPF.ByteArrayHelper.ToBytes*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToBytes_System_UInt32___" data-uid="csDBPF.ByteArrayHelper.ToBytes(System.UInt32[])">
+  ToBytes(uint[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L387"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses an array of uints (UInt32) into bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToBytes(uint[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The array of data as bytes</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToFloat32Array_" data-uid="csDBPF.ByteArrayHelper.ToFloat32Array*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToFloat32Array_System_Byte___" data-uid="csDBPF.ByteArrayHelper.ToFloat32Array(System.Byte[])">
+  ToFloat32Array(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convert byte array to Float32 array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static float[] ToFloat32Array(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>[]</dt>
+    <dd><p>Array of float values</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToFloat32List_" data-uid="csDBPF.ByteArrayHelper.ToFloat32List*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToFloat32List_System_Byte___" data-uid="csDBPF.ByteArrayHelper.ToFloat32List(System.Byte[])">
+  ToFloat32List(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convert byte array to Float32 List.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;float&gt; ToFloat32List(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>&gt;</dt>
+    <dd><p>List of float values</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToSInt32Array_" data-uid="csDBPF.ByteArrayHelper.ToSInt32Array*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToSInt32Array_System_Byte___" data-uid="csDBPF.ByteArrayHelper.ToSInt32Array(System.Byte[])">
+  ToSInt32Array(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convert byte array to SInt32 array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int[] ToSInt32Array(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>[]</dt>
+    <dd><p>Array of int values</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToSInt64Array_" data-uid="csDBPF.ByteArrayHelper.ToSInt64Array*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToSInt64Array_System_Byte___" data-uid="csDBPF.ByteArrayHelper.ToSInt64Array(System.Byte[])">
+  ToSInt64Array(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L136"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convert byte array to SInt64 array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static long[] ToSInt64Array(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>[]</dt>
+    <dd><p>Array of long values</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToSInt64List_" data-uid="csDBPF.ByteArrayHelper.ToSInt64List*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToSInt64List_System_Byte___" data-uid="csDBPF.ByteArrayHelper.ToSInt64List(System.Byte[])">
+  ToSInt64List(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L154"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convert byte array to long List</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;long&gt; ToSInt64List(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>&gt;</dt>
+    <dd><p>List of long values</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToUInt16Array_" data-uid="csDBPF.ByteArrayHelper.ToUInt16Array*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToUInt16Array_System_Byte___" data-uid="csDBPF.ByteArrayHelper.ToUInt16Array(System.Byte[])">
+  ToUInt16Array(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convert byte array to UInt16 array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ushort[] ToUInt16Array(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a>[]</dt>
+    <dd><p>Array of ushort values</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToUInt32Array_" data-uid="csDBPF.ByteArrayHelper.ToUInt32Array*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToUInt32Array_System_Byte___" data-uid="csDBPF.ByteArrayHelper.ToUInt32Array(System.Byte[])">
+  ToUInt32Array(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convert byte array to UInt32 array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static uint[] ToUInt32Array(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>[]</dt>
+    <dd><p>Array of uint values</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="csDBPF_ByteArrayHelper_ToUint8Array_" data-uid="csDBPF.ByteArrayHelper.ToUint8Array*"></a>
+
+  <h3 id="csDBPF_ByteArrayHelper_ToUint8Array_System_Byte___" data-uid="csDBPF.ByteArrayHelper.ToUint8Array(System.Byte[])">
+  ToUint8Array(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convert byte array to UInt8 array. A Uint8 is the same as a byte, so just return the byte array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToUint8Array(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Data to parse</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Array of byte values</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/noah-severyn/csDBPF/blob/docs/csDBPF/csDBPF/ByteArrayHelper.cs/#L10" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

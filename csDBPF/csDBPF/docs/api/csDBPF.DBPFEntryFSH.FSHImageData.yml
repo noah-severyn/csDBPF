@@ -1,0 +1,762 @@
+### YamlMime:ManagedReference
+items:
+- uid: csDBPF.DBPFEntryFSH.FSHImageData
+  commentId: T:csDBPF.DBPFEntryFSH.FSHImageData
+  id: DBPFEntryFSH.FSHImageData
+  parent: csDBPF
+  children:
+  - csDBPF.DBPFEntryFSH.FSHImageData.#ctor(csDBPF.DBPFEntryFSH.BitmapType,System.Int32,System.Int32,System.Byte[])
+  - csDBPF.DBPFEntryFSH.FSHImageData.Bitmap
+  - csDBPF.DBPFEntryFSH.FSHImageData.Code
+  - csDBPF.DBPFEntryFSH.FSHImageData.Data
+  - csDBPF.DBPFEntryFSH.FSHImageData.Decompress
+  - csDBPF.DBPFEntryFSH.FSHImageData.Height
+  - csDBPF.DBPFEntryFSH.FSHImageData.ToImage
+  - csDBPF.DBPFEntryFSH.FSHImageData.Width
+  langs:
+  - csharp
+  - vb
+  name: DBPFEntryFSH.FSHImageData
+  nameWithType: DBPFEntryFSH.FSHImageData
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData
+  type: Class
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: FSHImageData
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 272
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Contains the raw, encoded and potentially compressed image data. This is the entry point for actually getting the raw bitmap.
+  example: []
+  syntax:
+    content: public class DBPFEntryFSH.FSHImageData
+    content.vb: Public Class DBPFEntryFSH.FSHImageData
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.#ctor(csDBPF.DBPFEntryFSH.BitmapType,System.Int32,System.Int32,System.Byte[])
+  commentId: M:csDBPF.DBPFEntryFSH.FSHImageData.#ctor(csDBPF.DBPFEntryFSH.BitmapType,System.Int32,System.Int32,System.Byte[])
+  id: '#ctor(csDBPF.DBPFEntryFSH.BitmapType,System.Int32,System.Int32,System.Byte[])'
+  parent: csDBPF.DBPFEntryFSH.FSHImageData
+  langs:
+  - csharp
+  - vb
+  name: FSHImageData(BitmapType, int, int, byte[])
+  nameWithType: DBPFEntryFSH.FSHImageData.FSHImageData(DBPFEntryFSH.BitmapType, int, int, byte[])
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.FSHImageData(csDBPF.DBPFEntryFSH.BitmapType, int, int, byte[])
+  type: Constructor
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: .ctor
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 272
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Contains the raw, encoded and potentially compressed image data. This is the entry point for actually getting the raw bitmap.
+  example: []
+  syntax:
+    content: public FSHImageData(DBPFEntryFSH.BitmapType code, int width, int height, byte[] data)
+    parameters:
+    - id: code
+      type: csDBPF.DBPFEntryFSH.BitmapType
+      description: Specifies the type of compression
+    - id: width
+      type: System.Int32
+      description: Bitmap width in pixels
+    - id: height
+      type: System.Int32
+      description: Bitmap height in pixels
+    - id: data
+      type: System.Byte[]
+      description: Compressed bitmap data
+    content.vb: Public Sub New(code As DBPFEntryFSH.BitmapType, width As Integer, height As Integer, data As Byte())
+  overload: csDBPF.DBPFEntryFSH.FSHImageData.#ctor*
+  nameWithType.vb: DBPFEntryFSH.FSHImageData.New(DBPFEntryFSH.BitmapType, Integer, Integer, Byte())
+  fullName.vb: csDBPF.DBPFEntryFSH.FSHImageData.New(csDBPF.DBPFEntryFSH.BitmapType, Integer, Integer, Byte())
+  name.vb: New(BitmapType, Integer, Integer, Byte())
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Code
+  commentId: P:csDBPF.DBPFEntryFSH.FSHImageData.Code
+  id: Code
+  parent: csDBPF.DBPFEntryFSH.FSHImageData
+  langs:
+  - csharp
+  - vb
+  name: Code
+  nameWithType: DBPFEntryFSH.FSHImageData.Code
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Code
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Code
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 276
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Specifies the type of compression for <xref href="csDBPF.DBPFEntryFSH.FSHImageData.Data" data-throw-if-not-resolved="false"></xref>
+  example: []
+  syntax:
+    content: public DBPFEntryFSH.BitmapType Code { get; }
+    parameters: []
+    return:
+      type: csDBPF.DBPFEntryFSH.BitmapType
+    content.vb: Public Property Code As DBPFEntryFSH.BitmapType
+  overload: csDBPF.DBPFEntryFSH.FSHImageData.Code*
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Width
+  commentId: P:csDBPF.DBPFEntryFSH.FSHImageData.Width
+  id: Width
+  parent: csDBPF.DBPFEntryFSH.FSHImageData
+  langs:
+  - csharp
+  - vb
+  name: Width
+  nameWithType: DBPFEntryFSH.FSHImageData.Width
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Width
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Width
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 280
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Bitmap width in pixels.
+  example: []
+  syntax:
+    content: public int Width { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property Width As Integer
+  overload: csDBPF.DBPFEntryFSH.FSHImageData.Width*
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Height
+  commentId: P:csDBPF.DBPFEntryFSH.FSHImageData.Height
+  id: Height
+  parent: csDBPF.DBPFEntryFSH.FSHImageData
+  langs:
+  - csharp
+  - vb
+  name: Height
+  nameWithType: DBPFEntryFSH.FSHImageData.Height
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Height
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Height
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 284
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Bitmap height in pixels.
+  example: []
+  syntax:
+    content: public int Height { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property Height As Integer
+  overload: csDBPF.DBPFEntryFSH.FSHImageData.Height*
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Data
+  commentId: P:csDBPF.DBPFEntryFSH.FSHImageData.Data
+  id: Data
+  parent: csDBPF.DBPFEntryFSH.FSHImageData
+  langs:
+  - csharp
+  - vb
+  name: Data
+  nameWithType: DBPFEntryFSH.FSHImageData.Data
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Data
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Data
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 288
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Compressed bitmap data.
+  example: []
+  syntax:
+    content: public byte[] Data { get; }
+    parameters: []
+    return:
+      type: System.Byte[]
+    content.vb: Public Property Data As Byte()
+  overload: csDBPF.DBPFEntryFSH.FSHImageData.Data*
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Bitmap
+  commentId: P:csDBPF.DBPFEntryFSH.FSHImageData.Bitmap
+  id: Bitmap
+  parent: csDBPF.DBPFEntryFSH.FSHImageData
+  langs:
+  - csharp
+  - vb
+  name: Bitmap
+  nameWithType: DBPFEntryFSH.FSHImageData.Bitmap
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Bitmap
+  type: Property
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Bitmap
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 292
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Decompressed bitmap data.
+  example: []
+  syntax:
+    content: public byte[] Bitmap { get; }
+    parameters: []
+    return:
+      type: System.Byte[]
+    content.vb: Public Property Bitmap As Byte()
+  overload: csDBPF.DBPFEntryFSH.FSHImageData.Bitmap*
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Decompress
+  commentId: M:csDBPF.DBPFEntryFSH.FSHImageData.Decompress
+  id: Decompress
+  parent: csDBPF.DBPFEntryFSH.FSHImageData
+  langs:
+  - csharp
+  - vb
+  name: Decompress()
+  nameWithType: DBPFEntryFSH.FSHImageData.Decompress()
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Decompress()
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: Decompress
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 299
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Decompresses bitmap data
+  example: []
+  syntax:
+    content: public void Decompress()
+    content.vb: Public Sub Decompress()
+  overload: csDBPF.DBPFEntryFSH.FSHImageData.Decompress*
+  exceptions:
+  - type: System.InvalidOperationException
+    commentId: T:System.InvalidOperationException
+    description: Data is null and cannot be decompressed.
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: Unknown bitmap format
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.ToImage
+  commentId: M:csDBPF.DBPFEntryFSH.FSHImageData.ToImage
+  id: ToImage
+  parent: csDBPF.DBPFEntryFSH.FSHImageData
+  langs:
+  - csharp
+  - vb
+  name: ToImage()
+  nameWithType: DBPFEntryFSH.FSHImageData.ToImage()
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.ToImage()
+  type: Method
+  source:
+    remote:
+      path: csDBPF/csDBPF/Entries/DBPFEntryFSH.cs
+      branch: docs
+      repo: https://github.com/noah-severyn/csDBPF.git
+    id: ToImage
+    path: ../Entries/DBPFEntryFSH.cs
+    startLine: 321
+  assemblies:
+  - csDBPF
+  namespace: csDBPF
+  summary: Converts the decompressed bitmap data to a useable image format, decompressing if necessary.
+  example: []
+  syntax:
+    content: public Image<Rgba32> ToImage()
+    return:
+      type: SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32}
+      description: An ImageSharp <xref href="SixLabors.ImageSharp.Image%601" data-throw-if-not-resolved="false"></xref> image
+    content.vb: Public Function ToImage() As Image(Of Rgba32)
+  overload: csDBPF.DBPFEntryFSH.FSHImageData.ToImage*
+references:
+- uid: csDBPF
+  commentId: N:csDBPF
+  href: csDBPF.html
+  name: csDBPF
+  nameWithType: csDBPF
+  fullName: csDBPF
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.#ctor*
+  commentId: Overload:csDBPF.DBPFEntryFSH.FSHImageData.#ctor
+  href: csDBPF.DBPFEntryFSH.FSHImageData.html#csDBPF_DBPFEntryFSH_FSHImageData__ctor_csDBPF_DBPFEntryFSH_BitmapType_System_Int32_System_Int32_System_Byte___
+  name: FSHImageData
+  nameWithType: DBPFEntryFSH.FSHImageData.FSHImageData
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.FSHImageData
+  nameWithType.vb: DBPFEntryFSH.FSHImageData.New
+  fullName.vb: csDBPF.DBPFEntryFSH.FSHImageData.New
+  name.vb: New
+- uid: csDBPF.DBPFEntryFSH.BitmapType
+  commentId: T:csDBPF.DBPFEntryFSH.BitmapType
+  parent: csDBPF
+  href: csDBPF.DBPFEntryFSH.html
+  name: DBPFEntryFSH.BitmapType
+  nameWithType: DBPFEntryFSH.BitmapType
+  fullName: csDBPF.DBPFEntryFSH.BitmapType
+  spec.csharp:
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    href: csDBPF.DBPFEntryFSH.html
+  - name: .
+  - uid: csDBPF.DBPFEntryFSH.BitmapType
+    name: BitmapType
+    href: csDBPF.DBPFEntryFSH.BitmapType.html
+  spec.vb:
+  - uid: csDBPF.DBPFEntryFSH
+    name: DBPFEntryFSH
+    href: csDBPF.DBPFEntryFSH.html
+  - name: .
+  - uid: csDBPF.DBPFEntryFSH.BitmapType
+    name: BitmapType
+    href: csDBPF.DBPFEntryFSH.BitmapType.html
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Data
+  commentId: P:csDBPF.DBPFEntryFSH.FSHImageData.Data
+  href: csDBPF.DBPFEntryFSH.FSHImageData.html#csDBPF_DBPFEntryFSH_FSHImageData_Data
+  name: Data
+  nameWithType: DBPFEntryFSH.FSHImageData.Data
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Data
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Code*
+  commentId: Overload:csDBPF.DBPFEntryFSH.FSHImageData.Code
+  href: csDBPF.DBPFEntryFSH.FSHImageData.html#csDBPF_DBPFEntryFSH_FSHImageData_Code
+  name: Code
+  nameWithType: DBPFEntryFSH.FSHImageData.Code
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Code
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Width*
+  commentId: Overload:csDBPF.DBPFEntryFSH.FSHImageData.Width
+  href: csDBPF.DBPFEntryFSH.FSHImageData.html#csDBPF_DBPFEntryFSH_FSHImageData_Width
+  name: Width
+  nameWithType: DBPFEntryFSH.FSHImageData.Width
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Width
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Height*
+  commentId: Overload:csDBPF.DBPFEntryFSH.FSHImageData.Height
+  href: csDBPF.DBPFEntryFSH.FSHImageData.html#csDBPF_DBPFEntryFSH_FSHImageData_Height
+  name: Height
+  nameWithType: DBPFEntryFSH.FSHImageData.Height
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Height
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Data*
+  commentId: Overload:csDBPF.DBPFEntryFSH.FSHImageData.Data
+  href: csDBPF.DBPFEntryFSH.FSHImageData.html#csDBPF_DBPFEntryFSH_FSHImageData_Data
+  name: Data
+  nameWithType: DBPFEntryFSH.FSHImageData.Data
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Data
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Bitmap*
+  commentId: Overload:csDBPF.DBPFEntryFSH.FSHImageData.Bitmap
+  href: csDBPF.DBPFEntryFSH.FSHImageData.html#csDBPF_DBPFEntryFSH_FSHImageData_Bitmap
+  name: Bitmap
+  nameWithType: DBPFEntryFSH.FSHImageData.Bitmap
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Bitmap
+- uid: System.InvalidOperationException
+  commentId: T:System.InvalidOperationException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.invalidoperationexception
+  name: InvalidOperationException
+  nameWithType: InvalidOperationException
+  fullName: System.InvalidOperationException
+- uid: System.NotSupportedException
+  commentId: T:System.NotSupportedException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.notsupportedexception
+  name: NotSupportedException
+  nameWithType: NotSupportedException
+  fullName: System.NotSupportedException
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.Decompress*
+  commentId: Overload:csDBPF.DBPFEntryFSH.FSHImageData.Decompress
+  href: csDBPF.DBPFEntryFSH.FSHImageData.html#csDBPF_DBPFEntryFSH_FSHImageData_Decompress
+  name: Decompress
+  nameWithType: DBPFEntryFSH.FSHImageData.Decompress
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.Decompress
+- uid: SixLabors.ImageSharp.Image`1
+  commentId: T:SixLabors.ImageSharp.Image`1
+  isExternal: true
+  name: Image<TPixel>
+  nameWithType: Image<TPixel>
+  fullName: SixLabors.ImageSharp.Image<TPixel>
+  nameWithType.vb: Image(Of TPixel)
+  fullName.vb: SixLabors.ImageSharp.Image(Of TPixel)
+  name.vb: Image(Of TPixel)
+  spec.csharp:
+  - uid: SixLabors.ImageSharp.Image`1
+    name: Image
+    isExternal: true
+  - name: <
+  - name: TPixel
+  - name: '>'
+  spec.vb:
+  - uid: SixLabors.ImageSharp.Image`1
+    name: Image
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TPixel
+  - name: )
+- uid: csDBPF.DBPFEntryFSH.FSHImageData.ToImage*
+  commentId: Overload:csDBPF.DBPFEntryFSH.FSHImageData.ToImage
+  href: csDBPF.DBPFEntryFSH.FSHImageData.html#csDBPF_DBPFEntryFSH_FSHImageData_ToImage
+  name: ToImage
+  nameWithType: DBPFEntryFSH.FSHImageData.ToImage
+  fullName: csDBPF.DBPFEntryFSH.FSHImageData.ToImage
+- uid: SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32}
+  commentId: T:SixLabors.ImageSharp.Image{SixLabors.ImageSharp.PixelFormats.Rgba32}
+  parent: SixLabors.ImageSharp
+  definition: SixLabors.ImageSharp.Image`1
+  name: Image<Rgba32>
+  nameWithType: Image<Rgba32>
+  fullName: SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>
+  nameWithType.vb: Image(Of Rgba32)
+  fullName.vb: SixLabors.ImageSharp.Image(Of SixLabors.ImageSharp.PixelFormats.Rgba32)
+  name.vb: Image(Of Rgba32)
+  spec.csharp:
+  - uid: SixLabors.ImageSharp.Image`1
+    name: Image
+    isExternal: true
+  - name: <
+  - uid: SixLabors.ImageSharp.PixelFormats.Rgba32
+    name: Rgba32
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: SixLabors.ImageSharp.Image`1
+    name: Image
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: SixLabors.ImageSharp.PixelFormats.Rgba32
+    name: Rgba32
+    isExternal: true
+  - name: )
+- uid: SixLabors.ImageSharp
+  commentId: N:SixLabors.ImageSharp
+  isExternal: true
+  name: SixLabors.ImageSharp
+  nameWithType: SixLabors.ImageSharp
+  fullName: SixLabors.ImageSharp
+  spec.csharp:
+  - uid: SixLabors
+    name: SixLabors
+    isExternal: true
+  - name: .
+  - uid: SixLabors.ImageSharp
+    name: ImageSharp
+    isExternal: true
+  spec.vb:
+  - uid: SixLabors
+    name: SixLabors
+    isExternal: true
+  - name: .
+  - uid: SixLabors.ImageSharp
+    name: ImageSharp
+    isExternal: true
