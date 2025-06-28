@@ -118,8 +118,8 @@ namespace csDBPF {
 		/// Returns a list of data values which are stored in this property.
 		/// </summary>
 		/// <returns>List of data values which are stored in this property</returns>
-		public override List<long> GetData() {
-			return _dataValues;
+		public override long[] GetData() {
+			return _dataValues.ToArray();
 		}
 
 
@@ -144,13 +144,13 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Set the data values stored in this property. Value should be of type <![CDATA[List<long>]]>.
+        /// Set the data values stored in this property. Value should be of type <![CDATA[IEnumerable<long>]]>.
         /// </summary>
         /// <param name="value">Values to set</param>
-        /// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetData must be <![CDATA[List<long>]]>;.</exception>
-        public override void SetData(object value) {
-			if (value is not List<long>) {
-				throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be List<long>. {value.GetType()} was provided.");
+        /// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetData must be <![CDATA[IEnumerable<long>]]>;.</exception>
+        public override void SetData(IEnumerable value) {
+			if (value is not IEnumerable<long>) {
+				throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be IEnumerable<long>. {value.GetType()} was provided.");
 			}
 
 			_dataValues = (List<long>) value;
@@ -167,7 +167,7 @@ namespace csDBPF {
         /// This override is necessary when countOfReps = 1; otherwise, if passed a list of length 1 then the number of reps would be set to 0. Figuring the byte offset for the next property will then be off by 4 because the extra 4 bytes representing the number of reps will be ignored.
         /// </remarks>
 		/// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetData must be <![CDATA[List<long>]]>;.</exception>
-        internal override void SetData(object value, uint countOfReps) {
+        internal override void SetData(IEnumerable value, uint countOfReps) {
             if (value is not List<long>) {
                 throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be List<long>. {value.GetType()} was provided.");
             }

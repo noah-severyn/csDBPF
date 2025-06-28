@@ -41,24 +41,27 @@ namespace csDBPF
 		/// <summary>
 		/// Returns the values(s) stored in this property.
 		/// </summary>
-		public abstract object GetData();
+        /// <returns>An array of string, long, or float values. This is specified via the <see cref="DataType"/> property</returns>
+		public abstract IEnumerable GetData();
 
         /// <summary>
         /// Returns the value stored in this property at the given position.
         /// </summary>
+        /// <returns>A single string, long, or float value.  This is specified via the <see cref="DataType"/> property</returns>
         public abstract object GetData(int position);
 
 		/// <summary>
 		/// Set the values(s) stored in this property.
 		/// </summary>
-		public abstract void SetData(object value);
+        /// <param name="value">A string or set of numeric value(s)</param>
+		public abstract void SetData(IEnumerable value);
         /// <summary>
         /// Set the values(s) stored in this property.
         /// </summary>
         /// <remarks>
 		/// This override is necessary when countOfReps = 1; otherwise, if passed a list of length 1 then the number of reps would be set to 0. Figuring the byte offset for the next property will then be off by 4 because the extra 4 bytes representing the number of reps will be ignored. This is only necessary for long-type properties.
 		/// </remarks>
-        internal abstract void SetData(object value, uint countOfReps);
+        internal abstract void SetData(IEnumerable value, uint countOfReps);
 
         /// <summary>
         /// Process the features and data values of this property into a byte array according to the set encoding type.

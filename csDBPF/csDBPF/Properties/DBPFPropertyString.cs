@@ -99,7 +99,7 @@ namespace csDBPF {
 		/// <remarks>
 		/// The position parameter is ignored because type DBPFPropertyString only stores one string as its data.
 		/// </remarks>
-        public override object GetData(int position) {
+        public override string GetData(int position) {
             return _dataValue;
         }
 
@@ -109,7 +109,7 @@ namespace csDBPF {
         /// </summary>
         /// <param name="value">String to set</param>
         /// <exception cref="ArgumentException">Argument to DBPFPropertyString.SetData must be string.</exception>
-        public override void SetData(object value) {
+        public override void SetData(IEnumerable value) {
 			if (value is not string) {
 				throw new ArgumentException($"Argument to DBPFPropertyString.SetData must be string. {value.GetType()} was provided.");
 			}
@@ -124,9 +124,9 @@ namespace csDBPF {
         /// Set the values(s) stored in this property. Value should be of type string.
         /// </summary>
         /// <remarks>
-        /// This implementation for string-type properties is identical to <see cref="SetData(object)"/>.
+        /// This implementation for string-type properties is identical to <see cref="SetData(IEnumerable)"/>.
         /// </remarks>
-        internal override void SetData(object value, uint countOfReps) {
+        internal override void SetData(IEnumerable value, uint countOfReps) {
             SetData(value);
         }
 

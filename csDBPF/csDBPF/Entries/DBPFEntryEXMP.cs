@@ -1,11 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using csDBPF;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static csDBPF.DBPFEntryDIR;
-using static csDBPF.DBPFProperty;
 
 namespace csDBPF {
 	/// <summary>
@@ -22,33 +19,21 @@ namespace csDBPF {
 		/// </summary>
 		private bool _isTextEncoding;
 
-		private SortedList<uint, DBPFProperty> _listOfProperties;
 		/// <summary>
 		/// List of one or more <see cref="DBPFProperty"/> associated with this entry. Sorted by <see cref="DBPFProperty.ID"/>.
 		/// </summary>
-		public SortedList<uint, DBPFProperty> ListOfProperties {
-			get { return _listOfProperties; }
-			set { _listOfProperties = value; }
-		}
+		public SortedList<uint, DBPFProperty> ListOfProperties { get; set; }
 
-		private TGI _parentCohort;
 		/// <summary>
 		/// The Parent Cohort for this exemplar.
 		/// </summary>
 		/// <see href="https://www.wiki.sc4devotion.com/index.php?title=Cohort"/>
-		public TGI ParentCohort {
-			get { return _parentCohort; }
-			set { _parentCohort = value; }
-		}
+		public TGI ParentCohort { get; set; }
 
-		private bool _isCohort;
 		/// <summary>
 		/// Determine if the file is Exemplar or Cohort.
 		/// </summary>
-		public bool IsCohort {
-			get { return _isCohort; }
-			set { _isCohort = value; }
-		}
+		public bool IsCohort { get; set; }
 
 
         /// <summary>
@@ -56,8 +41,8 @@ namespace csDBPF {
         /// </summary>
         /// <param name="tgi"></param>
         public DBPFEntryEXMP(TGI tgi) : base(tgi) {
-            _listOfProperties = new SortedList<uint, DBPFProperty>();
-            _parentCohort = new TGI(DBPFTGI.BLANKTGI);
+            ListOfProperties = [];
+            ParentCohort = new TGI(DBPFTGI.BLANKTGI);
         }
 
         //TODO add constructor for only listofprop, tgi+listofprop, tgi+parent, tgi+listofprop+parent
@@ -71,11 +56,11 @@ namespace csDBPF {
         /// <param name="index">Entry position in the file, 0-n</param>
         /// <param name="bytes">Byte data for this entry</param>
         public DBPFEntryEXMP(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
-			_listOfProperties = new SortedList<uint, DBPFProperty>();
-			_parentCohort = new TGI(DBPFTGI.BLANKTGI);
+			ListOfProperties = [];
+			ParentCohort = new TGI(DBPFTGI.BLANKTGI);
 
 			if (bytes[0] == 0x43) { //"C"
-				_isCohort = true;
+				IsCohort = true;
 			}
 		}
 
@@ -108,20 +93,20 @@ namespace csDBPF {
 				parentCohortTID = BitConverter.ToUInt32(dData, 8);
 				parentCohortGID = BitConverter.ToUInt32(dData, 12);
 				parentCohortIID = BitConverter.ToUInt32(dData, 16);
-				_parentCohort = new TGI(parentCohortTID, parentCohortGID, parentCohortIID);
+				ParentCohort = new TGI(parentCohortTID, parentCohortGID, parentCohortIID);
 				propertyCount = BitConverter.ToUInt32(dData, 20);
 				pos = 24;
 			} else {
 				parentCohortTID = ByteArrayHelper.ReadTextToUint(dData, 30);
 				parentCohortGID = ByteArrayHelper.ReadTextToUint(dData, 41);
 				parentCohortIID = ByteArrayHelper.ReadTextToUint(dData, 52);
-				_parentCohort = new TGI(parentCohortTID, parentCohortGID, parentCohortIID);
+				ParentCohort = new TGI(parentCohortTID, parentCohortGID, parentCohortIID);
 				propertyCount = ByteArrayHelper.ReadTextToUint(dData, 75);
 				pos = 85;
 			}
 
 			if (propertyCount == 0) {
-				LogMessage("Entry contains 0 properties.");
+				LogError("Entry contains 0 properties.");
 				return;
 			}
 
@@ -130,15 +115,15 @@ namespace csDBPF {
 			for (int idx = 0; idx < propertyCount; idx++) {
 				property = DecodeProperty(dData, pos);
 				if (property is null) {
-					LogMessage($"Property #{idx} could not be decoded.");
+					LogError($"Property #{idx} could not be decoded.");
 					return;
 				}
 
 				//Can be an error if this property has duplicate entries which some files do have - skip any subsequent properties with same ID
 				try {
-                    _listOfProperties.Add(property.ID, property);
+                    ListOfProperties.Add(property.ID, property);
                 } catch {
-					LogMessage($"Property {DBPFUtil.ToHexString(property.ID)} is duplicated.");
+					LogError($"Property {DBPFUtil.ToHexString(property.ID)} is duplicated.");
 				}
 
 				//Determine which bytes to skip to get to the start of the next property
@@ -158,11 +143,11 @@ namespace csDBPF {
 			}
 
 			//Lastly check to make sure we have ExemplarType (0x10) and ExemplarName (0x20) properties
-			if (GetExemplarType() == ExemplarType.Error) {
-				LogMessage("Missing property Exemplar Type.");
+			if (GetExemplarType() == DBPFProperty.ExemplarType.Error) {
+				LogError("Missing property Exemplar Type.");
 			}
             if (GetExemplarName() == null) {
-                LogMessage("Missing property Exemplar Name.");
+                LogError("Missing property Exemplar Name.");
             }
         }
 
@@ -199,7 +184,7 @@ namespace csDBPF {
 
 			//Get the property ID
 			if (offset + 4 > dData.Length) {
-                LogMessage($"Offset of {offset} does not contain enough data to hold a property. Unable to decode property.");
+                LogError($"Offset of {offset} does not contain enough data to hold a property. Unable to decode property.");
                 return null; 
 			}
 			uint propertyID = BitConverter.ToUInt32(dData, offset);
@@ -209,21 +194,21 @@ namespace csDBPF {
 			ushort valueType = BitConverter.ToUInt16(dData, offset);
             DBPFProperty.PropertyDataType dataType = (DBPFProperty.PropertyDataType) valueType;
 			if (dataType is DBPFProperty.PropertyDataType.UNKNOWN) {
-				LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid data type. Unable to decode property.");
+				LogError($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid data type. Unable to decode property.");
                 return null;
             }
 			offset += 2;
 
 			//Get the property keyType
 			if (offset + 2 > dData.Length) {
-                LogMessage($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid key type. Unable to decode property.");
+                LogError($"Property 0x{DBPFUtil.ToHexString(propertyID)} has invalid key type. Unable to decode property.");
                 return null; 
 			}
 			ushort keyType = BitConverter.ToUInt16(dData, offset);
 			offset += 2;
 
-			//Examine the keyType to determine how to set the values for the new property
-			object dataValues;
+            //Examine the keyType to determine how to set the values for the new property
+            IEnumerable dataValues;
 			uint countOfReps;
 			//keyType == 0x80 ... this is one or more repetitions of the data type (2+ values of the data type)
 			if (keyType == 0x80) {
@@ -273,7 +258,7 @@ namespace csDBPF {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 				if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-					LogMessage($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
+					LogError($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
             } else {
@@ -336,7 +321,7 @@ namespace csDBPF {
 
 			//Parse the text values into a byte array and set the property values equal to the array. Algorithm differs depending on if the data type is float, string, or other number.
 			offset = FindNextInstanceOf(dData, (byte) SpecialChars.OpeningBrace, offset) + 1;
-			object dataValues;
+            IEnumerable dataValues;
 
 			if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
 				dataValues = new List<float>();
@@ -387,7 +372,7 @@ namespace csDBPF {
 				newProperty = new DBPFPropertyString();
 			} else if (dataType == DBPFProperty.PropertyDataType.FLOAT32) {
                 if (countOfReps == 1 && ((List<float>) dataValues).Count == 1) {
-                    LogMessage($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
+                    LogError($"Property {DBPFUtil.ToHexString(propertyID)} contains a potential macOS TE bug.");
                 }
                 newProperty = new DBPFPropertyFloat();
 			} else {
@@ -421,7 +406,7 @@ namespace csDBPF {
             if (!_isDecoded) return;
 
             string id;
-            if (_isCohort) {
+            if (IsCohort) {
                 id = "C";
             } else {
                 id = "E";
@@ -433,9 +418,9 @@ namespace csDBPF {
 
                 StringBuilder sb = new StringBuilder();
                 sb.Append(id + "\r\n");
-                sb.Append($"ParentCohort=Key:{{0x{DBPFUtil.ToHexString(_parentCohort.TypeID)},0x{DBPFUtil.ToHexString(_parentCohort.GroupID)},0x{DBPFUtil.ToHexString(_parentCohort.InstanceID)}}}\r\n");
-                sb.Append($"PropCount=0x{DBPFUtil.ToHexString(_listOfProperties.Count)}\r\n");
-                foreach (DBPFProperty prop in _listOfProperties.Values) {
+                sb.Append($"ParentCohort=Key:{{0x{DBPFUtil.ToHexString(ParentCohort.TypeID)},0x{DBPFUtil.ToHexString(ParentCohort.GroupID)},0x{DBPFUtil.ToHexString(ParentCohort.InstanceID)}}}\r\n");
+                sb.Append($"PropCount=0x{DBPFUtil.ToHexString(ListOfProperties.Count)}\r\n");
+                foreach (DBPFProperty prop in ListOfProperties.Values) {
                     sb.Append(prop.ToBytes());
                 }
                 ByteData = ByteArrayHelper.ToBytes(sb.ToString(), true);
@@ -448,11 +433,11 @@ namespace csDBPF {
 
                 List<byte> bytes = new List<byte>();
                 bytes.AddRange(ByteArrayHelper.ToBytes(id, true));
-                bytes.AddRange(BitConverter.GetBytes(_parentCohort.TypeID));
-                bytes.AddRange(BitConverter.GetBytes(_parentCohort.GroupID));
-                bytes.AddRange(BitConverter.GetBytes(_parentCohort.InstanceID));
-                bytes.AddRange(BitConverter.GetBytes(_listOfProperties.Count));
-                foreach (DBPFProperty prop in _listOfProperties.Values) {
+                bytes.AddRange(BitConverter.GetBytes(ParentCohort.TypeID));
+                bytes.AddRange(BitConverter.GetBytes(ParentCohort.GroupID));
+                bytes.AddRange(BitConverter.GetBytes(ParentCohort.InstanceID));
+                bytes.AddRange(BitConverter.GetBytes(ListOfProperties.Count));
+                foreach (DBPFProperty prop in ListOfProperties.Values) {
                     bytes.AddRange(prop.ToBytes());
                 }
                 ByteData = bytes.ToArray();
@@ -481,19 +466,19 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="ExemplarType"/> for the full list.
+        /// Gets the Exemplar Type (0x00 - 0x2B) of the property. See <see cref="DBPFProperty.ExemplarType"/> for the full list.
         /// </summary>
-        /// <returns>Exemplar Type if found; <see cref="ExemplarType.Error"/> if property is not found</returns>
+        /// <returns>Exemplar Type if found; <see cref="DBPFProperty.ExemplarType.Error"/> if property is not found</returns>
 		/// <remarks>Simply a shortcut for <c>Entry.GetProperty(0x10)</c></remarks>
-        public ExemplarType GetExemplarType() {
+        public DBPFProperty.ExemplarType GetExemplarType() {
 			DBPFProperty property = GetProperty(0x00000010);
 			if (property is null) {
-				return ExemplarType.Error;
+				return DBPFProperty.ExemplarType.Error;
 			}
 
 			//We know exemplar type can only hold one value, so grab the first one
-			List<long> dataValues = (List<long>) property.GetData();
-			return (ExemplarType) Convert.ToInt32(dataValues[0]);
+			var dataValues = (long[]) property.GetData();
+			return (DBPFProperty.ExemplarType) dataValues[0];
 		}
 
 
@@ -510,8 +495,8 @@ namespace csDBPF {
             }
 
             //We know exemplar type can only hold one value, so grab the first one
-            string dataValue = (string) property.GetData();
-            return dataValue;
+            var dataValues = (string) property.GetData();
+            return dataValues;
         }
 
 
@@ -519,37 +504,57 @@ namespace csDBPF {
         /// <summary>
         /// Lookup and return a property from a list of properties in the entry.
         /// </summary>
-        /// <param name="idToGet">Property ID to find</param>
-        /// <returns>DBPFProperty of the match if found; null otherwise</returns>
-        public DBPFProperty GetProperty(uint idToGet) {
-			if (_listOfProperties is null) {
+        /// <param name="propertyId">Id of the property to find.</param>
+        /// <returns>A <see cref="DBPFProperty"/> of the match if found; otherwise, <see langword="null"/>.</returns>
+        public DBPFProperty GetProperty(uint propertyId) {
+			if (ListOfProperties is null) {
 				throw new InvalidOperationException("This entry must be decoded before it can be analyzed!");
 			}
-			_listOfProperties.TryGetValue(idToGet, out DBPFProperty property);
+			ListOfProperties.TryGetValue(propertyId, out DBPFProperty property);
 			return property;
 		}
-		/// <summary>
-		/// Lookup and return a property from a list of properties in the entry.
-		/// </summary>
-		/// <param name="name">Name of property</param>
-		/// <returns>DBPFProperty of the match if found; null otherwise</returns>
-		/// <remarks>
-		/// Lookup name is case insensitive and ignores spaces (the XML properties can be inconsistently named).
-		/// </remarks>
-		public DBPFProperty GetProperty(string name) {
-			uint id = XMLProperties.GetPropertyID(name);
-			return GetProperty(id);
-		}
+
+
+        /// <summary>
+        /// Lookup and return a property from a list of properties in the entry.
+        /// </summary>
+        /// <param name="name">Name of property to check. Name is case insensitive and ignores spaces.</param>
+        /// <returns>A <see cref="DBPFProperty"/> of the match if found; otherwise, <see langword="null"/>.</returns>
+        public DBPFProperty GetProperty(string name) {
+            uint id = XMLProperties.GetPropertyID(name);
+            return GetProperty(id);
+        }
+
+        /// <summary>
+        /// Evaluate whether this entry contains the specified property.
+        /// </summary>
+        /// <param name="name">Name of property to check. Name is case insensitive and ignores spaces.</param>
+        /// <returns><see langword="true"/> if the property is present; otherwise <see langword="false"/>.</returns>
+        public bool HasProperty(string name) {
+            uint id = XMLProperties.GetPropertyID(name);
+            return HasProperty(id);
+        }
+        /// <summary>
+        /// Evaluate whether this entry contains the specified property.
+        /// </summary>
+        /// <param name="propertyId">Id of the property to check</param>
+        /// <returns><see langword="true"/> if the property is present; otherwise, <see langword="false"/>.</returns>
+        public bool HasProperty(uint propertyId) {
+            if (ListOfProperties is null) {
+                throw new InvalidOperationException("This entry must be decoded before it can be analyzed!");
+            }
+            return ListOfProperties.TryGetValue(propertyId, out _);
+        }
 
 
 
-		/// <summary>
-		/// Add a property to this exemplar/cohort. If the property already exists no action is taken.
-		/// </summary>
-		/// <param name="prop">Property to add</param>
-		public void AddProperty(DBPFProperty prop) {
+        /// <summary>
+        /// Add a property to this exemplar/cohort. If the property already exists no action is taken.
+        /// </summary>
+        /// <param name="prop">Property to add</param>
+        public void AddProperty(DBPFProperty prop) {
 			try {
-				_listOfProperties.Add(prop.ID, prop);
+				ListOfProperties.Add(prop.ID, prop);
 			}
 			catch (ArgumentException) {
 
@@ -564,7 +569,7 @@ namespace csDBPF {
 		/// <param name="prop">Property to update</param>
 		public void UpdateProperty(DBPFProperty prop) {
 			try {
-				_listOfProperties[prop.ID] = prop;
+				ListOfProperties[prop.ID] = prop;
 			}
 			catch (KeyNotFoundException) {
 
@@ -580,10 +585,10 @@ namespace csDBPF {
 		/// <param name="prop">Property to add or update</param>
 		public void AddOrUpdateProperty(DBPFProperty prop) {
 			try {
-				_listOfProperties[prop.ID] = prop;
+				ListOfProperties[prop.ID] = prop;
 			}
 			catch (KeyNotFoundException) {
-				_listOfProperties.Add(prop.ID, prop);
+				ListOfProperties.Add(prop.ID, prop);
 			}
 		}
 
@@ -595,7 +600,7 @@ namespace csDBPF {
 		/// <param name="id">Property ID to remove</param>
 		public void RemoveProperty(uint id) {
 			try {
-				_listOfProperties.Remove(id);
+				ListOfProperties.Remove(id);
 			}
 			catch (KeyNotFoundException) {
 
@@ -608,7 +613,7 @@ namespace csDBPF {
 		/// Removes all the properties from this cohort/exemplar.
 		/// </summary>
 		public void RemoveAllProperties() {
-			_listOfProperties.Clear();
+			ListOfProperties.Clear();
         }
 
 
