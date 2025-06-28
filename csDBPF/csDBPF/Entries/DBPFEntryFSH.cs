@@ -6,90 +6,22 @@ using System.IO;
 using System.Collections;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-//using Squish;
-using Epsylon.TextureSquish;
+//This implementation is based off of:
+// - https://github.com/sebamarynissen/sc4/blob/main/src/core/fsh.ts
+// - https://github.com/sebamarynissen/sc4/blob/main/src/core/bitmap-decompression.ts
+// - https://github.com/mafaca/Dxt/blob/master/Dxt/DxtDecoder.cs
 
 namespace csDBPF {
     /// <summary>
-	/// An implementation of <see cref="DBPFEntry"/> for FSH entries. Object data is stored in <see cref="DBPFEntry.ByteData"/> and is interpreted from the <see cref="FSHHeader.FSHDirectory"/> and <see cref="BitmapHeaders"/>.
+	/// An implementation of <see cref="DBPFEntry"/> for FSH entries.
 	/// </summary>
 	/// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH"/>
     /// <seealso href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format"/>
     public class DBPFEntryFSH : DBPFEntry {
-        private readonly FSHHeader _header;
-        private readonly List<FSHBitmapHeader> _bitmapHeaders;
-        private bool _isCompressed;
-        private bool _isDecoded;
 
-        /// <summary>
-        /// Stores key information about this FSH entry.
-        /// </summary>
-        public FSHHeader Header {
-            get { return _header; }
-        }
+        public List<FSHEntry> Entries { get; private set; }
 
-        /// <summary>
-        /// Stores key information about each bitmap in this file.
-        /// </summary>
-        public List<FSHBitmapHeader> BitmapHeaders {
-            get { return _bitmapHeaders; }
-        }
-
-
-
-        /// <summary>
-        /// Stores key information about this FSH entry. The header is the first 16 bytes of the entry, plus the size of the directory.
-        /// </summary>
-        public class FSHHeader {
-            private string _identifier;
-            private List<FSHDirectoryItem> _fshdirectory;
-
-            /// <summary>
-            /// FSH File identifier. Should always be "SHPI".
-            /// </summary>
-            public string Identifier {
-                get { return _identifier; }
-                internal set {
-                    string identifierFSH = "SHPI";
-                    if (value.CompareTo(identifierFSH) != 0) {
-                        throw new InvalidDataException("Invalid FSH header format.");
-                    } else {
-                        _identifier = value;
-                    }
-                }
-            }
-
-            /// <summary>
-            /// File size in bytes of this entry.
-            /// </summary>
-            /// <remarks>This is equivalent to the QFS compressed size of this entry.</remarks>
-            public int FileSize { get; internal set; }
-
-            /// <summary>
-            /// Number of bitmaps in this entry.
-            /// </summary>
-            public int BitmapCount { get; internal set; }
-
-            /// <summary>
-            /// Describes the usage of these bitmaps in game.
-            /// </summary>
-            public FSHDirectoryID DirectoryID { get; internal set; }
-
-            /// <summary>
-            /// Describes the structure of this entry as a list of name-offset pairs of length <see cref="BitmapCount"/>.
-            /// </summary>
-            public List<FSHDirectoryItem> FSHDirectory {
-                get { return _fshdirectory; }
-                internal set { _fshdirectory = value; }
-            }
-
-            /// <summary>
-            /// Create a new instance.
-            /// </summary>
-            internal FSHHeader() {
-                _fshdirectory = new List<FSHDirectoryItem>();
-            }
-        }
+        public FSHImageData Image => Entries.Count > 0 ? Entries[0].Image : throw new InvalidOperationException("No image entries available");
 
 
         /// <summary>
@@ -97,9 +29,7 @@ namespace csDBPF {
         /// </summary>
         /// <param name="tgi"></param>
         public DBPFEntryFSH(TGI tgi) : base(tgi) {
-            _header = new FSHHeader();
-            _bitmapHeaders = new List<FSHBitmapHeader>();
-            _isCompressed = QFS.IsCompressed(ByteData);
+            Entries = [];
         }
         /// <summary>
 		/// Create a new instance. Use when reading an existing FSH entry from a file.
@@ -110,110 +40,50 @@ namespace csDBPF {
 		/// <param name="index">Entry position in the file, 0-n</param>
 		/// <param name="bytes">Byte data for this entry</param>
         public DBPFEntryFSH(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
-            _header = new FSHHeader();
-            _bitmapHeaders = new List<FSHBitmapHeader>();
-            _isCompressed = QFS.IsCompressed(ByteData);
+            Entries = [];
         }
 
 
 
         /// <summary>
-        /// Decompresses this entry and sets <see cref="FSHHeader.FSHDirectory"/> and <see cref="BitmapHeaders"/> from byte data. These provide a template for how to process the <see cref="DBPFEntry.ByteData"/>
+        /// Decompresses this entry and sets bitmap data from byte data.
         /// </summary>
         public override void Decode() {
-            if (_isDecoded) return;
-
             byte[] dData;
-            if (_isCompressed) {
+            if (QFS.IsCompressed(ByteData)) {
                 dData = QFS.Decompress(ByteData);
-                _isCompressed = false;
             } else {
                 dData = ByteData;
             }
 
+            MemoryStream ms = new MemoryStream(dData);
+            BinaryReader br = new BinaryReader(ms);
+
             //Analyze the FSH file header
-            _header.Identifier = ByteArrayHelper.ToAString(dData, 0, 4);
-            _header.FileSize = BitConverter.ToInt32(dData, 4);
-            _header.BitmapCount = BitConverter.ToInt32(dData, 8);
-            _header.DirectoryID = (FSHDirectoryID) BitConverter.ToInt32(dData, 12);
+            string identifier = br.ReadString(4);
+            if (identifier != "SHPI") {
+                throw new InvalidDataException("Invalid FSH file");
+            }
+            int fileSize = br.ReadInt32();
+            int bitmapCount = br.ReadInt32();
+            string dirId = br.ReadString(4);
+
 
             //Fill the FSH Directory. This tells us the location in the file of each bitmap.
-            int offset = 16;
-            byte[] entryName = new byte[4];
-            for (int entry = 0; entry < _header.BitmapCount; entry++) {
-                Array.Copy(dData, offset, entryName, 0, 4);
-                offset += 4;
-                int entryOffset = BitConverter.ToInt32(dData, offset);
-                offset += 4;
-                _header.FSHDirectory.Add(new FSHDirectoryItem(entryName, entryOffset));
+            var directory = new List<FSHDirectoryItem>();
+            for (int idx = 0; idx < bitmapCount; idx++) {
+                string name = br.ReadString(4);
+                int offset = br.ReadInt32();
+                directory.Add(new FSHDirectoryItem(name, offset));
             }
 
             //After the directory is built, look at the header information each bitmap in the file
-            int endOffset;
-            int alphaOffset;
-            Bitmap bmp;
-            for (int idx = 0; idx < _header.BitmapCount; idx++) {
-                offset = _header.FSHDirectory[idx].Offset;
-                int code = BitConverter.ToInt32(dData, offset);
-                short width = BitConverter.ToInt16(dData, offset + 4);
-                short height = BitConverter.ToInt16(dData, offset + 6);
-                short[] misc = new short[4];
-                Array.Copy(dData, offset + 8, misc, 0, 4);
-                _bitmapHeaders.Add(new FSHBitmapHeader(code, width, height, misc));
-
-                offset += 16; //16 byte header
-                if (idx == _header.BitmapCount-1) {
-                    endOffset = ByteData.Length;
-                } else {
-                    endOffset = _header.FSHDirectory[idx+1].Offset;
-                }
-                FSHBitmapType bmpType = (FSHBitmapType) code;
-                byte[] dest;
-                byte[] imgdata = new byte[endOffset - offset];
-                Array.Copy(dData,offset,imgdata,0,endOffset-offset);
-
-                switch (bmpType) {
-                    case FSHBitmapType.EightBit:
-                        dest = new byte[0];
-                        break;
-                    case FSHBitmapType.ThirtyTwoBit:
-                        dest = new byte[0];
-                        break;
-                    case FSHBitmapType.TwentyFourBit:
-                        dest = new byte[0];
-                        break;
-                    case FSHBitmapType.SixteenBitAlpha:
-                        dest = new byte[0];
-                        break;
-                    case FSHBitmapType.SixteenBit:
-                        dest = new byte[0];
-                        break;
-                    case FSHBitmapType.SixteenBit4x4:
-                        dest = new byte[0];
-                        break;
-                    case FSHBitmapType.DXT3:
-                        //dest = new byte[Squish.Squish.GetStorageRequirements(width, height, SquishFlags.kDxt3)];
-                        //Squish.Squish.DecompressImage(dData, width, height, dest, SquishFlags.kDxt3);
-                        bmp = Bitmap.Decompress(width, height, imgdata, CompressionMode.Dxt3);
-                        dest = bmp.Data;
-                        //DxtDecoder.DecompressDXT3(imgdata,width,height, dest);
-                        break;
-                    case FSHBitmapType.DXT1:
-                        //dest = new byte[Squish.Squish.GetStorageRequirements(width, height, SquishFlags.kDxt1)];
-                        //Squish.Squish.DecompressImage(imgdata, width, height, dest, SquishFlags.kDxt1);
-                        //DxtDecoder.DecompressDXT1(imgdata, width, height, dest);
-                        bmp = Bitmap.Decompress(width, height, imgdata, CompressionMode.Dxt1);
-                        dest = bmp.Data;
-                        break;
-                    default:
-                        dest = new byte[0];
-                        break;
-                }
-
-                Image<Rgba32> img = Image.Load<Rgba32>(dest);
-                img.SaveAsPng("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\test.png");
+            foreach (FSHDirectoryItem di in directory) {
+                BinaryReader streamData = br.GetStreamAt(di.Offset);
+                FSHEntry entry = new FSHEntry(di.Name);
+                entry.Parse(streamData);
+                Entries.Add(entry);
             }
-            _isDecoded = true;
         }
 
 
@@ -231,114 +101,27 @@ namespace csDBPF {
         /// Stores the name and offset of each bitmap item in this subfile.
         /// </summary>
         /// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#FSH_Directory"/>
-        public readonly struct FSHDirectoryItem {
-            private readonly byte[] _name;
+        /// <param name="name">4 byte name of this item</param>
+        /// <param name="offset">Offset of the entry in the file</param>
+        private readonly struct FSHDirectoryItem(string name, int offset) {
             /// <summary>
-            /// Item name.
+            /// The entry name sometimes has significance. When searching for a global palette for 8-bit bitmaps, the directory entry name for the gobal palette will always <c>!pal</c>. Once the <c>!pal</c> directory entry has been found, the global palette can be extracted and used for any bitmaps that use 8-bit indexed color. If no global palette is found, FSH decoders should look for a local palette directly following the indexed bitmap. If no palette is found, then no palette will be created or associated with the bitmap. Most tools simply ignore missing palettes and save the bitmap with an empty palette with all indexes set to black.
             /// </summary>
-            public byte[] Name { get { return _name; } }
-
-            private readonly int _offset;
+            public readonly string Name = name;
             /// <summary>
-            /// Byte offset of this item, from the start of this DBPFEntryFSH
+            /// Offset of the entry in the file.
             /// </summary>
-            public int Offset { get { return _offset; } }
-
-            /// <summary>
-            /// Instantiate a new FSHDirectoryItem.
-            /// </summary>
-            /// <param name="name">4 byte name of this item</param>
-            /// <param name="offset">Byte offset of this item, from the start of this DBPFEntryFSH</param>
-            public FSHDirectoryItem(byte[] name, int offset) {
-                if (name.Length != 4) {
-                    throw new ArgumentException("Name must be 4 bytes in length.");
-                }
-                _name = name;
-                _offset = offset;
-            }
+            public readonly int Offset = offset;
         }
 
-        /// <summary>
-        /// Stores key information about each bitmap in this file.
-        /// </summary>
-        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#FSH_Entry_Header"/>
-        public readonly struct FSHBitmapHeader {
-            private readonly int _blocksize;
-            private readonly short _width;
-            private readonly short _height;
-            private readonly short[] _misc;
 
-            /// <summary>
-            /// Size of this block including this header. 
-            /// </summary>
-            /// <remarks>This is actually a combination of 2 values: least significant byte is the Record ID (logically ANDed by 0x7f for the <see cref="FSHBitmapType"/>), and the remaining 3 bytes are the size of this block including the header. The block size is only used if the file contains an attachment or embedded mipmaps. It is zero otherwise. For single images this is usually: width x height + 0x10. For images with embedded mipmaps, this is the total size of the original image, plus all mipmaps, plus the header. In either case, it may include additional data as a binary attachment with unknown format.</remarks>
-            public int BlockSize { get { return _blocksize; } }
-            /// <summary>
-            /// Pixel width of this bitmap.
-            /// </summary>
-            public short Width { get { return _width; } }
-            /// <summary>
-            /// Pixel height of this bitmap.
-            /// </summary>
-            public short Height { get { return _height; } }
-            /// <summary>
-            /// Holds center coordinates and axis position offsets for the bitmap. These are not used in SC4.
-            /// </summary>
-            public short[] Misc { get { return _misc; } }
-            /// <summary>
-            /// Create a new instance.
-            /// </summary>
-            /// <param name="blockSize">Size of this block including this header (see <see cref="FSHBitmapHeader.BlockSize"/>)</param>
-            /// <param name="width">Pixel width of this bitmap</param>
-            /// <param name="height">Pixel height of this bitmap</param>
-            /// <param name="misc">Holds center coordinates and axis position offsets for the bitmap. These are not used in SC4</param>
-            internal FSHBitmapHeader(int blockSize, short width, short height, short[] misc) {
-                _blocksize = blockSize;
-                _width = width;
-                _height = height;
-                _misc = misc;
-            }
-        }
 
-        /// <summary>
-		/// Valid options for the DirectoryID value in the FSHHeader.
-		/// </summary>
-		public enum FSHDirectoryID {
-            /// <summary>
-            /// G354 - Building Textures
-            /// </summary>
-            Building = 0x47334444,
-            /// <summary>
-            /// G264 - Network Textures, Sim Textures, Sim heads, Sim animations, Trees, props, Lot textures, Misc colors
-            /// </summary>
-            EverythingElse = 0x47323634,
-            /// <summary>
-            /// G266 - 3d Animation textures (e.g.the green rotating diamond in loteditor.dat)
-            /// </summary>
-            Animation = 0x47323636,
-            /// <summary>
-            /// //G290 - Dispatch marker textures
-            /// </summary>
-            DispatchMarker = 0x47323930,
-            /// <summary>
-            /// G315 - Small Sim texture, Network Transport Model Textures(trains, etc.)
-            /// </summary>
-            NetworkTransportModel = 0x71333135,
-            /// <summary>
-            /// GIMX - UI Editor textures
-            /// </summary>
-            UIEditor = 0x47494D58,
-            /// <summary>
-            /// G344 - BAT gen texture maps
-            /// </summary>
-            BATgen = 0x47333434
-        }
 
         /// <summary>
         /// Defines the bitmap type stored in this file.
         /// </summary>
         /// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#Bitmap_or_Palette_Data"/>
-        public enum FSHBitmapType {
+        public enum BitmapType {
             /// <summary>
             /// Type: 8-bit indexed<br/>Palette: directly follows bitmap or uses global palette<br/>Compression: none
             /// </summary>
@@ -354,7 +137,7 @@ namespace csDBPF {
             /// <summary>
             /// Type: 16-bit A1 R5 G5 B5<br/>Palette: none<br/>Compression: none
             /// </summary>
-            SixteenBitAlpha = 0x7E,
+            SixteenBitAlpha5 = 0x7E,
             /// <summary>
             /// Type: 16-bit A0 R5 G6 B5<br/>Palette: none<br/>Compression: none
             /// </summary>
@@ -362,7 +145,7 @@ namespace csDBPF {
             /// <summary>
             /// Type: 16-bit A4 R4 G4 B4<br/>Palette: none<br/>Compression: none
             /// </summary>
-            SixteenBit4x4 = 0x6D,
+            SixteenBitAlpha4 = 0x6D,
             /// <summary>
             /// Type: DXT3 4x4 packed, 4-bit alpha<br/>Palette: none<br/>Compression: 4x4 grid compressed, half-byte per pixel
             /// </summary>
@@ -373,150 +156,409 @@ namespace csDBPF {
             DXT1 = 0x60
         }
 
-        /// <summary>
-        /// Specifies the color palette for <see cref="FSHBitmapType.EightBit"/> type bitmaps.
-        /// </summary>
-        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format#Palette_codes"/>
-        public enum FSHPaletteCode {
-            /// <summary>
-            /// 24-bit DOS
-            /// </summary>
-            TwentyFourBitDOS = 0x22,
-            /// <summary>
-            /// 24-bit
-            /// </summary>
-            TwentyFourBit = 0x24,
-            /// <summary>
-            /// 16-bit NFS5
-            /// </summary>
-            SixteenBitNFSS = 0x29,
-            /// <summary>
-            /// 32-bit 
-            /// </summary>
-            ThirtyTwoBit = 0x2A,
-            /// <summary>
-            /// 16-bit
-            /// </summary>
-            SixteenBit = 0x2D
-        }
 
 
-        public enum FSHTextCode {
-            /// <summary>
-            /// Standard Text file
-            /// </summary>
-            StandardText = 0x6F,
-            /// <summary>
-            /// ETXT of arbitrary length with full entry header
-            /// </summary>
-            ArbitraryLength = 0x69,
-            /// <summary>
-            /// ETXT of 16 bytes or less including the header 
-            /// </summary>
-            LessThan16Bytes = 0x70,
-            /// <summary>
-            /// Defined Pixel region Hotspot data for image.
-            /// </summary>
-            PixelRegionHotspot = 0x7C
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-    //this implementation is based on the one decompiled from FSHLib.dll from FSH Converter Tool.
-    public class BitmapItem {
-        private byte[] _rawData;
-        /// <summary>
-        /// Raw byte data.
-        /// </summary>
-        public byte[] RawData { get; set; }
         
-        private Image<Rgba32> _base;
+
+        
+
+
+        
+
+        public class FSHEntry(string? name) {
+            /// <summary>
+            /// Entry name. See <see cref="FSHDirectoryItem.Name"/>.
+            /// </summary>
+            public string Name { get; set; } = name ?? "0000";
+            /// <summary>
+            /// Record identifier.
+            /// </summary>
+            public int Id { get; set; } = 0x00;
+            /// <summary>
+            /// Size of the block including this header, only used if the file contains an attachment or embedded mipmaps; it is zero otherwise.<br></br><br></br>
+            /// - For single images this is usually: width x height + 10h(hex).<br></br>
+            /// - For images with embedded mipmaps, this is the total size of the original image, plus all mipmaps, plus the header.<br></br><br></br>
+            /// In either case, it may include additional data as a binary attachment with unknown format.
+            /// </summary>
+            public int Size { get; set; }
+            /// <summary>
+            /// Bitmap width in pixels.
+            /// </summary>
+            public ushort Width { get; set; }
+            /// <summary>
+            /// Bitmap height in pixels.
+            /// </summary>
+            public ushort Height { get; set; }
+            /// <summary>
+            /// [X, Y] coordinate for the center of the image. Not used in SC4.
+            /// </summary>
+            private ushort[] Center { get; set; } = new ushort[2];
+            /// <summary>
+            /// [X, Y] position to display the image from the [left, top]. Not used in SC4.
+            /// </summary>
+            private ushort[] Offset { get; set; } = new ushort[2];
+            /// <summary>
+            /// List of embedded mipmaps in this file, if any.
+            /// </summary>
+            public List<FSHImageData> Mipmaps { get; private set; } = [];
+
+            public FSHImageData Image => Mipmaps.Count > 0 ? Mipmaps[0] : throw new InvalidOperationException("No mipmaps available");
+            
+
+            /// <summary>
+            /// Specifies how this bitmap's pixel and color information is saved, and if it is compressed.
+            /// </summary>
+            public BitmapType Code => (BitmapType) (Id & 0x7F);
+
+            public void Parse(BinaryReader br) {
+                Id = br.ReadByte();
+                Size =  (br.ReadByte() + (br.ReadByte() << 8) + (br.ReadByte() << 16));
+                Width = br.ReadUInt16();
+                Height = br.ReadUInt16();
+                Center[0] = br.ReadUInt16();
+                Center[1] = br.ReadUInt16();
+                ushort ox = br.ReadUInt16();
+                ushort oy = br.ReadUInt16();
+                Offset[0] = (ushort) (ox & 0xFFFFFF);
+                Offset[1] = (ushort) (oy & 0xFFFFFF);
+
+                double sizeFactor = GetSizeFactor(Code);
+                byte[] data = br.ReadBytes((int) (Width * Height * sizeFactor));
+                var image = new FSHImageData(Code, Width, Height, data);
+
+                Mipmaps = [image];
+
+                int numMipMaps = oy >> 24;
+                for (int i = 0; i < numMipMaps; i++) {
+                    int factor = 1 << (i + 1);
+                    int mipWidth = Width / factor;
+                    int mipHeight = Height / factor;
+                    byte[] mipData = br.ReadBytes((int) (mipWidth * mipHeight * sizeFactor));
+                    var mipmap = new FSHImageData(Code, mipWidth, mipHeight, mipData);
+                    Mipmaps.Add(mipmap);
+                }
+            }
+        }
+
+        private static double GetSizeFactor(BitmapType code) {
+            switch (code) {
+                case BitmapType.EightBit: return 1;
+                case BitmapType.ThirtyTwoBit: return 4;
+                case BitmapType.TwentyFourBit: return 3;
+                case BitmapType.DXT1: return 0.5;
+                case BitmapType.DXT3: return 1;
+                default:
+                    break;
+            }
+            throw new Exception($"Unknown FSH format 0x${code}");
+        }
+
         /// <summary>
-        /// Base (color) bitmap.
+        /// Contains the raw, encoded and potentially compressed image data. This is the entry point for actually getting the raw bitmap.
         /// </summary>
-        public Image<Rgba32> Base { get; set; }
+        /// <param name="code">Specifies the type of compression</param>
+        /// <param name="width">Bitmap width in pixels</param>
+        /// <param name="height">Bitmap height in pixels</param>
+        /// <param name="data">Compressed bitmap data</param>
+        public class FSHImageData(BitmapType code, int width, int height, byte[] data) {
+            /// <summary>
+            /// Specifies the type of compression for <see cref="Data"/>
+            /// </summary>
+            public BitmapType Code { get; set; } = code;
+            /// <summary>
+            /// Bitmap width in pixels.
+            /// </summary>
+            public int Width { get; set; } = width;
+            /// <summary>
+            /// Bitmap height in pixels.
+            /// </summary>
+            public int Height { get; set; } = height;
+            /// <summary>
+            /// Compressed bitmap data.
+            /// </summary>
+            public byte[] Data { get; set; } = data;
+            /// <summary>
+            /// Decompressed bitmap data.
+            /// </summary>
+            public byte[] Bitmap { get; private set; } = [];
 
-        private Image<Rgba32> _alpha;
-        /// <summary>
-        /// Alpha (transparency) bitmap.
-        /// </summary>
-        public Image<Rgba32> Alpha { get; set; }
-        /// <summary>
-        /// Defines the bitmap type of this item.
-        /// </summary>
-        /// 
-        public DBPFEntryFSH.FSHBitmapType BitmapType { get; set; }
-        public string[] Comments { get; set; } //TODO - what's this for???
-        public bool IsCompressed { get; set; } //TODO - is this QFS or DXT compression reference?
-        public Color[] Palette { get; set; }
+            /// <summary>
+            /// Decompresses 
+            /// </summary>
+            /// <returns>The decompressed bitmap data</returns>
+            /// <exception cref="InvalidOperationException">Data is null and cannot be decompressed.</exception>
+            /// <exception cref="NotSupportedException">Unknown bitmap format</exception>
+            public byte[] Decompress() {
+                if (Bitmap.Length > 0) return Bitmap;
+                if (Data.Length == 0) throw new InvalidOperationException("Data is null and cannot be decompressed.");
 
-        public BitmapItem() { }
+                switch (Code) {
+                    case BitmapType.EightBit: return Bitmap = Decompress8Bit(Data);
+                    case BitmapType.ThirtyTwoBit: return Bitmap = Decompress32Bit(Data);
+                    case BitmapType.TwentyFourBit: return Bitmap = Decompress24Bit(Data);
+                    case BitmapType.SixteenBitAlpha5: return Bitmap = Decompress1555(Data);
+                    case BitmapType.SixteenBit: return Bitmap = Decompress0565(Data);
+                    case BitmapType.SixteenBitAlpha4: return Bitmap = Decompress444(Data);
+                    case BitmapType.DXT3: return Bitmap = DecompressDXT3(Data, Width, Height);
+                    case BitmapType.DXT1: return Bitmap = DecompressDXT1(Data, Width, Height);
+                    default:
+                        throw new NotSupportedException($"Unknown bitmap format 0x{Code:X}");
+                }
+            }
 
-        public BitmapItem(byte[] rawData) {
-            _rawData = rawData;
-            //Color = new Image();
-            //Alpha = new Image();
-            //BitmapType = ...;
-            //Palette = new Color[];
 
-            //READING: ++++++++++++++++++++========================++++++++++++++++++++++++++++++++++++++++++++++++=======================
-            //----------------- FSHBitmapType bitmapcode = (FSHBitmapType) (fshentryheader.BlockSize & 0x7F);
-            //bool isvalidcode = Enum.IsDefined<FSHBitmapType>(bitmapcode);
-            //if (!isvalidcode) return;
+            /// <summary>
+            /// Decompresses an 8-bit encoded bitmap. Note that for now we don't use color palettes and just assume grayscale. That's probably what SimCity 4 uses them for anyway.
+            /// </summary>
+            private static byte[] Decompress8Bit(byte[] data) {
+                byte[] output = new byte[data.Length * 4];
+                for (byte i = 0; i < data.Length; i++) {
+                    byte value = data[i];
+                    int j = 4 * i;
+                    output[j + 2] = output[j + 1] = output[j] = value;
+                    output[j + 3] = 0xff;
+                }
+                return output;
+            }
 
-            //AColor[] colorArray = new AColor[0];
-            //int[,] numArray1 = new int[fshentryheader.Height, fshentryheader.Width];
-            //int[,] numArray2 = new int[fshentryheader.Height, fshentryheader.Width];
-            //switch (bitmapcode) {
-            //    case FSHBitmapType.DXT1: //0x60 = 96
-            //        //var format = new SixLabors.ImageSharp.PixelFormats.Argb32;
-            //        for (int row = 0; row < numArray2.GetLength(0); row++) {
-            //            for (int col = 0; col < numArray2.GetLength(1); col++) {
-            //                numArray2[row, col] = -1;
-            //            }
-            //        }
-            //        byte[] target = new byte[12 * fshentryheader.Width / 4];
-            //        for (int row = fshentryheader.Height/4 -1; row >=0; row--) {
-            //            for (int col = 7; col >= 4; col--) {
+            /// <summary>
+            /// Decompresses a 32-bit encoded bitmap - which actually is no decompressing at all. The only thing that changes is the order because alpha goes first here.
+            /// </summary>
+            private static byte[] Decompress32Bit(byte[] data) {
+                byte[] output = new byte[data.Length];
+                for (int i = 0; i < data.Length; i += 4) {
+                    byte a = data[i];
+                    byte r = data[i + 1];
+                    byte g = data[i + 2];
+                    byte b = data[i + 3];
+                    output[i] = r;
+                    output[i + 1] = g;
+                    output[i + 2] = b;
+                    output[i + 3] = a;
+                }
+                return output;
+            }
 
-            //            }
-            //        }
+            /// <summary>
+            /// Decompresses a 24-bit encoded bitmap, meaning a bitmap without alpha channel.
+            /// </summary>
+            private static byte[] Decompress24Bit(byte[] data) {
+                int colors = data.Length / 3;
+                byte[] output = new byte[4 * colors];
+                for (int i = 0; i < colors; i++) {
+                    int sourceIndex = 3 * i;
+                    int outputIndex = 4 * i;
+                    byte r = data[sourceIndex];
+                    byte g = data[sourceIndex + 1];
+                    byte b = data[sourceIndex + 2];
+                    output[outputIndex] = r;
+                    output[outputIndex + 1] = g;
+                    output[outputIndex + 2] = b;
+                    output[outputIndex + 3] = 0xff;
+                }
+                return output;
+            }
 
-            //        break;
-            //    case FSHBitmapType.DXT3: //0x61 = 97
-            //        format = 0;
-            //        break;
-            //    case FSHBitmapType.SixteenBit4x4: //0x6D = 109
-            //        format = 0;
-            //        break;
-            //    case FSHBitmapType.SixteenBit: //0x78 = 120
-            //        format = 0;
-            //        break;
-            //    case FSHBitmapType.EightBit: //0x7B = 123
-            //        format = 0;
-            //        break;
-            //    case FSHBitmapType.ThirtyTwoBit: //0x7D = 125
-            //        format = 0;
-            //        break;
-            //    case FSHBitmapType.SixteenBitAlpha: //0x7E = 126
-            //        format = 0;
-            //        break;
-            //    case FSHBitmapType.TwentyFourBit: //0x7F = 127
-            //        format = 0;
-            //        break;
-            //    default:
-            //        isvalidcode = false;
-            //        break;
-            //}
+            /// <summary>
+            /// Decompress a 16-bit bitmap of the A1R5G5B5 format.
+            /// </summary>
+            private static byte[] Decompress1555(byte[] data) {
+                int colors = data.Length / 2;
+                byte[] output = new byte[4 * colors];
+                for (int i = 0; i < colors; i++) {
+                    int sourceIndex = 2 * i;
+                    int number = (data[sourceIndex] << 8) | data[sourceIndex + 1];
+                    RGBA rgba = Unpack1555(number);
+                    int outputIndex = 4 * i;
+                    output[outputIndex] = (byte) rgba.R;
+                    output[outputIndex + 1] = (byte) rgba.G;
+                    output[outputIndex + 2] = (byte) rgba.B;
+                    output[outputIndex + 3] = (byte) rgba.A;
+                }
+                return output;
+            }
+
+            /// <summary>
+            /// Decompress a 16-bit bitmap of the A0R5G5B5 format.
+            /// </summary>
+            private static byte[] Decompress0565(byte[] data) {
+                int colors = data.Length / 2;
+                byte[] output = new byte[4 * colors];
+                for (int i = 0; i < colors; i++) {
+                    int sourceIndex = 2 * i;
+                    int number = (data[sourceIndex] << 8) | data[sourceIndex + 1];
+                    RGBA rgba = Unpack565(number);
+                    int outputIndex = 4 * i;
+                    output[outputIndex] = (byte) rgba.R;
+                    output[outputIndex + 1] = (byte) rgba.G;
+                    output[outputIndex + 2] = (byte) rgba.B;
+                    output[outputIndex + 3] = (byte) rgba.A;
+                }
+                return output;
+            }
+
+            /// <summary>
+            /// Decompress a 16-bit bitmap of the A4R4G4B4 format.
+            /// </summary>
+            private static byte[] Decompress444(byte[] data) {
+                int colors = data.Length / 2;
+                byte[] output = new byte[4 * colors];
+                for (int i = 0; i < colors; i++) {
+                    int sourceIndex = 2 * i;
+                    int number = (data[sourceIndex] << 8) | data[sourceIndex + 1];
+                    RGBA rgba = Unpack4444(number);
+                    int outputIndex = 4 * i;
+                    output[outputIndex] = (byte) rgba.R;
+                    output[outputIndex + 1] = (byte) rgba.G;
+                    output[outputIndex + 2] = (byte) rgba.B;
+                    output[outputIndex + 3] = (byte) rgba.A;
+                }
+                return output;
+            }
+
+            private struct RGBA(int r, int g, int b, int a = 255) {
+                public int R = r;
+                public int G = g;
+                public int B = b;
+                public int A = a;
+
+                /// <inheritdoc/>
+                public override readonly string ToString() {
+                    return $"RGBA({R}, {G}, {B}, {A})";
+                }
+            }
+
+            
+
+            private static RGBA Unpack565(int rgb565) {
+                int r = ((rgb565 >> 11) & 0b11111) * (255 / 31);
+                int g = ((rgb565 >> 5) & 0b111111) * (255 / 63);
+                int b = (rgb565 & 0b11111) * (255 / 31);
+                return new RGBA(r, g, b, 0);
+            }
+
+            private static RGBA Unpack1555(int rgb1555) {
+                int a = ((rgb1555 >> 15) & 0b1) * 255;
+                int r = ((rgb1555 >> 10) & 0b11111) * (255 / 31);
+                int g = ((rgb1555 >> 5) & 0b11111) * (255 / 31);
+                int b = (rgb1555 & 0b11111) * (255 / 31);
+                return new RGBA(r, g, b, a);
+            }
+
+            private static RGBA Unpack4444(int rgb444) {
+                int a = ((rgb444 >> 12) & 0b1111) * (255 / 15);
+                int r = ((rgb444 >> 8) & 0b1111) * (255 / 15);
+                int g = ((rgb444 >> 4) & 0b1111) * (255 / 15);
+                int b = (rgb444 & 0b1111) * (255 / 15);
+                return new RGBA(r, g, b, a);
+            }
+
+            
+            //Source: https://github.com/mafaca/Dxt/blob/master/Dxt/DxtDecoder.cs
+            /// <summary>
+            /// Decompresses an image compressed in the DXT1 format to a bitmap (a byte[] of rgba values).
+            /// </summary>
+            private static byte[] DecompressDXT1(byte[] input, int width, int height) {
+                byte[] output = new byte[width * height * 4];
+                int offset = 0;
+                int bcw = (width + 3) / 4;
+                int bch = (height + 3) / 4;
+                int clen_last = (width + 3) % 4 + 1;
+                uint[] buffer = new uint[16];
+                int[] colors = new int[4];
+                for (int t = 0; t < bch; t++) {
+                    for (int s = 0; s < bcw; s++, offset += 8) {
+                        int q0 = input[offset + 0] | input[offset + 1] << 8;
+                        int q1 = input[offset + 2] | input[offset + 3] << 8;
+                        RGBA c0 = IntToRgb565(q0);
+                        RGBA c1 = IntToRgb565(q1);
+                        colors[0] = GetColorInt(c0.R, c0.G, c0.B, 255);
+                        colors[1] = GetColorInt(c1.R, c1.G, c1.B, 255);
+                        if (q0 > q1) {
+                            colors[2] = GetColorInt((c0.R * 2 + c1.R) / 3, (c0.G * 2 + c1.G) / 3, (c0.B * 2 + c1.B) / 3, 255);
+                            colors[3] = GetColorInt((c0.R + c1.R * 2) / 3, (c0.G + c1.G * 2) / 3, (c0.B + c1.B * 2) / 3, 255);
+                        } else {
+                            colors[2] = GetColorInt((c0.R + c1.R) / 2, (c0.G + c1.G) / 2, (c0.B + c1.B) / 2, 255);
+                        }
+
+                        uint d = BitConverter.ToUInt32(input, offset + 4);
+                        for (int i = 0; i < 16; i++, d >>= 2) {
+                            buffer[i] = unchecked((uint) colors[d & 3]);
+                        }
+
+                        int clen = (s < bcw - 1 ? 4 : clen_last) * 4;
+                        for (int i = 0, y = t * 4; i < 4 && y < height; i++, y++) {
+                            Buffer.BlockCopy(buffer, i * 4 * 4, output, (y * width + s * 4) * 4, clen);
+                        }
+                    }
+                }
+                return output;
+            }
+
+
+            /// <summary>
+            /// Decompresses an image compressed in the DXT3 format to a bitmap (a byte[] of rgba values).
+            /// </summary>
+            private static byte[] DecompressDXT3(byte[] dxtData, int width, int height) {
+                byte[] rgbaData = new byte[width * height * 4];
+                int offset = 0;
+                int bcw = (width + 3) / 4;
+                int bch = (height + 3) / 4;
+                int clen_last = (width + 3) % 4 + 1;
+                uint[] buffer = new uint[16];
+                int[] colors = new int[4];
+                int[] alphas = new int[16];
+                for (int t = 0; t < bch; t++) {
+                    for (int s = 0; s < bcw; s++, offset += 16) {
+                        for (int i = 0; i < 4; i++) {
+                            int alpha = dxtData[offset + i * 2] | dxtData[offset + i * 2 + 1] << 8;
+                            alphas[i * 4 + 0] = (((alpha >> 0) & 0xF) * 0x11) << 24;
+                            alphas[i * 4 + 1] = (((alpha >> 4) & 0xF) * 0x11) << 24;
+                            alphas[i * 4 + 2] = (((alpha >> 8) & 0xF) * 0x11) << 24;
+                            alphas[i * 4 + 3] = (((alpha >> 12) & 0xF) * 0x11) << 24;
+                        }
+
+                        int color0 = dxtData[offset + 8] | dxtData[offset + 9] << 8;
+                        int color1 = dxtData[offset + 10] | dxtData[offset + 11] << 8;
+                        RGBA c0 = IntToRgb565(color0);
+                        RGBA c1 = IntToRgb565(color1);
+                        colors[0] = GetColorInt(c0.R, c0.G, c0.B, 0);
+                        colors[1] = GetColorInt(c1.R, c1.G, c1.B, 0);
+                        if (color0 > color1) {
+                            colors[2] = GetColorInt((c0.R * 2 + c1.R) / 3, (c0.G * 2 + c1.G) / 3, (c0.B * 2 + c1.B) / 3, 0);
+                            colors[3] = GetColorInt((c0.R + c1.R * 2) / 3, (c0.G + c1.G * 2) / 3, (c0.B + c1.B * 2) / 3, 0);
+                        } else {
+                            colors[2] = GetColorInt((c0.R + c1.R) / 2, (c0.G + c1.G) / 2, (c0.B + c1.B) / 2, 0);
+                        }
+
+                        uint d = BitConverter.ToUInt32(dxtData, offset + 12);
+                        for (int i = 0; i < 16; i++, d >>= 2) {
+                            buffer[i] = unchecked((uint) (colors[d & 3] | alphas[i]));
+                        }
+
+                        int clen = (s < bcw - 1 ? 4 : clen_last) * 4;
+                        for (int i = 0, y = t * 4; i < 4 && y < height; i++, y++) {
+                            Buffer.BlockCopy(buffer, i * 4 * 4, rgbaData, (y * width + s * 4) * 4, clen);
+                        }
+                    }
+                }
+                return rgbaData;
+            }
+
+            private static RGBA IntToRgb565(int c) {
+                int r = (c & 0xf800) >> 8;
+                int g = (c & 0x07e0) >> 3;
+                int b = (c & 0x001f) << 3;
+                r |= r >> 5;
+                g |= g >> 6;
+                b |= b >> 5;
+
+                return new RGBA(r, g, b, 0);
+            }
+
+            private static int GetColorInt(int r, int g, int b, int a) {
+                return r << 16 | g << 8 | b | a << 24;
+            }
         }
     }
 }

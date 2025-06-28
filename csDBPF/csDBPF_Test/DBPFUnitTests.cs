@@ -1200,19 +1200,86 @@ namespace csDBPF_Test {
             /// </summary>
             [TestClass]
             public class _084_FSH {
-                [Ignore]
+                
                 [TestMethod]
                 public void Test_084a_FSH_Decode() {
-                    //DXT1
-                    DBPFFile file1 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\b62- blue cart corral v.1.0-0x5ad0e817_0xf00f7c4_0x2580000.SC4Model");
-                    DBPFEntryFSH fshentry1 = (DBPFEntryFSH) file1.GetEntry(1);
-                    fshentry1.Decode();
+                    ////DXT1
+                    //DBPFFile file1 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\b62- blue cart corral v.1.0-0x5ad0e817_0xf00f7c4_0x2580000.SC4Model");
+                    //DBPFEntryFSH fshentry1 = (DBPFEntryFSH) file1.GetEntry(1);
+                    //fshentry1.Decode();
 
-                    //DXT3
-                    DBPFFile file2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\ALN_Dirt_Path_Textures.dat");
-                    DBPFEntryFSH fshentry2 = (DBPFEntryFSH) file2.GetEntry(4);
-                    fshentry2.Decode();
-                }
+                    ////DXT3
+                    //DBPFFile file2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\ALN_Dirt_Path_Textures.dat");
+                    //DBPFEntryFSH fshentry2 = (DBPFEntryFSH) file2.GetEntry(4);
+                    //fshentry2.Decode();
+
+                    //Decompress all mipmaps in a FSH
+                    
+
+		            
+		            var dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\DiegoDL-432ParkAvenue-LM-DN.SC4Model");
+                    var entries = dbpf.ListOfEntries.Where(e => e.MatchesEntryType(DBPFTGI.FSH));
+
+                    foreach (DBPFEntryFSH entry in entries.Cast<DBPFEntryFSH>()) {
+                        entry.Decode();
+			            foreach (var fshEntry in entry.Entries) {
+				            foreach (var mipmap in fshEntry.Mipmaps) {
+                                var width = mipmap.Width;
+                                var height = mipmap.Height;
+					            byte[] buffer = mipmap.Decompress();
+                                Assert.AreEqual(width * height * 4, buffer.Length);
+				            }
+			            }
+                        CollectionAssert.AreEqual(entry.Entries[0].Mipmaps[0].Bitmap, entry.Image.Bitmap);
+		            }
+
+	            }
+
+	            //it('decompresses a grayscale 8-bit FSH', async function() {
+
+		           // let file = resource('fsh/0x7b.fsh');
+		           // let buffer = await fs.readFile(file);
+		           // let fsh = new FSH().parse(buffer);
+		           // let data = fsh.entries[0].image.decompress();
+		           // for (let i = 0; i < data.length; i += 4) {
+			          //  expect(data[i]).to.equal(data[i+1]);
+			          //  expect(data[i]).to.equal(data[i+2]);
+			          //  expect(data[i+3]).to.equal(0xff);
+		           // }
+
+	            //});
+
+	            //it('decompresses a 32-bit A8R8G8B8 bitmap', async function() {
+
+		           // let file = resource('fsh/0x7d.fsh');
+		           // let buffer = await fs.readFile(file);
+		           // let fsh = new FSH().parse(buffer);
+		           // let bitmap = fsh.entries[0].image.decompress();
+		           // expect(bitmap).to.eql(new Uint8Array([
+			          //  0, 0, 0xff, 0,
+			          //  0, 0, 0xff, 0,
+			          //  0, 0, 0xff, 0,
+			          //  0, 0, 0xff, 0,
+		           // ]));
+
+	            //});
+
+	            //it('decompresses a 24-bit R8G8B8 bitmap', async function() {
+
+		           // let file = resource('fsh/0x7f.fsh');
+		           // let buffer = await fs.readFile(file);
+		           // let fsh = new FSH().parse(buffer);
+		           // let bitmap = fsh.entries[0].image.decompress();
+		           // expect(bitmap).to.eql(new Uint8Array([
+			          //  0, 0, 0, 0xff,
+			          //  0, 0, 0, 0xff,
+			          //  0, 0, 0, 0xff,
+			          //  0, 0, 0, 0xff,
+		           // ]));
+
+	            //});
+
+                
 
 
             }

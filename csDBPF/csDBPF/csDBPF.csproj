@@ -8,6 +8,7 @@
 		<ApplicationIcon />
 
 		<OutputType>Library</OutputType>
+		<Nullable>enable</Nullable>
 
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
@@ -15,34 +16,20 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
 
 	<ItemGroup>
-	  <Compile Remove="Entries\cFSHImage.cs" />
-	  <Compile Remove="Entries\DBPFEntryFSH_FSHLib.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Remove="Properties\new_properties.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <None Include="..\.editorconfig" Link=".editorconfig" />
-	  <None Include="Entries\cFSHImage.cs" />
-	  <None Include="Entries\DBPFEntryFSH_FSHLib.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="LibSquishNet" Version="2.0.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.8" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.10" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="QFS\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="Epsylon.TextureSquish">
-	    <HintPath>..\..\..\TextureSquish\Sources\Epsylon.TextureSquish\bin\Debug\net7.0\Epsylon.TextureSquish.dll</HintPath>
-	  </Reference>
 	</ItemGroup>
 
 	<ItemGroup>
