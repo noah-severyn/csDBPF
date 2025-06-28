@@ -7,6 +7,8 @@ using SixLabors.ImageSharp;
 using System.IO;
 using System.Collections;
 using System.Linq;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Formats.Bmp;
 
 namespace csDBPF_Test {
     [TestClass]
@@ -1203,22 +1205,22 @@ namespace csDBPF_Test {
                 
                 [TestMethod]
                 public void Test_084a_FSH_Decode() {
-                    ////DXT1
-                    //DBPFFile file1 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\b62- blue cart corral v.1.0-0x5ad0e817_0xf00f7c4_0x2580000.SC4Model");
-                    //DBPFEntryFSH fshentry1 = (DBPFEntryFSH) file1.GetEntry(1);
-                    //fshentry1.Decode();
+                    DBPFFile file1 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\b62- blue cart corral v.1.0-0x5ad0e817_0xf00f7c4_0x2580000.SC4Model");
+                    DBPFEntryFSH fsh1 = (DBPFEntryFSH) file1.GetEntry(1);
+                    fsh1.Decode();
+                    var img1 = fsh1.Image;
+                    img1.SaveAsPng("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\img1.png");
 
-                    ////DXT3
-                    //DBPFFile file2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\ALN_Dirt_Path_Textures.dat");
-                    //DBPFEntryFSH fshentry2 = (DBPFEntryFSH) file2.GetEntry(4);
-                    //fshentry2.Decode();
 
-                    //Decompress all mipmaps in a FSH
-                    
+                    DBPFFile file2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\ALN_Dirt_Path_Textures.dat");
+                    DBPFEntryFSH fsh2 = (DBPFEntryFSH) file2.GetEntry(0);
+                    fsh2.Decode();
+                    var img2 = fsh2.Image;
+                    img2.SaveAsPng("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\img2.png");
 
-		            
-		            var dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\DiegoDL-432ParkAvenue-LM-DN.SC4Model");
-                    var entries = dbpf.ListOfEntries.Where(e => e.MatchesEntryType(DBPFTGI.FSH));
+
+                    var file3 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\DiegoDL-432ParkAvenue-LM-DN.SC4Model");
+                    var entries = file3.ListOfEntries.Where(e => e.MatchesEntryType(DBPFTGI.FSH));
 
                     foreach (DBPFEntryFSH entry in entries.Cast<DBPFEntryFSH>()) {
                         entry.Decode();
@@ -1226,13 +1228,11 @@ namespace csDBPF_Test {
 				            foreach (var mipmap in fshEntry.Mipmaps) {
                                 var width = mipmap.Width;
                                 var height = mipmap.Height;
-					            byte[] buffer = mipmap.Decompress();
-                                Assert.AreEqual(width * height * 4, buffer.Length);
-				            }
-			            }
-                        CollectionAssert.AreEqual(entry.Entries[0].Mipmaps[0].Bitmap, entry.Image.Bitmap);
+					            mipmap.Decompress();
+                                Assert.AreEqual(width * height * 4, mipmap.Bitmap.Length);
+                            }
+			            } 
 		            }
-
 	            }
 
 	            //it('decompresses a grayscale 8-bit FSH', async function() {

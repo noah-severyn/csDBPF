@@ -6,6 +6,7 @@ using System.IO;
 using System.Collections;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Advanced;
 //This implementation is based off of:
 // - https://github.com/sebamarynissen/sc4/blob/main/src/core/fsh.ts
 // - https://github.com/sebamarynissen/sc4/blob/main/src/core/bitmap-decompression.ts
@@ -18,10 +19,14 @@ namespace csDBPF {
 	/// <see href="https://www.wiki.sc4devotion.com/index.php?title=FSH"/>
     /// <seealso href="https://www.wiki.sc4devotion.com/index.php?title=FSH_Format"/>
     public class DBPFEntryFSH : DBPFEntry {
-
+        /// <summary>
+        /// A FSH file may contain one or more entries, though commonly this is limited to one.
+        /// </summary>
         public List<FSHEntry> Entries { get; private set; }
-
-        public FSHImageData Image => Entries.Count > 0 ? Entries[0].Image : throw new InvalidOperationException("No image entries available");
+        /// <summary>
+        /// An image created from the first entry, if it exists.
+        /// </summary>
+        public Image<Rgba32> Image => Entries.Count > 0 ? Entries[0].Image : throw new InvalidOperationException("No image entries available");
 
 
         /// <summary>
@@ -164,7 +169,10 @@ namespace csDBPF {
 
 
         
-
+        /// <summary>
+        /// Holds information about the bitmap data.
+        /// </summary>
+        /// <param name="name">Name of this entry, as read from <see cref="FSHDirectoryItem.Name"/></param>
         public class FSHEntry(string? name) {
             /// <summary>
             /// Entry name. See <see cref="FSHDirectoryItem.Name"/>.
@@ -201,8 +209,10 @@ namespace csDBPF {
             /// List of embedded mipmaps in this file, if any.
             /// </summary>
             public List<FSHImageData> Mipmaps { get; private set; } = [];
-
-            public FSHImageData Image => Mipmaps.Count > 0 ? Mipmaps[0] : throw new InvalidOperationException("No mipmaps available");
+            /// <summary>
+            /// An image created from the first mipmap, if it exists.
+            /// </summary>
+            public Image<Rgba32> Image => Mipmaps.Count > 0 ? Mipmaps[0].ToImage() : throw new InvalidOperationException("No mipmaps available");
             
 
             /// <summary>
@@ -210,7 +220,7 @@ namespace csDBPF {
             /// </summary>
             public BitmapType Code => (BitmapType) (Id & 0x7F);
 
-            public void Parse(BinaryReader br) {
+            internal void Parse(BinaryReader br) {
                 Id = br.ReadByte();
                 Size =  (br.ReadByte() + (br.ReadByte() << 8) + (br.ReadByte() << 16));
                 Width = br.ReadUInt16();
@@ -264,46 +274,72 @@ namespace csDBPF {
             /// <summary>
             /// Specifies the type of compression for <see cref="Data"/>
             /// </summary>
-            public BitmapType Code { get; set; } = code;
+            public BitmapType Code { get; private set; } = code;
             /// <summary>
             /// Bitmap width in pixels.
             /// </summary>
-            public int Width { get; set; } = width;
+            public int Width { get; private set; } = width;
             /// <summary>
             /// Bitmap height in pixels.
             /// </summary>
-            public int Height { get; set; } = height;
+            public int Height { get; private set; } = height;
             /// <summary>
             /// Compressed bitmap data.
             /// </summary>
-            public byte[] Data { get; set; } = data;
+            public byte[] Data { get; private set; } = data;
             /// <summary>
             /// Decompressed bitmap data.
             /// </summary>
             public byte[] Bitmap { get; private set; } = [];
 
             /// <summary>
-            /// Decompresses 
+            /// Decompresses bitmap data
             /// </summary>
-            /// <returns>The decompressed bitmap data</returns>
             /// <exception cref="InvalidOperationException">Data is null and cannot be decompressed.</exception>
             /// <exception cref="NotSupportedException">Unknown bitmap format</exception>
-            public byte[] Decompress() {
-                if (Bitmap.Length > 0) return Bitmap;
+            public void Decompress() {
+                if (Bitmap.Length > 0) return;
                 if (Data.Length == 0) throw new InvalidOperationException("Data is null and cannot be decompressed.");
 
                 switch (Code) {
-                    case BitmapType.EightBit: return Bitmap = Decompress8Bit(Data);
-                    case BitmapType.ThirtyTwoBit: return Bitmap = Decompress32Bit(Data);
-                    case BitmapType.TwentyFourBit: return Bitmap = Decompress24Bit(Data);
-                    case BitmapType.SixteenBitAlpha5: return Bitmap = Decompress1555(Data);
-                    case BitmapType.SixteenBit: return Bitmap = Decompress0565(Data);
-                    case BitmapType.SixteenBitAlpha4: return Bitmap = Decompress444(Data);
-                    case BitmapType.DXT3: return Bitmap = DecompressDXT3(Data, Width, Height);
-                    case BitmapType.DXT1: return Bitmap = DecompressDXT1(Data, Width, Height);
+                    case BitmapType.EightBit: Bitmap = Decompress8Bit(Data); return;
+                    case BitmapType.ThirtyTwoBit: Bitmap = Decompress32Bit(Data); return;
+                    case BitmapType.TwentyFourBit: Bitmap = Decompress24Bit(Data); return;
+                    case BitmapType.SixteenBitAlpha5: Bitmap = Decompress1555(Data); return;
+                    case BitmapType.SixteenBit: Bitmap = Decompress0565(Data); return;
+                    case BitmapType.SixteenBitAlpha4: Bitmap = Decompress444(Data); return;
+                    case BitmapType.DXT3: Bitmap = DecompressDXT3(Data, Width, Height); return;
+                    case BitmapType.DXT1: Bitmap = DecompressDXT1(Data, Width, Height); return;
                     default:
                         throw new NotSupportedException($"Unknown bitmap format 0x{Code:X}");
                 }
+            }
+
+            /// <summary>
+            /// Converts the decompressed bitmap data to a useable image format, decompressing if necessary.
+            /// </summary>
+            /// <returns>An ImageSharp <see cref="Image{Rgba32}"/> image</returns>
+            public Image<Rgba32> ToImage() {
+                if (Bitmap.Length == 0) {
+                    Decompress();
+                }
+                
+                var image = new Image<Rgba32>(Width, Height);
+                int pixelIndex = 0;
+
+                image.ProcessPixelRows(accessor => {
+                    for (int y = 0; y < Height; y++) {
+                        Span<Rgba32> row = accessor.GetRowSpan(y);
+                        for (int x = 0; x < Width; x++) {
+                            byte r = Bitmap[pixelIndex++];
+                            byte g = Bitmap[pixelIndex++];
+                            byte b = Bitmap[pixelIndex++];
+                            byte a = Bitmap[pixelIndex++];
+                            row[x] = new Rgba32(r, g, b, a);
+                        }
+                    }
+                });
+                return image;
             }
 
 
