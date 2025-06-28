@@ -335,7 +335,13 @@ namespace csDBPF {
                             byte g = Bitmap[pixelIndex++];
                             byte b = Bitmap[pixelIndex++];
                             byte a = Bitmap[pixelIndex++];
-                            row[x] = new Rgba32(r, g, b, a);
+                            //Channel order for DXT compressed data is BGRA instead of RGBA
+                            if (Code == BitmapType.DXT1 || Code == BitmapType.DXT3) {
+                                row[x] = new Rgba32(b, g, r, a); 
+                            } else {
+                                row[x] = new Rgba32(r, g, b, a);
+                            }
+                            
                         }
                     }
                 });
@@ -490,7 +496,6 @@ namespace csDBPF {
             }
 
             
-            //Source: https://github.com/mafaca/Dxt/blob/master/Dxt/DxtDecoder.cs
             /// <summary>
             /// Decompresses an image compressed in the DXT1 format to a bitmap (a byte[] of rgba values).
             /// </summary>
