@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
-using System.Text;
 using System.Text.RegularExpressions;
 
 //See: https://github.com/memo33/jDBPFX/blob/master/src/jdbpfx/DBPFTGI.java
