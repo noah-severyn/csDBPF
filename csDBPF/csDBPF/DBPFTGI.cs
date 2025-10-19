@@ -440,6 +440,7 @@ namespace csDBPF {
         /// Returns a string of the TGI in the same format as <see cref="TGI.ToString"/> for comparison.
         /// </summary>
         /// <param name="tgi">TGI string to parse</param>
+        /// <exception cref="ArgumentException">If the TGI string is in an improper format</exception>
         /// <returns>The TGI properly formated delimited by comma space, in the format of <c>0x########, 0x########, 0x########</c>, with leading zeros added up to 8 characters each.</returns>
         /// <remarks>The input string must contain three hexadecimal numbers, each prefixed with <c>0x</c>.</remarks>
         public static string CleanTGIFormat(string tgi) {
@@ -473,6 +474,7 @@ namespace csDBPF {
         /// Parse a TGI string into it's component Type, Group, Index values.
         /// </summary>
         /// <param name="tgi">String to parse</param>
+        /// <exception cref="ArgumentException">If the TGI string is in an improper format</exception>
         /// <returns>A TGI struct</returns>
         public static TGI ParseTGIString(string tgi) {
             string cleaned = CleanTGIFormat(tgi);

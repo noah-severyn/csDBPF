@@ -2,6 +2,7 @@
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using static System.Net.WebRequestMethods;
 
@@ -140,14 +141,27 @@ namespace csDBPF {
 
 
 
-		/// <summary>
-		/// Determine if the entry is the same entry type as the specified one.
-		/// </summary>
-		/// <param name="known"><see cref="DBPFTGI"/> to compare against</param>
-		/// <returns>TRUE if this Entry matches the specified; FALSE otherwise.</returns>
-		/// <remarks>This is a shortcut equivalent to <see cref="TGI.Matches(TGI)"/>.</remarks>
-		public bool MatchesEntryType(TGI known) {
+        /// <summary>
+        /// Determine if the entry is the same kind as the specified type.
+        /// </summary>
+        /// <param name="known">TGI type to check against. Refer to the static fields of <see cref="DBPFTGI"/> to use as comparisons.</param>
+        /// <returns><see langword="true"/> if this entry matches the specified type; otherwise <see langword="false"/></returns>
+        /// <remarks>This is a shortcut equivalent to <see cref="TGI.Matches(TGI)"/>.</remarks>
+        public bool MatchesEntryType(TGI known) {
 			return TGI.Matches(known);
+		}
+        /// <summary>
+        /// Determine if the entry is the same kind as any of the specified types.
+        /// </summary>
+		/// <param name="knowns">TGI type(s) to check against. Refer to the static fields of <see cref="DBPFTGI"/> to use as comparisons.</param>
+        /// <returns><see langword="true"/> if this entry matches any of the specified types; otherwise <see langword="false"/></returns>
+        public bool MatchesAnyEntryType(params TGI[] knowns) {
+			foreach (TGI known in knowns) {
+				if (TGI.Matches(known)) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 
