@@ -330,8 +330,10 @@ namespace csDBPF {
 		public static readonly TGI INI_NETWORK;
 		/// <summary>INI file (#, 0x8a5971c5, #)</summary>
 		public static readonly TGI INI;
-		/// <summary>XML file (0x88777602, #, #)</summary>
-		public static readonly TGI XML;
+        /// <summary>UI file (0x000000, 0x96a006b0, #)</summary>
+        public static readonly TGI UI;
+        /// <summary>XML file (0x88777602, #, #)</summary>
+        public static readonly TGI XML;
         /// <summary>BLANKTGI (0, 0, 0)</summary>
         public static readonly TGI BLANKTGI;
         #endregion KnownTGIs
@@ -339,6 +341,7 @@ namespace csDBPF {
         /// <summary>
         /// This static constructor will be called as soon as the class is loaded into memory, and not necessarily when an object is created.
         /// Known types need to be ordered "bottom-up", that is, specialized entries need to be inserted first, more general ones later.
+        /// A null value indicates that any number is valid to identify the type.
         /// </summary>
         static DBPFTGI() {
             
@@ -384,6 +387,7 @@ namespace csDBPF {
             INI_FONT = new TGI(0, 0x4a87bfe8, 0x2a87bffc); //INI (Font Table)
             INI_NETWORK = new TGI(0, 0x8a5971c5, 0x8a5993b9); //INI (Networks)
             INI = new TGI(0, 0x8a5971c5, null);
+            UI = new TGI(0, 0x96a006b0, null);
             RUL = new TGI(0x0a5bcf4b, 0xaa5bcf57, null);
             XML = new TGI(0x88777602, null, null);
             EFFDIR = new TGI(0xea5118b0, null, null);
@@ -427,6 +431,7 @@ namespace csDBPF {
             KnownEntries.Add(INI_FONT, new TGIDetails("INI", "INI_FONT"));
             KnownEntries.Add(INI_NETWORK, new TGIDetails("INI", "INI_NETWORK"));
             KnownEntries.Add(INI, new TGIDetails("INI", "INI"));
+            KnownEntries.Add(UI, new TGIDetails("UI", "UI"));
             KnownEntries.Add(XML, new TGIDetails("RUL", "RUL"));
             KnownEntries.Add(RUL, new TGIDetails("XML", "XML"));
             KnownEntries.Add(EFFDIR, new TGIDetails("EFF", "EFFDIR"));
