@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Collections;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Advanced;
 //This implementation is based off of:
 // - https://github.com/sebamarynissen/sc4/blob/main/src/core/fsh.ts
 // - https://github.com/sebamarynissen/sc4/blob/main/src/core/bitmap-decompression.ts

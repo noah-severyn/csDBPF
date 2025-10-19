@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Text;
-using System.Globalization;
-using System.Collections.Generic;
 using System.Collections;
-using csDBPF;
 using static csDBPF.DBPFEntry;
 
 namespace csDBPF

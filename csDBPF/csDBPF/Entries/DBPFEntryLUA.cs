@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace csDBPF {
     internal class DBPFEntryLUA : DBPFEntry {
@@ -13,11 +9,11 @@ namespace csDBPF {
         }
 
         public override void Decode() {
-            
+            throw new NotImplementedException();
         }
 
         public override void Encode(bool compress = false) {
-            
+            throw new NotImplementedException();
         }
     }
 }

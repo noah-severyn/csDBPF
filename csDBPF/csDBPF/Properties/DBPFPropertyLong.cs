@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using csDBPF;
 using static csDBPF.DBPFEntry;
 using static csDBPF.DBPFProperty;
 

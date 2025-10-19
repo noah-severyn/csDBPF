@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using csDBPF;
 
 namespace csDBPF {
     /// <summary>
-    /// A set of extension methods for working with DBPF items
+    /// Extension methods for working with lists of <see cref="DBPFEntry"/> objects.
     /// </summary>
-    public static class DBPFFileExtensions {
+    public static class DBPFEntryExtensions {
 
         /// <summary>
         /// Decode all entries in the given list

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace csDBPF {
 	/// <summary>
@@ -16,7 +13,7 @@ namespace csDBPF {
 		private static readonly byte[] DBPF = { 0x44, 0x42, 0x50, 0x46 };
 
         /// <summary>
-        /// Filters a list of file paths based on SC4 file extensions.
+        /// Filters a list of file paths for known SC4 file extensions, or optionally examining the file's first four bytes for the magic identifier instead.
         /// </summary>
         /// <param name="filesToFilter">List of all files to filter through</param>
         /// <param name="validateIdentifier">Optionally examine the first 4 bytes of each for a valid DBPF format. If omitted or set to <see langword="false"/>, only the file extension will be examined.</param>
@@ -24,7 +21,7 @@ namespace csDBPF {
         public static IEnumerable<string> FilterDBPFFiles(this IEnumerable<string> filesToFilter, bool validateIdentifier = false) {
 			List<string> dbpfFiles = [];
 			foreach (string file in filesToFilter) {
-                if (file.IsValidDBPF(validateIdentifier)) {
+                if (file.IsDBPF(validateIdentifier)) {
                     dbpfFiles.Add(file);
                 }
 			}
@@ -34,12 +31,12 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Examines the first bytes of the file to determine if the file is valid DBPF or not.
+        /// Determine if a file is a DBPF file via its extension, or optionally examining the file's first four bytes for the magic identifier instead.
         /// </summary>
-        /// <param name="filePath">Full File path of the file to examine</param>
+        /// <param name="filePath">Full file path to examine</param>
         /// <param name="validateIdentifier">Optionally examine the first 4 bytes of each for a valid DBPF format. If omitted or set to <see langword="false"/>, only the file extension will be examined.</param>
-        /// <returns><see langword="true"/> if file is a valid SC4 DBPF file; otherwise, <see langword="false"/></returns>
-        public static bool IsValidDBPF(this string filePath, bool validateIdentifier = false) {
+        /// <returns><see langword="true"/> if file is a SC4 DBPF file; otherwise, <see langword="false"/></returns>
+        public static bool IsDBPF(this string filePath, bool validateIdentifier = false) {
             if (validateIdentifier) {
                 FileStream fs = new FileStream(filePath, FileMode.Open);
                 BinaryReader br = new BinaryReader(fs);
@@ -52,15 +49,14 @@ namespace csDBPF {
             }
         }
         /// <summary>
-        /// Examines the first bytes of the file to determine if the file is valid DBPF or not.
+        /// Determine if a file is a DBPF file via its extension, and optionally examine its first four bytes for the magic string.
         /// </summary>
         /// <param name="file">File to examine</param>
-        /// <param name="validateIdentifier">Optionally examine the first 4 bytes of the specified file to determine if valid DBPF format. If omitted or set to false, only the file extension will be examined.</param>
-        /// <returns>TRUE if valid SC4 DBPF file, FALSE otherwise</returns>
-        public static bool IsValidDBPF(this FileInfo file, bool validateIdentifier = false) {
-            return IsValidDBPF(file.FullName, validateIdentifier);
+        /// <param name="validateIdentifier">Optionally examine the first 4 bytes of each for a valid DBPF format. If omitted or set to <see langword="false"/>, only the file extension will be examined.</param>
+        /// <returns><see langword="true"/> if file is a SC4 DBPF file; otherwise, <see langword="false"/></returns>
+        public static bool IsDBPF(this FileInfo file, bool validateIdentifier = false) {
+            return IsDBPF(file.FullName, validateIdentifier);
         }
-
 
 
 
