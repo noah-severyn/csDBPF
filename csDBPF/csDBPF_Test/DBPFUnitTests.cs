@@ -44,15 +44,15 @@ namespace csDBPF_Test {
         public class _01x_DBPFUtil {
             [TestMethod]
             public void Test_010_DBPFUtil_IsFileDBPF() {
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_GraphModd. V2.dat"));
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dat"));
-                Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll"));
-                Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png"));
+                Assert.IsTrue(DBPFUtil.IsDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_GraphModd. V2.dat"));
+                Assert.IsTrue(DBPFUtil.IsDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dat"));
+                Assert.IsFalse(DBPFUtil.IsDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll"));
+                Assert.IsFalse(DBPFUtil.IsDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png"));
 
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_GraphModd. V2.dat", true));
-                Assert.IsTrue(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dat", true));
-                Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll", true));
-                Assert.IsFalse(DBPFUtil.IsValidDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png", true));
+                Assert.IsTrue(DBPFUtil.IsDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_GraphModd. V2.dat", true));
+                Assert.IsTrue(DBPFUtil.IsDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dat", true));
+                Assert.IsFalse(DBPFUtil.IsDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll", true));
+                Assert.IsFalse(DBPFUtil.IsDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png", true));
             }
 
             [TestMethod]
