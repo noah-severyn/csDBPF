@@ -85,7 +85,7 @@ namespace csDBPF {
 				return;
 			}
 			if (ByteData.Length < 4) {
-				_text = null;
+				_text = string.Empty;
 				LogError("Data length is less than 4 bytes so no information can be read.");
 			}
 

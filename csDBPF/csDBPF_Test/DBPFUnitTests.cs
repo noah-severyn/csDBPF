@@ -90,6 +90,22 @@ namespace csDBPF_Test {
                 Assert.AreEqual(d1, DBPFUtil.UnixToDate(u1));
                 Assert.AreEqual(d2, DBPFUtil.UnixToDate(u2));
             }
+
+
+            [TestMethod]
+            public void Test_014_DBPFUtil_CleanTGIFormat() {
+                string s1 = "0x5ad0e817 0x5283112c 0x00030000";
+                string s2 = "0x6534284a-0xbf3fbe81-0xe1278c85";
+                string s3 = "0x5ad0e817_____0x7c051bc2_____0x00030000";
+                string s4 = "0x6534284a, 0xbf3fbe81, 0x6208ab6f";
+                string s5 = "0x5ad0 0x5 0x003";
+
+                Assert.AreEqual("0x5ad0e817, 0x5283112c, 0x00030000", DBPFUtil.FormatTgiString(s1));
+                Assert.AreEqual("0x6534284a, 0xbf3fbe81, 0xe1278c85", DBPFUtil.FormatTgiString(s2));
+                Assert.AreEqual("0x5ad0e817, 0x7c051bc2, 0x00030000", DBPFUtil.FormatTgiString(s3));
+                Assert.AreEqual("0x6534284a, 0xbf3fbe81, 0x6208ab6f", DBPFUtil.FormatTgiString(s4));
+                Assert.AreEqual("0x00005ad0, 0x00000005, 0x00000003", DBPFUtil.FormatTgiString(s5));
+            }
         }
 
 
@@ -182,8 +198,8 @@ namespace csDBPF_Test {
                 CollectionAssert.AreEqual(b3_single, ByteArrayHelper.ToBytes(s3, true));
 
                 string s4 = "지역 의료 시설 포켓 피킹"; //"Local Medical Facility Pockets Picked"
-                byte[] b4 = { 0xc0, 0xc9, 0xed, 0xc5, 0x58, 0xc7, 0xcc, 0xb8, 0xdc, 0xc2, 0x24, 0xc1, 0xec, 0xd3, 0x13, 0xcf, 0x3c, 0xd5, 0xb9, 0xd0 };
-                byte[] r1 = ByteArrayHelper.ToBytes(s4);
+                byte[] b4 = [ 0xc0, 0xc9, 0xed, 0xc5, 0x20, 0x00, 0x58, 0xc7, 0xcc, 0xb8, 0x20, 0x00, 0xdc, 0xc2, 0x24, 0xc1, 0x20, 0x00, 0xec, 0xd3, 0x13, 0xcf, 0x20, 0x00, 0x3c, 0xd5, 0xb9, 0xd0];
+                Assert.AreEqual(s4, System.Text.Encoding.Unicode.GetString(b4));
             }
 
 
@@ -233,7 +249,7 @@ namespace csDBPF_Test {
         [TestClass]
         public class _04x_DBPFTGI {
             [TestMethod]
-            public void Test_040a_DBPFTGI_ctor_CreateFromUints() {
+            public void Test_040a_DBPFTGI_CreateFromUints() {
                 TGI tgi1 = new TGI(0x6534284a, 0, 0);
                 Assert.AreEqual<uint>(0x6534284a, tgi1.TypeID);
                 Assert.AreNotEqual<uint>(0, tgi1.GroupID);
@@ -259,7 +275,7 @@ namespace csDBPF_Test {
             }
 
             [TestMethod]
-            public void Test_040a_DBPFTGI_ctor_CreteFromTGI() {
+            public void Test_040b_DBPFTGI_CreteFromTGI() {
                 TGI tgi1 = new TGI(DBPFTGI.EXEMPLAR);
                 Assert.AreEqual<uint>(0x6534284a, tgi1.TypeID);
                 Assert.AreNotEqual<uint>(0, tgi1.GroupID);
@@ -274,6 +290,22 @@ namespace csDBPF_Test {
                 Assert.AreEqual<uint>(0xCA63E2A3, tgi3.TypeID);
                 Assert.AreEqual<uint>(0x4A5E8EF6, tgi3.GroupID);
                 Assert.AreNotEqual<uint>(0, tgi3.InstanceID);
+            }
+
+            [TestMethod]
+            public void Test_040c_DBPFTGI_CreateFromString() {
+                string s1 = "0x5ad0e817 0x5283112c 0x00030000";
+                string s2 = "0x6534284a-0xbf3fbe81-0xe1278c85";
+                string s3 = "0x5ad0e817_____0x7c051bc2_____0x00030000";
+                string s4 = "0x6534284a, 0xbf3fbe81, 0x6208ab6f";
+                string s5 = "0x5ad0 0x5 0x003";
+
+                Assert.IsTrue(new TGI(0x5ad0e817, 0x5283112c, 0x00030000).Equals(new TGI(s1)));
+                Assert.IsTrue(new TGI(0x6534284a, 0xbf3fbe81, 0xe1278c85).Equals(new TGI(s2)));
+                Assert.IsTrue(new TGI(0x5ad0e817, 0x7c051bc2, 0x00030000).Equals(new TGI(s3)));
+                Assert.IsTrue(new TGI(0x6534284a, 0xbf3fbe81, 0x6208ab6f).Equals(new TGI(s4)));
+                Assert.IsTrue(new TGI(0x5ad0, 0x5, 0x3).Equals(new TGI(s5)));
+
             }
 
 
@@ -391,36 +423,7 @@ namespace csDBPF_Test {
 
 
 
-            [TestMethod]
-            public void Test_048_DBPFTGI_CleanTGIFormat() {
-                string s1 = "0x5ad0e817 0x5283112c 0x00030000";
-                string s2 = "0x6534284a-0xbf3fbe81-0xe1278c85";
-                string s3 = "0x5ad0e817_____0x7c051bc2_____0x00030000";
-                string s4 = "0x6534284a, 0xbf3fbe81, 0x6208ab6f";
-                string s5 = "0x5ad0 0x5 0x003";
 
-                Assert.AreEqual("0x5ad0e817, 0x5283112c, 0x00030000", DBPFTGI.CleanTGIFormat(s1));
-                Assert.AreEqual("0x6534284a, 0xbf3fbe81, 0xe1278c85", DBPFTGI.CleanTGIFormat(s2));
-                Assert.AreEqual("0x5ad0e817, 0x7c051bc2, 0x00030000", DBPFTGI.CleanTGIFormat(s3));
-                Assert.AreEqual("0x6534284a, 0xbf3fbe81, 0x6208ab6f", DBPFTGI.CleanTGIFormat(s4));
-                Assert.AreEqual("0x00005ad0, 0x00000005, 0x00000003", DBPFTGI.CleanTGIFormat(s5));
-            }
-
-            [TestMethod]
-            public void Test_049_DBPFTGI_ParseTGIString() {
-                string s1 = "0x5ad0e817 0x5283112c 0x00030000";
-                string s2 = "0x6534284a-0xbf3fbe81-0xe1278c85";
-                string s3 = "0x5ad0e817_____0x7c051bc2_____0x00030000";
-                string s4 = "0x6534284a, 0xbf3fbe81, 0x6208ab6f";
-                string s5 = "0x5ad0 0x5 0x003";
-
-                Assert.IsTrue(new TGI(0x5ad0e817, 0x5283112c, 0x00030000).Equals(DBPFTGI.ParseTGIString(s1)));
-                Assert.IsTrue(new TGI(0x6534284a, 0xbf3fbe81, 0xe1278c85).Equals(DBPFTGI.ParseTGIString(s2)));
-                Assert.IsTrue(new TGI(0x5ad0e817, 0x7c051bc2, 0x00030000).Equals(DBPFTGI.ParseTGIString(s3)));
-                Assert.IsTrue(new TGI(0x6534284a, 0xbf3fbe81, 0x6208ab6f).Equals(DBPFTGI.ParseTGIString(s4)));
-                Assert.IsTrue(new TGI(0x5ad0, 0x5, 0x3).Equals(DBPFTGI.ParseTGIString(s5)));
-
-            }
         }
 
 

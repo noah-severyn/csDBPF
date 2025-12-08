@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace csDBPF {
 	/// <summary>
@@ -293,126 +295,116 @@ namespace csDBPF {
             float.TryParse(ToAString(data, offset, length), out float result);
 			return result;
 		}
-		#endregion FromByteArrayToA
+        #endregion FromByteArrayToA
 
 
 
-		#region ToBytes
-		/// <summary>
-		/// Reads a string and parses into a byte array the same length as the string
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <param name="singleByte">Parse type. FALSE (Default) is two byte output per char (Unicode); TRUE is one byte output per char: (ANSI/Windows-1252)</param>
-		/// <returns>The string as bytes</returns>
-		public static byte[] ToBytes(string data, bool singleByte = false) {
+        #region ToBytes
+        /// <summary>
+        /// Converts the specified string to an array of bytes, using either single-byte or Unicode encoding.
+        /// </summary>
+        /// <remarks>When <paramref name="singleByteEncoding"/> is <see langword="true"/>, only characters that can be represented as single bytes are supported (ANSI/Windows-1252 encoding). For strings containing multi-byte characters (e.g., Korean, Chinese,  or other non-ASCII characters), or for single byte characters represented as two bytes (<c>T</c>> -> <c>0x54, 0x00</c>), use Unicode encoding with <paramref name="singleByteEncoding"/> set as <see langword="false"/>.</remarks>
+        /// <param name="data">The string to convert. If <paramref name="data"/> is <see langword="null"/>, an empty byte array is returned.</param>
+        /// <param name="singleByteEncoding">Specify whether the data is single-byte encoded or Unicode encoded.</param>
+        /// <returns>A byte array representing the encoded string, or an empty array if <paramref name="data"/> is <see langword="null"/>.</returns>
+        public static byte[] ToBytes(string data, bool singleByteEncoding = false) {
 			if (data is null) {
-				return Array.Empty<byte>();
+				return [];
 			}
 
-			List<byte> bytes = new List<byte>();
-			foreach (char c in data) {
-				if (singleByte) {
-					bytes.Add(Convert.ToByte(c));
-				} else {
-					bytes.AddRange(BitConverter.GetBytes(c));
-				}
-			}
-			return bytes.ToArray();
+			if (singleByteEncoding) {
+                byte[] bytes = new byte[data.Length];
+                for (int i = 0; i < data.Length; i++) {
+                    bytes[i] = Convert.ToByte(data[i]);
+                }
+                return bytes;
+            }
+			return Encoding.Unicode.GetBytes(data);
 		}
 		/// <summary>
 		/// Converts a long to byte array with the given length.
 		/// </summary>
 		/// <param name="value">Value to convert</param>
 		/// <param name="numPlaces">Length of returned array</param>
-		/// <returns></returns>
+		/// <returns>A byte array representing the input value <paramref name="value"/></returns>
 		public static byte[] ToBytes(long value, int numPlaces = 8) {
 			byte[] bytes = BitConverter.GetBytes(value);
-			return bytes[0..numPlaces];
-		}
-		/// <summary>
-		/// Parses an array of booleans into bytes.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>The array of data as bytes</returns>
-		public static byte[] ToBytes(bool[] data) {
-			byte[] result = new byte[data.Length];
+            if (numPlaces >= bytes.Length) {
+                return bytes;
+            }
+            return bytes[0..numPlaces];
+        }
+        /// <summary>
+        /// Parses an array of booleans into bytes.
+        /// </summary>
+        /// <param name="data">Data to parse</param>
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
+        public static byte[] ToBytes(bool[] data) {
+            if (data is null) return [];
+            byte[] result = new byte[data.Length];
 			for (int idx = 0; idx < result.Length; idx++) {
-				if (data[idx] == true) {
-					result[idx] = 0x01;
-				} else {
-					result[idx] = 0x00;
-				}
-			}
+                result[idx] = data[idx] ? (byte) 0x01 : (byte) 0x00;
+            }
 			return result;
 		}
         /// <summary>
         /// Parses an array of chars (UInt8) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
         public static byte[] ToBytes(char[] data) {
-			byte[] result = new byte[data.Length];
-			Array.Copy(data, result, data.Length);
-			return result;
-		}
+            if (data is null) return [];
+            byte[] result = new byte[data.Length];
+            for (int i = 0; i < data.Length; i++) {
+                result[i] = Convert.ToByte(data[i]);
+            }
+            return result;
+        }
         /// <summary>
         /// Parses an array of ushorts (UInt16) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
         public static byte[] ToBytes(ushort[] data) {
-			byte[] result = new byte[data.Length * 2];
-			for (int pos = 0; pos < data.Length; pos++) {
-				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 2, 2);
-			}
-			return result;
-		}
+            if (data is null) return [];
+            return MemoryMarshal.AsBytes<ushort>(data.AsSpan()).ToArray();
+        }
         /// <summary>
         /// Parses an array of ints (Sint32) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
         public static byte[] ToBytes(int[] data) {
-			byte[] result = new byte[data.Length * 4];
-			for (int pos = 0; pos < data.Length; pos++) {
-				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 4, 4);
-			}
-			return result;
-		}
+            if (data is null) return [];
+            return MemoryMarshal.AsBytes<int>(data.AsSpan()).ToArray();
+        }
         /// <summary>
         /// Parses an array of uints (UInt32) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
         public static byte[] ToBytes(uint[] data) {
-			byte[] result = new byte[data.Length * 4];
-			for (int pos = 0; pos < data.Length; pos++) {
-				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 4, 4);
-			}
-			return result;
-		}
+            if (data is null) return [];
+            return MemoryMarshal.AsBytes<uint>(data.AsSpan()).ToArray();
+        }
         /// <summary>
         /// Parses an array of floats (Float32) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
         public static byte[] ToBytes(float[] data) {
-			byte[] result = new byte[data.Length * 4];
-			Buffer.BlockCopy(data, 0, result, 0, result.Length);
-			return result;
-		}
+            if (data is null) return [];
+            return MemoryMarshal.AsBytes<float>(data.AsSpan()).ToArray();
+        }
         /// <summary>
         /// Parses an array of longs (SInt64) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
         public static byte[] ToBytes(long[] data) {
-			byte[] result = new byte[data.Length * 8];
-			for (int pos = 0; pos < data.Length; pos++) {
-				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 8, 8);
-			}
-			return result;
-		}
+            if (data is null) return [];
+            return MemoryMarshal.AsBytes<long>(data.AsSpan()).ToArray();
+        }
 		#endregion ToBytes
 	}
 }
