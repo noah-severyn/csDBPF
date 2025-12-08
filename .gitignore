@@ -395,3 +395,4 @@ FodyWeavers.xsd
 *.sln.iml
 csDBPF/HEX-DEC-TXT Decoder.xlsm
 *.xlsm
+/csDBPF/csDBPF_Test/Test Files
