@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -8,25 +9,27 @@ using System.Text.RegularExpressions;
 namespace csDBPF {
 
     /// <summary>
-    /// A struct representing three unsigned integers as a Type, Group, Instance pair.
+    /// A struct representing three unsigned integers as a Type, Group, Instance triplet.
     /// </summary>
     public struct TGI : IComparable<TGI> {
         /// <summary>
-        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=Type_ID">Type ID</see> (TID).
+        /// Returns the <see href="https://www.wiki.sc4devotion.com/index.php?title=Type_ID">Type ID</see> (TID).
         /// </summary>
         public uint TypeID  { get; private set; }
 
         /// <summary>
-        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=Group_ID">Group ID</see> (GID).
+        /// Returns the <see href="https://www.wiki.sc4devotion.com/index.php?title=Group_ID">Group ID</see> (GID).
         /// </summary>
         public uint GroupID { get; private set; }
 
         /// <summary>
-        /// <see href="https://www.wiki.sc4devotion.com/index.php?title=Instance_ID">Instance ID</see> (IID).
+        /// Returns the <see href="https://www.wiki.sc4devotion.com/index.php?title=Instance_ID">Instance ID</see> (IID).
         /// </summary>
         public uint InstanceID { get; private set; }
 
-
+        /// <summary>
+        /// Internal constructor used to instantiate the static TGI templates, and is not exposed publicly as it allows null arguments. Null arguments are set to zero.
+        /// </summary>
         internal TGI(uint? t, uint? g, uint? i) {
             if (t.HasValue) {
                 TypeID = (uint) t;
@@ -45,7 +48,7 @@ namespace csDBPF {
             }
         }
         /// <summary>
-        /// Create a struct representing three uints as a Type, Group, Instance triplet. A random value will be set for a Group or Instance if either is zero.
+        /// Create a new TGI from the specified uints. A random value will be assigned for the Group or Instance if either is zero.
         /// </summary>
         /// <param name="t">Type ID</param>
         /// <param name="g">Group ID</param>
@@ -64,25 +67,37 @@ namespace csDBPF {
             }
         }
         /// <summary>
-        /// Create a new DBPFTGI based on a known entry type. Assigns a random Group or Instance as appropriate.
+        /// Create a new TGI based on a TGI template. Assigns a random Group or Instance as appropriate based on the template.
         /// </summary>
-        /// <param name="knownEntry">Known entry type. Should be one of the static types in <see cref="DBPFTGI"/> class.</param>
-        public TGI(TGI knownEntry) {
-            TypeID = knownEntry.TypeID;
-            if (knownEntry.GroupID == 0) {
+        /// <param name="template">TGI template. Should be one of the static types in <see cref="DBPFTGI"/> class.</param>
+        public TGI(TGI template) {
+            TypeID = template.TypeID;
+            if (template.GroupID == 0) {
                 GroupID = DBPFUtil.GenerateRandomUint();
             } else {
-                GroupID = knownEntry.GroupID;
+                GroupID = template.GroupID;
             }
-            if (knownEntry.InstanceID == 0) {
+            if (template.InstanceID == 0) {
                 InstanceID = DBPFUtil.GenerateRandomUint();
             } else {
-                InstanceID = knownEntry.InstanceID;
+                InstanceID = template.InstanceID;
             }
         }
+        /// <summary>
+        /// Create a new TGI based on an existing string representation.
+        /// </summary>
+        /// <remarks>The input string must satisfy the conditions of <see cref="DBPFUtil.FormatTgiString(string)"/> to be valid.</remarks>
+        /// <param name="tgi">A string representing the TGI (Type, Group, Instance) in a valid format.</param>
+        public TGI(string tgi) {
+            string cleaned = DBPFUtil.FormatTgiString(tgi);
+            TypeID = uint.Parse(cleaned.Substring(2, 8), NumberStyles.HexNumber);
+            GroupID = uint.Parse(cleaned.Substring(14, 8), NumberStyles.HexNumber);
+            InstanceID = uint.Parse(cleaned.Substring(26, 8), NumberStyles.HexNumber);
+        }
+
 
         /// <inheritdoc/>
-        public int CompareTo(TGI other) {
+        public readonly int CompareTo(TGI other) {
             //Check if the T difers first, then if the G differs, then if the I differs
             var typediff = TypeID - other.TypeID;
             if (typediff != 0)
@@ -97,33 +112,31 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Evaluate whether two TGIs are identical.
+        /// Evaluate whether two TGIs are equal. TGIs are equal if their Types, Groups, and Instances are identical.
         /// </summary>
         /// <param name="obj"></param>
-        /// <returns>TRUE if the TGIs are identical; FALSE otherwise</returns>
+        /// <returns><see langword="true"/> if the TGIs are identical; <see langword="false"/> otherwise</returns>
         public override readonly bool Equals(object obj) {
-            if (obj is not TGI _tgi) return false;
-            return TypeID == _tgi.TypeID && GroupID == _tgi.GroupID && InstanceID == _tgi.InstanceID;
+            if (obj is not TGI tgi) return false;
+            return TypeID == tgi.TypeID && GroupID == tgi.GroupID && InstanceID == tgi.InstanceID;
         }
         /// <inheritdoc/>
         public static bool operator ==(TGI left, TGI right) { return left.Equals(right); }
         /// <inheritdoc/>
         public static bool operator !=(TGI left, TGI right) { return !(left == right); }
         /// <inheritdoc/>
-        public override int GetHashCode() {
+        public override readonly int GetHashCode() {
             return TypeID.GetHashCode() ^ GroupID.GetHashCode() ^ InstanceID.GetHashCode();
         }
 
 
         /// <summary>
-        /// Evaluates equality of this item to another item.
+        /// Determines whether the current TGI matches the specified <paramref name="otherTGI"/> based on its TypeID, GroupID, and InstanceID.
         /// </summary>
-        /// <param name="otherTGI">TGI to compare to</param>
-        /// <returns>TRUE if Type, Group, and Instance of both values are match; FALSE if any differ</returns>
-        /// <remarks>
-        /// If any component of the specified TGI is 0 then the check will be skipped. This may be used to check against one of the <see cref="DBPFTGI.KnownEntries"/> as a pseudo "is a" check.
-        /// </remarks>
-        /// <remarks>A type, group, or instance of null in either item will match with any other value.</remarks>
+        /// <remarks>If  A match occurs if each non-zero field in <paramref name="otherTGI"/> equals the corresponding field in the current TGI. If <paramref name="otherTGI"/> is one of the static templates in <see cref="DBPFTGI"/>, then fields with a value of 0 are treated as wildcards and will always match.</remarks>
+        /// <param name="otherTGI">The <see cref="TGI"/> instance to compare against. A value of 0 for any of its fields (TypeID, GroupID, or
+        /// InstanceID) acts as a wildcard, meaning that field will always match.</param>
+        /// <returns><see langword="true"/> if the current TGI matches the specified TGI; otherwise, <see langword="false"/>.</returns>
         public readonly bool Matches(TGI otherTGI) {
             bool evalT, evalG, evalI;
             if (otherTGI.TypeID == 0) {
@@ -145,18 +158,10 @@ namespace csDBPF {
         }
 
         /// <summary>
-        /// Check if the Type, Group, and Instance of two TGIs are identical.
+        /// Determines whether the current instance matches any known TGI template.
         /// </summary>
-        /// <param name="otherTGI">TGI to check against</param>
-        /// <returns>TRUE if check passes; FALSE otherwise</returns>
-        public readonly bool MatchesExactly(TGI otherTGI) {
-            return TypeID == otherTGI.TypeID && GroupID == otherTGI.GroupID && InstanceID == otherTGI.InstanceID;
-        }
-
-        /// <summary>
-        /// Check whether this TGI matches any of the known entry TGI sets.
-        /// </summary>
-        /// <returns>Returns the nearest known TGI match</returns>
+        /// <remarks>This method iterates through all known TGI templates and checks for a match using the <see cref="Matches"/> method. If a match is found, the corresponding TGI entry is returned. If no matches are found, a blank TGI entry is returned.</remarks>
+        /// <returns>The first matching TGI entry if a match is found; otherwise, <see cref="DBPFTGI.BLANKTGI"/> is returned.</returns>
         public readonly TGI MatchesAnyKnown() {
             foreach (TGI tgi in DBPFTGI.KnownEntries.Keys) {
                 if (Matches(tgi)) {
@@ -169,9 +174,9 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Get the entry type associated with this TGI.
+        /// Returns the general file type this TGI represents (EXMP, FSH, PNG, etc.).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A string representing the entry type if a match is found; otherwise, an empty string.</returns>
         public readonly string GetEntryType() {
             foreach (TGI tgi in DBPFTGI.KnownEntries.Keys) {
                 if (Matches(tgi)) {
@@ -181,9 +186,9 @@ namespace csDBPF {
             return string.Empty;
         }
         /// <summary>
-        /// Get the specific entry type associated with this TGI, as it relates to an in-game implementation.
+        /// Returns the specific file type detail associated with this TGI, as it relates to an in-game implementation (EXEMPLAR_ROAD, FSH_BASE_OVERLAY, PNG_ICON, etc.).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A string representing the file type detail if a match is found; otherwise, an empty string.</returns>
         public readonly string GetEntryDetail() {
             foreach (TGI tgi in DBPFTGI.KnownEntries.Keys) {
                 if (Matches(tgi)) {
@@ -195,7 +200,10 @@ namespace csDBPF {
 
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Returns a comma separated list of the TypeID, GroupID, and InstanceID in hexadecimal format.
+        /// </summary>
+        /// <returns>A string in the format <c>0x########, 0x########, 0x########</c></returns>
         public override readonly string ToString() {
             string t = TypeID == 0 ? "#" : DBPFUtil.ToHexString(TypeID, prefix: true);
             string g = GroupID == 0 ? "#" : DBPFUtil.ToHexString(GroupID, prefix: true);
@@ -206,16 +214,15 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Assign a random Group ID.
+        /// Assign a random Group ID to this TGI.
         /// </summary>
         public void RandomizeGroup() {
             GroupID = DBPFUtil.GenerateRandomUint();
         }
         /// <summary>
-        /// Assign a random Instance ID.
+        /// Assign a random Instance ID to this TGI.
         /// </summary>
         public void RandomizeInstance() {
-            Random rand = new Random();
             InstanceID = DBPFUtil.GenerateRandomUint();
         }
     }
@@ -223,32 +230,25 @@ namespace csDBPF {
 
 
     /// <summary>
-    /// A DBPFTGI encapsulates a Type, Group, Instance identifier.
+    /// Provides a collection of predefined TGI constants ("templates") representing the known SC4 entry types. 
     /// </summary>
-    /// <remarks>
-    /// Common known entry types are listed in <see cref="KnownEntries"/>.
-    /// </remarks>
+    /// <remarks>The TGI templates may be used in combination with the methods provided by the <see cref="TGI"/> struct to instantiate a new TGI of a desired type, or to identify the nearest known entry type of an arbitrary TGI.</remarks>
     public static class DBPFTGI {
-		//In general Dictionary items are kept in the order they are added, and since we're not doing a lot of adding or any deleting/sorting, its not as big of a deal and we don't need to use a special type like SortedDictionary
-		internal static readonly Dictionary<TGI, TGIDetails> KnownEntries = new Dictionary<TGI, TGIDetails>();
-        internal struct TGIDetails {
+		//In general Dictionary items are kept in the order they are added> However, since we're not doing a lot of adding or *any* deleting/sorting, its not as big of a deal meaning we don't need to use a special type like SortedDictionary
+		internal static readonly Dictionary<TGI, TGIDetails> KnownEntries = [];
+        internal struct TGIDetails(string cat, string det) {
             /// <summary>
             /// The general file type this TGI represents.
             /// </summary>
-            public string EntryType;
+            public string EntryType = cat;
             /// <summary>
             /// The detailed description of the file type this TGI represents.
             /// </summary>
-            public string EntryDetail;
-
-            public TGIDetails(string cat, string det) {
-                EntryType = cat;
-                EntryDetail = det;
-            }
+            public string EntryDetail = det;
         }
         #region KnownTGIs
-		/// <summary>Directory file (0xe86b1eef, 0xe86b1eef, 0x286b1f03)</summary>
-		public static readonly TGI DIRECTORY;
+        /// <summary>Directory file (0xe86b1eef, 0xe86b1eef, 0x286b1f03)</summary>
+        public static readonly TGI DIRECTORY;
         /// <summary>LD file (0x6be74c6#, 0x6be74c60, #) </summary>
         public static readonly TGI LD;
 		/// <summary>Exemplar file: road network (0x6534284a, 0x2821ed93, #)</summary>
@@ -436,53 +436,6 @@ namespace csDBPF {
             KnownEntries.Add(RUL, new TGIDetails("XML", "XML"));
             KnownEntries.Add(EFFDIR, new TGIDetails("EFF", "EFFDIR"));
             KnownEntries.Add(BLANKTGI, new TGIDetails("BLANK", "BLANKTGI"));
-        }
-
-
-
-        /// <summary>
-        /// Returns a string of the TGI in the same format as <see cref="TGI.ToString"/> for comparison.
-        /// </summary>
-        /// <param name="tgi">TGI string to parse</param>
-        /// <exception cref="ArgumentException">If the TGI string is in an improper format</exception>
-        /// <returns>The TGI properly formated delimited by comma space, in the format of <c>0x########, 0x########, 0x########</c>, with leading zeros added up to 8 characters each.</returns>
-        /// <remarks>The input string must contain three hexadecimal numbers, each prefixed with <c>0x</c>.</remarks>
-        public static string CleanTGIFormat(string tgi) {
-            if (Regex.Matches(tgi, "0x").Count != 3) {
-                throw new ArgumentException($"TGI of <{tgi}> is not in the proper format.");
-            }
-
-            int startPos = tgi.IndexOf("0x", 2); //Find non-alphanumeric delimiter based on locn of the second '0x'
-            int idx = startPos;
-            do {
-                idx--;
-            } while (!char.IsLetterOrDigit(tgi[idx]));
-            idx++;
-            string separator = tgi.Substring(idx, startPos - idx);
-
-            string cleaned = tgi.Replace(separator, ", ");
-            int firstDelim = cleaned.IndexOf(',');
-            int secondDelim = cleaned.IndexOf(',', firstDelim + 1);
-
-            string x1 = cleaned.Substring(2, firstDelim - 2).PadLeft(8, '0');
-            string x2 = cleaned.Substring(firstDelim + 4, secondDelim - firstDelim - 4).PadLeft(8, '0');
-            string x3 = cleaned.Substring(secondDelim + 4, cleaned.Length - secondDelim - 4).PadLeft(8, '0');
-
-
-            return $"0x{x1}, 0x{x2}, 0x{x3}";
-        }
-
-
-
-        /// <summary>
-        /// Parse a TGI string into it's component Type, Group, Index values.
-        /// </summary>
-        /// <param name="tgi">String to parse</param>
-        /// <exception cref="ArgumentException">If the TGI string is in an improper format</exception>
-        /// <returns>A TGI struct</returns>
-        public static TGI ParseTGIString(string tgi) {
-            string cleaned = CleanTGIFormat(tgi);
-            return new TGI(uint.Parse(cleaned.Substring(2, 8), NumberStyles.HexNumber), uint.Parse(cleaned.Substring(14, 8), NumberStyles.HexNumber), uint.Parse(cleaned.Substring(26, 8), NumberStyles.HexNumber));
         }
 	}
 }

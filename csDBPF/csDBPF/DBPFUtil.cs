@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace csDBPF {
 	/// <summary>
 	/// Collection of miscellaneous utility methods to use with DBPFFiles.
 	/// </summary>
 	public static class DBPFUtil {
-		private static readonly string[] sc4Extensions = { ".dat", ".sc4lot", ".sc4desc", ".sc4model" };
-		private static readonly byte[] DBPF = { 0x44, 0x42, 0x50, 0x46 };
+		private static readonly string[] sc4Extensions = [".dat", ".sc4lot", ".sc4desc", ".sc4model"];
+		private static readonly byte[] DBPF = [0x44, 0x42, 0x50, 0x46];
 
         /// <summary>
         /// Filters a list of file paths for known SC4 file extensions, or optionally examining the file's first four bytes for the magic identifier instead.
@@ -99,8 +100,8 @@ namespace csDBPF {
         /// <param name="value">Value to return</param>
         /// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
         /// <param name="uppercase">Specify output as uppercase. Default is lowercase.</param>
-        /// <param name="prefix">Specify to omit "0x" prefixed to the front of the string. Default is true to include.</param>
-        /// <returns>Uppercase string representing the value</returns>
+        /// <param name="prefix">Optionally prepend the hex string with "0x". Default is <see langword="true"/> to include.</param>
+        /// <returns>A formatted hex string representing the value</returns>
         /// <exception cref="ArgumentOutOfRangeException">Number of places must be between 0 and 8.</exception>
         public static string ToHexString(long value, int places = 8, bool uppercase = false, bool prefix = true) {
             if (places < 0 || places > 16) {
@@ -119,8 +120,8 @@ namespace csDBPF {
         /// <param name="value">Value to return</param>
         /// <param name="places">Number of places to pad the value. 0-8 valid; 8 is default</param>
         /// <param name="uppercase">Specify output as uppercase. Default is lowercase.</param>
-        /// <param name="prefix">Specify to omit "0x" prefixed to the front of the string. Default is true to include.</param>
-        /// <returns>Uppercase string representing the value</returns>
+        /// <param name="prefix">Optionally prepend the hex string with "0x". Default is <see langword="true"/> to include.</param>
+        /// <returns>A formatted hex string representing the value, or an empty string if <paramref name="value"/> is null</returns>
         /// <exception cref="ArgumentOutOfRangeException">Number of places must be between 0 and 8.</exception>
         public static string ToHexString(uint? value, int places = 8, bool uppercase = false, bool prefix = true) {
             if (places < 0 || places > 16) {
@@ -135,8 +136,41 @@ namespace csDBPF {
                 }
 				
 			} else {
-				return value.ToString();
+				return string.Empty;
 			}
+        }
+
+
+
+        /// <summary>
+        /// Formats a string of TGI values in the same format as <see cref="TGI.ToString"/>.
+        /// </summary>
+        /// <remarks>The input string must contain three hexadecimal numbers, each prefixed with <c>0x</c>, but may be split with any delimiter.</remarks>
+        /// <param name="tgi">TGI string to parse</param>
+        /// <exception cref="ArgumentException">If the TGI string is in an improper format</exception>
+        /// <returns>A  TGI properly formated delimited by comma space, in the format of <c>0x########, 0x########, 0x########</c>, with leading zeros added up to 8 characters each.</returns>
+        public static string FormatTgiString(string tgi) {
+            if (Regex.Matches(tgi, "0x").Count != 3) {
+                throw new ArgumentException($"TGI of <{tgi}> is not in the proper format.");
+            }
+
+            int startPos = tgi.IndexOf("0x", 2); //Find non-alphanumeric delimiter based on locn of the second '0x'
+            int idx = startPos;
+            do {
+                idx--;
+            } while (!char.IsLetterOrDigit(tgi[idx]));
+            idx++;
+            string separator = tgi.Substring(idx, startPos - idx);
+
+            string cleaned = tgi.Replace(separator, ", ");
+            int firstDelim = cleaned.IndexOf(',');
+            int secondDelim = cleaned.IndexOf(',', firstDelim + 1);
+
+            string x1 = cleaned.Substring(2, firstDelim - 2).PadLeft(8, '0');
+            string x2 = cleaned.Substring(firstDelim + 4, secondDelim - firstDelim - 4).PadLeft(8, '0');
+            string x3 = cleaned.Substring(secondDelim + 4, cleaned.Length - secondDelim - 4).PadLeft(8, '0');
+
+            return $"0x{x1}, 0x{x2}, 0x{x3}";
         }
 
 
