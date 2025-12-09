@@ -34,7 +34,7 @@ namespace csDBPF {
 		/// <remarks>
 		/// This property affects <see cref="NumberOfReps"/>. This also determines how this property will be written to file. 
 		/// </remarks>
-		public override EncodingType Encoding { get; set; }
+		public override DBPF.Encoding Encoding { get; set; }
 
         /// <summary>
         /// The data value stored in this property.
@@ -47,22 +47,22 @@ namespace csDBPF {
         /// <summary>
         /// Construct a new DBPFProperty with a string data type.
         /// </summary>
-        /// <param name="encodingType">Text or Binary encoding type</param>
-        public DBPFPropertyString(EncodingType encodingType = EncodingType.Binary) {
+        /// <param name="encoding">Text or Binary encoding type</param>
+        public DBPFPropertyString(DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			DataType = PropertyDataType.STRING;
-			Encoding = encodingType;
+			Encoding = encoding;
 			NumberOfReps = 0;
 		}
 		/// <summary>
 		/// Construct a DBPFProperty with a string data type holding a specified string.
 		/// </summary>
 		/// <param name="value">String to set</param>
-		/// <param name="encodingType">Text or Binary encoding type</param>
-		public DBPFPropertyString(string value, EncodingType encodingType = EncodingType.Binary) {
+		/// <param name="encoding">Text or Binary encoding type</param>
+		public DBPFPropertyString(string value, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			DataType = PropertyDataType.STRING;
 			_dataValue = value;
-			Encoding = encodingType;
-			if (Encoding == EncodingType.Text) {
+			Encoding = encoding;
+			if (Encoding == DBPF.Encoding.Text) {
 				NumberOfReps = 1;
 			} else {
 				NumberOfReps = _dataValue.Length;
@@ -114,7 +114,7 @@ namespace csDBPF {
 				throw new ArgumentException($"Argument to DBPFPropertyString.SetData must be string. {value.GetType()} was provided.");
 			}
 			_dataValue = (string) value;
-			if (Encoding == EncodingType.Text) {
+			if (Encoding == DBPF.Encoding.Text) {
                 NumberOfReps = 1;
 			} else {
                 NumberOfReps = _dataValue.Length;
@@ -136,7 +136,7 @@ namespace csDBPF {
         /// </summary>
         /// <returns>A byte array encoding all information for this property</returns>
         public override byte[] ToBytes() {
-			if (Encoding == EncodingType.Text) {
+			if (Encoding == DBPF.Encoding.Text) {
 				StringBuilder sb = new StringBuilder();
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(ID);
 				sb.Append($"0x{DBPFUtil.ToHexString(ID)}:{{\"{xmlprop.Name}\"}}=String:1:{{");

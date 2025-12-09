@@ -34,7 +34,7 @@ namespace csDBPF {
 		/// <remarks>
 		/// This property affects <see cref="NumberOfReps"/>. This also determines how this property will be written to file. 
 		/// </remarks>
-		public override EncodingType Encoding { get; set; }
+		public override DBPF.Encoding Encoding { get; set; }
 
         /// <summary>
         /// List of data values which are stored in this property.
@@ -46,22 +46,22 @@ namespace csDBPF {
         /// <summary>
         /// Construct a new DBPFProperty with a float data type.
         /// </summary>
-        /// <param name="encodingType">Text or Binary encoding type</param>
-        public DBPFPropertyFloat(EncodingType encodingType = EncodingType.Binary) {
+        /// <param name="encoding">Text or Binary encoding type</param>
+        public DBPFPropertyFloat(DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			DataType = PropertyDataType.FLOAT32;
-			Encoding = encodingType;
+			Encoding = encoding;
 			NumberOfReps = 0;
 		}
         /// <summary>
         /// Construct a DBPFProperty with a float data type holding a single value.
         /// </summary>
         /// <param name="value">Value of this property</param>
-        /// <param name="encodingType">Text or Binary encoding type</param>
-        public DBPFPropertyFloat(float value, EncodingType encodingType = EncodingType.Binary) {
+        /// <param name="encoding">Text or Binary encoding type</param>
+        public DBPFPropertyFloat(float value, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			DataType = PropertyDataType.FLOAT32;
 			_dataValues = [value];
-			Encoding = encodingType;
-			if (Encoding == EncodingType.Text) {
+			Encoding = encoding;
+			if (Encoding == DBPF.Encoding.Text) {
                 NumberOfReps = 1;
             } else {
                 NumberOfReps = 0;
@@ -71,12 +71,12 @@ namespace csDBPF {
         /// Construct a DBPFProperty with a float data type holding multiple values.
         /// </summary>
         /// <param name="values">Values this property holds</param>
-        /// <param name="encodingType">Text or Binary encoding type</param>
-        public DBPFPropertyFloat(List<float> values, EncodingType encodingType = EncodingType.Binary) {
+        /// <param name="encoding">Text or Binary encoding type</param>
+        public DBPFPropertyFloat(List<float> values, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			DataType = PropertyDataType.FLOAT32;
 			_dataValues = values;
-			Encoding = encodingType;
-			if (Encoding == EncodingType.Text) {
+			Encoding = encoding;
+			if (Encoding == DBPF.Encoding.Text) {
 				NumberOfReps = _dataValues.Count;
 			} else {
                 //Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
@@ -141,7 +141,7 @@ namespace csDBPF {
 			}
 			_dataValues = (List<float>) value;
 
-			if (Encoding == EncodingType.Text) {
+			if (Encoding == DBPF.Encoding.Text) {
 				NumberOfReps = _dataValues.Count;
 			} else {
 				//Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
@@ -169,7 +169,7 @@ namespace csDBPF {
         /// </summary>
         /// <returns>A byte array encoding all information for this property</returns>
         public override byte[] ToBytes() {
-			if (Encoding == EncodingType.Text) {
+			if (Encoding == DBPF.Encoding.Text) {
 				StringBuilder sb = new StringBuilder();
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(ID);
 				sb.Append($"0x{DBPFUtil.ToHexString(ID)}:{{\"{xmlprop.Name}\"}}=Float32:{NumberOfReps}:{{");

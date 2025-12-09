@@ -13,15 +13,16 @@ namespace csDBPF {
 		/// Stores if this entry has been decoded yet.
 		/// </summary>
 		private bool _isDecoded;
-		/// <summary>
-		/// Stores if this entry is encoded as binary or text.
-		/// </summary>
-		private bool _isTextEncoding;
 
-		/// <summary>
-		/// List of one or more <see cref="DBPFProperty"/> associated with this entry. Sorted by <see cref="DBPFProperty.ID"/>.
-		/// </summary>
-		public SortedList<uint, DBPFProperty> ListOfProperties { get; set; }
+        /// <summary>
+        /// The encoding type of this entry
+        /// </summary>
+        public DBPF.Encoding Encoding { get; private set;  }
+
+        /// <summary>
+        /// List of one or more <see cref="DBPFProperty"/> associated with this entry. Sorted by <see cref="DBPFProperty.ID"/>.
+        /// </summary>
+        public SortedList<uint, DBPFProperty> ListOfProperties { get; set; }
 
 		/// <summary>
 		/// The Parent Cohort for this exemplar.
@@ -73,7 +74,14 @@ namespace csDBPF {
         /// </remarks>
         public override void Decode() {
 			if (_isDecoded) return;
-			_isTextEncoding = IsTextEncoding();
+            
+			byte identifier;
+            if (IsCompressed) {
+                identifier = ByteData[13];
+            } else {
+                identifier = ByteData[3];
+            }
+            Encoding = (identifier == 0x54) ? DBPF.Encoding.Text : DBPF.Encoding.Binary; //0x54 = T, 0x42 = B
 
 			byte[] dData;
 			if (QFS.IsCompressed(ByteData)) {
@@ -88,7 +96,7 @@ namespace csDBPF {
 			uint parentCohortIID;
 			uint propertyCount;
 			int pos; //Offset position in dData. Initialized to the starting position of the properties after the header data
-			if (!_isTextEncoding) {
+			if (Encoding == DBPF.Encoding.Binary) {
 				parentCohortTID = BitConverter.ToUInt32(dData, 8);
 				parentCohortGID = BitConverter.ToUInt32(dData, 12);
 				parentCohortIID = BitConverter.ToUInt32(dData, 16);
@@ -126,7 +134,7 @@ namespace csDBPF {
 				}
 
 				//Determine which bytes to skip to get to the start of the next property
-				if (!_isTextEncoding) {
+				if (Encoding == DBPF.Encoding.Binary) {
 					if (property.NumberOfReps == 0) {
 						pos += (DBPFProperty.LookupDataTypeLength(property.DataType) * (property.NumberOfReps+1)) + 9; //Additionally skip the 4 bytes for ID, 2 for DataType, 2 for KeyType, 1 unused byte
 					} else {
@@ -159,7 +167,7 @@ namespace csDBPF {
         /// <param name="offset">Offset (location) to start reading from</param>
         /// <returns>A <see cref="DBPFProperty"/></returns>
         private DBPFProperty DecodeProperty(byte[] dData, int offset = 0) {
-			if (_isTextEncoding) {
+			if (Encoding == DBPF.Encoding.Binary) {
 				return DecodeProperty_Text(dData, offset);
 			} else {
 				return DecodeProperty_Binary(dData, offset);
@@ -264,7 +272,7 @@ namespace csDBPF {
 				newProperty = new DBPFPropertyLong(dataType);
             }
 			newProperty.ID = propertyID;
-			newProperty.Encoding = EncodingType.Binary;
+			newProperty.Encoding = DBPF.Encoding.Binary;
             newProperty.SetData(dataValues, countOfReps);
             return newProperty;
 		}
@@ -378,7 +386,7 @@ namespace csDBPF {
 				newProperty = new DBPFPropertyLong(dataType);
 			}
 			newProperty.ID = propertyID;
-			newProperty.Encoding = EncodingType.Text;
+			newProperty.Encoding = DBPF.Encoding.Text;
 			newProperty.SetData(dataValues);
 			return newProperty;
         }
@@ -412,7 +420,7 @@ namespace csDBPF {
             }
 
             //Text Encoding
-            if (_isTextEncoding) {
+            if (Encoding == DBPF.Encoding.Text) {
                 id += "QZT1###";
 
                 StringBuilder sb = new StringBuilder();
@@ -445,22 +453,6 @@ namespace csDBPF {
 
             ByteData = QFS.Compress(ByteData);
         }
-
-
-
-        /// <summary>
-        /// Returns the encoding type of this entry.
-        /// </summary>
-        /// <returns>TRUE if text encoding; FALSE otherwise</returns>
-        public bool IsTextEncoding() {
-			byte identifier;
-			if (IsCompressed) {
-				identifier = ByteData[13];
-			} else {
-                identifier = ByteData[3];
-            }
-			return identifier == 0x54; //0x54 = T (0x42 = B)
-		}
 
 
 

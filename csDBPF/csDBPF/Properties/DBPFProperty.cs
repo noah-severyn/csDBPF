@@ -32,7 +32,7 @@ namespace csDBPF
 		/// <remarks>
 		/// May affect implementation of other fields, namely <see cref="NumberOfReps"/>. Property is presented so the default value (false) will be binary encoding which we want to use most of the time.
 		/// </remarks>
-		public abstract EncodingType Encoding { get; set; }
+		public abstract DBPF.Encoding Encoding { get; set; }
 
 		/// <summary>
 		/// Returns the values(s) stored in this property.

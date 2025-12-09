@@ -617,7 +617,7 @@ namespace csDBPF_Test {
                 Assert.AreEqual(DBPFProperty.PropertyDataType.STRING, propt.DataType);
                 Assert.AreEqual(1, propt.NumberOfReps);
                 Assert.AreEqual(val, propt.GetData());
-                propknown = new DBPFPropertyString(val, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyString(val, DBPF.Encoding.Text);
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
                 Assert.AreEqual(propknown.GetData(), propt.GetData());
@@ -639,7 +639,7 @@ namespace csDBPF_Test {
                 //1x Uint32
                 vals = new List<long> { 0x2 };
                 propt = entry.ListOfProperties.GetValueAtIndex(0);
-                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals, DBPF.Encoding.Text);
                 Assert.AreEqual((uint) 0x00000010, propt.ID);
                 Assert.AreEqual(0, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propt.DataType);
@@ -651,7 +651,7 @@ namespace csDBPF_Test {
                 //1x Sint64
                 vals = new List<long> { 0x00000000000000A9 };
                 propt = entry.ListOfProperties.GetValueAtIndex(2);
-                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.SINT64, vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.SINT64, vals, DBPF.Encoding.Text);
                 Assert.AreEqual((uint) 0x099AFACD, propt.ID);
                 Assert.AreEqual(0, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.SINT64, propt.DataType);
@@ -663,7 +663,7 @@ namespace csDBPF_Test {
                 //1x Uint8
                 vals = new List<long> { 0x01 };
                 propt = entry.ListOfProperties.GetValueAtIndex(6);
-                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT8, vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT8, vals, DBPF.Encoding.Text);
                 Assert.AreEqual((uint) 0x27812832, propt.ID);
                 Assert.AreEqual(0, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT8, propt.DataType);
@@ -675,7 +675,7 @@ namespace csDBPF_Test {
                 //4x Sint32
                 vals = new List<long> { 0x07, 0x03, 0x16, 0x00 };
                 propt = entry.ListOfProperties.GetValueAtIndex(9);
-                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.SINT32, vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.SINT32, vals, DBPF.Encoding.Text);
                 Assert.AreEqual((uint) 0x27812851, propt.ID);
                 Assert.AreEqual(4, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.SINT32, propt.DataType);
@@ -687,7 +687,7 @@ namespace csDBPF_Test {
                 //4x Uint32
                 vals = new List<long> { 0x1001, 0x2000, 0x2001, 0x13110 };
                 propt = entry.ListOfProperties.GetValueAtIndex(19);
-                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals, DBPF.Encoding.Text);
                 Assert.AreEqual(0xAA1DD396, propt.ID);
                 Assert.AreEqual(4, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propt.DataType);
@@ -709,7 +709,7 @@ namespace csDBPF_Test {
                 //3x Float32
                 vals = new List<float> { 81.589798f, 13.947300f, 39.442501f };
                 propt = entry.ListOfProperties.GetValueAtIndex(3);
-                propknown = new DBPFPropertyFloat(vals, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyFloat(vals, DBPF.Encoding.Text);
                 Assert.AreEqual<uint>(0x27812810, propt.ID);
                 Assert.AreEqual(3, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, propt.DataType);
@@ -721,7 +721,7 @@ namespace csDBPF_Test {
                 //1x Float32
                 vals = new List<float> { 0.5f };
                 propt = entry.ListOfProperties.GetValueAtIndex(4);
-                propknown = new DBPFPropertyFloat(0.5f, DBPFEntry.EncodingType.Text);
+                propknown = new DBPFPropertyFloat(0.5f, DBPF.Encoding.Text);
                 Assert.AreEqual<uint>(0x27812811, propt.ID);
                 Assert.AreEqual(1, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, propt.DataType);
@@ -990,12 +990,12 @@ namespace csDBPF_Test {
                     DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\RJ - Block Road Barriers 1.0.dat");
                     List<DBPFEntry> entries = dbpf.ListOfEntries;
 
-                    Assert.IsFalse(((DBPFEntryEXMP) entries[0]).IsTextEncoding()); //Compressed binary-encoding
-                    Assert.IsFalse(((DBPFEntryEXMP) entries[1]).IsTextEncoding()); //Uncompressed binary-encoding
+                    Assert.AreEqual(DBPF.Encoding.Binary, ((DBPFEntryEXMP) entries[0]).Encoding); //Compressed binary-encoding
+                    Assert.AreEqual(DBPF.Encoding.Binary, ((DBPFEntryEXMP) entries[1]).Encoding); //Uncompressed binary-encoding
 
                     DBPFFile dbpf2 = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\R$$6_1x2_Beacon Apartments L _7097cb41.SC4Lot");
                     entries = dbpf2.ListOfEntries;
-                    Assert.IsTrue(((DBPFEntryEXMP) entries[0]).IsTextEncoding()); //Uncompressed text-encoding
+                    Assert.AreEqual(DBPF.Encoding.Text, ((DBPFEntryEXMP) entries[0]).Encoding); //Uncompressed text-encoding
                 }
 
 
