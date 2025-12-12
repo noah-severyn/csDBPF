@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using static csDBPF.DBPF;
 
 namespace csDBPF {
 	/// <summary>
@@ -19,7 +15,7 @@ namespace csDBPF {
         /// <param name="data">The array of bytes to convert.</param>
         /// <returns>An array of Boolean values where each element is <see langword="true"/> if the corresponding byte is
         /// nonzero; otherwise, <see langword="false"/>. Returns <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
-        public static bool[]? ToBoolArray(byte[] data) {
+        public static bool[]? ToBoolArray(this byte[] data) {
             if (data is null) return null;
             bool[] result = new bool[data.Length];
 			for (int idx = 0; idx < data.Length; idx++) {
@@ -32,7 +28,7 @@ namespace csDBPF {
         /// </summary>
         /// <param name="data">The array of bytes to convert.</param>
         /// <returns>An array of byte (Uint8) values, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
-        public static byte[]? ToUint8Array(byte[] data) {
+        public static byte[]? ToUint8Array(this byte[] data) {
 			return data;
 		}
         /// <summary>
@@ -42,7 +38,7 @@ namespace csDBPF {
         /// <param name="data">The byte array to convert. The length of the array must be a non-negative even number.</param>
         /// <returns>An array of <see langword="ushort"/> (Uint16) values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if the length of <paramref name="data"/> is odd.</exception>
-        public static ushort[]? ToUInt16Array(byte[] data) {
+        public static ushort[]? ToUInt16Array(this byte[] data) {
             if (data is null) return null;
             ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
 
@@ -56,7 +52,7 @@ namespace csDBPF {
         /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 4.</param>
         /// <returns>An array of <see langword="uint"/> (Uint32) values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 4.</exception>
-        public static uint[]? ToUInt32Array(byte[] data) {
+        public static uint[]? ToUInt32Array(this byte[] data) {
             if (data is null) return null;
             ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
             ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 4, 0, nameof(data));
@@ -71,7 +67,7 @@ namespace csDBPF {
         /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 4.</param>
         /// <returns>An array of <see langword="int"/> (SInt32) values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 4.</exception>
-		public static int[]? ToSInt32Array(byte[] data) {
+		public static int[]? ToSInt32Array(this byte[] data) {
             if (data is null) return null;
             ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
             ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 4, 0, nameof(data));
@@ -86,7 +82,7 @@ namespace csDBPF {
         /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 4.</param>
         /// <returns>An array of <see langword="float"/> values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 4.</exception>
-		public static float[]? ToFloat32Array(byte[] data) {
+		public static float[]? ToFloat32Array(this byte[] data) {
             if (data is null) return null;
             ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
             ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 4, 0, nameof(data));
@@ -101,7 +97,7 @@ namespace csDBPF {
         /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 8.</param>
         /// <returns>An array of <see langword="long"/> values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 8.</exception>
-		public static long[]? ToSInt64Array(byte[] data) {
+		public static long[]? ToSInt64Array(this byte[] data) {
             if (data is null) return null;
             ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
             ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 8, 0, nameof(data));

@@ -95,7 +95,7 @@ namespace csDBPF {
         /// Initialize a header with default values.
         /// </summary>
         internal DBPFHeader() {
-            Identifier = "DBPF";
+            _identifier = "DBPF";
             MajorVersion = 1;
             MinorVersion = 0;
             DateCreated = (uint) DateTimeOffset.Now.ToUnixTimeSeconds();
@@ -110,7 +110,7 @@ namespace csDBPF {
         /// </summary>
         /// <param name="br">Stream to read from</param>
         internal DBPFHeader(BinaryReader br) {
-            Identifier = ByteArrayHelper.ToAString(br.ReadBytes(4));
+            _identifier = DBPFUtil.ToAString(br.ReadBytes(4));
             MajorVersion = br.ReadUInt32();
             MinorVersion = br.ReadUInt32();
             br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes

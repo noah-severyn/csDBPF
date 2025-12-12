@@ -76,8 +76,8 @@ namespace csDBPF_Test {
                 uint u2 = 0x60557b29; // 3/20/2021 4:33:45 AM
                 DateTime d2 = new DateTime(2021, 3, 20, 4, 33, 45);
 
-                Assert.AreEqual(d1, DBPFUtil.UnixToDate(u1));
-                Assert.AreEqual(d2, DBPFUtil.UnixToDate(u2));
+                Assert.AreEqual(d1, DBPFUtil.UnixToDateTime(u1));
+                Assert.AreEqual(d2, DBPFUtil.UnixToDateTime(u2));
             }
 
 

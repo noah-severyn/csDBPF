@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace csDBPF {
 	/// <summary>
-	/// Collection of miscellaneous utility methods to use with DBPFFiles.
+	/// A collection of utility methods to use with DBPF files.
 	/// </summary>
-	public static class DBPFUtil {
+	public static partial class DBPFUtil {
 		private static readonly string[] sc4Extensions = [".dat", ".sc4lot", ".sc4desc", ".sc4model"];
 		private static readonly byte[] DBPF = [0x44, 0x42, 0x50, 0x46];
 
@@ -143,11 +143,11 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Convert Unix datetime to a <see cref="DateTime"/> object.
+        /// Convert Unix timestamp to a <see cref="DateTime"/> object.
         /// </summary>
-        /// <param name="time">Unix time</param>
-        /// <returns><see cref="DateTime"/> object equal to the provided Unix time</returns>
-        public static DateTime UnixToDate(uint time) {
+        /// <param name="time">A Unix timestamp.</param>
+        /// <returns>A <see cref="DateTime"/> object equal to the provided Unix timestamp</returns>
+        public static DateTime UnixToDateTime(uint time) {
 			return DateTimeOffset.FromUnixTimeSeconds(time).UtcDateTime;
 		}
 
