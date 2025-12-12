@@ -110,7 +110,7 @@ namespace csDBPF {
         /// </summary>
         /// <param name="br">Stream to read from</param>
         internal DBPFHeader(BinaryReader br) {
-            _identifier = DBPFUtil.ToAString(br.ReadBytes(4));
+            _identifier = br.ReadBytes(4).ToAString();
             MajorVersion = br.ReadUInt32();
             MinorVersion = br.ReadUInt32();
             br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
