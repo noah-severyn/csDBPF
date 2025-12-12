@@ -12,162 +12,103 @@ namespace csDBPF {
 	/// Helper methods to parse a byte array into an array of one of the DBPF data types. 
 	/// </summary>
 	public static class ByteArrayHelper {
-		//TODO - replace all of these as MemoryMarshall.Case<To,From> https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.memorymarshal.cast?view=net-7.0
-		//TODO - replace some of these with Encoding.ASCII.GetString() ???
-
-		//Convert from a byte[] to the specific data type
-		#region FromByteArrayToArray
-		/// <summary>
-		/// Convert byte array to boolean array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of boolean values</returns>
-		public static bool[] ToBoolArray(byte[] data) {
-			bool[] result = new bool[data.Length];
+        #region FromByteArrayToArray
+        /// <summary>
+        /// Converts a byte array to a Boolean array.
+        /// </summary>
+        /// <param name="data">The array of bytes to convert.</param>
+        /// <returns>An array of Boolean values where each element is <see langword="true"/> if the corresponding byte is
+        /// nonzero; otherwise, <see langword="false"/>. Returns <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        public static bool[]? ToBoolArray(byte[] data) {
+            if (data is null) return null;
+            bool[] result = new bool[data.Length];
 			for (int idx = 0; idx < data.Length; idx++) {
-				if (data[idx] == 0) {
-					result[idx] = false;
-				} else {
-					result[idx] = true;
-				}
-			}
+                result[idx] = data[idx] != 0;
+            }
 			return result;
 		}
-		/// <summary>
-		/// Convert byte array to UInt8 array. A Uint8 is the same as a byte, so just return the byte array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of byte values</returns>
-		public static byte[] ToUint8Array(byte[] data) {
+        /// <summary>
+        /// Convert byte array to UInt8 array. A Uint8 is the same as a byte, so just return the byte array.
+        /// </summary>
+        /// <param name="data">The array of bytes to convert.</param>
+        /// <returns>An array of byte (Uint8) values, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        public static byte[]? ToUint8Array(byte[] data) {
 			return data;
 		}
-		/// <summary>
-		/// Convert byte array to UInt16 array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of ushort values</returns>
-		public static ushort[] ToUInt16Array(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			}
+        /// <summary>
+        /// Converts a byte array to an array of 16-bit unsigned integers.
+        /// </summary>
+        /// <remarks>The method interprets each consecutive group of two bytes in <paramref name="data"/> as a single 32-bit unsigned integer, using the platform's endianness.</remarks>
+        /// <param name="data">The byte array to convert. The length of the array must be a non-negative even number.</param>
+        /// <returns>An array of <see langword="ushort"/> (Uint16) values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the length of <paramref name="data"/> is odd.</exception>
+        public static ushort[]? ToUInt16Array(byte[] data) {
+            if (data is null) return null;
+            ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
 
-			ushort[] result = new ushort[data.Length / 2];
-			for (int idx = 0; idx < data.Length / 2; idx++) {
-				//result[idx] = (ushort) (data[pos+1] << 8 | data[pos]);
-				result[idx] = BitConverter.ToUInt16(data, idx * 2);
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to UInt32 array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of uint values</returns>
-		public static uint[] ToUInt32Array(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 4 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 4!");
-			}
+            ReadOnlySpan<byte> span = data.AsSpan();
+            return MemoryMarshal.Cast<byte, ushort>(span).ToArray();
+        }
+        /// <summary>
+        /// Converts a byte array to an array of 32-bit unsigned integers.
+        /// </summary>
+        /// <remarks>The method interprets each consecutive group of four bytes in <paramref name="data"/> as a single 32-bit unsigned integer, using the platform's endianness.</remarks>
+        /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 4.</param>
+        /// <returns>An array of <see langword="uint"/> (Uint32) values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 4.</exception>
+        public static uint[]? ToUInt32Array(byte[] data) {
+            if (data is null) return null;
+            ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
+            ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 4, 0, nameof(data));
 
-			uint[] result = new uint[data.Length / 4];
-			for (int idx = 0; idx < data.Length / 4; idx++) {
-				//result[idx] = (uint) ((data[pos+3] << 24) | (data[pos + 2] << 16) | (data[pos + 1] << 8) | data[pos]);
-				result[idx] = BitConverter.ToUInt32(data, idx * 4);
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to SInt32 array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of int values</returns>
-		public static int[] ToSInt32Array(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 4 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 4!");
-			}
+            ReadOnlySpan<byte> span = data.AsSpan();
+            return MemoryMarshal.Cast<byte, uint>(span).ToArray();
+        }
+        /// <summary>
+        /// Converts a byte array to an array of 32-bit signed integers.
+        /// </summary>
+        /// <remarks>The method interprets each consecutive group of four bytes in <paramref name="data"/> as a single 32-bit signed integer, using the platform's endianness.</remarks>
+        /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 4.</param>
+        /// <returns>An array of <see langword="int"/> (SInt32) values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 4.</exception>
+		public static int[]? ToSInt32Array(byte[] data) {
+            if (data is null) return null;
+            ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
+            ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 4, 0, nameof(data));
 
-			int[] result = new int[data.Length / 4];
-			for (int idx = 0; idx < data.Length / 4; idx++) {
-				//result[idx] = (data[pos+3] << 24) | (data[pos + 2] << 16) | (data[pos + 1] << 8) | data[pos];
-				result[idx] = BitConverter.ToInt32(data, idx * 4);
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to Float32 array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of float values</returns>
-		public static float[] ToFloat32Array(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 4 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 4!");
-			}
+            ReadOnlySpan<byte> span = data.AsSpan();
+            return MemoryMarshal.Cast<byte, int>(span).ToArray();
+        }
+        /// <summary>
+        /// Converts a byte array to an array of floats.
+        /// </summary>
+        /// <remarks>The method interprets each consecutive group of four bytes in <paramref name="data"/> as a floats, using the platform's endianness.</remarks>
+        /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 4.</param>
+        /// <returns>An array of <see langword="float"/> values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 4.</exception>
+		public static float[]? ToFloat32Array(byte[] data) {
+            if (data is null) return null;
+            ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
+            ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 4, 0, nameof(data));
 
-			float[] result = new float[data.Length / 4];
-			for (int idx = 0; idx < data.Length / 4; idx++) {
-				result[idx] = BitConverter.ToSingle(data, idx * 4); //float aka single
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to Float32 List.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>List of float values</returns>
-		public static List<float> ToFloat32List(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 4 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 4!");
-			}
+            ReadOnlySpan<byte> span = data.AsSpan();
+            return MemoryMarshal.Cast<byte, float>(span).ToArray();
+        }
+        /// <summary>
+        /// Converts a byte array to an array of longs.
+        /// </summary>
+        /// <remarks>The method interprets each consecutive group of four bytes in <paramref name="data"/> as a longs, using the platform's endianness.</remarks>
+        /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 8.</param>
+        /// <returns>An array of <see langword="long"/> values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 8.</exception>
+		public static long[]? ToSInt64Array(byte[] data) {
+            if (data is null) return null;
+            ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
+            ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 8, 0, nameof(data));
 
-			List<float> result = new List<float>();
-			for (int idx = 0; idx < data.Length / 4; idx++) {
-				result.Add(BitConverter.ToSingle(data, idx * 4)); //float aka single
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to SInt64 array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of long values</returns>
-		public static long[] ToSInt64Array(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 8 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 8!");
-			}
-
-			long[] result = new long[data.Length / 8];
-			for (int idx = 0; idx < data.Length / 8; idx++) {
-				result[idx] = BitConverter.ToInt64(data, idx * 8);
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to long List
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>List of long values</returns>
-		public static List<long> ToSInt64List(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 8 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 8!");
-			}
-
-			List<long> result = new List<long>();
-			for (int idx = 0; idx < data.Length / 8; idx++) {
-				result.Add(BitConverter.ToInt64(data, idx * 8));
-			}
-			return result;
-		}
+            ReadOnlySpan<byte> span = data.AsSpan();
+            return MemoryMarshal.Cast<byte, long>(span).ToArray();
+        }
         #endregion FromByteArrayToArray
 
 
