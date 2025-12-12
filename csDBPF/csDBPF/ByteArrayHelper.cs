@@ -1,418 +1,370 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Buffers.Binary;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace csDBPF {
 	/// <summary>
 	/// Helper methods to parse a byte array into an array of one of the DBPF data types. 
 	/// </summary>
 	public static class ByteArrayHelper {
-		//TODO - replace all of these as MemoryMarshall.Case<To,From> https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.memorymarshal.cast?view=net-7.0
-		//TODO - replace some of these with Encoding.ASCII.GetString() ???
-
-		//Convert from a byte[] to the specific data type
-		#region FromByteArrayToArray
-		/// <summary>
-		/// Convert byte array to boolean array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of boolean values</returns>
-		public static bool[] ToBoolArray(byte[] data) {
-			bool[] result = new bool[data.Length];
+        #region FromByteArrayToArray
+        /// <summary>
+        /// Converts a byte array to a Boolean array.
+        /// </summary>
+        /// <param name="data">The array of bytes to convert.</param>
+        /// <returns>An array of Boolean values where each element is <see langword="true"/> if the corresponding byte is
+        /// nonzero; otherwise, <see langword="false"/>. Returns <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        public static bool[]? ToBoolArray(this byte[] data) {
+            if (data is null) return null;
+            bool[] result = new bool[data.Length];
 			for (int idx = 0; idx < data.Length; idx++) {
-				if (data[idx] == 0) {
-					result[idx] = false;
-				} else {
-					result[idx] = true;
-				}
-			}
+                result[idx] = data[idx] != 0;
+            }
 			return result;
 		}
-		/// <summary>
-		/// Convert byte array to UInt8 array. A Uint8 is the same as a byte, so just return the byte array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of byte values</returns>
-		public static byte[] ToUint8Array(byte[] data) {
+        /// <summary>
+        /// Convert byte array to UInt8 array. A Uint8 is the same as a byte, so just return the byte array.
+        /// </summary>
+        /// <param name="data">The array of bytes to convert.</param>
+        /// <returns>An array of byte (Uint8) values, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        public static byte[]? ToUint8Array(this byte[] data) {
 			return data;
 		}
-		/// <summary>
-		/// Convert byte array to UInt16 array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of ushort values</returns>
-		public static ushort[] ToUInt16Array(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			}
+        /// <summary>
+        /// Converts a byte array to an array of 16-bit unsigned integers.
+        /// </summary>
+        /// <remarks>The method interprets each consecutive group of two bytes in <paramref name="data"/> as a single 32-bit unsigned integer, using the platform's endianness.</remarks>
+        /// <param name="data">The byte array to convert. The length of the array must be a non-negative even number.</param>
+        /// <returns>An array of <see langword="ushort"/> (Uint16) values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the length of <paramref name="data"/> is odd.</exception>
+        public static ushort[]? ToUInt16Array(this byte[] data) {
+            if (data is null) return null;
+            ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
 
-			ushort[] result = new ushort[data.Length / 2];
-			for (int idx = 0; idx < data.Length / 2; idx++) {
-				//result[idx] = (ushort) (data[pos+1] << 8 | data[pos]);
-				result[idx] = BitConverter.ToUInt16(data, idx * 2);
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to UInt32 array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of uint values</returns>
-		public static uint[] ToUInt32Array(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 4 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 4!");
-			}
+            ReadOnlySpan<byte> span = data.AsSpan();
+            return MemoryMarshal.Cast<byte, ushort>(span).ToArray();
+        }
+        /// <summary>
+        /// Converts a byte array to an array of 32-bit unsigned integers.
+        /// </summary>
+        /// <remarks>The method interprets each consecutive group of four bytes in <paramref name="data"/> as a single 32-bit unsigned integer, using the platform's endianness.</remarks>
+        /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 4.</param>
+        /// <returns>An array of <see langword="uint"/> (Uint32) values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 4.</exception>
+        public static uint[]? ToUInt32Array(this byte[] data) {
+            if (data is null) return null;
+            ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
+            ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 4, 0, nameof(data));
 
-			uint[] result = new uint[data.Length / 4];
-			for (int idx = 0; idx < data.Length / 4; idx++) {
-				//result[idx] = (uint) ((data[pos+3] << 24) | (data[pos + 2] << 16) | (data[pos + 1] << 8) | data[pos]);
-				result[idx] = BitConverter.ToUInt32(data, idx * 4);
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to SInt32 array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of int values</returns>
-		public static int[] ToSInt32Array(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 4 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 4!");
-			}
+            ReadOnlySpan<byte> span = data.AsSpan();
+            return MemoryMarshal.Cast<byte, uint>(span).ToArray();
+        }
+        /// <summary>
+        /// Converts a byte array to an array of 32-bit signed integers.
+        /// </summary>
+        /// <remarks>The method interprets each consecutive group of four bytes in <paramref name="data"/> as a single 32-bit signed integer, using the platform's endianness.</remarks>
+        /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 4.</param>
+        /// <returns>An array of <see langword="int"/> (SInt32) values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 4.</exception>
+		public static int[]? ToSInt32Array(this byte[] data) {
+            if (data is null) return null;
+            ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
+            ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 4, 0, nameof(data));
 
-			int[] result = new int[data.Length / 4];
-			for (int idx = 0; idx < data.Length / 4; idx++) {
-				//result[idx] = (data[pos+3] << 24) | (data[pos + 2] << 16) | (data[pos + 1] << 8) | data[pos];
-				result[idx] = BitConverter.ToInt32(data, idx * 4);
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to Float32 array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of float values</returns>
-		public static float[] ToFloat32Array(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 4 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 4!");
-			}
+            ReadOnlySpan<byte> span = data.AsSpan();
+            return MemoryMarshal.Cast<byte, int>(span).ToArray();
+        }
+        /// <summary>
+        /// Converts a byte array to an array of floats.
+        /// </summary>
+        /// <remarks>The method interprets each consecutive group of four bytes in <paramref name="data"/> as a floats, using the platform's endianness.</remarks>
+        /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 4.</param>
+        /// <returns>An array of <see langword="float"/> values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 4.</exception>
+		public static float[]? ToFloat32Array(this byte[] data) {
+            if (data is null) return null;
+            ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
+            ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 4, 0, nameof(data));
 
-			float[] result = new float[data.Length / 4];
-			for (int idx = 0; idx < data.Length / 4; idx++) {
-				result[idx] = BitConverter.ToSingle(data, idx * 4); //float aka single
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to Float32 List.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>List of float values</returns>
-		public static List<float> ToFloat32List(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 4 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 4!");
-			}
+            ReadOnlySpan<byte> span = data.AsSpan();
+            return MemoryMarshal.Cast<byte, float>(span).ToArray();
+        }
+        /// <summary>
+        /// Converts a byte array to an array of longs.
+        /// </summary>
+        /// <remarks>The method interprets each consecutive group of four bytes in <paramref name="data"/> as a longs, using the platform's endianness.</remarks>
+        /// <param name="data">The byte array to convert. The length of the array must be a non-negative multiple of 8.</param>
+        /// <returns>An array of <see langword="long"/> values representing the converted data, or <see langword="null"/> if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="data"/> has an odd length, or its length is not a multiple of 8.</exception>
+		public static long[]? ToSInt64Array(this byte[] data) {
+            if (data is null) return null;
+            ArgumentOutOfRangeException.ThrowIfEqual(data.Length % 2, 1, nameof(data));
+            ArgumentOutOfRangeException.ThrowIfNotEqual(data.Length % 8, 0, nameof(data));
 
-			List<float> result = new List<float>();
-			for (int idx = 0; idx < data.Length / 4; idx++) {
-				result.Add(BitConverter.ToSingle(data, idx * 4)); //float aka single
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to SInt64 array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>Array of long values</returns>
-		public static long[] ToSInt64Array(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 8 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 8!");
-			}
-
-			long[] result = new long[data.Length / 8];
-			for (int idx = 0; idx < data.Length / 8; idx++) {
-				result[idx] = BitConverter.ToInt64(data, idx * 8);
-			}
-			return result;
-		}
-		/// <summary>
-		/// Convert byte array to long List
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>List of long values</returns>
-		public static List<long> ToSInt64List(byte[] data) {
-			if (data.Length % 2 != 0) {
-				throw new ArgumentException("Length of data array cannot be odd!");
-			} else if (data.Length % 8 != 0) {
-				throw new ArgumentException("Length of data array must be a multiple of 8!");
-			}
-
-			List<long> result = new List<long>();
-			for (int idx = 0; idx < data.Length / 8; idx++) {
-				result.Add(BitConverter.ToInt64(data, idx * 8));
-			}
-			return result;
-		}
-		#endregion FromByteArrayToArray
+            ReadOnlySpan<byte> span = data.AsSpan();
+            return MemoryMarshal.Cast<byte, long>(span).ToArray();
+        }
+        #endregion FromByteArrayToArray
 
 
 
-		#region FromByteArrayToA
-		/// <summary>
-		/// Reads a byte array and returns a string of the entire array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>A string of parsed data</returns>
-		public static string ToAString(byte[] data) {
-			if (data is null) return null;
-
+        #region ByteArrayTo
+        /// <summary>
+        /// Converts the specified byte array to its string representation.
+        /// </summary>
+        /// <param name="data">The byte array to convert</param>
+        /// <returns>A string representation of the byte array, or an empty string if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <remarks>Non-printable characters are replaced with a period.</remarks>
+        public static string ToAString(this byte[] data) {
+			if (data is null) return string.Empty;
 			return ToAString(data, 0, data.Length);
 		}
-		/// <summary>
-		/// Reads a byte array and returns a string from the specified location to the end of the array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <param name="start">Location to start parsing at</param>
-		/// <returns>A string of parsed data</returns>
-		public static string ToAString(byte[] data, int start) {
-			if (data is null) return null;
-
+        /// <summary>
+        /// Converts a range of bytes from the specified array to a string, starting at the given index.
+        /// </summary>
+        /// <param name="data">The byte array to convert</param>
+        /// <param name="start">The zero-based index in <paramref name="data"/> at which to begin conversion.</param>
+        /// <returns>A string representation of the bytes in <paramref name="data"/> starting at <paramref name="start"/> and continuing to the end of the array, or an empty string if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <remarks>Non-printable characters are replaced with a period.</remarks>
+        public static string ToAString(this byte[] data, int start) {
+			if (data is null) return string.Empty;
 			return ToAString(data, start, data.Length - start);
 		}
-		/// <summary>
-		/// Reads a byte array and returns a string from the specified location for a determined length.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <param name="start">Location to start parsing at</param>
-		/// <param name="length">Length of the provided data to parse</param>
-		/// <returns>A string of parsed data</returns>
-		/// <remarks>
-		/// Any non-printable characters are replaced with a period ('.').
-		/// </remarks>
-		public static string ToAString(byte[] data, int start, int length) {
-			if (data is null) return null;
+        /// <summary>
+        /// Converts a range of bytes from the specified array into a string, replacing non-printable ASCII characters with a
+        /// period ('.').
+        /// </summary>
+        /// <param name="data">The byte array containing the data to convert.</param>
+        /// <param name="start">The zero-based index in <paramref name="data"/> at which to begin conversion.</param>
+        /// <param name="length">The number of bytes to convert starting from <paramref name="start"/>.</param>
+        /// <returns>A string representation of the bytes in <paramref name="data"/> starting at <paramref name="start"/> and continuing for <paramref name="length"/> positions, or an empty string if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <remarks>Non-printable characters are replaced with a period.</remarks>
+        public static string ToAString(this byte[] data, int start, int length) {
+			if (data is null) return string.Empty;
+            string s = System.Text.Encoding.ASCII.GetString(data, start, length);
+            char[] buf = s.ToCharArray();
+            for (int i = 0; i < buf.Length; i++) {
+                char c = buf[i];
+                if (c < 31 || c == 127) {
+                    buf[i] = '.';
+                }
+            }
+            return new string(buf);
+        }
 
-			StringBuilder sb = new StringBuilder();
-			for (int idx = start; idx < start + length; idx++) {
-				//Check to avoid problematic non-printable characters
-				if (data[idx] < 31 || data[idx] == 127) {
-					sb.Append('.');
-				} else {
-					sb.Append((char) data[idx]);
-				}
-			}
-			return sb.ToString();
+
+
+        /// <summary>
+        /// Reads two bytes from the specified array starting at the given offset and interprets them as an unsigned 16-bit integer in big-endian order.
+        /// </summary>
+        /// <remarks>Using the sample array <c>[0x30, 0x30, 0x30, 0x30]</c>, using <see cref="DBPF.Encoding.Binary"/> yields <c>0x30303030</c> since each byte is taken as its literal value, while using <see cref="DBPF.Encoding.Text"/> yields <c>0x0000</c> since each byte is taken as its ASCII text equivalent.</remarks>
+        /// <param name="data">The byte array containing the data to read. Must contain at least two bytes starting from <paramref name="offset"/>.</param>
+        /// <param name="offset">The zero-based index in <paramref name="data"/> at which to begin reading. Defaults to 0.</param>
+        /// <param name="encoding">The encoding type of <paramref name="data"/>.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is <see langword="null"/>.</exception>
+        /// <returns>The unsigned 16-bit integer value represented by the two bytes at the specified offset, interpreted in big-endian format.</returns>
+        public static ushort ReadIntoUshort(this byte[] data, int offset, DBPF.Encoding encoding) {
+            ArgumentNullException.ThrowIfNull(data);
+
+            if (encoding == DBPF.Encoding.Binary) {
+                return BinaryPrimitives.ReadUInt16BigEndian(data.AsSpan(offset));
+            } else {
+                _ = ushort.TryParse(ToAString(data, offset, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort result);
+                return result;
+            }
+        }
+        /// <summary>
+        /// Reads four bytes from the specified array starting at the given offset and interprets them as a signed 32-bit integer in big-endian order.
+        /// </summary>
+		/// <remarks>Using the sample array <c>[0x30, 0x30, 0x30, 0x30]</c>, using <see cref="DBPF.Encoding.Binary"/> yields <c>0x30303030</c> since each byte is taken as its literal value, while using <see cref="DBPF.Encoding.Text"/> yields <c>0x0000</c> since each byte is taken as its ASCII text equivalent.</remarks>
+        /// <param name="data">The byte array containing the data to read. Must contain at least four bytes starting from <paramref name="offset"/>.</param>
+        /// <param name="offset">The zero-based index in <paramref name="data"/> at which to begin reading.</param>
+		/// <param name="encoding">The encoding type of <paramref name="data"/>.</param>
+		/// <param name="length">The number of bytes to convert starting from <paramref name="offset"/>. The default is 8.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is <see langword="null"/>.</exception>
+        /// <returns>The 32-bit signed integer represented by the four bytes at the specified offset in big-endian format.</returns>
+        public static int ReadIntoInt(this byte[] data, int offset, DBPF.Encoding encoding, int length = 8) {
+            ArgumentNullException.ThrowIfNull(data);
+
+            if (encoding == DBPF.Encoding.Binary) {
+                return BinaryPrimitives.ReadInt32BigEndian(data.AsSpan(offset));
+            } else {
+                _ = int.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result);
+                return result;
+            }
+        }
+        /// <summary>
+        /// Reads four bytes from the specified array starting at the given offset and interprets them as an unsigned 32-bit integer in big-endian order.
+        /// </summary>
+		/// <remarks>Using the sample array <c>[0x30, 0x30, 0x30, 0x30]</c>, using <see cref="DBPF.Encoding.Binary"/> yields <c>0x30303030</c> since each byte is taken as its literal value, while using <see cref="DBPF.Encoding.Text"/> yields <c>0x0000</c> since each byte is taken as its ASCII text equivalent.</remarks>
+        /// <param name="data">The byte array containing the data to read. Must contain at least four bytes starting from <paramref name="offset"/>.</param>
+        /// <param name="offset">The zero-based index in <paramref name="data"/> at which to begin reading.</param>
+		/// <param name="encoding">The encoding type of <paramref name="data"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is <see langword="null"/>.</exception>
+        /// <returns>The 32-bit unsigned integer represented by the four bytes at the specified offset in big-endian format.</returns>
+        public static uint ReadIntoUint(this byte[] data, int offset, DBPF.Encoding encoding) {
+			ArgumentNullException.ThrowIfNull(data);
+			
+			if (encoding == DBPF.Encoding.Binary) {
+                //The BitConverter functions are dependent on the the endianness of the system, but dbpf files are always big endian
+                return BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(offset));
+            } else {
+                _ = uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result);
+                return result;
+            }
 		}
-
-		/// <summary>
-		/// Sequentially reads 4 bytes and assigns them to a uint in big-endian order.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <returns>Uint value</returns>
-		public static uint ReadBytesIntoUint(byte[] data, int offset = 0) {
-			return (uint) ((data[offset] << 24) | (data[offset + 1] << 16) | (data[offset + 2] << 8) | data[offset + 3]);
-		}
-
-		/// <summary>
-		/// Sequentially reads 2 bytes from the specified position and assigns them to a uint in big-endian order.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <returns>Ushort value</returns>
-		public static ushort ReadBytesIntoUshort(byte[] data, int offset = 0) {
-			return (ushort) ((data[offset] << 8) | data[offset + 1]);
-		}
-
-
-		/// <summary>
-		/// Sequentially reads 1 byte, converts it to string equivalent, then parses back into a byte.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <returns>Byte value</returns>
-		public static byte ReadTextIntoByte(byte[] data, int offset = 0) {
-			byte.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result);
-			return result;
-		}
-
-		/// <summary>
-		/// Sequentially reads 4 bytes, converts them to string equivalents, then parses them into a uint.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <returns>Uint value</returns>
-		public static uint ReadTextToUint(byte[] data, int offset = 0) {
-			uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result);
-			return result;
-		}
-
-		/// <summary>
-		/// Sequentially reads a number of bytes, converts them to string equivalents, then parses them into an int.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <param name="length">Length to read</param>
-		/// <returns></returns>
-		public static int ReadTextToInt(byte[] data, int offset, int length) {
-			int.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result);
-			return result;
-		}
-
-		/// <summary>
-		/// Sequentially reads a number of bytes, converts them to string equivalents, then parses them into a long.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <param name="length">Length to read</param>
-		/// <returns></returns>
-		public static long ReadTextToLong(byte[] data, int offset, int length) {
-			long.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result);
-			return result;
-		}
-
-		/// <summary>
-		/// Sequentially reads a number of bytes, converts them to string equivalents, then parses them into a float.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <param name="length">Length to read</param>
-		/// <returns></returns>
-		public static float ReadTextToFloat(byte[] data, int offset, int length) {
-            float.TryParse(ToAString(data, offset, length), out float result);
-			return result;
-		}
-		#endregion FromByteArrayToA
+        /// <summary>
+        /// Reads four bytes from the specified array starting at the given offset and interprets them as a signed 64-bit integer in big-endian order.
+        /// </summary>
+		/// <remarks>Using the sample array <c>[0x30, 0x30, 0x30, 0x30]</c>, using <see cref="DBPF.Encoding.Binary"/> yields <c>0x30303030</c> since each byte is taken as its literal value, while using <see cref="DBPF.Encoding.Text"/> yields <c>0x0000</c> since each byte is taken as its ASCII text equivalent.<br></br><br></br>
+        /// 
+        /// The <paramref name="length"/> should typically be specified when reading values into a <see cref="DBPFPropertyLong"/>, as the number of chars of the underlying property data type (2/4/8/16 chars) should be read, instead of always the 16 chars defined by a long.</remarks>
+        /// <param name="data">The byte array containing the data to read. Must contain at least four bytes starting from <paramref name="offset"/>.</param>
+        /// <param name="offset">The zero-based index in <paramref name="data"/> at which to begin reading.</param>
+		/// <param name="encoding">The encoding type of <paramref name="data"/>.</param>
+		/// <param name="length">The number of bytes to convert starting from <paramref name="offset"/>. Default is 16.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is <see langword="null"/>.</exception>
+        /// <returns>The signed 64-bit integer value represented by the eight bytes at the specified offset, interpreted in big-endian format.</returns>
+        public static long ReadIntoLong(this byte[] data, int offset, DBPF.Encoding encoding, int length = 16) {
+            ArgumentNullException.ThrowIfNull(data);
+            
+            if (encoding == DBPF.Encoding.Binary) {
+                return BinaryPrimitives.ReadInt64BigEndian(data.AsSpan(offset));
+            } else {
+                _ = long.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result);
+                return result;
+            }
+        }
+        /// <summary>
+        /// Reads four bytes from the specified array starting at the given offset and interprets them as a single-precision floating-point in big-endian order.
+        /// </summary>
+        /// <param name="data">The byte array containing the data to read. Must contain at least four bytes starting from <paramref name="offset"/>.</param>
+        /// <param name="offset">The zero-based index in <paramref name="data"/> at which to begin reading. Defaults to 0.</param>
+		/// <param name="length">The number of bytes to convert starting from <paramref name="offset"/>.</param>
+		/// <param name="encoding">The encoding type of <paramref name="data"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is <see langword="null"/>.</exception>
+        /// <returns>The single-precision floating-point value read from the specified offset in the byte array.</returns>
+        public static float ReadIntoFloat(this byte[] data, int offset, int length, DBPF.Encoding encoding) {
+            ArgumentNullException.ThrowIfNull(data);
+            
+            if (encoding == DBPF.Encoding.Binary) {
+                return BinaryPrimitives.ReadSingleBigEndian(data.AsSpan(offset, length));
+            } else {
+                _ = float.TryParse(ToAString(data, offset, length), out float result);
+                return result;
+            }
+        }
+        #endregion FromByteArrayToA
 
 
 
-		#region ToBytes
-		/// <summary>
-		/// Reads a string and parses into a byte array the same length as the string
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <param name="singleByte">Parse type. FALSE (Default) is two byte output per char (Unicode); TRUE is one byte output per char: (ANSI/Windows-1252)</param>
-		/// <returns>The string as bytes</returns>
-		public static byte[] ToBytes(string data, bool singleByte = false) {
+        #region ToBytes
+        /// <summary>
+        /// Converts the specified string to an array of bytes, using either single-byte or Unicode encoding.
+        /// </summary>
+        /// <remarks>When <paramref name="singleByteEncoding"/> is <see langword="true"/>, only characters that can be represented as single bytes are supported (ANSI/Windows-1252 encoding). For strings containing multi-byte characters (e.g., Korean, Chinese,  or other non-ASCII characters), or for single byte characters represented as two bytes (<c>T</c>> -> <c>0x54, 0x00</c>), use Unicode encoding with <paramref name="singleByteEncoding"/> set as <see langword="false"/>.</remarks>
+        /// <param name="data">The string to convert. If <paramref name="data"/> is <see langword="null"/>, an empty byte array is returned.</param>
+        /// <param name="singleByteEncoding">Specify whether the data is single-byte encoded or Unicode encoded.</param>
+        /// <returns>A byte array representing the encoded string, or an empty array if <paramref name="data"/> is <see langword="null"/>.</returns>
+        public static byte[] ToBytes(this string data, bool singleByteEncoding = false) {
 			if (data is null) {
-				return Array.Empty<byte>();
+				return [];
 			}
 
-			List<byte> bytes = new List<byte>();
-			foreach (char c in data) {
-				if (singleByte) {
-					bytes.Add(Convert.ToByte(c));
-				} else {
-					bytes.AddRange(BitConverter.GetBytes(c));
-				}
-			}
-			return bytes.ToArray();
+			if (singleByteEncoding) {
+                byte[] bytes = new byte[data.Length];
+                for (int i = 0; i < data.Length; i++) {
+                    bytes[i] = Convert.ToByte(data[i]);
+                }
+                return bytes;
+            }
+			return System.Text.Encoding.Unicode.GetBytes(data);
 		}
 		/// <summary>
 		/// Converts a long to byte array with the given length.
 		/// </summary>
 		/// <param name="value">Value to convert</param>
 		/// <param name="numPlaces">Length of returned array</param>
-		/// <returns></returns>
-		public static byte[] ToBytes(long value, int numPlaces = 8) {
+		/// <returns>A byte array representing the input value <paramref name="value"/></returns>
+		public static byte[] ToBytes(this long value, int numPlaces = 8) {
 			byte[] bytes = BitConverter.GetBytes(value);
-			return bytes[0..numPlaces];
-		}
-		/// <summary>
-		/// Parses an array of booleans into bytes.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>The array of data as bytes</returns>
-		public static byte[] ToBytes(bool[] data) {
-			byte[] result = new byte[data.Length];
+            if (numPlaces >= bytes.Length) {
+                return bytes;
+            }
+            return bytes[0..numPlaces];
+        }
+        /// <summary>
+        /// Parses an array of booleans into bytes.
+        /// </summary>
+        /// <param name="data">Data to parse</param>
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
+        public static byte[] ToBytes(this bool[] data) {
+            if (data is null) return [];
+            byte[] result = new byte[data.Length];
 			for (int idx = 0; idx < result.Length; idx++) {
-				if (data[idx] == true) {
-					result[idx] = 0x01;
-				} else {
-					result[idx] = 0x00;
-				}
-			}
+                result[idx] = data[idx] ? (byte) 0x01 : (byte) 0x00;
+            }
 			return result;
 		}
         /// <summary>
         /// Parses an array of chars (UInt8) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
-        public static byte[] ToBytes(char[] data) {
-			byte[] result = new byte[data.Length];
-			Array.Copy(data, result, data.Length);
-			return result;
-		}
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
+        public static byte[] ToBytes(this char[] data) {
+            if (data is null) return [];
+            byte[] result = new byte[data.Length];
+            for (int i = 0; i < data.Length; i++) {
+                result[i] = Convert.ToByte(data[i]);
+            }
+            return result;
+        }
         /// <summary>
         /// Parses an array of ushorts (UInt16) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
-        public static byte[] ToBytes(ushort[] data) {
-			byte[] result = new byte[data.Length * 2];
-			for (int pos = 0; pos < data.Length; pos++) {
-				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 2, 2);
-			}
-			return result;
-		}
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
+        public static byte[] ToBytes(this ushort[] data) {
+            if (data is null) return [];
+            return MemoryMarshal.AsBytes<ushort>(data.AsSpan()).ToArray();
+        }
         /// <summary>
         /// Parses an array of ints (Sint32) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
-        public static byte[] ToBytes(int[] data) {
-			byte[] result = new byte[data.Length * 4];
-			for (int pos = 0; pos < data.Length; pos++) {
-				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 4, 4);
-			}
-			return result;
-		}
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
+        public static byte[] ToBytes(this int[] data) {
+            if (data is null) return [];
+            return MemoryMarshal.AsBytes<int>(data.AsSpan()).ToArray();
+        }
         /// <summary>
         /// Parses an array of uints (UInt32) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
-        public static byte[] ToBytes(uint[] data) {
-			byte[] result = new byte[data.Length * 4];
-			for (int pos = 0; pos < data.Length; pos++) {
-				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 4, 4);
-			}
-			return result;
-		}
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
+        public static byte[] ToBytes(this uint[] data) {
+            if (data is null) return [];
+            return MemoryMarshal.AsBytes<uint>(data.AsSpan()).ToArray();
+        }
         /// <summary>
         /// Parses an array of floats (Float32) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
-        public static byte[] ToBytes(float[] data) {
-			byte[] result = new byte[data.Length * 4];
-			Buffer.BlockCopy(data, 0, result, 0, result.Length);
-			return result;
-		}
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
+        public static byte[] ToBytes(this float[] data) {
+            if (data is null) return [];
+            return MemoryMarshal.AsBytes<float>(data.AsSpan()).ToArray();
+        }
         /// <summary>
         /// Parses an array of longs (SInt64) into bytes.
         /// </summary>
         /// <param name="data">Data to parse</param>
-        /// <returns>The array of data as bytes</returns>
-        public static byte[] ToBytes(long[] data) {
-			byte[] result = new byte[data.Length * 8];
-			for (int pos = 0; pos < data.Length; pos++) {
-				Array.Copy(BitConverter.GetBytes(data[pos]), 0, result, pos * 8, 8);
-			}
-			return result;
-		}
+        /// <returns>The array of data as bytes, or an empty array if <paramref name="data"/> is <see langword="null"/></returns>
+        public static byte[] ToBytes(this long[] data) {
+            if (data is null) return [];
+            return MemoryMarshal.AsBytes<long>(data.AsSpan()).ToArray();
+        }
 		#endregion ToBytes
 	}
 }

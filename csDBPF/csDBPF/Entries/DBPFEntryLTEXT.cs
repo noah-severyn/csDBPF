@@ -85,7 +85,7 @@ namespace csDBPF {
 				return;
 			}
 			if (ByteData.Length < 4) {
-				_text = null;
+				_text = string.Empty;
 				LogError("Data length is less than 4 bytes so no information can be read.");
 			}
 
@@ -96,7 +96,7 @@ namespace csDBPF {
 			int pos = 0;
 			ushort numberOfChars = BitConverter.ToUInt16(ByteData, pos);
 			pos += 2;
-			ushort textControlChar = ByteArrayHelper.ReadBytesIntoUshort(ByteData, pos);
+			ushort textControlChar = ByteData.ReadIntoUshort(pos, DBPF.Encoding.Binary);
 			if (textControlChar != 0x0010) {
 				_text = null;
 				LogError("Invalid control character. Text not set.");

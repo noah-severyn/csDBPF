@@ -37,7 +37,7 @@ namespace csDBPF {
 		/// <remarks>
 		/// This only determines how this property will be written to file. No properties of this instance are affected by this. 
 		/// </remarks>
-		public override EncodingType Encoding {	get; set; }
+		public override DBPF.Encoding Encoding { get; set; }
 
 		/// <summary>
 		/// List of data values which are stored in this property.
@@ -50,15 +50,15 @@ namespace csDBPF {
         /// Construct a DBPFProperty with a numerical data type.
         /// </summary>
         /// <param name="dataType">Data type of this property</param>
-        /// <param name="encodingType">Text or Binary encoding type</param>
+        /// <param name="encoding">Text or Binary encoding type</param>
         /// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-        public DBPFPropertyLong(PropertyDataType dataType, EncodingType encodingType = EncodingType.Binary) {
+        public DBPFPropertyLong(PropertyDataType dataType, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			if (dataType == PropertyDataType.FLOAT32 || dataType == PropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			DataType = dataType;
 			_dataValues = null;
-			Encoding = encodingType;
+			Encoding = encoding;
 			NumberOfReps = 0;
 		}
         /// <summary>
@@ -66,15 +66,15 @@ namespace csDBPF {
         /// </summary>
         /// <param name="dataType">Data type of this property</param>
         /// <param name="value">Value of this property</param>
-        /// <param name="encodingType">Text or Binary encoding type</param>
+        /// <param name="encoding">Text or Binary encoding type</param>
         /// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-        public DBPFPropertyLong(PropertyDataType dataType, long value, EncodingType encodingType = EncodingType.Binary) {
+        public DBPFPropertyLong(PropertyDataType dataType, long value, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			if (dataType == PropertyDataType.FLOAT32 || dataType == PropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			DataType = dataType;
 			_dataValues = new List<long> { value };
-			Encoding = encodingType;
+			Encoding = encoding;
 			NumberOfReps = 0;
 		}
         /// <summary>
@@ -82,15 +82,15 @@ namespace csDBPF {
         /// </summary>
         /// <param name="dataType">Data type of this property</param>
         /// <param name="values">Values this property holds</param>
-        /// <param name="encodingType">Text or Binary encoding type</param>
+        /// <param name="encoding">Text or Binary encoding type</param>
         /// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-        public DBPFPropertyLong(PropertyDataType dataType, List<long> values, EncodingType encodingType = EncodingType.Binary) {
+        public DBPFPropertyLong(PropertyDataType dataType, List<long> values, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			if (dataType == PropertyDataType.FLOAT32 || dataType == PropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			DataType = dataType;
 			_dataValues = values;
-			Encoding = encodingType;
+			Encoding = encoding;
 			if (_dataValues.Count == 1) {
 				NumberOfReps = 0;
 			} else {
@@ -181,7 +181,7 @@ namespace csDBPF {
         /// </summary>
         /// <returns>A byte array encoding all information for this property</returns>
         public override byte[] ToBytes() {
-			if (Encoding == EncodingType.Text) {
+			if (Encoding == DBPF.Encoding.Text) {
 				StringBuilder sb = new StringBuilder();
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(ID);
 				sb.Append($"0x{DBPFUtil.ToHexString(ID)}:{{\"{xmlprop.Name}\"}}={LookupDataTypeName(DataType)}:{NumberOfReps}:{{");

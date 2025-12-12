@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace csDBPF {
 	/// <summary>
-	/// Collection of miscellaneous utility methods to use with DBPFFiles.
+	/// A collection of utility methods to use with DBPF files.
 	/// </summary>
-	public static class DBPFUtil {
+	public static partial class DBPFUtil {
 		private static readonly string[] sc4Extensions = [".dat", ".sc4lot", ".sc4desc", ".sc4model"];
 		private static readonly byte[] DBPF = [0x44, 0x42, 0x50, 0x46];
 
@@ -60,39 +60,6 @@ namespace csDBPF {
         }
 
 
-
-		#region ReverseBytes
-		/// <summary>
-		/// Reverses the byte order for a ushort. Example: 3 (0x0003) returns 768 (0x0300)
-		/// </summary>
-		/// <remarks>
-		/// See:https://www.csharp-examples.net/reverse-bytes/
-		/// </remarks>
-		/// <param name="value">Value to reverse</param>
-		/// <returns>Reversed ushort</returns>
-		public static ushort ReverseBytes(ushort value) {
-			return (ushort) ((value & 0x00FFU) << 8 | (value & 0xFF00U) >> 8);
-		}
-
-		/// <summary>
-		/// Reverses the byte order for a uint. See <see cref="ReverseBytes(uint)"/>.
-		/// </summary>
-		/// <param name="value">Value to reverse</param>
-		/// <returns>Reversed uint</returns>
-		public static uint ReverseBytes(uint value) {
-			return (value & 0x000000FFU) << 24 | (value & 0x0000FF00U) << 8 | (value & 0x00FF0000U) >> 8 | (value & 0xFF000000U) >> 24;
-		}
-
-		/// <summary>
-		/// Reverses the byte order for a ulong. See <see cref="ReverseBytes(uint)"/>.
-		/// </summary>
-		/// <param name="value">Value to reverse</param>
-		/// <returns>Reversed uint</returns>
-		public static long ReverseBytes(long value) {
-			return (value & 0x00000000000000FFL) << 56 | (value & 0x000000000000FF00L) << 40 | (value & 0x0000000000FF0000L) << 24 | (value & 0x00000000FF000000L) << 8 |
-		 (value & 0x000000FF00000000L) >> 8 | (value & 0x0000FF0000000000L) >> 24 | (value & 0x00FF000000000000L) >> 40 | (value & 0x7F00000000000000L) >> 56;
-		}
-        #endregion
 
         /// <summary>
         /// Returns the uppercase string representation of the provided uint converted to hex, padded by the specified number of places.
@@ -176,11 +143,11 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Convert Unix datetime to a <see cref="DateTime"/> object.
+        /// Convert Unix timestamp to a <see cref="DateTime"/> object.
         /// </summary>
-        /// <param name="time">Unix time</param>
-        /// <returns><see cref="DateTime"/> object equal to the provided Unix time</returns>
-        public static DateTime UnixToDate(uint time) {
+        /// <param name="time">A Unix timestamp.</param>
+        /// <returns>A <see cref="DateTime"/> object equal to the provided Unix timestamp</returns>
+        public static DateTime UnixToDateTime(uint time) {
 			return DateTimeOffset.FromUnixTimeSeconds(time).UtcDateTime;
 		}
 
