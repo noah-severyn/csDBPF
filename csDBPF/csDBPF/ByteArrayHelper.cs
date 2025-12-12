@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using static csDBPF.DBPF;
 
 namespace csDBPF {
 	/// <summary>
@@ -166,135 +168,156 @@ namespace csDBPF {
 			}
 			return result;
 		}
-		#endregion FromByteArrayToArray
+        #endregion FromByteArrayToArray
 
 
 
-		#region FromByteArrayToA
-		/// <summary>
-		/// Reads a byte array and returns a string of the entire array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <returns>A string of parsed data</returns>
-		public static string ToAString(byte[] data) {
-			if (data is null) return null;
-
+        #region ByteArrayTo
+        /// <summary>
+        /// Converts the specified byte array to its string representation.
+        /// </summary>
+        /// <param name="data">The byte array to convert</param>
+        /// <returns>A string representation of the byte array, or an empty string if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <remarks>Non-printable characters are replaced with a period.</remarks>
+        public static string ToAString(this byte[] data) {
+			if (data is null) return string.Empty;
 			return ToAString(data, 0, data.Length);
 		}
-		/// <summary>
-		/// Reads a byte array and returns a string from the specified location to the end of the array.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <param name="start">Location to start parsing at</param>
-		/// <returns>A string of parsed data</returns>
-		public static string ToAString(byte[] data, int start) {
-			if (data is null) return null;
-
+        /// <summary>
+        /// Converts a range of bytes from the specified array to a string, starting at the given index.
+        /// </summary>
+        /// <param name="data">The byte array to convert</param>
+        /// <param name="start">The zero-based index in <paramref name="data"/> at which to begin conversion.</param>
+        /// <returns>A string representation of the bytes in <paramref name="data"/> starting at <paramref name="start"/> and continuing to the end of the array, or an empty string if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <remarks>Non-printable characters are replaced with a period.</remarks>
+        public static string ToAString(this byte[] data, int start) {
+			if (data is null) return string.Empty;
 			return ToAString(data, start, data.Length - start);
 		}
-		/// <summary>
-		/// Reads a byte array and returns a string from the specified location for a determined length.
-		/// </summary>
-		/// <param name="data">Data to parse</param>
-		/// <param name="start">Location to start parsing at</param>
-		/// <param name="length">Length of the provided data to parse</param>
-		/// <returns>A string of parsed data</returns>
-		/// <remarks>
-		/// Any non-printable characters are replaced with a period ('.').
-		/// </remarks>
-		public static string ToAString(byte[] data, int start, int length) {
-			if (data is null) return null;
+        /// <summary>
+        /// Converts a range of bytes from the specified array into a string, replacing non-printable ASCII characters with a
+        /// period ('.').
+        /// </summary>
+        /// <param name="data">The byte array containing the data to convert.</param>
+        /// <param name="start">The zero-based index in <paramref name="data"/> at which to begin conversion.</param>
+        /// <param name="length">The number of bytes to convert starting from <paramref name="start"/>.</param>
+        /// <returns>A string representation of the bytes in <paramref name="data"/> starting at <paramref name="start"/> and continuing for <paramref name="length"/> positions, or an empty string if <paramref name="data"/> is <see langword="null"/>.</returns>
+        /// <remarks>Non-printable characters are replaced with a period.</remarks>
+        public static string ToAString(this byte[] data, int start, int length) {
+			if (data is null) return string.Empty;
+            string s = System.Text.Encoding.ASCII.GetString(data, start, length);
+            char[] buf = s.ToCharArray();
+            for (int i = 0; i < buf.Length; i++) {
+                char c = buf[i];
+                if (c < 31 || c == 127) {
+                    buf[i] = '.';
+                }
+            }
+            return new string(buf);
+        }
 
-			StringBuilder sb = new StringBuilder();
-			for (int idx = start; idx < start + length; idx++) {
-				//Check to avoid problematic non-printable characters
-				if (data[idx] < 31 || data[idx] == 127) {
-					sb.Append('.');
-				} else {
-					sb.Append((char) data[idx]);
-				}
-			}
-			return sb.ToString();
+
+
+        /// <summary>
+        /// Reads two bytes from the specified array starting at the given offset and interprets them as an unsigned 16-bit integer in big-endian order.
+        /// </summary>
+        /// <remarks>Using the sample array <c>[0x30, 0x30, 0x30, 0x30]</c>, using <see cref="DBPF.Encoding.Binary"/> yields <c>0x30303030</c> since each byte is taken as its literal value, while using <see cref="DBPF.Encoding.Text"/> yields <c>0x0000</c> since each byte is taken as its ASCII text equivalent.</remarks>
+        /// <param name="data">The byte array containing the data to read. Must contain at least two bytes starting from <paramref name="offset"/>.</param>
+        /// <param name="offset">The zero-based index in <paramref name="data"/> at which to begin reading. Defaults to 0.</param>
+        /// <param name="encoding">The encoding type of <paramref name="data"/>.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is <see langword="null"/>.</exception>
+        /// <returns>The unsigned 16-bit integer value represented by the two bytes at the specified offset, interpreted in big-endian format.</returns>
+        public static ushort ReadIntoUshort(this byte[] data, int offset, DBPF.Encoding encoding) {
+            ArgumentNullException.ThrowIfNull(data);
+
+            if (encoding == DBPF.Encoding.Binary) {
+                return BinaryPrimitives.ReadUInt16BigEndian(data.AsSpan(offset));
+            } else {
+                _ = ushort.TryParse(ToAString(data, offset, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort result);
+                return result;
+            }
+        }
+        /// <summary>
+        /// Reads four bytes from the specified array starting at the given offset and interprets them as a signed 32-bit integer in big-endian order.
+        /// </summary>
+		/// <remarks>Using the sample array <c>[0x30, 0x30, 0x30, 0x30]</c>, using <see cref="DBPF.Encoding.Binary"/> yields <c>0x30303030</c> since each byte is taken as its literal value, while using <see cref="DBPF.Encoding.Text"/> yields <c>0x0000</c> since each byte is taken as its ASCII text equivalent.</remarks>
+        /// <param name="data">The byte array containing the data to read. Must contain at least four bytes starting from <paramref name="offset"/>.</param>
+        /// <param name="offset">The zero-based index in <paramref name="data"/> at which to begin reading.</param>
+		/// <param name="encoding">The encoding type of <paramref name="data"/>.</param>
+		/// <param name="length">The number of bytes to convert starting from <paramref name="offset"/>. The default is 8.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is <see langword="null"/>.</exception>
+        /// <returns>The 32-bit signed integer represented by the four bytes at the specified offset in big-endian format.</returns>
+        public static int ReadIntoInt(this byte[] data, int offset, DBPF.Encoding encoding, int length = 8) {
+            ArgumentNullException.ThrowIfNull(data);
+
+            if (encoding == DBPF.Encoding.Binary) {
+                return BinaryPrimitives.ReadInt32BigEndian(data.AsSpan(offset));
+            } else {
+                _ = int.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result);
+                return result;
+            }
+        }
+        /// <summary>
+        /// Reads four bytes from the specified array starting at the given offset and interprets them as an unsigned 32-bit integer in big-endian order.
+        /// </summary>
+		/// <remarks>Using the sample array <c>[0x30, 0x30, 0x30, 0x30]</c>, using <see cref="DBPF.Encoding.Binary"/> yields <c>0x30303030</c> since each byte is taken as its literal value, while using <see cref="DBPF.Encoding.Text"/> yields <c>0x0000</c> since each byte is taken as its ASCII text equivalent.</remarks>
+        /// <param name="data">The byte array containing the data to read. Must contain at least four bytes starting from <paramref name="offset"/>.</param>
+        /// <param name="offset">The zero-based index in <paramref name="data"/> at which to begin reading.</param>
+		/// <param name="encoding">The encoding type of <paramref name="data"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is <see langword="null"/>.</exception>
+        /// <returns>The 32-bit unsigned integer represented by the four bytes at the specified offset in big-endian format.</returns>
+        public static uint ReadIntoUint(this byte[] data, int offset, DBPF.Encoding encoding) {
+			ArgumentNullException.ThrowIfNull(data);
+			
+			if (encoding == DBPF.Encoding.Binary) {
+                //The BitConverter functions are dependent on the the endianness of the system, but dbpf files are always big endian
+                return BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(offset));
+            } else {
+                _ = uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result);
+                return result;
+            }
 		}
-
-		/// <summary>
-		/// Sequentially reads 4 bytes and assigns them to a uint in big-endian order.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <returns>Uint value</returns>
-		public static uint ReadBytesIntoUint(byte[] data, int offset = 0) {
-			return (uint) ((data[offset] << 24) | (data[offset + 1] << 16) | (data[offset + 2] << 8) | data[offset + 3]);
-		}
-
-		/// <summary>
-		/// Sequentially reads 2 bytes from the specified position and assigns them to a uint in big-endian order.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <returns>Ushort value</returns>
-		public static ushort ReadBytesIntoUshort(byte[] data, int offset = 0) {
-			return (ushort) ((data[offset] << 8) | data[offset + 1]);
-		}
-
-
-		/// <summary>
-		/// Sequentially reads 1 byte, converts it to string equivalent, then parses back into a byte.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <returns>Byte value</returns>
-		public static byte ReadTextIntoByte(byte[] data, int offset = 0) {
-			byte.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte result);
-			return result;
-		}
-
-		/// <summary>
-		/// Sequentially reads 4 bytes, converts them to string equivalents, then parses them into a uint.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <returns>Uint value</returns>
-		public static uint ReadTextToUint(byte[] data, int offset = 0) {
-			uint.TryParse(ToAString(data, offset, 8), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint result);
-			return result;
-		}
-
-		/// <summary>
-		/// Sequentially reads a number of bytes, converts them to string equivalents, then parses them into an int.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <param name="length">Length to read</param>
-		/// <returns></returns>
-		public static int ReadTextToInt(byte[] data, int offset, int length) {
-			int.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result);
-			return result;
-		}
-
-		/// <summary>
-		/// Sequentially reads a number of bytes, converts them to string equivalents, then parses them into a long.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <param name="length">Length to read</param>
-		/// <returns></returns>
-		public static long ReadTextToLong(byte[] data, int offset, int length) {
-			long.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result);
-			return result;
-		}
-
-		/// <summary>
-		/// Sequentially reads a number of bytes, converts them to string equivalents, then parses them into a float.
-		/// </summary>
-		/// <param name="data">Array to read from</param>
-		/// <param name="offset">Location in array to start at. Default is 0</param>
-		/// <param name="length">Length to read</param>
-		/// <returns></returns>
-		public static float ReadTextToFloat(byte[] data, int offset, int length) {
-            float.TryParse(ToAString(data, offset, length), out float result);
-			return result;
-		}
+        /// <summary>
+        /// Reads four bytes from the specified array starting at the given offset and interprets them as a signed 64-bit integer in big-endian order.
+        /// </summary>
+		/// <remarks>Using the sample array <c>[0x30, 0x30, 0x30, 0x30]</c>, using <see cref="DBPF.Encoding.Binary"/> yields <c>0x30303030</c> since each byte is taken as its literal value, while using <see cref="DBPF.Encoding.Text"/> yields <c>0x0000</c> since each byte is taken as its ASCII text equivalent.<br></br><br></br>
+        /// 
+        /// The <paramref name="length"/> should typically be specified when reading values into a <see cref="DBPFPropertyLong"/>, as the number of chars of the underlying property data type (2/4/8/16 chars) should be read, instead of always the 16 chars defined by a long.</remarks>
+        /// <param name="data">The byte array containing the data to read. Must contain at least four bytes starting from <paramref name="offset"/>.</param>
+        /// <param name="offset">The zero-based index in <paramref name="data"/> at which to begin reading.</param>
+		/// <param name="encoding">The encoding type of <paramref name="data"/>.</param>
+		/// <param name="length">The number of bytes to convert starting from <paramref name="offset"/>. Default is 16.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is <see langword="null"/>.</exception>
+        /// <returns>The signed 64-bit integer value represented by the eight bytes at the specified offset, interpreted in big-endian format.</returns>
+        public static long ReadIntoLong(this byte[] data, int offset, DBPF.Encoding encoding, int length = 16) {
+            ArgumentNullException.ThrowIfNull(data);
+            
+            if (encoding == DBPF.Encoding.Binary) {
+                return BinaryPrimitives.ReadInt64BigEndian(data.AsSpan(offset));
+            } else {
+                _ = long.TryParse(ToAString(data, offset, length), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long result);
+                return result;
+            }
+        }
+        /// <summary>
+        /// Reads four bytes from the specified array starting at the given offset and interprets them as a single-precision floating-point in big-endian order.
+        /// </summary>
+        /// <param name="data">The byte array containing the data to read. Must contain at least four bytes starting from <paramref name="offset"/>.</param>
+        /// <param name="offset">The zero-based index in <paramref name="data"/> at which to begin reading. Defaults to 0.</param>
+		/// <param name="length">The number of bytes to convert starting from <paramref name="offset"/>.</param>
+		/// <param name="encoding">The encoding type of <paramref name="data"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is <see langword="null"/>.</exception>
+        /// <returns>The single-precision floating-point value read from the specified offset in the byte array.</returns>
+        public static float ReadIntoFloat(this byte[] data, int offset, int length, DBPF.Encoding encoding) {
+            ArgumentNullException.ThrowIfNull(data);
+            
+            if (encoding == DBPF.Encoding.Binary) {
+                return BinaryPrimitives.ReadSingleBigEndian(data.AsSpan(offset, length));
+            } else {
+                _ = float.TryParse(ToAString(data, offset, length), out float result);
+                return result;
+            }
+        }
         #endregion FromByteArrayToA
 
 
@@ -319,7 +342,7 @@ namespace csDBPF {
                 }
                 return bytes;
             }
-			return Encoding.Unicode.GetBytes(data);
+			return System.Text.Encoding.Unicode.GetBytes(data);
 		}
 		/// <summary>
 		/// Converts a long to byte array with the given length.

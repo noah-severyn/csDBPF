@@ -104,11 +104,11 @@ namespace csDBPF {
 				propertyCount = BitConverter.ToUInt32(dData, 20);
 				pos = 24;
 			} else {
-				parentCohortTID = ByteArrayHelper.ReadTextToUint(dData, 30);
-				parentCohortGID = ByteArrayHelper.ReadTextToUint(dData, 41);
-				parentCohortIID = ByteArrayHelper.ReadTextToUint(dData, 52);
+				parentCohortTID = dData.ReadIntoUint(30, DBPF.Encoding.Text);
+				parentCohortGID = dData.ReadIntoUint(41, DBPF.Encoding.Text);
+				parentCohortIID = dData.ReadIntoUint(52, DBPF.Encoding.Text);
 				ParentCohort = new TGI(parentCohortTID, parentCohortGID, parentCohortIID);
-				propertyCount = ByteArrayHelper.ReadTextToUint(dData, 75);
+				propertyCount = dData.ReadIntoUint(75, DBPF.Encoding.Text);
 				pos = 85;
 			}
 
@@ -168,9 +168,9 @@ namespace csDBPF {
         /// <returns>A <see cref="DBPFProperty"/></returns>
         private DBPFProperty DecodeProperty(byte[] dData, int offset = 0) {
 			if (Encoding == DBPF.Encoding.Binary) {
-				return DecodeProperty_Text(dData, offset);
-			} else {
 				return DecodeProperty_Binary(dData, offset);
+			} else {
+				return DecodeProperty_Text(dData, offset);
 			}
 		}
         /// <summary>
@@ -305,7 +305,7 @@ namespace csDBPF {
 
 			//Capture the Property ID
 			offset += 2; //skip first "0x"
-			uint propertyID = ByteArrayHelper.ReadTextToUint(dData, offset);
+			uint propertyID = dData.ReadIntoUint(offset, DBPF.Encoding.Text);
 			offset += 8;
 
 			//Capture the DataType
@@ -318,7 +318,7 @@ namespace csDBPF {
 
 			//Determine number of reps; Problem if countOfReps = 0, then the loop below will not execute. If one value, the loop should run just once. Be careful with the difference between the "number of values" and "number of repetitions".
 			endPos = FindNextInstanceOf(dData, (byte) SpecialChars.Colon, offset);
-			int countOfReps = ByteArrayHelper.ReadTextToInt(dData, offset, endPos - offset);
+            int countOfReps = dData.ReadIntoInt(offset, DBPF.Encoding.Text, endPos - offset);
 			int countOfValues;
 			if (countOfReps == 0) {
 				countOfValues = 1;
@@ -336,7 +336,7 @@ namespace csDBPF {
 
 				if (countOfReps == 1) {
 					endPos = FindNextInstanceOf(dData, (byte) SpecialChars.ClosingBrace, offset);
-					value = ByteArrayHelper.ReadTextToFloat(dData, offset, endPos - offset);
+					value = dData.ReadIntoFloat(offset, endPos - offset, DBPF.Encoding.Text);
 					((List<float>) dataValues).Add(value);
 				} 
 				else {
@@ -349,7 +349,7 @@ namespace csDBPF {
 						}
 
 						//Precision of floats is ~6-9 digits so this number may be rounded or truncated
-						value = ByteArrayHelper.ReadTextToFloat(dData, offset, endRepPos - offset);
+						value = dData.ReadIntoFloat(offset, endRepPos - offset, DBPF.Encoding.Text);
 						((List<float>) dataValues).Add(value);
 						offset = endRepPos + 1;
 					}
@@ -367,7 +367,7 @@ namespace csDBPF {
 				dataValues = new List<long>();
 				for (int rep = 0; rep < countOfValues; rep++) {
 					offset += 2; //skip "0x"
-					long result = ByteArrayHelper.ReadTextToLong(dData, offset, DBPFProperty.LookupDataTypeLength(dataType) * 2);
+					long result = dData.ReadIntoLong(offset, DBPF.Encoding.Text, (DBPFProperty.LookupDataTypeLength(dataType) * 2));
 					((List<long>) dataValues).Add(result);
 					offset += (DBPFProperty.LookupDataTypeLength(dataType) * 2) + 1; //skip comma
 				}

@@ -56,8 +56,7 @@ namespace csDBPF {
 			protected set {
                 _byteData = value;
                 //Peek at bytes 4 and 5 to determine compression status
-                IsCompressed = _byteData.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(_byteData, 4) == 0x10FB;
-                IsCompressed = _byteData.Length > 9 && _byteData.ReadIntoUshort(4) == 0x10FB;
+                IsCompressed = _byteData.Length > 9 && _byteData.ReadIntoUshort(4, DBPF.Encoding.Binary) == 0x10FB;
 				if (IsCompressed) {
 					CompressedSize = (uint) _byteData.Length;
 					//UncompressedSize = (uint) ByteArrayHelper.to //TODO - fix Uncompressed size setting here
@@ -105,8 +104,7 @@ namespace csDBPF {
 			ErrorLog = [];
 
             //Peek at bytes 4 and 5 to determine compression status
-            IsCompressed = (_byteData.Length > 9 && ByteArrayHelper.ReadBytesIntoUshort(_byteData, 4) == 0x10FB);
-            IsCompressed = (_byteData.Length > 9 && _byteData.ReadIntoUshort(4) == 0x10FB);
+            IsCompressed = (_byteData.Length > 9 && _byteData.ReadIntoUshort(4, DBPF.Encoding.Binary) == 0x10FB);
             //Peek at the first 9 bytes of this data to determine its compression characteristics
             if (IsCompressed) {
                 UncompressedSize = (uint) ((bytes[6] << 16) | (bytes[7] << 8) | bytes[8]);
