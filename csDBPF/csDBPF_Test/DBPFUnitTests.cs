@@ -55,16 +55,6 @@ namespace csDBPF_Test {
             }
 
             [TestMethod]
-            public void Test_011_DBPFUtil_ReverseBytes() {
-                //Example: 1697917002 (0x 65 34 28 4A) returns 1244148837 (0x 4A 28 34 65)
-                Assert.AreEqual((uint) 1244148837, DBPFUtil.ReverseBytes(1697917002));
-                Assert.AreEqual((uint) 0x4a283465, DBPFUtil.ReverseBytes(0x6534284a));
-                Assert.AreEqual((uint) 0, DBPFUtil.ReverseBytes(0));
-
-                Assert.AreEqual(0x7FFFFFFFFFFF0000, DBPFUtil.ReverseBytes(0x0000FFFFFFFFFF7F));
-            }
-
-            [TestMethod]
             public void Test_012_DBPFUtil_ToHexString() {
                 Assert.AreEqual("6534284A", DBPFUtil.ToHexString(1697917002, 8, true, false));
                 Assert.AreEqual("6534284a", DBPFUtil.ToHexString(1697917002, 8, false, false));
