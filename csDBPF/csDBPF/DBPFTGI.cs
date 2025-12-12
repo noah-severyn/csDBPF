@@ -11,11 +11,11 @@ namespace csDBPF {
     /// <summary>
     /// A struct representing three unsigned integers as a Type, Group, Instance triplet.
     /// </summary>
-    public struct TGI : IComparable<TGI> {
+    public struct TGI : IEquatable<TGI>, IComparable<TGI> {
         /// <summary>
         /// Returns the <see href="https://www.wiki.sc4devotion.com/index.php?title=Type_ID">Type ID</see> (TID).
         /// </summary>
-        public uint TypeID  { get; private set; }
+        public uint TypeID { get; private set; }
 
         /// <summary>
         /// Returns the <see href="https://www.wiki.sc4devotion.com/index.php?title=Group_ID">Group ID</see> (GID).
@@ -104,29 +104,54 @@ namespace csDBPF {
                 return (int) typediff;
 
             var groupdiff = this.GroupID - other.GroupID;
-            if (groupdiff != 0) 
+            if (groupdiff != 0)
                 return (int) groupdiff;
 
             return (int) (InstanceID - other.InstanceID);
         }
 
 
-        /// <summary>
-        /// Evaluate whether two TGIs are equal. TGIs are equal if their Types, Groups, and Instances are identical.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns><see langword="true"/> if the TGIs are identical; <see langword="false"/> otherwise</returns>
-        public override readonly bool Equals(object obj) {
-            if (obj is not TGI tgi) return false;
-            return TypeID == tgi.TypeID && GroupID == tgi.GroupID && InstanceID == tgi.InstanceID;
-        }
         /// <inheritdoc/>
         public static bool operator ==(TGI left, TGI right) { return left.Equals(right); }
         /// <inheritdoc/>
-        public static bool operator !=(TGI left, TGI right) { return !(left == right); }
+        public static bool operator !=(TGI left, TGI right) { return !left.Equals(right); }
+        /// <inheritdoc/>
+        public static bool operator <(TGI left, TGI right) {
+            return left.CompareTo(right) < 0;
+        }
+        /// <inheritdoc/>
+        public static bool operator <=(TGI left, TGI right) {
+            return left.CompareTo(right) <= 0;
+        }
+        /// <inheritdoc/>
+        public static bool operator >(TGI left, TGI right) {
+            return left.CompareTo(right) > 0;
+        }
+        /// <inheritdoc/>
+        public static bool operator >=(TGI left, TGI right) {
+            return left.CompareTo(right) >= 0;
+        }
         /// <inheritdoc/>
         public override readonly int GetHashCode() {
             return TypeID.GetHashCode() ^ GroupID.GetHashCode() ^ InstanceID.GetHashCode();
+        }
+
+
+        /// <summary>
+        /// Evaluate whether two TGIs are equal. TGIs are equal if their Types, Groups, and Instances are identical.
+        /// </summary>
+        /// <param name="other"><see cref="TGI"/> to compare.</param>
+        /// <returns><see langword="true"/> if the TGIs are identical; <see langword="false"/> otherwise</returns> 
+        public readonly bool Equals(TGI other) {
+            return TypeID == other.TypeID && GroupID == other.GroupID && InstanceID == other.InstanceID;
+        }
+        /// <summary>
+        /// Indicates whether this instance and a specified object are equal
+        /// </summary>
+        /// <param name="obj">The object to compare.</param>
+        /// <returns><see langword="true"/> if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise; otherwise, <see langword="false"/>.</returns>
+        public override readonly bool Equals(object? obj) {
+            return obj is TGI tgi && Equals(tgi);
         }
 
 
@@ -234,8 +259,8 @@ namespace csDBPF {
     /// </summary>
     /// <remarks>The TGI templates may be used in combination with the methods provided by the <see cref="TGI"/> struct to instantiate a new TGI of a desired type, or to identify the nearest known entry type of an arbitrary TGI.</remarks>
     public static class DBPFTGI {
-		//In general Dictionary items are kept in the order they are added> However, since we're not doing a lot of adding or *any* deleting/sorting, its not as big of a deal meaning we don't need to use a special type like SortedDictionary
-		internal static readonly Dictionary<TGI, TGIDetails> KnownEntries = [];
+        //In general Dictionary items are kept in the order they are added> However, since we're not doing a lot of adding or *any* deleting/sorting, its not as big of a deal meaning we don't need to use a special type like SortedDictionary
+        internal static readonly Dictionary<TGI, TGIDetails> KnownEntries = [];
         internal struct TGIDetails(string cat, string det) {
             /// <summary>
             /// The general file type this TGI represents.
@@ -251,85 +276,85 @@ namespace csDBPF {
         public static readonly TGI DIRECTORY;
         /// <summary>LD file (0x6be74c6#, 0x6be74c60, #) </summary>
         public static readonly TGI LD;
-		/// <summary>Exemplar file: road network (0x6534284a, 0x2821ed93, #)</summary>
-		public static readonly TGI EXEMPLAR_ROAD;
-		/// <summary>Exemplar file: street network (0x6534284a, 0xa92a02ea, #)</summary>
-		public static readonly TGI EXEMPLAR_STREET;
-		/// <summary>Exemplar file: one-way road network (0x6534284a, 0xcbe084cb, #)</summary>
-		public static readonly TGI EXEMPLAR_ONEWAYROAD;
-		/// <summary>Exemplar file: avenue network (0x6534284a, 0xcb730fac, #)</summary>
-		public static readonly TGI EXEMPLAR_AVENUE;
-		/// <summary>Exemplar file: elevated highway network (0x6534284a, 0xa8434037, #)</summary>
-		public static readonly TGI EXEMPLAR_HIGHWAY;
-		/// <summary>Exemplar file: ground highway network (0x6534284a, 0xebe084d1, #)</summary>
-		public static readonly TGI EXEMPLAR_GROUNDHIGHWAY;
-		/// <summary>Exemplar file: dirt road/ANT/RHW network (0x6534284a, 0x6be08658, #)</summary>
-		public static readonly TGI EXEMPLAR_DIRTROAD;
-		/// <summary>Exemplar file: rail network (0x6534284a, 0xe8347989, #)</summary>
-		public static readonly TGI EXEMPLAR_RAIL;
-		/// <summary>Exemplar file: light rail network (0x6534284a, 0x2b79dffb, #)</summary>
-		public static readonly TGI EXEMPLAR_LIGHTRAIL;
-		/// <summary>Exemplar file: monorail network (0x6534284a, 0xebe084c2, #)</summary>
-		public static readonly TGI EXEMPLAR_MONORAIL;
-		/// <summary>Exemplar file: power poles network (0x6534284a, 0x088e1962, #)</summary>
-		public static readonly TGI EXEMPLAR_POWERPOLE;
-		/// <summary>Exemplar file: Type 21 (0x6534284a, 0x89AC5643, #)</summary>
-		public static readonly TGI EXEMPLAR_T21;
-		/// <summary>Exemplar file: LotInfo, LotConfig (0x6534284a, #, #)</summary>
-		public static readonly TGI EXEMPLAR;
-		/// <summary>Cohort file (0x05342861, #, #)</summary>
-		public static readonly TGI COHORT;
-		/// <summary>PNG file: Menu building icons, bridges, overlays (0x856ddbac, 0x6a386d26, #)</summary>
-		public static readonly TGI PNG_ICON;
-		/// <summary>PNG file (image, icon) (0x856ddbac, #, #)</summary>
-		public static readonly TGI PNG;
-		/// <summary>FSH file: Transit Textures/Buildings/Bridges/Misc (0x7ab50e44, 0x1abe787d, #)</summary>
-		[Obsolete("Use FISH_MISC instead.")]
-		public static readonly TGI FSH_TRANSIT;
-		/// <summary>FSH file: Transit Textures/Buildings/Bridges/Misc (0x7ab50e44, 0x1abe787d, #)</summary>
-		public static readonly TGI FSH_MISC;
-		/// <summary>FSH file: Base and Overlay Lot Textures (0x7ab50e44, 0x0986135e, #)</summary>
-		public static readonly TGI FSH_BASE_OVERLAY;
-		/// <summary>FSH file: Transit Network Shadows (Masks) (0x7ab50e44, 0x2BC2759a, #)</summary>
-		public static readonly TGI FSH_SHADOW;
-		/// <summary>FSH file: Animation Sprites (Props) (0x7ab50e44, 0x2a2458f9, #)</summary>
-		public static readonly TGI FSH_ANIM_PROPS;
-		/// <summary>FSH file: Animation Sprites (Non Props) (0x7ab50e44, 0x49a593e7, #)</summary>
-		public static readonly TGI FSH_ANIM_NONPROPS;
-		/// <summary>FSH file: Terrain And Foundations (0x7ab50e44, 0x891b0e1a, #)</summary>
-		public static readonly TGI FSH_TERRAIN_FOUNDATION;
-		/// <summary>FSH file: User Interface Images (0x7ab50e44, 0x46a006b#, #)</summary>
-		public static readonly TGI FSH_UI;
-		/// <summary>FSH file: Textures (0x7ab50e44, #, #)</summary>
-		public static readonly TGI FSH;
-		/// <summary>S3D file: Maxis Models (0x5ad0e817, 0xbadb57f1, #)</summary>
-		public static readonly TGI S3D_MAXIS;
-		/// <summary>S3D file: Models (0x5ad0e817, #, #)</summary>
-		public static readonly TGI S3D;
-		/// <summary>SC4PATH (2D) (0x296678f7, 0x69668828, #)</summary>
-		public static readonly TGI SC4PATH_2D;
-		/// <summary>SC4PATH (3D) (0x296678f7, 0xa966883f, #)</summary>
-		public static readonly TGI SC4PATH_3D;
-		/// <summary>SC4PATH file (0x296678f7, #, #)</summary>
-		public static readonly TGI SC4PATH;
-		/// <summary>LUA file: Missions, Advisors, Tutorials and Packaging files (0xca63e2a3, 0x4a5e8ef6, #)</summary>
-		public static readonly TGI LUA;
-		/// <summary>LUA file: Generators, Attractors, Repulsors and System LUA (0xca63e2a3, 0x4a5e8f3f, #)</summary>
-		public static readonly TGI LUA_GEN;
-		/// <summary>RUL file: Network rules (0x0a5bcf4b, 0xaa5bcf57, #)</summary>
-		public static readonly TGI RUL;
-		/// <summary>WAV file (0x2026960b, 0xaa4d1933, #)</summary>
-		public static readonly TGI WAV;
-		/// <summary>LTEXT file (0x2026960b, #, #)</summary>
-		public static readonly TGI LTEXT;
-		/// <summary>Effect Directory file (0xea5118b0, #, #)</summary>
-		public static readonly TGI EFFDIR;
-		/// <summary>Font Table INI (#, 0x4a87bfe8, 0x2a87bffc)</summary>
-		public static readonly TGI INI_FONT;
-		/// <summary>Network INI: Remapping, Bridge Exemplars (#, 0x8a5971c5, 0x8a5993b9)</summary>
-		public static readonly TGI INI_NETWORK;
-		/// <summary>INI file (#, 0x8a5971c5, #)</summary>
-		public static readonly TGI INI;
+        /// <summary>Exemplar file: road network (0x6534284a, 0x2821ed93, #)</summary>
+        public static readonly TGI EXEMPLAR_ROAD;
+        /// <summary>Exemplar file: street network (0x6534284a, 0xa92a02ea, #)</summary>
+        public static readonly TGI EXEMPLAR_STREET;
+        /// <summary>Exemplar file: one-way road network (0x6534284a, 0xcbe084cb, #)</summary>
+        public static readonly TGI EXEMPLAR_ONEWAYROAD;
+        /// <summary>Exemplar file: avenue network (0x6534284a, 0xcb730fac, #)</summary>
+        public static readonly TGI EXEMPLAR_AVENUE;
+        /// <summary>Exemplar file: elevated highway network (0x6534284a, 0xa8434037, #)</summary>
+        public static readonly TGI EXEMPLAR_HIGHWAY;
+        /// <summary>Exemplar file: ground highway network (0x6534284a, 0xebe084d1, #)</summary>
+        public static readonly TGI EXEMPLAR_GROUNDHIGHWAY;
+        /// <summary>Exemplar file: dirt road/ANT/RHW network (0x6534284a, 0x6be08658, #)</summary>
+        public static readonly TGI EXEMPLAR_DIRTROAD;
+        /// <summary>Exemplar file: rail network (0x6534284a, 0xe8347989, #)</summary>
+        public static readonly TGI EXEMPLAR_RAIL;
+        /// <summary>Exemplar file: light rail network (0x6534284a, 0x2b79dffb, #)</summary>
+        public static readonly TGI EXEMPLAR_LIGHTRAIL;
+        /// <summary>Exemplar file: monorail network (0x6534284a, 0xebe084c2, #)</summary>
+        public static readonly TGI EXEMPLAR_MONORAIL;
+        /// <summary>Exemplar file: power poles network (0x6534284a, 0x088e1962, #)</summary>
+        public static readonly TGI EXEMPLAR_POWERPOLE;
+        /// <summary>Exemplar file: Type 21 (0x6534284a, 0x89AC5643, #)</summary>
+        public static readonly TGI EXEMPLAR_T21;
+        /// <summary>Exemplar file: LotInfo, LotConfig (0x6534284a, #, #)</summary>
+        public static readonly TGI EXEMPLAR;
+        /// <summary>Cohort file (0x05342861, #, #)</summary>
+        public static readonly TGI COHORT;
+        /// <summary>PNG file: Menu building icons, bridges, overlays (0x856ddbac, 0x6a386d26, #)</summary>
+        public static readonly TGI PNG_ICON;
+        /// <summary>PNG file (image, icon) (0x856ddbac, #, #)</summary>
+        public static readonly TGI PNG;
+        /// <summary>FSH file: Transit Textures/Buildings/Bridges/Misc (0x7ab50e44, 0x1abe787d, #)</summary>
+        [Obsolete("Use FISH_MISC instead.")]
+        public static readonly TGI FSH_TRANSIT;
+        /// <summary>FSH file: Transit Textures/Buildings/Bridges/Misc (0x7ab50e44, 0x1abe787d, #)</summary>
+        public static readonly TGI FSH_MISC;
+        /// <summary>FSH file: Base and Overlay Lot Textures (0x7ab50e44, 0x0986135e, #)</summary>
+        public static readonly TGI FSH_BASE_OVERLAY;
+        /// <summary>FSH file: Transit Network Shadows (Masks) (0x7ab50e44, 0x2BC2759a, #)</summary>
+        public static readonly TGI FSH_SHADOW;
+        /// <summary>FSH file: Animation Sprites (Props) (0x7ab50e44, 0x2a2458f9, #)</summary>
+        public static readonly TGI FSH_ANIM_PROPS;
+        /// <summary>FSH file: Animation Sprites (Non Props) (0x7ab50e44, 0x49a593e7, #)</summary>
+        public static readonly TGI FSH_ANIM_NONPROPS;
+        /// <summary>FSH file: Terrain And Foundations (0x7ab50e44, 0x891b0e1a, #)</summary>
+        public static readonly TGI FSH_TERRAIN_FOUNDATION;
+        /// <summary>FSH file: User Interface Images (0x7ab50e44, 0x46a006b#, #)</summary>
+        public static readonly TGI FSH_UI;
+        /// <summary>FSH file: Textures (0x7ab50e44, #, #)</summary>
+        public static readonly TGI FSH;
+        /// <summary>S3D file: Maxis Models (0x5ad0e817, 0xbadb57f1, #)</summary>
+        public static readonly TGI S3D_MAXIS;
+        /// <summary>S3D file: Models (0x5ad0e817, #, #)</summary>
+        public static readonly TGI S3D;
+        /// <summary>SC4PATH (2D) (0x296678f7, 0x69668828, #)</summary>
+        public static readonly TGI SC4PATH_2D;
+        /// <summary>SC4PATH (3D) (0x296678f7, 0xa966883f, #)</summary>
+        public static readonly TGI SC4PATH_3D;
+        /// <summary>SC4PATH file (0x296678f7, #, #)</summary>
+        public static readonly TGI SC4PATH;
+        /// <summary>LUA file: Missions, Advisors, Tutorials and Packaging files (0xca63e2a3, 0x4a5e8ef6, #)</summary>
+        public static readonly TGI LUA;
+        /// <summary>LUA file: Generators, Attractors, Repulsors and System LUA (0xca63e2a3, 0x4a5e8f3f, #)</summary>
+        public static readonly TGI LUA_GEN;
+        /// <summary>RUL file: Network rules (0x0a5bcf4b, 0xaa5bcf57, #)</summary>
+        public static readonly TGI RUL;
+        /// <summary>WAV file (0x2026960b, 0xaa4d1933, #)</summary>
+        public static readonly TGI WAV;
+        /// <summary>LTEXT file (0x2026960b, #, #)</summary>
+        public static readonly TGI LTEXT;
+        /// <summary>Effect Directory file (0xea5118b0, #, #)</summary>
+        public static readonly TGI EFFDIR;
+        /// <summary>Font Table INI (#, 0x4a87bfe8, 0x2a87bffc)</summary>
+        public static readonly TGI INI_FONT;
+        /// <summary>Network INI: Remapping, Bridge Exemplars (#, 0x8a5971c5, 0x8a5993b9)</summary>
+        public static readonly TGI INI_NETWORK;
+        /// <summary>INI file (#, 0x8a5971c5, #)</summary>
+        public static readonly TGI INI;
         /// <summary>UI file (0x000000, 0x96a006b0, #)</summary>
         public static readonly TGI UI;
         /// <summary>XML file (0x88777602, #, #)</summary>
@@ -344,7 +369,6 @@ namespace csDBPF {
         /// A null value indicates that any number is valid to identify the type.
         /// </summary>
         static DBPFTGI() {
-            
             DIRECTORY = new TGI(0xe86b1eef, 0xe86b1eef, 0x286b1f03);
             LD = new TGI(0x6be74c60, 0x6be74c60, null);
             S3D_MAXIS = new TGI(0x5ad0e817, 0xbadb57f1, null);
@@ -437,5 +461,5 @@ namespace csDBPF {
             KnownEntries.Add(EFFDIR, new TGIDetails("EFF", "EFFDIR"));
             KnownEntries.Add(BLANKTGI, new TGIDetails("BLANK", "BLANKTGI"));
         }
-	}
+    }
 }
