@@ -3,7 +3,8 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 
-		<IsPackable>false</IsPackable>
+		<Version>1.0.0</Version>
+		<Copyright>$([System.DateTime]::Now.Year) Noah Severyn</Copyright>
 
 		<ApplicationIcon />
 
@@ -16,26 +17,21 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
 
 	<ItemGroup>
-	  <None Remove="Properties\new_properties.xml" />
+		<None Remove="Properties\new_properties.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="..\.editorconfig" Link=".editorconfig" />
+		<None Include="..\.editorconfig" Link=".editorconfig" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="QFS\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Include="Properties\new_properties.xml">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </EmbeddedResource>
+		<EmbeddedResource Include="Properties\new_properties.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</EmbeddedResource>
 	</ItemGroup>
 
 </Project>
