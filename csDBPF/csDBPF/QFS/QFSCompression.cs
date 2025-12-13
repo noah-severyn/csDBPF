@@ -1,6 +1,4 @@
-﻿// Code in this module is imported from DBPFSharp: https://github.com/0xC0000054/DBPFSharp
-// ---------------------------------------------------------------------------------------
-// Copyright (c) 2023 Nicholas Hayes
+﻿// Copyright (c) 2023, 2025 Nicholas Hayes
 // SPDX-License-Identifier: MIT
 //
 // Portions of this file have been adapted from zlib version 1.2.3
@@ -29,13 +27,22 @@ freely, subject to the following restrictions:
 Jean-loup Gailly        Mark Adler
 jloup@gzip.org          madler@alumni.caltech.edu
 */
-// ---------------------------------------------------------------------------------------
 
 using System;
 using System.Numerics;
 
-namespace csDBPF {
-    public static partial class QFS {
+namespace DBPFSharp {
+    /// <summary>
+    /// An implementation of the QFS/RefPack compression format used in SC4 DBPF files.
+    /// </summary>
+    /// <remarks>
+    /// QFS/RefPack is a byte oriented compression format similar to LZ77.<br/>
+    /// <br/>
+    /// References:<br/>
+    /// https://wiki.sc4devotion.com/index.php?title=DBPF_Compression<br/>
+    /// http://wiki.niotso.org/RefPack
+    /// </remarks>
+    internal static class QfsCompression {
         /// <summary>
         /// The minimum size in bytes of an uncompressed buffer that can be compressed with QFS compression.
         /// </summary>
@@ -43,7 +50,7 @@ namespace csDBPF {
         /// This is an optimization to skip compression for very small files.
         /// The QFS format used by SC4 has a 9 byte header.
         /// </remarks>
-        private const int UncompressedDataMinSize = 10;
+        private const int UncompressedDataMinSize = 50;
 
         /// <summary>
         /// The maximum size in bytes of an uncompressed buffer that can be compressed with QFS compression.
@@ -59,8 +66,6 @@ namespace csDBPF {
         /// </remarks>
         private const int UncompressedDataMaxSize = 16777215;
 
-
-
         /// <summary>
         /// Compresses the input byte array with QFS compression
         /// </summary>
@@ -68,23 +73,151 @@ namespace csDBPF {
         /// <param name="prefixLength">If set to <c>true</c> prefix the size of the compressed data, as is used by SC4; otherwise <c>false</c>.</param>
         /// <returns>A byte array containing the compressed data or null if the data cannot be compressed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="input" /> is null.</exception>
-        public static byte[]? Compress(byte[] input, bool prefixLength = true) {
-            if (input == null) {
-                throw new ArgumentNullException(nameof(input));
-            }
+        public static byte[]? Compress(byte[] input, bool prefixLength) {
+            ArgumentNullException.ThrowIfNull(input);
 
             if (input.Length < UncompressedDataMinSize || input.Length > UncompressedDataMaxSize) {
                 return null;
             }
 
-            if (IsCompressed(input)) {
-                return input;
-            }
-
             return new ZlibQFS(input, prefixLength).Compress();
         }
 
+        /// <summary>
+        /// Decompresses a QFS compressed byte array.
+        /// </summary>
+        /// <param name="compressedData">The byte array to decompress</param>
+        /// <returns>A byte array containing the decompressed data.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="compressedData"/> is null.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="compressedData"/> uses an unsupported compression format.</exception>
+        public static byte[] Decompress(byte[] compressedData) {
+            ArgumentNullException.ThrowIfNull(compressedData);
 
+            int headerStartOffset = 0;
+
+            if ((compressedData[0] & HeaderFlags.Mask) != 0x10 || compressedData[1] != 0xFB) {
+                if ((compressedData[4] & HeaderFlags.Mask) != 0x10 || compressedData[5] != 0xFB) {
+                    throw new NotSupportedException("Unsupported compression format.");
+                }
+                headerStartOffset = 4;
+            }
+
+            int index = headerStartOffset + 2;
+
+            // The first byte contains flags that describes the information in the header.
+            byte headerFlags = compressedData[headerStartOffset];
+
+            bool largeSizeFields = (headerFlags & HeaderFlags.LargeSizeFields) != 0;
+            bool compressedSizePresent = (headerFlags & HeaderFlags.CompressedSizePresent) != 0;
+
+            if (compressedSizePresent) {
+                // Some files may write the compressed size after the signature.
+                index += largeSizeFields ? 4 : 3;
+            }
+
+            uint outLength;
+
+            // The uncompressed size is a 3 or 4 byte unsigned big endian integer.
+            if (largeSizeFields) {
+                outLength = (uint) ((compressedData[index] << 24) |
+                                   (compressedData[index + 1] << 16) |
+                                   (compressedData[index + 2] << 8) |
+                                   compressedData[index + 3]);
+                index += 4;
+            } else {
+                outLength = (uint) ((compressedData[index] << 16) |
+                                   (compressedData[index + 1] << 8) |
+                                   compressedData[index + 2]);
+                index += 3;
+            }
+
+            byte[] uncompressedData = new byte[checked((int) outLength)];
+
+            byte controlByte1;
+            byte controlByte2;
+            byte controlByte3;
+            byte controlByte4;
+
+            int outIndex = 0;
+            int plainCount;
+            int copyCount;
+            int copyOffset;
+
+            int length = compressedData.Length;
+
+            while (index < length && compressedData[index] < 0xFC) {
+                controlByte1 = compressedData[index];
+                index++;
+
+                if (controlByte1 >= 0xE0) // 1 byte literal op code 0xE0 - 0xFB
+                {
+                    plainCount = ((controlByte1 & 0x1F) << 2) + 4;
+                    copyCount = 0;
+                    copyOffset = 0;
+                } else if (controlByte1 >= 0xC0) // 4 byte op code 0xC0 - 0xDF
+                  {
+                    controlByte2 = compressedData[index];
+                    index++;
+                    controlByte3 = compressedData[index];
+                    index++;
+                    controlByte4 = compressedData[index];
+                    index++;
+
+                    plainCount = controlByte1 & 3;
+                    copyCount = ((controlByte1 & 0x0C) << 6) + controlByte4 + 5;
+                    copyOffset = ((controlByte1 & 0x10) << 12) + (controlByte2 << 8) + controlByte3 + 1;
+                } else if (controlByte1 >= 0x80) // 3 byte op code 0x80 - 0xBF
+                  {
+                    controlByte2 = compressedData[index];
+                    index++;
+                    controlByte3 = compressedData[index];
+                    index++;
+
+                    plainCount = (controlByte2 & 0xC0) >> 6;
+                    copyCount = (controlByte1 & 0x3F) + 4;
+                    copyOffset = ((controlByte2 & 0x3F) << 8) + controlByte3 + 1;
+                } else // 2 byte op code 0x00 - 0x7F
+                  {
+                    controlByte2 = compressedData[index];
+                    index++;
+
+                    plainCount = controlByte1 & 3;
+                    copyCount = ((controlByte1 & 0x1C) >> 2) + 3;
+                    copyOffset = ((controlByte1 & 0x60) << 3) + controlByte2 + 1;
+                }
+
+                for (int i = 0; i < plainCount; i++) {
+                    uncompressedData[outIndex] = compressedData[index];
+                    index++;
+                    outIndex++;
+                }
+
+                if (copyCount > 0) {
+                    int srcIndex = outIndex - copyOffset;
+
+                    for (int i = 0; i < copyCount; i++) {
+                        uncompressedData[outIndex] = uncompressedData[srcIndex];
+                        srcIndex++;
+                        outIndex++;
+                    }
+                }
+            }
+
+            // Write the trailing bytes.
+            if (index < length && outIndex < outLength) {
+                // 1 byte EOF op code 0xFC - 0xFF.
+                plainCount = compressedData[index] & 3;
+                index++;
+
+                for (int i = 0; i < plainCount; i++) {
+                    uncompressedData[outIndex] = compressedData[index];
+                    index++;
+                    outIndex++;
+                }
+            }
+
+            return uncompressedData;
+        }
 
         /// <summary>
         /// The flags may be present in the first byte of the compression signature.
@@ -167,26 +300,26 @@ namespace csDBPF {
                 this.input = input;
                 this.inputLength = input.Length;
                 this.output = new byte[this.inputLength - 1];
-                this.outputLength = output.Length;
+                this.outputLength = this.output.Length;
 
                 if (this.inputLength < MaxWindowSize) {
-                    windowSize = 1 << BitOperations.Log2((uint) this.inputLength);
-                    hashSize = Math.Max(windowSize / 2, 32);
-                    hashShift = (BitOperations.TrailingZeroCount(hashSize) + MinMatch - 1) / MinMatch;
+                    this.windowSize = 1 << BitOperations.Log2((uint) this.inputLength);
+                    this.hashSize = Math.Max(this.windowSize / 2, 32);
+                    this.hashShift = (BitOperations.TrailingZeroCount(this.hashSize) + MinMatch - 1) / MinMatch;
                 } else {
-                    windowSize = MaxWindowSize;
-                    hashSize = MaxHashSize;
-                    hashShift = 6;
+                    this.windowSize = MaxWindowSize;
+                    this.hashSize = MaxHashSize;
+                    this.hashShift = 6;
                 }
-                maxWindowOffset = windowSize - 1;
-                windowMask = maxWindowOffset;
-                hashMask = hashSize - 1;
+                this.maxWindowOffset = this.windowSize - 1;
+                this.windowMask = this.maxWindowOffset;
+                this.hashMask = this.hashSize - 1;
 
                 this.hash = 0;
-                this.head = new int[hashSize];
-                this.prev = new int[windowSize];
+                this.head = new int[this.hashSize];
+                this.prev = new int[this.windowSize];
                 this.readPosition = 0;
-                this.remaining = inputLength;
+                this.remaining = this.inputLength;
                 this.outIndex = QfsHeaderSize;
                 this.lastWritePosition = 0;
                 this.prefixLength = prefixLength;
@@ -204,12 +337,12 @@ namespace csDBPF {
             /// This method has been adapted from deflate.c in zlib version 1.2.3.
             /// </remarks>
             public byte[]? Compress() {
-                this.hash = input[0];
-                this.hash = ((this.hash << hashShift) ^ input[1]) & hashMask;
+                this.hash = this.input[0];
+                this.hash = ((this.hash << this.hashShift) ^ this.input[1]) & this.hashMask;
 
                 int lastMatch = this.inputLength - MinMatch;
 
-                while (remaining > 0) {
+                while (this.remaining > 0) {
                     this.prevLength = this.matchLength;
                     int prev_match = this.matchStart;
                     this.matchLength = MinMatch - 1;
@@ -219,14 +352,14 @@ namespace csDBPF {
                     // Insert the string window[readPosition .. readPosition+2] in the
                     // dictionary, and set hash_head to the head of the hash chain:
                     if (this.remaining >= MinMatch) {
-                        this.hash = ((this.hash << hashShift) ^ input[this.readPosition + MinMatch - 1]) & hashMask;
+                        this.hash = ((this.hash << this.hashShift) ^ this.input[this.readPosition + MinMatch - 1]) & this.hashMask;
 
-                        hash_head = head[this.hash];
-                        prev[this.readPosition & windowMask] = hash_head;
-                        head[this.hash] = this.readPosition;
+                        hash_head = this.head[this.hash];
+                        this.prev[this.readPosition & this.windowMask] = hash_head;
+                        this.head[this.hash] = this.readPosition;
                     }
 
-                    if (hash_head >= 0 && this.prevLength < MaxLazy && this.readPosition - hash_head <= windowSize) {
+                    if (hash_head >= 0 && this.prevLength < MaxLazy && this.readPosition - hash_head <= this.windowSize) {
                         int bestLength = LongestMatch(hash_head);
 
                         if (bestLength >= MinMatch) {
@@ -234,7 +367,7 @@ namespace csDBPF {
 
                             if (bestOffset <= 1024 ||
                                 bestOffset <= 16384 && bestLength >= 4 ||
-                                bestOffset <= windowSize && bestLength >= 5) {
+                                bestOffset <= this.windowSize && bestLength >= 5) {
                                 this.matchLength = bestLength;
                             }
                         }
@@ -252,22 +385,22 @@ namespace csDBPF {
                         // enough lookahead, the last two strings are not inserted in
                         // the hash table.
 
-                        this.remaining -= (this.prevLength - 1);
+                        this.remaining -= this.prevLength - 1;
                         this.prevLength -= 2;
 
                         do {
                             this.readPosition++;
 
                             if (this.readPosition < lastMatch) {
-                                this.hash = ((this.hash << hashShift) ^ input[this.readPosition + MinMatch - 1]) & hashMask;
+                                this.hash = ((this.hash << this.hashShift) ^ this.input[this.readPosition + MinMatch - 1]) & this.hashMask;
 
-                                hash_head = head[this.hash];
-                                prev[this.readPosition & windowMask] = hash_head;
-                                head[this.hash] = this.readPosition;
+                                hash_head = this.head[this.hash];
+                                this.prev[this.readPosition & this.windowMask] = hash_head;
+                                this.head[this.hash] = this.readPosition;
                             }
                             this.prevLength--;
                         }
-                        while (prevLength > 0);
+                        while (this.prevLength > 0);
 
                         this.matchLength = MinMatch - 1;
                         this.readPosition++;
@@ -282,37 +415,37 @@ namespace csDBPF {
                 }
 
                 // Write the compressed data header.
-                output[0] = 0x10;
-                output[1] = 0xFB;
-                output[2] = (byte) ((inputLength >> 16) & 0xff);
-                output[3] = (byte) ((inputLength >> 8) & 0xff);
-                output[4] = (byte) (inputLength & 0xff);
+                this.output[0] = 0x10;
+                this.output[1] = 0xFB;
+                this.output[2] = (byte) ((this.inputLength >> 16) & 0xff);
+                this.output[3] = (byte) ((this.inputLength >> 8) & 0xff);
+                this.output[4] = (byte) (this.inputLength & 0xff);
 
                 // Trim the output array to its actual size.
-                if (prefixLength) {
-                    int finalLength = outIndex + 4;
-                    if (finalLength >= inputLength) {
+                if (this.prefixLength) {
+                    int finalLength = this.outIndex + 4;
+                    if (finalLength >= this.inputLength) {
                         return null;
                     }
 
                     byte[] temp = new byte[finalLength];
 
                     // Write the compressed data length in little endian byte order.
-                    temp[0] = (byte) (outIndex & 0xff);
-                    temp[1] = (byte) ((outIndex >> 8) & 0xff);
-                    temp[2] = (byte) ((outIndex >> 16) & 0xff);
-                    temp[3] = (byte) ((outIndex >> 24) & 0xff);
+                    temp[0] = (byte) (this.outIndex & 0xff);
+                    temp[1] = (byte) ((this.outIndex >> 8) & 0xff);
+                    temp[2] = (byte) ((this.outIndex >> 16) & 0xff);
+                    temp[3] = (byte) ((this.outIndex >> 24) & 0xff);
 
-                    Buffer.BlockCopy(this.output, 0, temp, 4, outIndex);
+                    Buffer.BlockCopy(this.output, 0, temp, 4, this.outIndex);
                     this.output = temp;
                 } else {
-                    byte[] temp = new byte[outIndex];
-                    Buffer.BlockCopy(this.output, 0, temp, 0, outIndex);
+                    byte[] temp = new byte[this.outIndex];
+                    Buffer.BlockCopy(this.output, 0, temp, 0, this.outIndex);
 
                     this.output = temp;
                 }
 
-                return output;
+                return this.output;
             }
 
             /// <summary>
@@ -363,7 +496,7 @@ namespace csDBPF {
                         return false; // data did not compress
                     }
 
-                    this.output[this.outIndex] = (byte) ((((copyOffset >> 8) << 5) + ((copyLength - 3) << 2)) + run);
+                    this.output[this.outIndex] = (byte) (((copyOffset >> 8) << 5) + ((copyLength - 3) << 2) + run);
                     this.output[this.outIndex + 1] = (byte) (copyOffset & 0xff);
                     this.outIndex += 2;
                 } else if (copyLength <= 67 && copyOffset < 16384)  // 3 byte op code 0x80 - 0xBF
@@ -382,7 +515,7 @@ namespace csDBPF {
                         return false; // data did not compress
                     }
 
-                    this.output[this.outIndex] = (byte) (((0xC0 + ((copyOffset >> 16) << 4)) + (((copyLength - 5) >> 8) << 2)) + run);
+                    this.output[this.outIndex] = (byte) (0xC0 + ((copyOffset >> 16) << 4) + (((copyLength - 5) >> 8) << 2) + run);
                     this.output[this.outIndex + 1] = (byte) ((copyOffset >> 8) & 0xff);
                     this.output[this.outIndex + 2] = (byte) (copyOffset & 0xff);
                     this.output[this.outIndex + 3] = (byte) ((copyLength - 5) & 0xff);
@@ -464,11 +597,11 @@ namespace csDBPF {
                 int bestLength = this.prevLength;
 
                 if (bestLength >= this.remaining) {
-                    return remaining;
+                    return this.remaining;
                 }
 
-                byte scanEnd1 = input[scan + bestLength - 1];
-                byte scanEnd = input[scan + bestLength];
+                byte scanEnd1 = this.input[scan + bestLength - 1];
+                byte scanEnd = this.input[scan + bestLength];
 
                 // Do not waste too much time if we already have a good match:
                 if (this.prevLength >= GoodLength) {
@@ -483,17 +616,17 @@ namespace csDBPF {
                 }
 
                 int maxLength = Math.Min(this.remaining, MaxMatch);
-                int limit = this.readPosition > maxWindowOffset ? this.readPosition - maxWindowOffset : 0;
+                int limit = this.readPosition > this.maxWindowOffset ? this.readPosition - this.maxWindowOffset : 0;
 
                 do {
                     int match = currentMatch;
 
                     // Skip to next match if the match length cannot increase
                     // or if the match length is less than 2:
-                    if (input[match + bestLength] != scanEnd ||
-                        input[match + bestLength - 1] != scanEnd1 ||
-                        input[match] != input[scan] ||
-                        input[match + 1] != input[scan + 1]) {
+                    if (this.input[match + bestLength] != scanEnd ||
+                        this.input[match + bestLength - 1] != scanEnd1 ||
+                        this.input[match] != this.input[scan] ||
+                        this.input[match + 1] != this.input[scan + 1]) {
                         continue;
                     }
 
@@ -501,7 +634,7 @@ namespace csDBPF {
                     do {
                         len++;
                     }
-                    while (len < maxLength && input[scan + len] == input[match + len]);
+                    while (len < maxLength && this.input[scan + len] == this.input[match + len]);
 
                     if (len > bestLength) {
                         this.matchStart = currentMatch;
@@ -509,11 +642,11 @@ namespace csDBPF {
                         if (len >= niceLength) {
                             break;
                         }
-                        scanEnd1 = input[scan + bestLength - 1];
-                        scanEnd = input[scan + bestLength];
+                        scanEnd1 = this.input[scan + bestLength - 1];
+                        scanEnd = this.input[scan + bestLength];
                     }
                 }
-                while ((currentMatch = prev[currentMatch & windowMask]) >= limit && --chainLength > 0);
+                while ((currentMatch = this.prev[currentMatch & this.windowMask]) >= limit && --chainLength > 0);
 
                 return bestLength;
             }

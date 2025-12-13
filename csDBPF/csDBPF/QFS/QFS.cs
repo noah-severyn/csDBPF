@@ -58,11 +58,8 @@ namespace csDBPF {
         /// Decompress data compressed with QFS/RefPack compression.
         /// </summary>
         /// <param name="sourceBytes">Compressed data array</param>
-        /// <returns>Decompressed data array</returns>
-        /// <exception cref="IndexOutOfRangeException">
-        /// Thrown when the compression algorithm tries to access an element that is out of bounds in the array
-        /// </exception>
-        public static byte[] Decompress(byte[] sourceBytes) {
+        /// <returns>A byte array containing the decompressed data. If <paramref name="sourceBytes"/> is not compressed, the original array is returned.</returns>
+        public static byte[] Decompress(this byte[] sourceBytes) {
 			if (!IsCompressed(sourceBytes)) {
 				return sourceBytes;
 			}
@@ -193,6 +190,16 @@ namespace csDBPF {
 			}
 
 			return destinationBytes;
+		}
+
+        /// <summary>
+        /// Compresses the input byte array with QFS compression
+        /// </summary>
+        /// <param name="sourceBytes">The input byte array to compress</param>
+        /// <returns>A byte array containing the compressed data or null if the data cannot be compressed.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="sourceBytes" /> is null.</exception>
+        public static byte[]? Compress(this byte[] sourceBytes) {
+			return DBPFSharp.QfsCompression.Compress(sourceBytes, true);
 		}
 
 
