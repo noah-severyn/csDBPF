@@ -104,21 +104,12 @@ namespace csDBPF {
             Header = new DBPFHeader();
             ListOfEntries = [];
             ListOfTGIs = [];
-            ErrorLog = [];
+            _errorLog = [];
         }
 
         /// <inheritdoc/>
         public override string ToString() {
             return $"{File.Name}: {ListOfEntries.Count} subfiles";
-        }
-
-
-        /// <summary>
-        /// Reads the header and TGI list of a DBPF file.
-        /// </summary>
-        /// <param name="file"></param>
-        private void ReadQuick(FileInfo file) {
-
         }
 
 

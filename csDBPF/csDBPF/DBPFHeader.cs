@@ -8,52 +8,18 @@ namespace csDBPF {
     /// Stores key information about the DBPFFile. The Header is the first 96 bytes of the DBPFFile. 
     /// </summary>
     public class DBPFHeader {
-        //Only have backing fields for the fields with setter logic
-        private string _identifier;
-        private uint _majorVersion;
-        private uint _minorVersion;
-        private uint _indexMajorVersion;
-
         /// <summary>
         /// File type identifier. Must be "DBPF".
         /// </summary>
-        public string Identifier {
-            get { return _identifier; }
-            private set {
-                string identifierDbpf = "DBPF";
-                if (value.CompareTo(identifierDbpf) != 0) {
-                    throw new InvalidDataException("File is not a DBPF file!");
-                } else {
-                    _identifier = value;
-                }
-            }
-        }
+        public string Identifier { get; private set; }
         /// <summary>
         /// DBPF format major version. Always 1 for SC4.
         /// </summary>
-        public uint MajorVersion {
-            get { return _majorVersion; }
-            private set {
-                if (value != 1) {
-                    throw new InvalidDataException("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
-                } else {
-                    _majorVersion = value;
-                }
-            }
-        }
+        public uint MajorVersion { get; private set; }
         /// <summary>
         /// DBPF format minor version. Always 0 for SC4.
         /// </summary>
-        public uint MinorVersion {
-            get { return _minorVersion; }
-            private set {
-                if (value != 0) {
-                    throw new InvalidDataException("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
-                } else {
-                    _minorVersion = value;
-                }
-            }
-        }
+        public uint MinorVersion { get; private set; }
         /// <summary>
         /// Creation time in Unix timestamp format.
         /// </summary>
@@ -65,16 +31,7 @@ namespace csDBPF {
         /// <summary>
         /// Defines the Index version. Always 7 for SC4.
         /// </summary>
-        public uint IndexMajorVersion {
-            get { return _indexMajorVersion; }
-            private set {
-                if (value != 7) {
-                    throw new InvalidDataException("Unsupported index version. Only 7 is supported for SC4 DBPF files.");
-                } else {
-                    _indexMajorVersion = value;
-                }
-            }
-        }
+        public uint IndexMajorVersion { get; private set; }
         /// <summary>
         /// Number of subfiles within this file.
         /// </summary>
@@ -95,7 +52,7 @@ namespace csDBPF {
         /// Initialize a header with default values.
         /// </summary>
         internal DBPFHeader() {
-            _identifier = "DBPF";
+            Identifier = "DBPF";
             MajorVersion = 1;
             MinorVersion = 0;
             DateCreated = (uint) DateTimeOffset.Now.ToUnixTimeSeconds();
@@ -105,18 +62,40 @@ namespace csDBPF {
             IndexEntryOffset = 0;
             IndexSize = 0;
         }
+
         /// <summary>
         /// Initialize Header information from an existing stream.
         /// </summary>
-        /// <param name="br">Stream to read from</param>
+        /// <remarks>The <paramref name="br"/> stream position will be advanced past the header upon successful construction.</remarks>
+        /// <param name="br">The <see cref="BinaryReader"/> positioned at the start of the DBPF file header. The reader must support
+        /// reading at least 44 bytes from the current position.</param>
+        /// <exception cref="InvalidDataException">Thrown if the file does not begin with the expected "DBPF" identifier, if the major or minor version is not
+        /// 1.0, or if the index version is not 7.</exception>
         internal DBPFHeader(BinaryReader br) {
-            _identifier = br.ReadBytes(4).ToAString();
+            // Read identifier directly as string
+            Span<byte> identifierBytes = stackalloc byte[4];
+            br.BaseStream.Read(identifierBytes);
+            Identifier = System.Text.Encoding.ASCII.GetString(identifierBytes);
+            if (Identifier != "DBPF") {
+                throw new InvalidDataException("File is not a DBPF file!");
+            }
+
             MajorVersion = br.ReadUInt32();
             MinorVersion = br.ReadUInt32();
-            br.BaseStream.Seek(12, SeekOrigin.Current); //skip 8 unused bytes
+            if (MajorVersion != 1 || MinorVersion != 0) {
+                throw new InvalidDataException("Unsupported major.minor version. Only 1.0 is supported for SC4 DBPF files.");
+            }
+
+            br.BaseStream.Position += 12; //Skip 12 unused bytes
+
             DateCreated = br.ReadUInt32();
             DateModified = br.ReadUInt32();
+
             IndexMajorVersion = br.ReadUInt32();
+            if (IndexMajorVersion != 7) {
+                throw new InvalidDataException("Unsupported index version. Only 7 is supported for SC4 DBPF files.");
+            }
+
             IndexEntryCount = br.ReadUInt32();
             IndexEntryOffset = br.ReadUInt32();
             IndexSize = br.ReadUInt32();

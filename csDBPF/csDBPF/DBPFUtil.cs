@@ -6,12 +6,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace csDBPF {
-	/// <summary>
-	/// A collection of utility methods to use with DBPF files.
-	/// </summary>
-	public static partial class DBPFUtil {
-		private static readonly string[] sc4Extensions = [".dat", ".sc4lot", ".sc4desc", ".sc4model"];
-		private static readonly byte[] DBPF = [0x44, 0x42, 0x50, 0x46];
+    /// <summary>
+    /// A collection of utility methods to use with DBPF files.
+    /// </summary>
+    public static partial class DBPFUtil {
+        private static readonly HashSet<string> sc4Extensions = new(StringComparer.OrdinalIgnoreCase) {
+            ".dat", ".sc4lot", ".sc4desc", ".sc4model"
+        };
+        private static readonly byte[] DBPF = [0x44, 0x42, 0x50, 0x46];
 
         /// <summary>
         /// Filters a list of file paths for known SC4 file extensions, or optionally examining the file's first four bytes for the magic identifier instead.
@@ -20,14 +22,14 @@ namespace csDBPF {
         /// <param name="validateIdentifier">Optionally examine the first 4 bytes of each for a valid DBPF format. If omitted or set to <see langword="false"/>, only the file extension will be examined.</param>
         /// <returns>A listing of DBPF files</returns>
         public static IEnumerable<string> FilterDBPFFiles(this IEnumerable<string> filesToFilter, bool validateIdentifier = false) {
-			List<string> dbpfFiles = [];
-			foreach (string file in filesToFilter) {
+            List<string> dbpfFiles = [];
+            foreach (string file in filesToFilter) {
                 if (file.IsDBPF(validateIdentifier)) {
                     dbpfFiles.Add(file);
                 }
-			}
-			return dbpfFiles;
-		}
+            }
+            return dbpfFiles;
+        }
 
 
 
@@ -38,17 +40,30 @@ namespace csDBPF {
         /// <param name="validateIdentifier">Optionally examine the first 4 bytes of each for a valid DBPF format. If omitted or set to <see langword="false"/>, only the file extension will be examined.</param>
         /// <returns><see langword="true"/> if file is a SC4 DBPF file; otherwise, <see langword="false"/></returns>
         public static bool IsDBPF(this string filePath, bool validateIdentifier = false) {
-            if (validateIdentifier) {
-                FileStream fs = new FileStream(filePath, FileMode.Open);
-                BinaryReader br = new BinaryReader(fs);
-                byte[] firstFour = br.ReadBytes(4);
-                br.Close();
-                fs.Close();
-                return firstFour.SequenceEqual(DBPF);
-            } else {
-                return Array.IndexOf(sc4Extensions, Path.GetExtension(filePath).ToLower()) > -1;
+            if (!validateIdentifier) {
+                string extension = Path.GetExtension(filePath);
+                return sc4Extensions.Contains(extension);
+            }
+
+            try {
+                // Fast fail if file doesn't exist or is too small
+                FileInfo fi = new FileInfo(filePath);
+                if (!fi.Exists || fi.Length < 4) {
+                    return false;
+                }
+
+                using FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4);
+                Span<byte> buffer = stackalloc byte[4];
+                int bytesRead = fs.Read(buffer);
+
+                // Manual comparison is faster than byte[].SequenceEqual for exactly 4 bytes
+                return buffer[0] == DBPF[0] && buffer[1] == DBPF[1] && buffer[2] == DBPF[2] && buffer[3] == DBPF[3];
+            }
+            catch {
+                return false;
             }
         }
+
         /// <summary>
         /// Determine if a file is a DBPF file via its extension, and optionally examine its first four bytes for the magic string.
         /// </summary>
@@ -94,17 +109,17 @@ namespace csDBPF {
             if (places < 0 || places > 16) {
                 throw new ArgumentOutOfRangeException(nameof(places), "Number of places must be between 0 and 8.");
             }
-			if (value != null) {
+            if (value != null) {
                 string prepend = (prefix == true ? "0x" : string.Empty);
                 if (uppercase) {
                     return prepend + ((uint) value).ToString($"X{places}");
                 } else {
                     return prepend + ((uint) value).ToString($"x{places}");
                 }
-				
-			} else {
-				return string.Empty;
-			}
+
+            } else {
+                return string.Empty;
+            }
         }
 
 
@@ -148,22 +163,22 @@ namespace csDBPF {
         /// <param name="time">A Unix timestamp.</param>
         /// <returns>A <see cref="DateTime"/> object equal to the provided Unix timestamp</returns>
         public static DateTime UnixToDateTime(uint time) {
-			return DateTimeOffset.FromUnixTimeSeconds(time).UtcDateTime;
-		}
+            return DateTimeOffset.FromUnixTimeSeconds(time).UtcDateTime;
+        }
 
 
-		/// <summary>
-		/// Appends an array of byte values sequentially into a string.
-		/// </summary>
-		/// <param name="data">Byte data to print.</param>
-		/// <returns>String of 2 character bytes, space separated</returns>
-		public static string PrintByteValues(byte[] data) {
-			StringBuilder sb = new StringBuilder();
-			foreach (byte b in data) {
-				sb.Append(b.ToString("X2") + " ");
-			}
-			return sb.ToString();
-		}
+        /// <summary>
+        /// Appends an array of byte values sequentially into a string.
+        /// </summary>
+        /// <param name="data">Byte data to print.</param>
+        /// <returns>String of 2 character bytes, space separated</returns>
+        public static string PrintByteValues(byte[] data) {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in data) {
+                sb.Append(b.ToString("X2") + " ");
+            }
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Generate a random uint value.
