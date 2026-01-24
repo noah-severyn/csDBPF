@@ -1,23 +1,21 @@
 ﻿
 namespace csDBPF {
-
     /// <summary>
     /// Details an error encountered when parsing a DBPF file.
     /// </summary>
-    public struct DBPFError(string fileName, TGI tgi, string message) {
+    public struct DBPFError(string fileName, TGI? tgi, string message) {
         /// <summary>
-        /// Name of the current DBPF file
+        /// Name of the current DBPF file.
         /// </summary>
         public string FileName = fileName;
         /// <summary>
-        /// TGI of the current subfile
+        /// TGI of the current subfile.
         /// </summary>
-        public TGI TGI = tgi;
+        /// <remarks>If the TGI was set to <see langword="null"/>, <see cref="DBPFTGI.BLANKTGI"/> is returned instead.</remarks>
+        public TGI TGI = tgi ?? DBPFTGI.BLANKTGI;
         /// <summary>
-        /// Error message
+        /// Error message.
         /// </summary>
         public string Message = message;
     }
-
-
 }
