@@ -226,14 +226,24 @@ namespace csDBPF {
 
 
         /// <summary>
-        /// Returns a comma separated list of the TypeID, GroupID, and InstanceID in hexadecimal format.
+        /// Returns the string representation of this instance.
         /// </summary>
-        /// <returns>A string in the format <c>0x########, 0x########, 0x########</c></returns>
+        /// <returns>A string in the default format defined by <see cref="TGIFormatOptions"/>.</returns>
         public override readonly string ToString() {
-            string t = TypeID == 0 ? "#" : DBPFUtil.ToHexString(TypeID, prefix: true);
-            string g = GroupID == 0 ? "#" : DBPFUtil.ToHexString(GroupID, prefix: true);
-            string i = InstanceID == 0 ? "#" : DBPFUtil.ToHexString(InstanceID, prefix: true);
-            return $"{t}, {g}, {i}";
+            var options = new TGIFormatOptions();
+            return ToString(options);
+        }
+        /// <summary>
+        /// Returns the string representation of this instance.
+        /// </summary>
+        /// <param name="options">Specified formatting options.</param>
+        /// <remarks>To format a single type, group, or instance value, use <see cref="DBPFUtil.ToHexString(uint?, int, bool, bool)"/>.</remarks>
+        /// <returns>A string in the default format defined by <see cref="TGIFormatOptions"/>.</returns>
+        public readonly string ToString(TGIFormatOptions options) {
+            string t = TypeID == 0 ? "#" : DBPFUtil.ToHexString(TypeID, options.Places, options.Uppercase, options.Prefix);
+            string g = GroupID == 0 ? "#" : DBPFUtil.ToHexString(GroupID, options.Places, options.Uppercase, options.Prefix);
+            string i = InstanceID == 0 ? "#" : DBPFUtil.ToHexString(InstanceID, options.Places, options.Uppercase, options.Prefix);
+            return string.Join(options.Separator, t, g, i);
         }
 
 
@@ -252,6 +262,35 @@ namespace csDBPF {
         }
     }
 
+
+    /// <summary>
+    /// Configuration for the appearance of a <see cref="TGI"/> when converted to a string.
+    /// </summary>
+    public struct TGIFormatOptions {
+        /// <summary>
+        /// Number of places to show each hexadecimal value. Default is 8.
+        /// </summary>
+        public int Places { get; set; } = 8;
+        /// <summary>
+        /// Whether to prefix each hexadecimal value with <c>0x</c>. Default is <see langword="true"/>.
+        /// </summary>
+        public bool Prefix { get; set; } = true;
+        /// <summary>
+        /// Separator between each hexadecimal value. Default is a comma then a space.
+        /// </summary>
+        public string Separator { get; set; } = ", ";
+        /// <summary>
+        /// Format hexadecimal values as upper or lower case. Default is <see langword="false"/>.
+        /// </summary>
+        public bool Uppercase { get; set; } = false;
+
+        /// <summary>
+        /// Initialize a new instance of the TGIFormatOptions class.
+        /// </summary>
+        public TGIFormatOptions() {
+
+        }
+    }
 
 
     /// <summary>
