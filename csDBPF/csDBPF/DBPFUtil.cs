@@ -10,8 +10,14 @@ namespace csDBPF {
     /// A collection of utility methods to use with DBPF files.
     /// </summary>
     public static partial class DBPFUtil {
-        private static readonly HashSet<string> sc4Extensions = new(StringComparer.OrdinalIgnoreCase) {
-            ".dat", ".sc4lot", ".sc4desc", ".sc4model"
+        /// <summary>
+        /// Valid SC4 file extensions.
+        /// </summary>
+        /// <remarks>
+        /// Includes extensions <c>.dat</c>, <c>.sc4lot</c>, <c>.sc4desc</c>, <c>.sc4model</c>, <c>.dll</c>, and <c>.ini</c>.
+        /// </remarks>
+        public static readonly HashSet<string> SC4Extensions = new(StringComparer.OrdinalIgnoreCase) {
+            ".dat", ".sc4lot", ".sc4desc", ".sc4model", ".dll", ".ini"
         };
         private static readonly byte[] DBPF = [0x44, 0x42, 0x50, 0x46];
 
@@ -42,7 +48,7 @@ namespace csDBPF {
         public static bool IsDBPF(this string filePath, bool validateIdentifier = false) {
             if (!validateIdentifier) {
                 string extension = Path.GetExtension(filePath);
-                return sc4Extensions.Contains(extension);
+                return SC4Extensions.Contains(extension);
             }
 
             try {
