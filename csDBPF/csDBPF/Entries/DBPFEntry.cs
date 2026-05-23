@@ -158,22 +158,6 @@ namespace csDBPF {
 			return false;
 		}
 
-
-		/// <summary>
-		/// Returns whether this entry is an Exemplar or Cohort Entry
-		/// </summary>
-		/// <returns>TRUE if is an Exemplar or Cohort; FALSE otherwise</returns>
-		public bool IsExemplar() {
-			byte[] data;
-			if (IsCompressed) {
-				data = QFS.Decompress(_byteData[0..16]);
-			} else {
-				data = _byteData[0..16];
-			}
-			string fileIdentifier = ByteArrayHelper.ToAString(data, 0, 4);
-			return fileIdentifier == "EQZB" || fileIdentifier == "EQZT" || fileIdentifier == "CQZB" || fileIdentifier == "CQZT";
-		}
-
 		/// <summary>
 		/// Return either the Compressed or Uncompressed size depending on if this entry is compressed or not.
 		/// </summary>
