@@ -46,11 +46,52 @@ namespace csDBPF
         /// <returns>A single string, long, or float value.  This is specified via the <see cref="DataType"/> property</returns>
         public abstract object GetData(int position);
 
-		/// <summary>
-		/// Set the values(s) stored in this property.
-		/// </summary>
+        /// <summary>
+        /// Returns the value(s) stored in this property cast to the exact CLR type defined by <see cref="DataType"/>.
+        /// </summary>
+        /// <returns>
+        /// An array whose element type matches <see cref="DataType"/>:
+        /// <list type="bullet">
+        /// <item><see cref="PropertyDataType.UINT8"/> → <c>IEnumerable&lt;byte&gt;</c></item>
+        /// <item><see cref="PropertyDataType.UINT16"/> → <c>IEnumerable&lt;ushort&gt;</c></item>
+        /// <item><see cref="PropertyDataType.UINT32"/> → <c>IEnumerable&lt;uint&gt;</c></item>
+        /// <item><see cref="PropertyDataType.SINT32"/> → <c>IEnumerable&lt;int&gt;</c></item>
+        /// <item><see cref="PropertyDataType.SINT64"/> → <c>IEnumerable&lt;long&gt;</c></item>
+        /// <item><see cref="PropertyDataType.BOOL"/> → <c>IEnumerable&lt;bool&gt;</c></item>
+        /// <item><see cref="PropertyDataType.FLOAT32"/> → <c>IEnumerable&lt;float&gt;</c></item>
+        /// <item><see cref="PropertyDataType.STRING"/> → <c>IEnumerable&lt;string&gt;</c></item>
+        /// </list> 
+        /// </returns>
+        public abstract IEnumerable GetTypedData();
+
+        /// <summary>
+        /// Returns the value stored in this property at the given position cast to the exact CLR type defined by <see cref="DataType"/>.
+        /// </summary>
+        /// <param name="position">Position (or rep) to return.</param>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="position"/> is less than zero.</exception>
+        /// <returns>
+        /// A single value whose type matches <see cref="DataType"/>:
+        /// <list type="bullet">
+        /// <item><see cref="PropertyDataType.UINT8"/> → <c>byte</c></item>
+        /// <item><see cref="PropertyDataType.UINT16"/> → <c>ushort</c></item>
+        /// <item><see cref="PropertyDataType.UINT32"/> → <c>uint</c></item>
+        /// <item><see cref="PropertyDataType.SINT32"/> → <c>int</c></item>
+        /// <item><see cref="PropertyDataType.SINT64"/> → <c>long</c></item>
+        /// <item><see cref="PropertyDataType.BOOL"/> → <c>bool</c></item>
+        /// <item><see cref="PropertyDataType.FLOAT32"/> → <c>float</c></item>
+        /// <item><see cref="PropertyDataType.STRING"/> → <c>string</c></item>
+        /// </list>
+        /// </returns>
+        /// <remarks>If <paramref name="position"/> exceeds the number of values in this property, the last value is returned.</remarks>
+        public abstract object GetTypedData(int position);
+
+
+
+        /// <summary>
+        /// Set the values(s) stored in this property.
+        /// </summary>
         /// <param name="value">A string or set of numeric value(s)</param>
-		public abstract void SetData(IEnumerable value);
+        public abstract void SetData(IEnumerable value);
         /// <summary>
         /// Set the values(s) stored in this property.
         /// </summary>

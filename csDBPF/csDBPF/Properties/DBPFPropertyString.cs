@@ -103,6 +103,16 @@ namespace csDBPF {
             return _dataValue;
         }
 
+        /// <inheritdoc/>
+        public override IEnumerable GetTypedData() {
+            return _dataValue;
+        }
+
+        /// <inheritdoc/>
+        public override object GetTypedData(int position) {
+            return _dataValue;
+        }
+
 
         /// <summary>
         /// Set the data value stored in this property. Value should be of type string.

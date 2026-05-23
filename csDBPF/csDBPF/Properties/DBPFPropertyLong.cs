@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using static csDBPF.DBPFEntry;
 using static csDBPF.DBPFProperty;
@@ -57,7 +58,7 @@ namespace csDBPF {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			DataType = dataType;
-			_dataValues = null;
+			_dataValues = [];
 			Encoding = encoding;
 			NumberOfReps = 0;
 		}
@@ -73,7 +74,7 @@ namespace csDBPF {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			DataType = dataType;
-			_dataValues = new List<long> { value };
+			_dataValues = [value];
 			Encoding = encoding;
 			NumberOfReps = 0;
 		}
@@ -137,7 +138,47 @@ namespace csDBPF {
 				return _dataValues[_dataValues.Count- 1];
 			}
 			return _dataValues[position];
-		}
+        }
+
+        /// <inheritdoc/>
+        public override IEnumerable GetTypedData() {
+            switch (DataType) {
+                case PropertyDataType.UINT8:
+                    return _dataValues.Select(Convert.ToByte);
+                case PropertyDataType.UINT16:
+                    return _dataValues.Select(Convert.ToUInt16);
+                case PropertyDataType.UINT32:
+                    return _dataValues.Select(Convert.ToUInt32);
+                case PropertyDataType.SINT32:
+                    return _dataValues.Select(Convert.ToInt32);
+                case PropertyDataType.BOOL:
+                    return _dataValues.Select(Convert.ToBoolean);
+                default: // SINT64
+					return _dataValues;
+            }
+        }
+
+        /// <inheritdoc/>
+        public override object GetTypedData(int position) {
+            if (position < 0) {
+                throw new ArgumentException("Value must be greater than or equal to 0.");
+            }
+            long value = position >= _dataValues.Count ? _dataValues[_dataValues.Count - 1] : _dataValues[position];
+            switch (DataType) {
+                case PropertyDataType.UINT8:
+                    return Convert.ToByte(value);
+                case PropertyDataType.UINT16:
+                    return Convert.ToUInt16(value);
+                case PropertyDataType.UINT32:
+                    return Convert.ToUInt32(value);
+                case PropertyDataType.SINT32:
+                    return Convert.ToInt32(value);
+                case PropertyDataType.BOOL:
+                    return Convert.ToBoolean(value);
+                default: // SINT64
+                    return value;
+            }
+        }
 
 
 
@@ -194,7 +235,7 @@ namespace csDBPF {
 				sb.Append("}}\r\n");
 				return ByteArrayHelper.ToBytes(sb.ToString(), true);
 			} else {
-				List<byte> bytes = new List<byte>();
+				List<byte> bytes = [];
 				bytes.AddRange(BitConverter.GetBytes(ID));
 				bytes.AddRange(BitConverter.GetBytes((ushort) DataType));
 				if (NumberOfReps == 0) { //keyType = 0x00

@@ -49,6 +49,7 @@ namespace csDBPF {
         /// <param name="encoding">Text or Binary encoding type</param>
         public DBPFPropertyFloat(DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			DataType = PropertyDataType.FLOAT32;
+			_dataValues = [];
 			Encoding = encoding;
 			NumberOfReps = 0;
 		}
@@ -126,6 +127,19 @@ namespace csDBPF {
                 return _dataValues[_dataValues.Count - 1];
             }
             return _dataValues[position];
+        }
+
+        /// <inheritdoc/>
+        public override IEnumerable GetTypedData() {
+            return _dataValues;
+        }       
+        
+        /// <inheritdoc/>
+        public override object GetTypedData(int position) {
+            if (position < 0) {
+                throw new ArgumentException("Value must be greater than or equal to 0.");
+            }
+            return position >= _dataValues.Count ? _dataValues[_dataValues.Count - 1] : _dataValues[position];
         }
 
 
