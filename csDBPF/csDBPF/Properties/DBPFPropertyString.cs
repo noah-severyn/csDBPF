@@ -82,23 +82,13 @@ namespace csDBPF {
 		}
 
 
-		/// <summary>
-		/// Returns the data value stored in this property.
-		/// </summary>
-		/// <returns>The data value stored in this property</returns>
-		public override string GetData() {
+        /// <inheritdoc/>
+        [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
+        public override string GetData() {
 			return _dataValue;
 		}
-		
-		
-		/// <summary>
-		/// Returns the value stored in this property at the given position.
-		/// </summary>
-		/// <param name="position">Position (or rep) to return</param>
-		/// <returns>The data value at the specified position</returns>
-		/// <remarks>
-		/// The position parameter is ignored because type DBPFPropertyString only stores one string as its data.
-		/// </remarks>
+        /// <inheritdoc/>
+        [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
         public override string GetData(int position) {
             return _dataValue;
         }

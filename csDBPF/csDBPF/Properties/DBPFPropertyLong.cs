@@ -113,23 +113,13 @@ namespace csDBPF {
 
 
 
-		/// <summary>
-		/// Returns a list of data values which are stored in this property.
-		/// </summary>
-		/// <returns>List of data values which are stored in this property</returns>
-		public override long[] GetData() {
+        /// <inheritdoc/>
+        [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
+        public override long[] GetData() {
 			return _dataValues.ToArray();
 		}
-
-
-        /// <summary>
-        /// Returns the value stored in this property at the given position.
-        /// </summary>
-        /// <param name="position">Position (or rep) to return</param>
-        /// <returns>The data value at the specified position</returns>
-        /// <remarks>
-        /// If the position parameter is greater than the number of values, the last value is returned instead.
-        /// </remarks>
+        /// <inheritdoc/>
+        [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
         public override object GetData(int position) {
 			if (position < 0) {
 				throw new ArgumentException("Value must be greater than or equal to 0.");

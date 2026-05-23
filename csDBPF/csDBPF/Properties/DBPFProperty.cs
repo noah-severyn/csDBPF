@@ -34,16 +34,19 @@ namespace csDBPF
 		/// </remarks>
 		public abstract DBPF.Encoding Encoding { get; set; }
 
-		/// <summary>
-		/// Returns the values(s) stored in this property.
-		/// </summary>
+
+        /// <summary>
+        /// Returns the values(s) stored in this property.
+        /// </summary>
         /// <returns>An array of string, long, or float values. This is specified via the <see cref="DataType"/> property</returns>
-		public abstract IEnumerable GetData();
+        [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
+        public abstract IEnumerable GetData();
 
         /// <summary>
         /// Returns the value stored in this property at the given position.
         /// </summary>
         /// <returns>A single string, long, or float value.  This is specified via the <see cref="DataType"/> property</returns>
+        [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
         public abstract object GetData(int position);
 
         /// <summary>
