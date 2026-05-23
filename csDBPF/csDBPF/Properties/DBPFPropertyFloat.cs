@@ -136,36 +136,35 @@ namespace csDBPF {
 
 
 
-        /// <summary>
-        /// Set the data values stored in this property. Value should be of type <![CDATA[IEnumerable<float>]]>.
-        /// </summary>
-        /// <param name="value">Values to set</param>
-        /// <exception cref="ArgumentException">Argument to DBPFPropertyFloat.SetData must be <![CDATA[IEnumerable<float>]]>.</exception>
+        /// <inheritdoc/>
+        [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
         public override void SetData(IEnumerable value) {
-			if (value is not IEnumerable<float>) {
-				throw new ArgumentException($"Argument to DBPFPropertyFloat.SetData must be IEnumerable<float>. {value.GetType()} was provided.");
-			}
-			_dataValues = (List<float>) value;
-
-			if (Encoding == DBPF.Encoding.Text) {
-				NumberOfReps = _dataValues.Count;
-			} else {
-				//Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
-				if (_dataValues.Count <= 1) {
-					NumberOfReps = 0;
-				} else {
-					NumberOfReps = _dataValues.Count;
-				}
-			}
+            SetTypedData(value);
         }
-        /// <summary>
-        /// Set the values(s) stored in this property. Value should be of type <![CDATA[List<float>]]>.
-        /// </summary>
-        /// <remarks>
-        /// This implementation for float-type properties is identical to <see cref="SetData(IEnumerable)"/> to avoid the macOS float bug.
-        /// </remarks>
+        /// <inheritdoc/>
+        [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
         internal override void SetData(IEnumerable value, uint countOfReps) {
 			SetData(value);
+        }
+
+
+        /// <inheritdoc/>
+        public override void SetTypedData(IEnumerable value) {
+            if (value is not IEnumerable<float>) {
+                throw new ArgumentException($"Argument to DBPFPropertyFloat.SetData must be IEnumerable<float>. {value.GetType()} was provided.");
+            }
+            _dataValues = (List<float>) value;
+
+            if (Encoding == DBPF.Encoding.Text) {
+                NumberOfReps = _dataValues.Count;
+            } else {
+                //Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
+                if (_dataValues.Count <= 1) {
+                    NumberOfReps = 0;
+                } else {
+                    NumberOfReps = _dataValues.Count;
+                }
+            }
         }
 
 

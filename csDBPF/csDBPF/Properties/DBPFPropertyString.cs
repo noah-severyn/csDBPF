@@ -104,30 +104,29 @@ namespace csDBPF {
         }
 
 
-        /// <summary>
-        /// Set the data value stored in this property. Value should be of type string.
-        /// </summary>
-        /// <param name="value">String to set</param>
-        /// <exception cref="ArgumentException">Argument to DBPFPropertyString.SetData must be string.</exception>
+        /// <inheritdoc/>
+        [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
         public override void SetData(IEnumerable value) {
-			if (value is not string) {
-				throw new ArgumentException($"Argument to DBPFPropertyString.SetData must be string. {value.GetType()} was provided.");
-			}
-			_dataValue = (string) value;
-			if (Encoding == DBPF.Encoding.Text) {
-                NumberOfReps = 1;
-			} else {
-                NumberOfReps = _dataValue.Length;
-			}
+            SetTypedData(value);
         }
-        /// <summary>
-        /// Set the values(s) stored in this property. Value should be of type string.
-        /// </summary>
-        /// <remarks>
-        /// This implementation for string-type properties is identical to <see cref="SetData(IEnumerable)"/>.
-        /// </remarks>
+        /// <inheritdoc/>
+        [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
         internal override void SetData(IEnumerable value, uint countOfReps) {
             SetData(value);
+        }
+
+
+        /// <inheritdoc/>
+        public override void SetTypedData(IEnumerable value) {
+            if (value is not string) {
+                throw new ArgumentException($"Argument to DBPFPropertyString.SetData must be string. {value.GetType()} was provided.");
+            }
+            _dataValue = (string) value;
+            if (Encoding == DBPF.Encoding.Text) {
+                NumberOfReps = 1;
+            } else {
+                NumberOfReps = _dataValue.Length;
+            }
         }
 
 

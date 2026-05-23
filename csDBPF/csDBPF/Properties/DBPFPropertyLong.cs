@@ -172,30 +172,21 @@ namespace csDBPF {
 
 
 
-        /// <summary>
-        /// Set the data values stored in this property. Value should be of type <![CDATA[IEnumerable<long>]]>.
-        /// </summary>
-        /// <param name="value">Values to set</param>
-        /// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetData must be <![CDATA[IEnumerable<long>]]>;.</exception>
+        /// <inheritdoc/>
+        [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
         public override void SetData(IEnumerable value) {
-			if (value is not IEnumerable<long>) {
-				throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be IEnumerable<long>. {value.GetType()} was provided.");
-			}
-
-			_dataValues = (List<long>) value;
-			if (_dataValues.Count <= 1) {
-				NumberOfReps = 0;
-			} else {
-				NumberOfReps = _dataValues.Count;
-			}
+            if (value is not IEnumerable<long>) {
+                throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be IEnumerable<long>. {value.GetType()} was provided.");
+            }
+            _dataValues = [.. (IEnumerable<long>) value];
+            if (_dataValues.Count <= 1) {
+                NumberOfReps = 0;
+            } else {
+                NumberOfReps = _dataValues.Count;
+            }
         }
-        /// <summary>
-        /// Set the values(s) stored in this property. Value should be of type <![CDATA[List<long>]]>.
-        /// </summary>
-        /// <remarks>
-        /// This override is necessary when countOfReps = 1; otherwise, if passed a list of length 1 then the number of reps would be set to 0. Figuring the byte offset for the next property will then be off by 4 because the extra 4 bytes representing the number of reps will be ignored.
-        /// </remarks>
-		/// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetData must be <![CDATA[List<long>]]>;.</exception>
+        /// <inheritdoc/>
+        [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
         internal override void SetData(IEnumerable value, uint countOfReps) {
             if (value is not List<long>) {
                 throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be List<long>. {value.GetType()} was provided.");
@@ -203,6 +194,36 @@ namespace csDBPF {
 
             _dataValues = (List<long>) value;
 			NumberOfReps = (int) countOfReps;
+        }
+
+
+
+
+        /// <inheritdoc/>
+        public override void SetTypedData(IEnumerable value) {
+            bool valid = DataType switch {
+                PropertyDataType.UINT8 => value is IEnumerable<byte>,
+                PropertyDataType.UINT16 => value is IEnumerable<ushort>,
+                PropertyDataType.UINT32 => value is IEnumerable<uint>,
+                PropertyDataType.SINT32 => value is IEnumerable<int>,
+                PropertyDataType.BOOL => value is IEnumerable<bool>,
+                _ => value is IEnumerable<long>,
+            };
+            if (!valid) {
+                throw new ArgumentException($"DataType {DataType} does not match the provided type {value.GetType()}.");
+            }
+
+            List<long> converted = [];
+            foreach (object v in value) {
+                converted.Add(Convert.ToInt64(v));
+            }
+
+            _dataValues = converted;
+            if (_dataValues.Count <= 1) {
+                NumberOfReps = 0;
+            } else {
+                NumberOfReps = _dataValues.Count;
+            }
         }
 
 
