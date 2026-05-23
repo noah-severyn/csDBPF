@@ -497,24 +497,24 @@ namespace csDBPF {
         /// </summary>
         /// <param name="propertyId">Id of the property to find.</param>
         /// <returns>A <see cref="DBPFProperty"/> of the match if found; otherwise, <see langword="null"/>.</returns>
-        public DBPFProperty GetProperty(uint propertyId) {
+        public DBPFProperty? GetProperty(uint propertyId) {
 			if (ListOfProperties is null) {
 				throw new InvalidOperationException("This entry must be decoded before it can be analyzed!");
 			}
-			ListOfProperties.TryGetValue(propertyId, out DBPFProperty property);
+			ListOfProperties.TryGetValue(propertyId, out DBPFProperty? property);
 			return property;
 		}
-
-
         /// <summary>
         /// Lookup and return a property from a list of properties in the entry.
         /// </summary>
         /// <param name="name">Name of property to check. Name is case insensitive and ignores spaces.</param>
         /// <returns>A <see cref="DBPFProperty"/> of the match if found; otherwise, <see langword="null"/>.</returns>
-        public DBPFProperty GetProperty(string name) {
+        public DBPFProperty? GetProperty(string name) {
             uint id = XMLProperties.GetPropertyID(name);
             return GetProperty(id);
         }
+
+
 
         /// <summary>
         /// Evaluate whether this entry contains the specified property.
