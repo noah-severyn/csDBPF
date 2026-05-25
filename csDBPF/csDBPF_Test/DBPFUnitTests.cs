@@ -53,6 +53,13 @@ namespace csDBPF_Test {
                 Assert.IsFalse(DBPFUtil.IsDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll", true));
                 Assert.IsFalse(DBPFUtil.IsDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png", true));
             }
+            [TestMethod]
+            public void Test_011_DBPFUtil_IsFileSC4() {
+                Assert.IsTrue(DBPFUtil.IsSC4File("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_GraphModd. V2.dat"));
+                Assert.IsTrue(DBPFUtil.IsSC4File("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dat"));
+                Assert.IsTrue(DBPFUtil.IsSC4File("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll"));
+                Assert.IsFalse(DBPFUtil.IsSC4File("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png"));
+            }
 
             [TestMethod]
             public void Test_012_DBPFUtil_ToHexString() {
