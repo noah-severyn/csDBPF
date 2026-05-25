@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static csDBPF.DBPFEntry;
 using static csDBPF.DBPFProperty;
 
 namespace csDBPF {
@@ -43,7 +42,7 @@ namespace csDBPF {
 		/// <summary>
 		/// List of data values which are stored in this property.
 		/// </summary>
-		private List<long> _dataValues;
+		private long[] _dataValues;
 
 
 
@@ -85,19 +84,15 @@ namespace csDBPF {
         /// <param name="values">Values this property holds</param>
         /// <param name="encoding">Text or Binary encoding type</param>
         /// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-        public DBPFPropertyLong(PropertyDataType dataType, List<long> values, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
+        public DBPFPropertyLong(PropertyDataType dataType, Array values, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			if (dataType == PropertyDataType.FLOAT32 || dataType == PropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			DataType = dataType;
-			_dataValues = values;
+            _dataValues = [];
+			SetTypedData(values);
 			Encoding = encoding;
-			if (_dataValues.Count == 1) {
-				NumberOfReps = 0;
-			} else {
-				NumberOfReps = _dataValues.Count;
-			}
-		}
+        }
 
 
 
@@ -116,7 +111,7 @@ namespace csDBPF {
         /// <inheritdoc/>
         [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
         public override long[] GetData() {
-			return _dataValues.ToArray();
+			return _dataValues;
 		}
         /// <inheritdoc/>
         [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
@@ -124,27 +119,27 @@ namespace csDBPF {
 			if (position < 0) {
 				throw new ArgumentException("Value must be greater than or equal to 0.");
 			}
-			if (position >= _dataValues.Count) {
-				return _dataValues[_dataValues.Count- 1];
+			if (position >= _dataValues.Length) {
+				return _dataValues[_dataValues.Length - 1];
 			}
 			return _dataValues[position];
         }
 
         /// <inheritdoc/>
-        public override IEnumerable GetTypedData() {
+        public override Array GetTypedData() {
             switch (DataType) {
                 case PropertyDataType.UINT8:
-                    return _dataValues.Select(Convert.ToByte);
+                    return _dataValues.Select(Convert.ToByte).ToArray();
                 case PropertyDataType.UINT16:
-                    return _dataValues.Select(Convert.ToUInt16);
+                    return _dataValues.Select(Convert.ToUInt16).ToArray();
                 case PropertyDataType.UINT32:
-                    return _dataValues.Select(Convert.ToUInt32);
+                    return _dataValues.Select(Convert.ToUInt32).ToArray();
                 case PropertyDataType.SINT32:
-                    return _dataValues.Select(Convert.ToInt32);
+                    return _dataValues.Select(Convert.ToInt32).ToArray();
                 case PropertyDataType.BOOL:
-                    return _dataValues.Select(Convert.ToBoolean);
+                    return _dataValues.Select(Convert.ToBoolean).ToArray();
                 default: // SINT64
-					return _dataValues;
+					return _dataValues.ToArray();
             }
         }
 
@@ -153,7 +148,7 @@ namespace csDBPF {
             if (position < 0) {
                 throw new ArgumentException("Value must be greater than or equal to 0.");
             }
-            long value = position >= _dataValues.Count ? _dataValues[_dataValues.Count - 1] : _dataValues[position];
+            long value = position >= _dataValues.Length ? _dataValues[_dataValues.Length - 1] : _dataValues[position];
             switch (DataType) {
                 case PropertyDataType.UINT8:
                     return Convert.ToByte(value);
@@ -179,10 +174,10 @@ namespace csDBPF {
                 throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be IEnumerable<long>. {value.GetType()} was provided.");
             }
             _dataValues = [.. (IEnumerable<long>) value];
-            if (_dataValues.Count <= 1) {
+            if (_dataValues.Length <= 1) {
                 NumberOfReps = 0;
             } else {
-                NumberOfReps = _dataValues.Count;
+                NumberOfReps = _dataValues.Length;
             }
         }
         /// <inheritdoc/>
@@ -192,7 +187,7 @@ namespace csDBPF {
                 throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be List<long>. {value.GetType()} was provided.");
             }
 
-            _dataValues = (List<long>) value;
+            _dataValues = ((List<long>) value).ToArray();
 			NumberOfReps = (int) countOfReps;
         }
 
@@ -200,29 +195,30 @@ namespace csDBPF {
 
 
         /// <inheritdoc/>
-        public override void SetTypedData(IEnumerable value) {
-            bool valid = DataType switch {
-                PropertyDataType.UINT8 => value is IEnumerable<byte>,
-                PropertyDataType.UINT16 => value is IEnumerable<ushort>,
-                PropertyDataType.UINT32 => value is IEnumerable<uint>,
-                PropertyDataType.SINT32 => value is IEnumerable<int>,
-                PropertyDataType.BOOL => value is IEnumerable<bool>,
-                _ => value is IEnumerable<long>,
+        public override void SetTypedData(Array value) {
+            bool valid = value is IEnumerable<long> || DataType switch {
+                PropertyDataType.UINT8 => value is byte[],
+                PropertyDataType.UINT16 => value is ushort[],
+                PropertyDataType.UINT32 => value is uint[],
+                PropertyDataType.SINT32 => value is int[],
+                PropertyDataType.BOOL => value is bool[],
+                _ => false,
             };
             if (!valid) {
                 throw new ArgumentException($"DataType {DataType} does not match the provided type {value.GetType()}.");
             }
 
-            List<long> converted = [];
+            long[] converted = new long[value.Length];
+            int idx = 0;
             foreach (object v in value) {
-                converted.Add(Convert.ToInt64(v));
+                converted[idx++] = Convert.ToInt64(v);
             }
 
             _dataValues = converted;
-            if (_dataValues.Count <= 1) {
+            if (_dataValues.Length <= 1) {
                 NumberOfReps = 0;
             } else {
-                NumberOfReps = _dataValues.Count;
+                NumberOfReps = _dataValues.Length;
             }
         }
 
@@ -237,9 +233,9 @@ namespace csDBPF {
 				StringBuilder sb = new StringBuilder();
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(ID);
 				sb.Append($"0x{DBPFUtil.ToHexString(ID)}:{{\"{xmlprop.Name}\"}}={LookupDataTypeName(DataType)}:{NumberOfReps}:{{");
-				for (int idx = 0; idx < _dataValues.Count; idx++) {
+				for (int idx = 0; idx < _dataValues.Length; idx++) {
 					sb.Append($"0x{DBPFUtil.ToHexString(_dataValues[idx], LookupDataTypeLength(DataType) * 2)}");
-					if (idx != _dataValues.Count - 1) {
+					if (idx != _dataValues.Length - 1) {
 						sb.Append(',');
 					}
 				}
@@ -257,7 +253,7 @@ namespace csDBPF {
 				} else { // keyType = 0x80
 					bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //keyType
 					bytes.Add(0); //unused flag
-					bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Count));
+					bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Length));
 					foreach (long value in _dataValues) {
 						bytes.AddRange(ByteArrayHelper.ToBytes(value, LookupDataTypeLength(DataType)));
 					}

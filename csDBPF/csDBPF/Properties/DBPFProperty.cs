@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using static csDBPF.DBPFEntry;
 
 namespace csDBPF
 {
@@ -61,17 +60,17 @@ namespace csDBPF
         /// <returns>
         /// An array whose element type matches <see cref="DataType"/>:
         /// <list type="bullet">
-        /// <item><see cref="PropertyDataType.UINT8"/> → <c>IEnumerable&lt;byte&gt;</c></item>
-        /// <item><see cref="PropertyDataType.UINT16"/> → <c>IEnumerable&lt;ushort&gt;</c></item>
-        /// <item><see cref="PropertyDataType.UINT32"/> → <c>IEnumerable&lt;uint&gt;</c></item>
-        /// <item><see cref="PropertyDataType.SINT32"/> → <c>IEnumerable&lt;int&gt;</c></item>
-        /// <item><see cref="PropertyDataType.SINT64"/> → <c>IEnumerable&lt;long&gt;</c></item>
-        /// <item><see cref="PropertyDataType.BOOL"/> → <c>IEnumerable&lt;bool&gt;</c></item>
-        /// <item><see cref="PropertyDataType.FLOAT32"/> → <c>IEnumerable&lt;float&gt;</c></item>
-        /// <item><see cref="PropertyDataType.STRING"/> → <c>IEnumerable&lt;string&gt;</c></item>
+        /// <item><see cref="PropertyDataType.UINT8"/> → <c>[byte]</c></item>
+        /// <item><see cref="PropertyDataType.UINT16"/> → <c>[ushort]</c></item>
+        /// <item><see cref="PropertyDataType.UINT32"/> → <c>[uint]</c></item>
+        /// <item><see cref="PropertyDataType.SINT32"/> → <c>[int]</c></item>
+        /// <item><see cref="PropertyDataType.SINT64"/> → <c>[long]</c></item>
+        /// <item><see cref="PropertyDataType.BOOL"/> → <c>[bool]</c></item>
+        /// <item><see cref="PropertyDataType.FLOAT32"/> → <c>[float]</c></item>
+        /// <item><see cref="PropertyDataType.STRING"/> → <c>[char]</c></item>
         /// </list> 
         /// </returns>
-        public abstract IEnumerable GetTypedData();
+        public abstract Array GetTypedData();
 
         /// <summary>
         /// Returns the value stored in this property at the given position cast to the exact CLR type defined by <see cref="DataType"/>.
@@ -88,7 +87,7 @@ namespace csDBPF
         /// <item><see cref="PropertyDataType.SINT64"/> → <c>long</c></item>
         /// <item><see cref="PropertyDataType.BOOL"/> → <c>bool</c></item>
         /// <item><see cref="PropertyDataType.FLOAT32"/> → <c>float</c></item>
-        /// <item><see cref="PropertyDataType.STRING"/> → <c>string</c></item>
+        /// <item><see cref="PropertyDataType.STRING"/> → <c>char</c></item>
         /// </list>
         /// </returns>
         /// <remarks>If <paramref name="position"/> exceeds the number of values in this property, the last value is returned.</remarks>
@@ -98,19 +97,19 @@ namespace csDBPF
         /// <summary>
         /// Set the value(s) stored in this property. The value must match the exact CLR type defined by <see cref="DataType"/>:
         /// <list type="bullet">
-        /// <item><see cref="PropertyDataType.UINT8"/> - <c>IEnumerable&lt;byte&gt;</c></item>
-        /// <item><see cref="PropertyDataType.UINT16"/> - <c>IEnumerable&lt;ushort&gt;</c></item>
-        /// <item><see cref="PropertyDataType.UINT32"/> - <c>IEnumerable&lt;uint&gt;</c></item>
-        /// <item><see cref="PropertyDataType.SINT32"/> - <c>IEnumerable&lt;int&gt;</c></item>
-        /// <item><see cref="PropertyDataType.SINT64"/> - <c>IEnumerable&lt;long&gt;</c></item>
-        /// <item><see cref="PropertyDataType.BOOL"/> - <c>IEnumerable&lt;bool&gt;</c></item>
-        /// <item><see cref="PropertyDataType.FLOAT32"/> - <c>IEnumerable&lt;float&gt;</c></item>
-        /// <item><see cref="PropertyDataType.STRING"/> - <c>string</c></item>
+        /// <item><see cref="PropertyDataType.UINT8"/> - <c>[byte]</c></item>
+        /// <item><see cref="PropertyDataType.UINT16"/> - <c>[ushort]</c></item>
+        /// <item><see cref="PropertyDataType.UINT32"/> - <c>[uint]</c></item>
+        /// <item><see cref="PropertyDataType.SINT32"/> - <c>[int]</c></item>
+        /// <item><see cref="PropertyDataType.SINT64"/> - <c>[long]</c></item>
+        /// <item><see cref="PropertyDataType.BOOL"/> - <c>[bool]</c></item>
+        /// <item><see cref="PropertyDataType.FLOAT32"/> - <c>[float]</c></item>
+        /// <item><see cref="PropertyDataType.STRING"/> - <c>[char]</c></item>
         /// </list>
         /// </summary>
         /// <param name="value">Values to set, typed to match <see cref="DataType"/></param>
         /// <exception cref="ArgumentException">If the enumerable contains a data type that does not match <see cref="DataType"/>.</exception>
-        public abstract void SetTypedData(IEnumerable value);
+        public abstract void SetTypedData(Array value);
 
 
         /// <summary>

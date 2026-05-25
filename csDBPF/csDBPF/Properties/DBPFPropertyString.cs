@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using static csDBPF.DBPFEntry;
 using static csDBPF.DBPFProperty;
 
 namespace csDBPF {
@@ -39,7 +38,7 @@ namespace csDBPF {
         /// <summary>
         /// The data value stored in this property.
         /// </summary>
-        private string _dataValue;
+        private char[] _dataValues;
 
 
 
@@ -60,14 +59,29 @@ namespace csDBPF {
 		/// <param name="encoding">Text or Binary encoding type</param>
 		public DBPFPropertyString(string value, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			DataType = PropertyDataType.STRING;
-			_dataValue = value;
+            _dataValues = value.ToCharArray();
 			Encoding = encoding;
 			if (Encoding == DBPF.Encoding.Text) {
 				NumberOfReps = 1;
 			} else {
-				NumberOfReps = _dataValue.Length;
+				NumberOfReps = _dataValues.Length;
 			}
-		}
+        }
+        /// <summary>
+        /// Construct a DBPFProperty with a string data type holding a specified string.
+        /// </summary>
+        /// <param name="value">Chars to set</param>
+        /// <param name="encoding">Text or Binary encoding type</param>
+        public DBPFPropertyString(char[] value, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
+            DataType = PropertyDataType.STRING;
+            _dataValues = value;
+            Encoding = encoding;
+            if (Encoding == DBPF.Encoding.Text) {
+                NumberOfReps = 1;
+            } else {
+                NumberOfReps = _dataValues.Length;
+            }
+        }
 
 
 
@@ -77,7 +91,7 @@ namespace csDBPF {
 			sb.Append($"ID: 0x{DBPFUtil.ToHexString(ID)}, ");
 			sb.Append($"Type: {DataType}, ");
 			sb.Append($"Reps: {NumberOfReps}, ");
-			sb.Append($"Value: {_dataValue}");
+			sb.Append($"Value: {_dataValues}");
 			return sb.ToString();
 		}
 
@@ -85,29 +99,29 @@ namespace csDBPF {
         /// <inheritdoc/>
         [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
         public override string GetData() {
-			return _dataValue;
+			return _dataValues.ToString();
 		}
         /// <inheritdoc/>
         [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
         public override string GetData(int position) {
-            return _dataValue;
+            return _dataValues.ToString();
         }
 
         /// <inheritdoc/>
-        public override IEnumerable GetTypedData() {
-            return _dataValue;
+        public override Array GetTypedData() {
+            return _dataValues;
         }
 
         /// <inheritdoc/>
         public override object GetTypedData(int position) {
-            return _dataValue;
+            return _dataValues[position];
         }
 
 
         /// <inheritdoc/>
         [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
         public override void SetData(IEnumerable value) {
-            SetTypedData(value);
+            SetTypedData(((string) value).ToCharArray());
         }
         /// <inheritdoc/>
         [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
@@ -117,15 +131,15 @@ namespace csDBPF {
 
 
         /// <inheritdoc/>
-        public override void SetTypedData(IEnumerable value) {
-            if (value is not string) {
-                throw new ArgumentException($"Argument to DBPFPropertyString.SetData must be string. {value.GetType()} was provided.");
+        public override void SetTypedData(Array value) {
+            if (value is not char[]) {
+                throw new ArgumentException($"Argument to DBPFPropertyString.SetData must be char[]. {value.GetType()} was provided.");
             }
-            _dataValue = (string) value;
+            _dataValues = (char[]) value;
             if (Encoding == DBPF.Encoding.Text) {
                 NumberOfReps = 1;
             } else {
-                NumberOfReps = _dataValue.Length;
+                NumberOfReps = _dataValues.Length;
             }
         }
 
@@ -139,7 +153,7 @@ namespace csDBPF {
 				StringBuilder sb = new StringBuilder();
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(ID);
 				sb.Append($"0x{DBPFUtil.ToHexString(ID)}:{{\"{xmlprop.Name}\"}}=String:1:{{");
-				sb.Append($"\"{_dataValue}\"");
+				sb.Append($"\"{_dataValues.ToString()}\"");
 				sb.Append("}\r\n");
 				return ByteArrayHelper.ToBytes(sb.ToString(), true);
 			} else {
@@ -148,9 +162,11 @@ namespace csDBPF {
 				bytes.AddRange(BitConverter.GetBytes((ushort) DataType));
 				bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //String is always keyType = 0x80
 				bytes.Add(0); //unused flag
-				bytes.AddRange(BitConverter.GetBytes((uint) _dataValue.Length));
-				bytes.AddRange(ByteArrayHelper.ToBytes(_dataValue,true));
-				return bytes.ToArray();
+				bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Length));
+                foreach (char value in _dataValues) {
+                    bytes.AddRange(BitConverter.GetBytes(value));
+                }
+                return bytes.ToArray();
 			}
 		}
 	}
