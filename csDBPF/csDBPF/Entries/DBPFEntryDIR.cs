@@ -108,15 +108,17 @@ namespace csDBPF {
         /// </summary>
 		/// <param name="compress">Note this has no effect as DIR entries always remain uncompressed</param>
         public override void Encode(bool compress = false) {
-            List<byte> bytes = [];
+            byte[] bytes = new byte[_compressedItems.Count * 16];
+            int pos = 0;
 
             foreach (DBDFItem item in _compressedItems) {
-                bytes.AddRange(BitConverter.GetBytes(item.TID));
-                bytes.AddRange(BitConverter.GetBytes(item.GID));
-                bytes.AddRange(BitConverter.GetBytes(item.IID));
-                bytes.AddRange(BitConverter.GetBytes(item.Size));
+                Buffer.BlockCopy(BitConverter.GetBytes(item.TID), 0, bytes, pos, 4);
+                Buffer.BlockCopy(BitConverter.GetBytes(item.GID), 0, bytes, pos + 4, 4);
+                Buffer.BlockCopy(BitConverter.GetBytes(item.IID), 0, bytes, pos + 8, 4);
+                Buffer.BlockCopy(BitConverter.GetBytes(item.Size), 0, bytes, pos + 12, 4);
+                pos += 16;
             }
-            ByteData = bytes.ToArray();
+            ByteData = bytes;
         }
     }
 }

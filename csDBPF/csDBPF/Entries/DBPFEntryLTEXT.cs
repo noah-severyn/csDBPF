@@ -123,22 +123,20 @@ namespace csDBPF {
 			if (TGI.GroupID == 0) { TGI.RandomizeGroup(); }
             if (TGI.InstanceID == 0) { TGI.RandomizeInstance(); }
 
-
-            List<byte> bytes = new List<byte>();
-			if (_text is null) {
-				bytes.AddRange(BitConverter.GetBytes((ushort) 0)); //Number of 2-byte characters
-            } else {
-				bytes.AddRange(BitConverter.GetBytes((ushort) _text.Length)); //Number of 2-byte characters
-			}
-			bytes.AddRange(new byte[] { 0x00, 0x10 }); //Text control character
-			bytes.AddRange(ByteArrayHelper.ToBytes(_text));
+			string text = _text ?? string.Empty;
+			int byteLen = text.Length * 2;
+            byte[] bytes = new byte[4 + byteLen];
+			Buffer.BlockCopy(BitConverter.GetBytes((ushort) text.Length), 0, bytes, 0, 2); //Number of 2-byte characters
+			bytes[2] = 0x00; //Text control characters
+            bytes[3] = 0x10;
+			Buffer.BlockCopy(text.ToBytes(), 0, bytes, 4, byteLen);
 			
 			if (compress) {
-                ByteData = QFS.Compress(bytes.ToArray());
+				ByteData = bytes.Compress();
 
                 //If data could not be compressed for some reason
                 if (ByteData is null) {
-                    ByteData = bytes.ToArray();
+                    ByteData = bytes;
 					IsCompressed = false;
                 } else {
                     CompressedSize = (uint) ByteData.Length;
@@ -147,10 +145,10 @@ namespace csDBPF {
             } 
 			
 			else {
-                ByteData = bytes.ToArray();
+                ByteData = bytes;
                 IsCompressed = false;
             }
-            UncompressedSize = (uint) _text.Length * 2 + 4;
+            UncompressedSize = (uint) byteLen + 4;
         }
 	}
 }

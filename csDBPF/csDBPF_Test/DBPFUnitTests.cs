@@ -1020,7 +1020,7 @@ namespace csDBPF_Test {
                 [TestMethod]
                 public void Test_081b_LTEXT_ModifyText() {
                     DBPFEntryLTEXT ltext = new DBPFEntryLTEXT();
-                    Assert.IsNull(ltext.Text);
+                    Assert.AreEqual(ltext.Text, string.Empty);
                     ltext.Text = "Test String";
                     Assert.AreEqual("Test String", ltext.Text);
                 }
@@ -1072,7 +1072,7 @@ namespace csDBPF_Test {
             [TestClass]
             public class _081_EXMP {
                 [TestMethod]
-                public void Test_081_EXMP_IsTextEncoding() {
+                public void Test_081_EXMP_EncodingKind() {
                     DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\RJ - Block Road Barriers 1.0.dat");
                     List<DBPFEntry> entries = dbpf.ListOfEntries;
 
