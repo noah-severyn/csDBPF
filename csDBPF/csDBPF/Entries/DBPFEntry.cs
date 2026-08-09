@@ -42,6 +42,11 @@ namespace csDBPF {
         /// </summary>
         public bool IsCompressed { get;	private protected set; }
 
+        /// <summary>
+        /// Gets whether <see cref="Decode"/> has been called and the entry data has been parsed.
+        /// </summary>
+        public bool IsDecoded { get; private protected set; }
+
 		private byte[] _byteData;
         /// <summary>
         /// Byte array of raw data pertaining to this entry. This may or may not be compressed.
@@ -49,11 +54,12 @@ namespace csDBPF {
         /// <remarks>
         /// The interpretation of the entry data depends on the compression status and the entry type (known through its <see cref="TGI"/>). Always check if the data is compressed before processing.
         /// </remarks>
-		public byte[] ByteData { get {
+		public byte[] ByteData { 
+            get {
 				return _byteData;
 			}
 
-			protected set {
+			private protected set {
                 _byteData = value;
                 //Peek at bytes 4 and 5 to determine compression status
                 IsCompressed = _byteData.Length > 9 && _byteData.ReadIntoUshort(4, DBPF.Encoding.Binary) == 0x10FB;
@@ -121,9 +127,9 @@ namespace csDBPF {
         public abstract void Decode();
 
         /// <summary>
-        /// Builds <see cref="ByteData"/> with the current state of the entry's data object. The encoding can be either text or binary according to <see cref="EncodingType"/>.
+        /// Builds <see cref="ByteData"/> with the current state of the entry's data object.
         /// </summary>
-		/// <param name="compress">Whether to compress the ByteData. Default is FALSE</param>
+		/// <param name="compress">Whether to compress the ByteData. Default is <see langword="false"/></param>
         public abstract void Encode(bool compress = false);
 
 

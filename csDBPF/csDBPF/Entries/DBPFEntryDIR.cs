@@ -7,10 +7,6 @@ namespace csDBPF {
     /// </summary>
     /// <see href="https://wiki.sc4devotion.com/index.php?title=DBDF"/>
     public class DBPFEntryDIR : DBPFEntry {
-        /// <summary>
-        /// Stores if this entry has been decoded yet.
-        /// </summary>
-        private bool _isDecoded;
 
         private List<DBDFItem> _compressedItems;
         /// <summary>
@@ -57,7 +53,7 @@ namespace csDBPF {
         /// Create a new instance. Use when creating a new Directory.
         /// </summary>
         public DBPFEntryDIR() : base(DBPFTGI.DIRECTORY) {
-            _compressedItems = new List<DBDFItem>();
+            _compressedItems = [];
             IsCompressed = false; //DIR files are never compressed
         }
 
@@ -70,7 +66,7 @@ namespace csDBPF {
         /// <param name="bytes">Byte data for this entry</param>
         /// <remarks>Directory subfiles are special in that their TGI is *always* the same, so providing TGI as an argument is unnecessary.</remarks>
         public DBPFEntryDIR(uint offset, uint size, uint index, byte[] bytes) : base(DBPFTGI.DIRECTORY, offset, size, index, bytes) {
-            _compressedItems = new List<DBDFItem>();
+            _compressedItems = [];
         }
 
 
@@ -79,14 +75,14 @@ namespace csDBPF {
         /// Sets the directory entry from raw data and sets the <see cref="CompressedItems"/> property of this instance.
         /// </summary>
         public override void Decode() {
-            if (_isDecoded) {
+            if (IsDecoded) {
                 return;
             }
 
             for (int pos = 0; pos < ByteData.Length; pos += 16) {
                 _compressedItems.Add(new DBDFItem(BitConverter.ToUInt32(ByteData, pos), BitConverter.ToUInt32(ByteData, pos + 4), BitConverter.ToUInt32(ByteData, pos + 8), BitConverter.ToUInt32(ByteData, pos + 12)));
             }
-            _isDecoded = true;
+            IsDecoded = true;
         }
 
 
@@ -112,7 +108,7 @@ namespace csDBPF {
         /// </summary>
 		/// <param name="compress">Note this has no effect as DIR entries always remain uncompressed</param>
         public override void Encode(bool compress = false) {
-            List<byte> bytes = new List<byte>();
+            List<byte> bytes = [];
 
             foreach (DBDFItem item in _compressedItems) {
                 bytes.AddRange(BitConverter.GetBytes(item.TID));

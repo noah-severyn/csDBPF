@@ -9,11 +9,11 @@ namespace csDBPF {
     /// </summary>
     /// <see href="https://www.wiki.sc4devotion.com/index.php?title=PNG"/>
     public class DBPFEntryPNG : DBPFEntry {
-        private Image _image;
+        private Image? _image;
         /// <summary>
         /// PNG image in this entry.
         /// </summary>
-        public Image PNGImage {
+        public Image? PNGImage {
             get { return _image; }
         }
 
@@ -45,7 +45,13 @@ namespace csDBPF {
 		/// Use when reading from a file.
 		/// </remarks>
         public override void Decode() {
+            if (IsDecoded) return;
+            if (IsCompressed) {
+                ByteData = QFS.Decompress(ByteData);
+            }
+
             _image = Image.Load(ByteData);
+            IsDecoded = true;
         }
 
         /// <summary>
@@ -53,8 +59,9 @@ namespace csDBPF {
         /// </summary>
 		/// <param name="compress">This has no effect as PNG entries are always uncompressed</param>
         public override void Encode(bool compress = false) {
-            using MemoryStream ms = new MemoryStream();
+            if (_image is null) return;
 
+            using MemoryStream ms = new MemoryStream();
             _image.Save(ms, new PngEncoder());
             _image.Dispose();
             ByteData = ms.ToArray();

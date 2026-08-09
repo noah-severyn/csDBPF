@@ -8,11 +8,6 @@ namespace csDBPF {
 	/// </summary>
 	/// <see href="https://wiki.sc4devotion.com/index.php?title=LTEXT"/>
 	public class DBPFEntryLTEXT : DBPFEntry {
-		/// <summary>
-		/// Stores if this entry has been decoded yet.
-		/// </summary>
-		private bool _isDecoded;
-
 		private string _text;
 		/// <summary>
 		/// Text string for this entry.
@@ -30,13 +25,17 @@ namespace csDBPF {
 		/// <summary>
 		/// Create a new instance. Use when creating a new LTEXT entry.
 		/// </summary>
-		public DBPFEntryLTEXT() : base(DBPFTGI.LTEXT) { }
+		public DBPFEntryLTEXT() : base(DBPFTGI.LTEXT) {
+            _text = string.Empty;
+        }
 
         /// <summary>
         /// Create a new instance with the specified TGI. Use when creating a new LTEXT entry from scratch.
         /// </summary>
         /// <param name="tgi">TGI set to assign</param>
-        public DBPFEntryLTEXT(TGI tgi) : base(tgi) { }
+        public DBPFEntryLTEXT(TGI tgi) : base(tgi) {
+			_text = string.Empty;
+		}
 
         /// <summary>
         /// Create a new instance with the specified text. Use when creating a new LTEXT entry from scratch.
@@ -68,8 +67,7 @@ namespace csDBPF {
 		/// <param name="index">Entry position in the file, 0-n</param>
 		/// <param name="bytes">Byte data for this entry</param>
 		public DBPFEntryLTEXT(TGI tgi, uint offset, uint size, uint index, byte[] bytes) : base(tgi, offset, size, index, bytes) {
-			_text = null;
-			_isDecoded = false;
+			_text = string.Empty;
 		}
 
 
@@ -81,7 +79,7 @@ namespace csDBPF {
         /// Data must be uncompressed or garbage data is returned.
         /// </remarks>
         public override void Decode() {
-			if (_isDecoded) {
+			if (IsDecoded) {
 				return;
 			}
 			if (ByteData.Length < 4) {
@@ -98,7 +96,7 @@ namespace csDBPF {
 			pos += 2;
 			ushort textControlChar = ByteData.ReadIntoUshort(pos, DBPF.Encoding.Binary);
 			if (textControlChar != 0x0010) {
-				_text = null;
+				_text = string.Empty;
 				LogError("Invalid control character. Text not set.");
 				return;
 			}
@@ -112,7 +110,7 @@ namespace csDBPF {
 				pos += 2;
 			}
 			_text = sb.ToString();
-			_isDecoded = true;
+			IsDecoded = true;
 		}
 
 

@@ -9,11 +9,6 @@ namespace csDBPF {
 	/// </summary>
 	/// <see href="https://wiki.sc4devotion.com/index.php?title=EXMP"/>
 	public class DBPFEntryEXMP : DBPFEntry {
-		/// <summary>
-		/// Stores if this entry has been decoded yet.
-		/// </summary>
-		private bool _isDecoded;
-
         /// <summary>
         /// The encoding type of this entry
         /// </summary>
@@ -73,7 +68,7 @@ namespace csDBPF {
         /// Use when reading from a file.
         /// </remarks>
         public override void Decode() {
-			if (_isDecoded) return;
+			if (IsDecoded) return;
             
 			byte identifier;
             if (IsCompressed) {
@@ -414,7 +409,7 @@ namespace csDBPF {
 		/// <param name="compress">Whether to compress the ByteData. Default is FALSE</param>
         public override void Encode(bool compress = false) {
             //If not decoded then assumed no changes have been made to the entry → decompressed size and compressed size are unchanged
-            if (!_isDecoded) return;
+            if (!IsDecoded) return;
 
             string id;
             if (IsCohort) {
