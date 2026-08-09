@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using static csDBPF.DBPFEntry;
 
 namespace csDBPF {
 	/// <summary>
@@ -39,7 +37,7 @@ namespace csDBPF {
         /// <summary>
         /// List of data values which are stored in this property.
         /// </summary>
-        private List<float> _dataValues;
+        private float[] _dataValues;
 
 
 
@@ -49,6 +47,7 @@ namespace csDBPF {
         /// <param name="encoding">Text or Binary encoding type</param>
         public DBPFPropertyFloat(DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			DataType = PropertyDataType.FLOAT32;
+			_dataValues = [];
 			Encoding = encoding;
 			NumberOfReps = 0;
 		}
@@ -72,19 +71,19 @@ namespace csDBPF {
         /// </summary>
         /// <param name="values">Values this property holds</param>
         /// <param name="encoding">Text or Binary encoding type</param>
-        public DBPFPropertyFloat(List<float> values, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
+        public DBPFPropertyFloat(float[] values, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			DataType = PropertyDataType.FLOAT32;
 			_dataValues = values;
 			Encoding = encoding;
 			if (Encoding == DBPF.Encoding.Text) {
-				NumberOfReps = _dataValues.Count;
+				NumberOfReps = _dataValues.Length;
 			} else {
                 //Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
                 //See: https://community.simtropolis.com/forums/topic/759206-mysterious-glitch-for-simcity-4-mac/?tab=comments#comment-1731134
-                if (_dataValues.Count <= 1) {
+                if (_dataValues.Length <= 1) {
 					NumberOfReps = 0;
 				} else {
-					NumberOfReps = _dataValues.Count;
+					NumberOfReps = _dataValues.Length;
 				}
 			}
 		}
@@ -103,63 +102,67 @@ namespace csDBPF {
 
 
 
-		/// <summary>
-		/// Returns a list of data values which are stored in this property.
-		/// </summary>
-		/// <returns>List of data values which are stored in this property</returns>
-		public override IEnumerable GetData() {
+        /// <inheritdoc/>
+        [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
+        public override IEnumerable GetData() {
 			return _dataValues;
         }
-        /// <summary>
-        /// Returns the value stored in this property at the given position.
-        /// </summary>
-        /// <param name="position">Position (or rep) to return</param>
-        /// <returns>The data value at the specified position</returns>
-        /// <remarks>
-        /// If the position parameter is greater than the number of values, the last value is returned.
-        /// </remarks>
+        /// <inheritdoc/>
+        [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
         public override ValueType GetData(int position) {
             if (position < 0) {
                 throw new ArgumentException("Value must be greater than or equal to 0.");
             }
-            if (position >= _dataValues.Count) {
-                return _dataValues[_dataValues.Count - 1];
+            if (position >= _dataValues.Length) {
+                return _dataValues[_dataValues.Length - 1];
             }
             return _dataValues[position];
         }
 
-
-
-        /// <summary>
-        /// Set the data values stored in this property. Value should be of type <![CDATA[IEnumerable<float>]]>.
-        /// </summary>
-        /// <param name="value">Values to set</param>
-        /// <exception cref="ArgumentException">Argument to DBPFPropertyFloat.SetData must be <![CDATA[IEnumerable<float>]]>.</exception>
-        public override void SetData(IEnumerable value) {
-			if (value is not IEnumerable<float>) {
-				throw new ArgumentException($"Argument to DBPFPropertyFloat.SetData must be IEnumerable<float>. {value.GetType()} was provided.");
-			}
-			_dataValues = (List<float>) value;
-
-			if (Encoding == DBPF.Encoding.Text) {
-				NumberOfReps = _dataValues.Count;
-			} else {
-				//Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
-				if (_dataValues.Count <= 1) {
-					NumberOfReps = 0;
-				} else {
-					NumberOfReps = _dataValues.Count;
-				}
-			}
+        /// <inheritdoc/>
+        public override Array GetTypedData() {
+            return _dataValues;
+        }       
+        
+        /// <inheritdoc/>
+        public override object GetTypedData(int position) {
+            if (position < 0) {
+                throw new ArgumentException("Value must be greater than or equal to 0.");
+            }
+            return position >= _dataValues.Length ? _dataValues[_dataValues.Length - 1] : _dataValues[position];
         }
-        /// <summary>
-        /// Set the values(s) stored in this property. Value should be of type <![CDATA[List<float>]]>.
-        /// </summary>
-        /// <remarks>
-        /// This implementation for float-type properties is identical to <see cref="SetData(IEnumerable)"/> to avoid the macOS float bug.
-        /// </remarks>
+
+
+
+        /// <inheritdoc/>
+        [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
+        public override void SetData(IEnumerable value) {
+            SetTypedData((float[]) value);
+        }
+        /// <inheritdoc/>
+        [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
         internal override void SetData(IEnumerable value, uint countOfReps) {
 			SetData(value);
+        }
+
+
+        /// <inheritdoc/>
+        public override void SetTypedData(Array value) {
+            if (value is not float[]) {
+                throw new ArgumentException($"Argument to DBPFPropertyFloat.SetData must be float[]. {value.GetType()} was provided.");
+            }
+            _dataValues = (float[]) value;
+
+            if (Encoding == DBPF.Encoding.Text) {
+                NumberOfReps = _dataValues.Length;
+            } else {
+                //Note that this implementation is slightly different from the specification to remove the bug on macOS for float-type properties with one value and a rep of 1
+                if (_dataValues.Length <= 1) {
+                    NumberOfReps = 0;
+                } else {
+                    NumberOfReps = _dataValues.Length;
+                }
+            }
         }
 
 
@@ -173,9 +176,9 @@ namespace csDBPF {
 				StringBuilder sb = new StringBuilder();
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(ID);
 				sb.Append($"0x{DBPFUtil.ToHexString(ID)}:{{\"{xmlprop.Name}\"}}=Float32:{NumberOfReps}:{{");
-				for (int idx = 0; idx < _dataValues.Count(); idx++) {
+				for (int idx = 0; idx < _dataValues.Length; idx++) {
 					sb.Append(_dataValues[idx]);
-					if (idx != _dataValues.Count() - 1) {
+					if (idx != _dataValues.Length - 1) {
 						sb.Append(',');
 					}
 				}
@@ -193,7 +196,7 @@ namespace csDBPF {
 				} else { // keyType = 0x80
 					bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //keyType
 					bytes.Add(0); //unused flag
-					bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Count));
+					bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Length));
 					foreach (float value in _dataValues) {
 						bytes.AddRange(BitConverter.GetBytes(value));
 					}

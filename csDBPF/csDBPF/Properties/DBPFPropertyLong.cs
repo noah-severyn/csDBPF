@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using static csDBPF.DBPFEntry;
 using static csDBPF.DBPFProperty;
 
 namespace csDBPF {
@@ -42,7 +42,7 @@ namespace csDBPF {
 		/// <summary>
 		/// List of data values which are stored in this property.
 		/// </summary>
-		private List<long> _dataValues;
+		private long[] _dataValues;
 
 
 
@@ -57,7 +57,7 @@ namespace csDBPF {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			DataType = dataType;
-			_dataValues = null;
+			_dataValues = [];
 			Encoding = encoding;
 			NumberOfReps = 0;
 		}
@@ -73,7 +73,7 @@ namespace csDBPF {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			DataType = dataType;
-			_dataValues = new List<long> { value };
+			_dataValues = [value];
 			Encoding = encoding;
 			NumberOfReps = 0;
 		}
@@ -84,19 +84,15 @@ namespace csDBPF {
         /// <param name="values">Values this property holds</param>
         /// <param name="encoding">Text or Binary encoding type</param>
         /// <exception cref="ArgumentException">DBPFPropertyNumber cannot contain float or string data.</exception>
-        public DBPFPropertyLong(PropertyDataType dataType, List<long> values, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
+        public DBPFPropertyLong(PropertyDataType dataType, Array values, DBPF.Encoding encoding = DBPF.Encoding.Binary) {
 			if (dataType == PropertyDataType.FLOAT32 || dataType == PropertyDataType.STRING) {
 				throw new ArgumentException("DBPFPropertyNumber cannot contain float or string data.");
 			}
 			DataType = dataType;
-			_dataValues = values;
+            _dataValues = [];
+			SetTypedData(values);
 			Encoding = encoding;
-			if (_dataValues.Count == 1) {
-				NumberOfReps = 0;
-			} else {
-				NumberOfReps = _dataValues.Count;
-			}
-		}
+        }
 
 
 
@@ -112,66 +108,118 @@ namespace csDBPF {
 
 
 
-		/// <summary>
-		/// Returns a list of data values which are stored in this property.
-		/// </summary>
-		/// <returns>List of data values which are stored in this property</returns>
-		public override long[] GetData() {
-			return _dataValues.ToArray();
+        /// <inheritdoc/>
+        [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
+        public override long[] GetData() {
+			return _dataValues;
 		}
-
-
-        /// <summary>
-        /// Returns the value stored in this property at the given position.
-        /// </summary>
-        /// <param name="position">Position (or rep) to return</param>
-        /// <returns>The data value at the specified position</returns>
-        /// <remarks>
-        /// If the position parameter is greater than the number of values, the last value is returned instead.
-        /// </remarks>
+        /// <inheritdoc/>
+        [Obsolete("Use .GetTypedData instead, which returns the data as an exact cast of this items data type, instead of just long/string/float.")]
         public override object GetData(int position) {
 			if (position < 0) {
 				throw new ArgumentException("Value must be greater than or equal to 0.");
 			}
-			if (position >= _dataValues.Count) {
-				return _dataValues[_dataValues.Count- 1];
+			if (position >= _dataValues.Length) {
+				return _dataValues[_dataValues.Length - 1];
 			}
 			return _dataValues[position];
-		}
-
-
-
-        /// <summary>
-        /// Set the data values stored in this property. Value should be of type <![CDATA[IEnumerable<long>]]>.
-        /// </summary>
-        /// <param name="value">Values to set</param>
-        /// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetData must be <![CDATA[IEnumerable<long>]]>;.</exception>
-        public override void SetData(IEnumerable value) {
-			if (value is not IEnumerable<long>) {
-				throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be IEnumerable<long>. {value.GetType()} was provided.");
-			}
-
-			_dataValues = (List<long>) value;
-			if (_dataValues.Count <= 1) {
-				NumberOfReps = 0;
-			} else {
-				NumberOfReps = _dataValues.Count;
-			}
         }
-        /// <summary>
-        /// Set the values(s) stored in this property. Value should be of type <![CDATA[List<long>]]>.
-        /// </summary>
-        /// <remarks>
-        /// This override is necessary when countOfReps = 1; otherwise, if passed a list of length 1 then the number of reps would be set to 0. Figuring the byte offset for the next property will then be off by 4 because the extra 4 bytes representing the number of reps will be ignored.
-        /// </remarks>
-		/// <exception cref="ArgumentException">Argument to DBPFPropertyNumber.SetData must be <![CDATA[List<long>]]>;.</exception>
+
+        /// <inheritdoc/>
+        public override Array GetTypedData() {
+            switch (DataType) {
+                case PropertyDataType.UINT8:
+                    return _dataValues.Select(Convert.ToByte).ToArray();
+                case PropertyDataType.UINT16:
+                    return _dataValues.Select(Convert.ToUInt16).ToArray();
+                case PropertyDataType.UINT32:
+                    return _dataValues.Select(Convert.ToUInt32).ToArray();
+                case PropertyDataType.SINT32:
+                    return _dataValues.Select(Convert.ToInt32).ToArray();
+                case PropertyDataType.BOOL:
+                    return _dataValues.Select(Convert.ToBoolean).ToArray();
+                default: // SINT64
+					return _dataValues.ToArray();
+            }
+        }
+
+        /// <inheritdoc/>
+        public override object GetTypedData(int position) {
+            if (position < 0) {
+                throw new ArgumentException("Value must be greater than or equal to 0.");
+            }
+            long value = position >= _dataValues.Length ? _dataValues[_dataValues.Length - 1] : _dataValues[position];
+            switch (DataType) {
+                case PropertyDataType.UINT8:
+                    return Convert.ToByte(value);
+                case PropertyDataType.UINT16:
+                    return Convert.ToUInt16(value);
+                case PropertyDataType.UINT32:
+                    return Convert.ToUInt32(value);
+                case PropertyDataType.SINT32:
+                    return Convert.ToInt32(value);
+                case PropertyDataType.BOOL:
+                    return Convert.ToBoolean(value);
+                default: // SINT64
+                    return value;
+            }
+        }
+
+
+
+        /// <inheritdoc/>
+        [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
+        public override void SetData(IEnumerable value) {
+            if (value is not IEnumerable<long>) {
+                throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be IEnumerable<long>. {value.GetType()} was provided.");
+            }
+            _dataValues = [.. (IEnumerable<long>) value];
+            if (_dataValues.Length <= 1) {
+                NumberOfReps = 0;
+            } else {
+                NumberOfReps = _dataValues.Length;
+            }
+        }
+        /// <inheritdoc/>
+        [Obsolete("Use .SetTypedData instead, which validates the input data is of the exact type of this data type, instead of just long/string/float.")]
         internal override void SetData(IEnumerable value, uint countOfReps) {
             if (value is not List<long>) {
                 throw new ArgumentException($"Argument to DBPFPropertyNumber.SetData must be List<long>. {value.GetType()} was provided.");
             }
 
-            _dataValues = (List<long>) value;
+            _dataValues = ((List<long>) value).ToArray();
 			NumberOfReps = (int) countOfReps;
+        }
+
+
+
+
+        /// <inheritdoc/>
+        public override void SetTypedData(Array value) {
+            bool valid = value is IEnumerable<long> || DataType switch {
+                PropertyDataType.UINT8 => value is byte[],
+                PropertyDataType.UINT16 => value is ushort[],
+                PropertyDataType.UINT32 => value is uint[],
+                PropertyDataType.SINT32 => value is int[],
+                PropertyDataType.BOOL => value is bool[],
+                _ => false,
+            };
+            if (!valid) {
+                throw new ArgumentException($"DataType {DataType} does not match the provided type {value.GetType()}.");
+            }
+
+            long[] converted = new long[value.Length];
+            int idx = 0;
+            foreach (object v in value) {
+                converted[idx++] = Convert.ToInt64(v);
+            }
+
+            _dataValues = converted;
+            if (_dataValues.Length <= 1) {
+                NumberOfReps = 0;
+            } else {
+                NumberOfReps = _dataValues.Length;
+            }
         }
 
 
@@ -185,16 +233,16 @@ namespace csDBPF {
 				StringBuilder sb = new StringBuilder();
 				XMLExemplarProperty xmlprop = XMLProperties.GetXMLProperty(ID);
 				sb.Append($"0x{DBPFUtil.ToHexString(ID)}:{{\"{xmlprop.Name}\"}}={LookupDataTypeName(DataType)}:{NumberOfReps}:{{");
-				for (int idx = 0; idx < _dataValues.Count; idx++) {
+				for (int idx = 0; idx < _dataValues.Length; idx++) {
 					sb.Append($"0x{DBPFUtil.ToHexString(_dataValues[idx], LookupDataTypeLength(DataType) * 2)}");
-					if (idx != _dataValues.Count - 1) {
+					if (idx != _dataValues.Length - 1) {
 						sb.Append(',');
 					}
 				}
 				sb.Append("}}\r\n");
 				return ByteArrayHelper.ToBytes(sb.ToString(), true);
 			} else {
-				List<byte> bytes = new List<byte>();
+				List<byte> bytes = [];
 				bytes.AddRange(BitConverter.GetBytes(ID));
 				bytes.AddRange(BitConverter.GetBytes((ushort) DataType));
 				if (NumberOfReps == 0) { //keyType = 0x00
@@ -205,7 +253,7 @@ namespace csDBPF {
 				} else { // keyType = 0x80
 					bytes.AddRange(BitConverter.GetBytes((ushort) 0x80)); //keyType
 					bytes.Add(0); //unused flag
-					bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Count));
+					bytes.AddRange(BitConverter.GetBytes((uint) _dataValues.Length));
 					foreach (long value in _dataValues) {
 						bytes.AddRange(ByteArrayHelper.ToBytes(value, LookupDataTypeLength(DataType)));
 					}

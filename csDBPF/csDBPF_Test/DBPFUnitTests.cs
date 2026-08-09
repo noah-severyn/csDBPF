@@ -53,6 +53,13 @@ namespace csDBPF_Test {
                 Assert.IsFalse(DBPFUtil.IsDBPF("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll", true));
                 Assert.IsFalse(DBPFUtil.IsDBPF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png", true));
             }
+            [TestMethod]
+            public void Test_011_DBPFUtil_IsFileSC4() {
+                Assert.IsTrue(DBPFUtil.IsSC4File("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_GraphModd. V2.dat"));
+                Assert.IsTrue(DBPFUtil.IsSC4File("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dat"));
+                Assert.IsTrue(DBPFUtil.IsSC4File("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll"));
+                Assert.IsFalse(DBPFUtil.IsSC4File("C:\\Program Files (x86)\\Steam\\steamapps\\common\\SimCity 4 Deluxe\\Plugins\\Background3D0.png"));
+            }
 
             [TestMethod]
             public void Test_012_DBPFUtil_ToHexString() {
@@ -556,7 +563,7 @@ namespace csDBPF_Test {
                 Assert.AreEqual((uint) 0x20, propb.ID);
                 Assert.AreEqual(20, propb.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.STRING, propb.DataType);
-                Assert.AreEqual(stringdataviewparksaura, propb.GetData());
+                CollectionAssert.AreEqual(stringdataviewparksaura.ToArray(), propb.GetTypedData());
 
                 //Compare to property with known values
                 DBPFPropertyString knownprop = new DBPFPropertyString(stringdataviewparksaura) {
@@ -565,15 +572,15 @@ namespace csDBPF_Test {
                 Assert.AreEqual(knownprop.ID, propb.ID);
                 Assert.AreEqual(knownprop.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(knownprop.DataType, propb.DataType);
-                Assert.AreEqual(knownprop.GetData(), propb.GetData());
+                CollectionAssert.AreEqual(knownprop.GetTypedData(), propb.GetTypedData());
                 Assert.AreEqual(knownprop.ToString(), propb.ToString());
 
                 //Check for no differences between values and valuesDecoded when each is changed
-                propb.SetData(stringparksaura);
-                Assert.AreEqual(stringparksaura, propb.GetData());
+                propb.SetTypedData(stringparksaura.ToArray());
+                CollectionAssert.AreEqual(stringparksaura.ToArray(), propb.GetTypedData());
                 Assert.AreEqual(stringparksaura.Length, propb.NumberOfReps);
-                propb.SetData(stringparks);
-                Assert.AreEqual(stringparks, propb.GetData());
+                propb.SetTypedData(stringparks.ToArray());
+                CollectionAssert.AreEqual(stringparks.ToArray(), propb.GetTypedData());
                 Assert.AreEqual(stringparks.Length, propb.NumberOfReps);
             }
 
@@ -584,79 +591,79 @@ namespace csDBPF_Test {
 
                 DBPFProperty propb;
                 DBPFPropertyLong propknown;
-                List<long> vals;
+                Array vals;
 
                 //Single UInt32 value
-                vals = [0x23];
+                vals = new uint[1] { 0x23 };
                 propb = entry.ListOfProperties.GetValueAtIndex(0);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, 0x23);
                 Assert.AreEqual((uint) 0x10, propb.ID);
                 Assert.AreEqual(0, propb.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propb.DataType);
-                CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(vals, propb.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propb.GetTypedData());
 
                 //7 repetitions of 0 (for 8 total values of 8)
-                vals = [0, 0, 0, 0, 0, 0, 0, 0];
+                vals = new uint[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
                 propb = entry.ListOfProperties.GetValueAtIndex(2);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals);
                 Assert.AreEqual((uint) 0x4A0B47E0, propb.ID);
                 Assert.AreEqual(8, propb.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propb.DataType);
-                CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(vals, propb.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propb.GetTypedData());
 
                 //Single True boolean value
-                vals = [1];
+                vals = new bool[1] { true };
                 propb = entry.ListOfProperties.GetValueAtIndex(3);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.BOOL, vals);
                 Assert.AreEqual((uint) 0x4A0B47E1, propb.ID);
                 Assert.AreEqual(0, propb.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.BOOL, propb.DataType);
-                CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(vals, propb.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propb.GetTypedData());
 
                 //Single False boolean value
-                vals = [0];
+                vals = new bool[1] { false };
                 propb = entry.ListOfProperties.GetValueAtIndex(4);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.BOOL, vals);
                 Assert.AreEqual((uint) 0x4A0B47E2, propb.ID);
                 Assert.AreEqual(0, propb.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.BOOL, propb.DataType);
-                CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(vals, propb.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propb.GetTypedData());
 
                 //Single UInt32 value of 0
-                vals = [0];
+                vals = new uint[1] { 0 };
                 propb = entry.ListOfProperties.GetValueAtIndex(5);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals);
                 Assert.AreEqual((uint) 0x4A0B47E3, propb.ID);
                 Assert.AreEqual(0, propb.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propb.DataType);
-                CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(vals, propb.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propb.GetTypedData());
 
                 //28 UInt32s
-                vals = [0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C, 0x0000000D, 0x70D98C79, 0x00000046, 0x70D98C79, 0x0000007F, 0x70F0C5BA, 0x00000080, 0x70FFFFFF, 0x00000081, 0x70E2F1DD, 0x000000B8, 0x70C5E3BB, 0x000000B9, 0x70A8D49A, 0x000000F2, 0x708AC679, 0x000000F3, 0x706AB758, 0x000000FE, 0x7046A836, 0x000000FF, 0x70009900];
+                vals = new uint[28] { 0x00000000, 0x70990000, 0x00000001, 0x70BC533C, 0x0000000C, 0x70BC533C, 0x0000000D, 0x70D98C79, 0x00000046, 0x70D98C79, 0x0000007F, 0x70F0C5BA, 0x00000080, 0x70FFFFFF, 0x00000081, 0x70E2F1DD, 0x000000B8, 0x70C5E3BB, 0x000000B9, 0x70A8D49A, 0x000000F2, 0x708AC679, 0x000000F3, 0x706AB758, 0x000000FE, 0x7046A836, 0x000000FF, 0x70009900 };
                 propb = entry.ListOfProperties.GetValueAtIndex(6);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals);
                 Assert.AreEqual((uint) 0x4A0B47E4, propb.ID);
                 Assert.AreEqual(28, propb.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propb.DataType);
-                CollectionAssert.AreEqual(vals, (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(vals, propb.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (System.Collections.ICollection) propb.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propb.GetTypedData());
             }
 
             [TestMethod]
@@ -666,7 +673,7 @@ namespace csDBPF_Test {
 
                 DBPFProperty propb;
                 DBPFPropertyFloat propknown;
-                List<float> vals;
+                float[] vals;
 
                 //5 floats
                 vals = [6000f, 1024f, 288f, 48f, 16f];
@@ -675,10 +682,10 @@ namespace csDBPF_Test {
                 Assert.AreEqual((uint) 0x8A020202, propb.ID);
                 Assert.AreEqual(5, propb.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, propb.DataType);
-                CollectionAssert.AreEqual(vals, (ICollection) propb.GetData());
+                CollectionAssert.AreEqual(vals, propb.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propb.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propb.DataType);
-                CollectionAssert.AreEqual((ICollection) propknown.GetData(), (ICollection) propb.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propb.GetTypedData());
             }
 
 
@@ -695,11 +702,11 @@ namespace csDBPF_Test {
                 propt = entry.ListOfProperties.GetValueAtIndex(1);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.STRING, propt.DataType);
                 Assert.AreEqual(1, propt.NumberOfReps);
-                Assert.AreEqual(val, propt.GetData());
+                Assert.AreEqual(val, new string((ReadOnlySpan<char>) propt.GetTypedData()));
                 propknown = new DBPFPropertyString(val, DBPF.Encoding.Text);
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
-                Assert.AreEqual(propknown.GetData(), propt.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propt.GetTypedData());
             }
 
             [TestMethod]
@@ -709,71 +716,71 @@ namespace csDBPF_Test {
 
                 DBPFProperty propt;
                 DBPFPropertyLong propknown;
-                List<long> vals;
+                Array vals;
 
                 //TODO - text property parsing: remaining single: Sint64, , , Bool, , , UInt16,
                 //TODO - text property parsing: remaining multi : , , , Bool, UInt8, SInt64, UInt16,
 
 
                 //1x Uint32
-                vals = [0x2];
+                vals = new uint[1] { 0x2 };
                 propt = entry.ListOfProperties.GetValueAtIndex(0);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals, DBPF.Encoding.Text);
                 Assert.AreEqual((uint) 0x00000010, propt.ID);
                 Assert.AreEqual(0, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propt.DataType);
-                CollectionAssert.AreEqual(vals, (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(vals, propt.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propt.GetTypedData());
 
                 //1x Sint64
-                vals = [0x00000000000000A9];
+                vals = new long[1] { 0x00000000000000A9 };
                 propt = entry.ListOfProperties.GetValueAtIndex(2);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.SINT64, vals, DBPF.Encoding.Text);
                 Assert.AreEqual((uint) 0x099AFACD, propt.ID);
                 Assert.AreEqual(0, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.SINT64, propt.DataType);
-                CollectionAssert.AreEqual(vals, (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(vals, propt.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propt.GetTypedData());
 
                 //1x Uint8
-                vals = [0x01];
+                vals = new byte[1] { 0x01 };
                 propt = entry.ListOfProperties.GetValueAtIndex(6);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT8, vals, DBPF.Encoding.Text);
                 Assert.AreEqual((uint) 0x27812832, propt.ID);
                 Assert.AreEqual(0, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT8, propt.DataType);
-                CollectionAssert.AreEqual(vals, (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(vals, propt.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propt.GetTypedData());
 
                 //4x Sint32
-                vals = [0x07, 0x03, 0x16, 0x00];
+                vals = new int[4] { 0x07, 0x03, 0x16, 0x00 };
                 propt = entry.ListOfProperties.GetValueAtIndex(9);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.SINT32, vals, DBPF.Encoding.Text);
                 Assert.AreEqual((uint) 0x27812851, propt.ID);
                 Assert.AreEqual(4, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.SINT32, propt.DataType);
-                CollectionAssert.AreEqual(vals, (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(vals, propt.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propt.GetTypedData());
 
                 //4x Uint32
-                vals = [0x1001, 0x2000, 0x2001, 0x13110];
+                vals = new uint[4] { 0x1001, 0x2000, 0x2001, 0x13110 };
                 propt = entry.ListOfProperties.GetValueAtIndex(19);
                 propknown = new DBPFPropertyLong(DBPFProperty.PropertyDataType.UINT32, vals, DBPF.Encoding.Text);
                 Assert.AreEqual(0xAA1DD396, propt.ID);
                 Assert.AreEqual(4, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, propt.DataType);
-                CollectionAssert.AreEqual(vals, (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(vals, propt.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
-                CollectionAssert.AreEqual(propknown.GetData(), (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propt.GetTypedData());
             }
 
             [TestMethod]
@@ -783,7 +790,7 @@ namespace csDBPF_Test {
 
                 DBPFProperty propt;
                 DBPFPropertyFloat propknown;
-                List<float> vals;
+                float[] vals;
 
                 //3x Float32
                 vals = [81.589798f, 13.947300f, 39.442501f];
@@ -792,10 +799,10 @@ namespace csDBPF_Test {
                 Assert.AreEqual<uint>(0x27812810, propt.ID);
                 Assert.AreEqual(3, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, propt.DataType);
-                CollectionAssert.AreEqual(vals, (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(vals, propt.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
-                CollectionAssert.AreEqual((ICollection) propknown.GetData(), (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propt.GetTypedData());
 
                 //1x Float32
                 vals = [0.5f];
@@ -804,10 +811,10 @@ namespace csDBPF_Test {
                 Assert.AreEqual<uint>(0x27812811, propt.ID);
                 Assert.AreEqual(1, propt.NumberOfReps);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, propt.DataType);
-                CollectionAssert.AreEqual(vals, (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(vals, propt.GetTypedData());
                 Assert.AreEqual(propknown.NumberOfReps, propt.NumberOfReps);
                 Assert.AreEqual(propknown.DataType, propt.DataType);
-                CollectionAssert.AreEqual((ICollection) propknown.GetData(), (ICollection) propt.GetData());
+                CollectionAssert.AreEqual(propknown.GetTypedData(), propt.GetTypedData());
             }
 
             [TestMethod]
@@ -837,7 +844,7 @@ namespace csDBPF_Test {
         public class _07x_XMLProperty {
             [TestMethod]
             public void Test_070_XMLProperties_AllProperties() {
-                Assert.AreEqual(0x56f, XMLProperties.AllProperties.Count);
+                Assert.HasCount(0x56f, XMLProperties.AllProperties);
             }
 
             [TestMethod]
@@ -847,16 +854,16 @@ namespace csDBPF_Test {
                 Assert.AreEqual(0x8a2602bb, exmp.ID);
                 Assert.AreEqual("Item Button ID", exmp.Name);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, exmp.DataType);
-                Assert.AreEqual(true, exmp.ShowAsHex);
+                Assert.IsTrue(exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "0x00000000" }, exmp.DefaultValue);
-                Assert.AreEqual(null, exmp.MaxValue);
+                Assert.IsNull(exmp.MaxValue);
 
                 //<PROPERTY Name="Path Offset Range for Peds" ID="0x29dd40c1" Type="Float32" Count="2" Default="-1 3" ShowAsHex="Y">
                 exmp = XMLProperties.GetXMLProperty(0x29dd40c1);
                 Assert.AreEqual((uint) 0x29dd40c1, exmp.ID);
                 Assert.AreEqual("Path Offset Range for Peds", exmp.Name);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
-                Assert.AreEqual(true, exmp.ShowAsHex);
+                Assert.IsTrue(exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "-1", "3" }, exmp.DefaultValue);
                 Assert.AreEqual((short) 2, exmp.Count);
 
@@ -865,22 +872,22 @@ namespace csDBPF_Test {
                 Assert.AreEqual((uint) 0x6932dc06, exmp.ID);
                 Assert.AreEqual("WaveMinTimeInState", exmp.Name);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
-                Assert.AreEqual(true, exmp.ShowAsHex);
+                Assert.IsTrue(exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "12", "0.230", "0.5", "2" }, exmp.DefaultValue);
                 Assert.AreEqual((short) 4, exmp.Count);
-                Assert.AreEqual(null, exmp.Step);
+                Assert.IsNull(exmp.Step);
 
                 //<PROPERTY Name="Health Effectiveness vs. Distance Effect" ID="0x891b3ae6" Type="Float32" Count="-2" Default="0 100" MinValue="0" MaxValue="100" ShowAsHex="Y">
                 exmp = XMLProperties.GetXMLProperty(0x891b3ae6);
                 Assert.AreEqual(0x891b3ae6, exmp.ID);
                 Assert.AreEqual("Health Effectiveness vs. Distance Effect", exmp.Name);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
-                Assert.AreEqual(true, exmp.ShowAsHex);
+                Assert.IsTrue(exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "0", "100" }, exmp.DefaultValue);
                 Assert.AreEqual((short) -2, exmp.Count);
                 Assert.AreEqual("0", exmp.MinValue);
                 Assert.AreEqual("100", exmp.MaxValue);
-                Assert.AreEqual(null, exmp.MaxLength);
+                Assert.IsNull(exmp.MaxLength);
             }
 
             [TestMethod]
@@ -890,9 +897,9 @@ namespace csDBPF_Test {
                 Assert.AreEqual(0x8a2602bb, exmp.ID);
                 Assert.AreEqual("Item Button ID", exmp.Name);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.UINT32, exmp.DataType);
-                Assert.AreEqual(true, exmp.ShowAsHex);
+                Assert.IsTrue(exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "0x00000000" }, exmp.DefaultValue);
-                Assert.AreEqual(null, exmp.MaxValue);
+                Assert.IsNull(exmp.MaxValue);
 
                 exmp = XMLProperties.GetXMLProperty("ItembuTTonID");
                 Assert.AreEqual(0x8a2602bb, exmp.ID);
@@ -903,7 +910,7 @@ namespace csDBPF_Test {
                 Assert.AreEqual((uint) 0x29dd40c1, exmp.ID);
                 Assert.AreEqual("Path Offset Range for Peds", exmp.Name);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
-                Assert.AreEqual(true, exmp.ShowAsHex);
+                Assert.IsTrue(exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "-1", "3" }, exmp.DefaultValue);
                 Assert.AreEqual((short) 2, exmp.Count);
 
@@ -912,22 +919,22 @@ namespace csDBPF_Test {
                 Assert.AreEqual((uint) 0x6932dc06, exmp.ID);
                 Assert.AreEqual("WaveMinTimeInState", exmp.Name);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
-                Assert.AreEqual(true, exmp.ShowAsHex);
+                Assert.IsTrue(exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "12", "0.230", "0.5", "2" }, exmp.DefaultValue);
                 Assert.AreEqual((short) 4, exmp.Count);
-                Assert.AreEqual(null, exmp.Step);
+                Assert.IsNull(exmp.Step);
 
                 //<PROPERTY Name="Health Effectiveness vs. Distance Effect" ID="0x891b3ae6" Type="Float32" Count="-2" Default="0 100" MinValue="0" MaxValue="100" ShowAsHex="Y">
                 exmp = XMLProperties.GetXMLProperty("Health Effectiveness vs. Distance Effect");
                 Assert.AreEqual(0x891b3ae6, exmp.ID);
                 Assert.AreEqual("Health Effectiveness vs. Distance Effect", exmp.Name);
                 Assert.AreEqual(DBPFProperty.PropertyDataType.FLOAT32, exmp.DataType);
-                Assert.AreEqual(true, exmp.ShowAsHex);
+                Assert.IsTrue(exmp.ShowAsHex);
                 CollectionAssert.AreEqual(new List<string> { "0", "100" }, exmp.DefaultValue);
                 Assert.AreEqual((short) -2, exmp.Count);
                 Assert.AreEqual("0", exmp.MinValue);
                 Assert.AreEqual("100", exmp.MaxValue);
-                Assert.AreEqual(null, exmp.MaxLength);
+                Assert.IsNull(exmp.MaxLength);
             }
 
             [TestMethod]
@@ -1013,7 +1020,7 @@ namespace csDBPF_Test {
                 [TestMethod]
                 public void Test_081b_LTEXT_ModifyText() {
                     DBPFEntryLTEXT ltext = new DBPFEntryLTEXT();
-                    Assert.AreEqual(null, ltext.Text);
+                    Assert.IsNull(ltext.Text);
                     ltext.Text = "Test String";
                     Assert.AreEqual("Test String", ltext.Text);
                 }
@@ -1147,7 +1154,7 @@ namespace csDBPF_Test {
                     //Parse from bytes
                     DBPFEntryDIR entryd = new DBPFEntryDIR(0, 0, 0, dirbytes);
                     entryd.Decode();
-                    Assert.AreEqual(1, entryd.CompressedItems.Count);
+                    Assert.HasCount(1, entryd.CompressedItems);
                     Assert.AreEqual((uint) 0x6534284A, entryd.CompressedItems[0].TID);
                     Assert.AreEqual((uint) 0x690F693F, entryd.CompressedItems[0].GID);
                     Assert.AreEqual((uint) 0x4A0B6819, entryd.CompressedItems[0].IID);
@@ -1157,7 +1164,7 @@ namespace csDBPF_Test {
                     DBPFFile dbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\z_DataView - Parks Aura.dat");
                     DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
                     dir.Decode();
-                    Assert.AreEqual(1, dir.CompressedItems.Count);
+                    Assert.HasCount(1, dir.CompressedItems);
                     Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
                     Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
                     Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
@@ -1171,7 +1178,7 @@ namespace csDBPF_Test {
                     DBPFEntryDIR dir = (DBPFEntryDIR) dbpf.GetEntry(12);
                     dir.Decode();
                     dbpf.RebuildDirectory();
-                    Assert.AreEqual(1, dir.CompressedItems.Count);
+                    Assert.HasCount(1, dir.CompressedItems);
                     Assert.AreEqual((uint) 0x6534284A, dir.CompressedItems[0].TID);
                     Assert.AreEqual((uint) 0x690F693F, dir.CompressedItems[0].GID);
                     Assert.AreEqual((uint) 0x4A0B6819, dir.CompressedItems[0].IID);
@@ -1182,7 +1189,7 @@ namespace csDBPF_Test {
                     DBPFEntryDIR dir2 = (DBPFEntryDIR) dbpf2.GetEntry(13);
                     dir2.Decode();
                     dbpf2.RebuildDirectory();
-                    Assert.AreEqual(7, dir2.CompressedItems.Count);
+                    Assert.HasCount(7, dir2.CompressedItems);
                     Assert.AreEqual((uint) 0x6534284A, dir2.CompressedItems[0].TID);
                     Assert.AreEqual((uint) 0x690F693F, dir2.CompressedItems[0].GID);
                     Assert.AreEqual((uint) 0x4A0B684C, dir2.CompressedItems[0].IID);
@@ -1246,7 +1253,7 @@ namespace csDBPF_Test {
 
                     string path = "C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\testsave.png";
                     pngentry.PNGImage.SaveAsPng(path);
-                    Assert.AreEqual(true,File.Exists(path));
+                    Assert.IsTrue(File.Exists(path));
                     File.Delete(path);
                 }
 
@@ -1317,7 +1324,7 @@ namespace csDBPF_Test {
                                 var width = mipmap.Width;
                                 var height = mipmap.Height;
 					            mipmap.Decompress();
-                                Assert.AreEqual(width * height * 4, mipmap.Bitmap.Length);
+                                Assert.HasCount(width * height * 4, mipmap.Bitmap);
                             }
 			            } 
 		            }
@@ -1423,7 +1430,7 @@ namespace csDBPF_Test {
             public void Test_101b_DBPFFile_IsNotDBPF() {
                 DBPFFile notdbpf = new DBPFFile("C:\\source\\repos\\csDBPF\\csDBPF\\csDBPF_Test\\Test Files\\CAS_AutoHistorical_v0.0.2.dll");
                 Assert.AreEqual("CAS_AutoHistorical_v0.0.2.dll: 0 subfiles", notdbpf.ToString());
-                Assert.AreEqual(0, notdbpf.ListOfEntries.Count);
+                Assert.IsEmpty(notdbpf.ListOfEntries);
             }
 
             [TestMethod]
@@ -1484,7 +1491,7 @@ namespace csDBPF_Test {
                     Assert.AreEqual(outk.ID, outr.ID);
                     Assert.AreEqual(outk.NumberOfReps, outr.NumberOfReps);
                     Assert.AreEqual(outk.DataType, outr.DataType);
-                    CollectionAssert.AreEqual((System.Collections.ICollection) outk.GetData(), (System.Collections.ICollection) outr.GetData());
+                    CollectionAssert.AreEqual(outk.GetTypedData(), outr.GetTypedData());
                 }
 
                 DBPFEntryLTEXT entry1 = (DBPFEntryLTEXT) dbpf.GetEntry(1);

@@ -19,7 +19,35 @@ namespace csDBPF {
         public static readonly HashSet<string> SC4Extensions = new(StringComparer.OrdinalIgnoreCase) {
             ".dat", ".sc4lot", ".sc4desc", ".sc4model", ".dll", ".ini"
         };
+        /// <summary>
+        /// Valid DBPF file extensions.
+        /// </summary>
+        /// <remarks>
+        /// Includes extensions <c>.dat</c>, <c>.sc4lot</c>, <c>.sc4desc</c>, and <c>.sc4model</c>.
+        /// </remarks>
+        public static readonly HashSet<string> DBPFExtensions = new(StringComparer.OrdinalIgnoreCase) {
+            ".dat", ".sc4lot", ".sc4desc", ".sc4model"
+        };
         private static readonly byte[] DBPF = [0x44, 0x42, 0x50, 0x46];
+
+        /// <summary>
+        /// Determine if a file is a DBPF file via its extension, or optionally examining the file's first four bytes for the magic identifier instead.
+        /// </summary>
+        /// <param name="filePath">Full file path to examine</param>
+        /// <returns><see langword="true"/> if file is a SC4 file; otherwise, <see langword="false"/></returns>
+        public static bool IsSC4File(this string filePath) {
+            string extension = Path.GetExtension(filePath);
+            return SC4Extensions.Contains(extension);
+        }
+
+        /// <summary>
+        /// Filters a list of file paths for known SC4 file extensions, or optionally examining the file's first four bytes for the magic identifier instead.
+        /// </summary>
+        /// <param name="filesToFilter">List of all files to filter through</param>
+        /// <returns>A list of SC4 files</returns>
+        public static IEnumerable<string> FilterSC4Files(this IEnumerable<string> filesToFilter) {
+            return filesToFilter.Where(IsSC4File);
+        }
 
         /// <summary>
         /// Filters a list of file paths for known SC4 file extensions, or optionally examining the file's first four bytes for the magic identifier instead.
@@ -28,13 +56,7 @@ namespace csDBPF {
         /// <param name="validateIdentifier">Optionally examine the first 4 bytes of each for a valid DBPF format. If omitted or set to <see langword="false"/>, only the file extension will be examined.</param>
         /// <returns>A listing of DBPF files</returns>
         public static IEnumerable<string> FilterDBPFFiles(this IEnumerable<string> filesToFilter, bool validateIdentifier = false) {
-            List<string> dbpfFiles = [];
-            foreach (string file in filesToFilter) {
-                if (file.IsDBPF(validateIdentifier)) {
-                    dbpfFiles.Add(file);
-                }
-            }
-            return dbpfFiles;
+            return filesToFilter.Where(f => f.IsDBPF(validateIdentifier));
         }
 
 
@@ -48,7 +70,7 @@ namespace csDBPF {
         public static bool IsDBPF(this string filePath, bool validateIdentifier = false) {
             if (!validateIdentifier) {
                 string extension = Path.GetExtension(filePath);
-                return SC4Extensions.Contains(extension);
+                return DBPFExtensions.Contains(extension);
             }
 
             try {
